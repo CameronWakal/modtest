@@ -1,0 +1,21 @@
+body {
+  font-family: 'helvetica neue';
+}
+
+.patches-list {
+  list-style: none;
+  padding: 0;
+}
+
+.patches-list li {
+  display: inline;
+}
+
+.patches-list a {
+  color: gray;
+  text-decoration: none;
+}
+
+.patches-list a.active {
+  color: red;
+}

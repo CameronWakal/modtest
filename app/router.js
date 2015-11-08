@@ -6,6 +6,9 @@ var Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+  this.route('patch', { path: '/:patch_id' });
+
+  this.route('patches', function() {});
 });
 
 export default Router;

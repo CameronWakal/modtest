@@ -1,3 +1,13 @@
-<h2 id="title">Welcome to Ember</h2>
-
+<h3>Patches</h3>
+<button {{action 'new'}}>New Patch</button>
+<button {{action 'removeCurrentPatch'}}>Delete Patch</button>
+<ul class="patches-list">
+  {{#each model as |patch index|}}
+    <li>
+      {{#link-to 'patch' patch}}
+        {{index}}
+      {{/link-to}}
+    </li>
+  {{/each}}
+</ul>
 {{outlet}}
