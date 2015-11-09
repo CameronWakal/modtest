@@ -23,8 +23,8 @@ export default Ember.Controller.extend({
       module.destroyRecord();
     },
 
-    addModule() {
-      let module = this.store.createRecord('module', {patch:this.model, xPos:5, yPos:10});
+    addModule(type) {
+      let module = this.store.createRecord('module', {patch:this.model, type:type, xPos:5, yPos:10});
       module.save();
       this.model.save();
     }

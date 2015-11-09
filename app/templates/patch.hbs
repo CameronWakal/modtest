@@ -1,10 +1,11 @@
 {{model.name}}
-<button {{action 'addModule'}}>Add Module</button>
+<button {{action 'addModule' 'module-generic'}}>Add Module</button>
+<button {{action 'addModule' 'module-clock'}}>Add Clock Module</button>
 
 <ul class="modules-list">
   {{#each model.modules as |module|}}
     <li>
-        {{component 'module-generic' module=module patch=model removeModule='removeModule'}}
+        {{component module.type module=module removeModule='removeModule'}}
     </li>
   {{/each}}
 </ul>
