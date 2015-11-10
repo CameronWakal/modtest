@@ -1,2 +1,8 @@
 a generic module of type {{module.type}}
+with ports
+<ul>
+  {{#each ports as |port|}}
+    <li>{{port.name}} {{port.signalType}} {{port.portType}}</li>
+  {{/each}}
+</ul>
 <button {{action 'removeSelf'}}>Remove Module</button>
