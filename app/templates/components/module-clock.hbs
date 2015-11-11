@@ -1,2 +1,5 @@
 a clock module of type {{module.type}}
+with ports:
+{{port-component signalType='trigger' portType='source' name='Trigger Out' selectPort=attrs.selectModulePort}}
+{{port-component signalType='signal' portType='dest' name='Signal Out' selectPort=attrs.selectModulePort}}
 <button {{action 'removeSelf'}}>Remove Module</button>

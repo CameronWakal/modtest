@@ -1,11 +1,15 @@
-{{model.name}}
+<h4>{{model.name}}</h4>
 <button {{action 'addModule' 'module-generic'}}>Add Module</button>
 <button {{action 'addModule' 'module-clock'}}>Add Clock Module</button>
+
+<h5>Connect Modules</h5>
+<p>Source: {{sourceModule.type}} {{sourcePort.name}}</p>
+<p>Dest: {{destModule.type}} {{destPort.name}}</p>
 
 <ul class="modules-list">
   {{#each model.modules as |module|}}
     <li>
-        {{component module.type module=module removeModule='removeModule'}}
+        {{component module.type module=module removeModule='removeModule' selectModulePort=(action 'selectModulePort' module)}}
     </li>
   {{/each}}
 </ul>
