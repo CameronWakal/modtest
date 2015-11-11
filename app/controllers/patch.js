@@ -40,7 +40,7 @@ export default Ember.Controller.extend({
     },
 
     selectModulePort(module, port) {
-      console.log('patchController selecting module '+module.get('type')+' port '+port.get('name'));
+      console.log('--- patchController selecting module '+module.get('type')+' port '+port.get('name'));
 
       if(port.portType == 'source') {
         this.set('sourceModule', module);
