@@ -4,7 +4,8 @@ export default Ember.Component.extend({
 
   actions: {
     removeSelf() {
-      this.sendAction('removeModule', this.get('module'));
+      this.sendAction('removeModule', this.get('model'));
     },
   },
+  
 });
