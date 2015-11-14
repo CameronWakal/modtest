@@ -8,11 +8,14 @@ export default Ember.Route.extend({
     new() {
       let patch = this.store.createRecord('patch', {name: 'my cool patch'});
       patch.save();
+      this.transitionTo('patch', patch);
     },
     removeCurrentPatch() {
+      //destroy current patch including modules and ports, leave route
+      console.log('- application route removing current patch');
+
       let currentPatchController = this.controllerFor('patch');
-      console.log('- application route removing patch '+currentPatchController.get('model').id);
-      currentPatchController.send('removePatch');
+      currentPatchController.send('removeCurrentPatch');
     }
   }
 });

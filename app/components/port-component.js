@@ -5,7 +5,7 @@ export default Ember.Component.extend({
   portType: null,
   name: null,
   click() {
-    console.log('----- port component sending selectPort action');
-    this.attrs.selectPort(this);
+    console.log('----- port component sending select action');
+    this.attrs.select();
   }
 });

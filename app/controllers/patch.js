@@ -9,32 +9,38 @@ export default Ember.Controller.extend({
 
   actions: {
     
-    removePatch() {
+    removeCurrentPatch() {
+      //destroy patch, remove all modules, transition to index
       console.log('--- patchController removing patch '+this.model.id);
 
       let modules = this.model.get('modules');
 
-      modules.forEach(function(module){
-        module.get('ports').forEach(function(port) {
-          port.destroyRecord();
-        });
-        module.destroyRecord();
-      });
-
       this.model.destroyRecord();
+
+      modules.forEach(function(module){
+        this.send('removeModule', module);
+      }, this);
+      
       this.transitionToRoute('index');
     },
-    
+
     removeModule(module) {
-      console.log('--- patchController for '+this.model.id+' removing module '+module.id);
+      //destroy all ports, remove from patch, save patch, destroy module
+      console.log('--- patchController destroying ports on module '+module.id);
 
       module.get('ports').forEach(function(port) {
         port.destroyRecord();
       });
+        
+      console.log('--- patchController removing module '+module.id);
 
       this.model.get('modules').removeObject(module);
       this.model.save();
+
+      console.log('--- patchController destroying module '+module.id);
+
       module.destroyRecord();
+
     },
 
     addModule(type) {
@@ -65,6 +71,9 @@ export default Ember.Controller.extend({
 
       module.save();
       this.model.save();
+
+      console.log('--- patchController saved module '+module.id+' to patch '+this.model.id);
+      
     },
 
     addConnection(sourceModule, sourcePortName, destModule, destPortName) {
@@ -72,12 +81,14 @@ export default Ember.Controller.extend({
     },
 
     selectModulePort(module, port) {
-      console.log('--- patchController selecting module '+module.get('type')+' port '+port.get('name'));
+      console.log('--- patchController selecting module '+module.get('type')+' port '+port.get('label'));
 
-      if(port.portType === 'source') {
+      let direction = port.get('direction');
+
+      if(direction === 'source') {
         this.set('sourceModule', module);
         this.set('sourcePort', port);
-      } else if(port.portType === 'dest') {
+      } else if(direction === 'destination') {
         this.set('destModule', module);
         this.set('destPort', port);
       }

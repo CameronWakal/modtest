@@ -1,5 +1,10 @@
-a clock module of type {{module.type}}
+a clock module of type {{model.type}}
 with ports:
-{{port-component signalType='trigger' portType='source' name='Trigger Out' selectPort=attrs.selectModulePort}}
-{{port-component signalType='signal' portType='dest' name='Signal Out' selectPort=attrs.selectModulePort}}
-<button {{action 'removeSelf'}}>Remove Module</button>
+
+{{#each model.ports as |port|}}
+{{port-component  signal=port.signal 
+                  direction=port.direction 
+                  label=port.label 
+                  select=(action 'selectPort' port) }}
+{{/each}}
+<button {{action 'remove'}}>Remove Module</button>

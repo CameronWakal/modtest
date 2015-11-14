@@ -3,13 +3,17 @@
 <button {{action 'addModule' 'module-clock'}}>Add Clock Module</button>
 
 <h5>Connect Modules</h5>
-<p>Source: {{sourceModule.type}} {{sourcePort.name}}</p>
-<p>Dest: {{destModule.type}} {{destPort.name}}</p>
+<p>Source: {{sourceModule.type}} {{sourcePort.label}}</p>
+<p>Dest: {{destModule.type}} {{destPort.label}}</p>
 
 <ul class="modules-list">
   {{#each model.modules as |module|}}
     <li>
-        {{component module.type model=module removeModule='removeModule' selectModulePort=(action 'selectModulePort' module)}}
+        {{component   module.type 
+                      model=module 
+                      selectPort=(action 'selectModulePort' module) 
+                      remove=(action 'removeModule' module)
+        }}
     </li>
   {{/each}}
 </ul>
