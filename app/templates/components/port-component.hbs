@@ -1,1 +1,2 @@
-Port label: {{label}} direction: {{direction}} signal: {{signal}}
+<span class='port-component-label'>{{model.label}}</span>
+<span class='port-component-signal'>{{if model.isEvent 'E' 'S'}}</span><span class='port-component-direction'>{{if model.isSource 'O' 'I'}}</span>

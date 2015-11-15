@@ -2,9 +2,9 @@
 <button {{action 'addModule' 'module-generic'}}>Add Module</button>
 <button {{action 'addModule' 'module-clock'}}>Add Clock Module</button>
 
-<h5>Connect Modules</h5>
 <p>Source: {{sourceModule.type}} {{sourcePort.label}}</p>
 <p>Dest: {{destModule.type}} {{destPort.label}}</p>
+<button {{action 'addConnection' sourcePort destPort}}>Add Connection</button>
 
 <ul class="modules-list">
   {{#each model.modules as |module|}}

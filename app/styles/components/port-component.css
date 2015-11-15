@@ -1,0 +1,11 @@
+.port-component {
+  border: 1px solid #ddd;
+  display: inline-block;
+  margin: 0 0.5rem 0.5rem 0;
+  padding: 0.25rem 0.5rem;
+  color: #bbb;
+}
+.port-component.connected {
+  color: #000;
+  border-color: #000;
+}

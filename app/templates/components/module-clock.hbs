@@ -1,10 +1,6 @@
 a clock module of type {{model.type}}
 with ports:
 
-{{#each model.ports as |port|}}
-{{port-component  signal=port.signal 
-                  direction=port.direction 
-                  label=port.label 
-                  select=(action 'selectPort' port) }}
-{{/each}}
+{{#each model.ports as |port|}}{{port-component  model=port 
+                  select=(action 'selectPort' port) }}{{/each}}
 <button {{action 'remove'}}>Remove Module</button>
