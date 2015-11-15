@@ -7,6 +7,37 @@ export default Ember.Controller.extend({
   destModule: null,
   destPort: null,
 
+  portTemplates: 
+  [
+    { module:'module-clock',
+      ports:
+      [ 
+        { label:'trig',
+          signal:'event',
+          direction:'source'
+        },
+        { label:'tempo',
+          signal:'value',
+          direction:'destination'
+        }
+      ]
+    },
+    {
+      module:'module-generic',
+      ports:
+      [ 
+        { label:'in',
+          signal:'event',
+          direction:'destination'
+        },
+        { label:'thru',
+          signal:'event',
+          direction:'source'
+        }
+      ]
+    }
+  ],
+
   actions: {
     
     removeCurrentPatch() {
@@ -14,10 +45,12 @@ export default Ember.Controller.extend({
       console.log('--- patchController removing patch '+this.model.id);
 
       let modules = this.model.get('modules');
+      let modulesList = modules.toArray();
 
       this.model.destroyRecord();
 
-      modules.forEach(function(module){
+      modulesList.forEach(function(module){
+        console.log('forEach '+module);
         this.send('removeModule', module);
       }, this);
       
@@ -46,28 +79,17 @@ export default Ember.Controller.extend({
     addModule(type) {
       let module = this.store.createRecord('module', {patch:this.model, type:type});
 
-      if(type === 'module-clock') {
-      //create ports on module model. How to save these as templates?
+      let portTemplate = this.portTemplates.findBy('module', type);
 
-        let port = this.store.createRecord('port', {  signal:'event',
-                                                      direction:'source',
-                                                      label:'trig',
+      portTemplate.ports.forEach(function(template){
+        let port = this.store.createRecord('port', {  signal:template.signal,
+                                                      direction:template.direction,
+                                                      label:template.label,
                                                       module:module
         });
         port.save();
         module.get('ports').pushObject(port);
-
-        port = this.store.createRecord('port', {  signal:'value',
-                                                      direction:'destination',
-                                                      label:'tempo',
-                                                      module:module
-        });
-        port.save();
-        module.get('ports').pushObject(port);
-
-      } else if (type === 'generic-module') {
-        //no ports
-      }
+      }, this);
 
       module.save();
       this.model.save();
