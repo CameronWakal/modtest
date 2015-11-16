@@ -1,8 +1,10 @@
-<h1>Patches</h1>
-<button {{action 'new'}}>Add</button><button {{action 'removeCurrentPatch'}}>Remove</button>
-<ul class="patches-list">
-  {{#each model as |patch index|}}<li>{{#link-to 'patch' patch}}
-        {{index}}
-      {{/link-to}}</li>{{/each}}
-</ul>
+<header class="app-header">
+  <h1>Patches</h1>
+  <ul class="patches-list">
+    {{#each model as |patch index|}}<li>{{#link-to 'patch' patch}}
+          {{index}}
+        {{/link-to}}</li>{{/each}}
+  </ul>
+  <button {{action 'new'}}>Add</button><button {{action 'removeCurrentPatch'}}>Remove</button>
+</header>
 {{outlet}}
