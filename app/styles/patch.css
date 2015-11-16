@@ -1,0 +1,13 @@
+.patch {
+  border-top: 1px solid #ddd;
+  padding-top: 1rem;
+}
+
+.patch .modules-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.patch .modules-list li {
+  display: inline;
+}

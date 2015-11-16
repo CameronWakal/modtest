@@ -1,0 +1,11 @@
+.module {
+  border: 1px solid #ddd;
+  display: inline-block;
+  margin: 0 0.5rem 0.5rem 0;
+  padding: 0.5rem 0 0 0.5rem;
+  color: #bbb;
+}
+
+.module h3 {
+  color: #000;
+}

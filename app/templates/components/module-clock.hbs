@@ -1,6 +1,4 @@
-a clock module of type {{model.type}}
-with ports:
+<h3>Clock</h3>
 
 {{#each model.ports as |port|}}{{port-component  model=port 
-                  select=(action 'selectPort' port) }}{{/each}}
-<button {{action 'remove'}}>Remove Module</button>
+                  select=(action 'selectPort' port) }}{{/each}}<button {{action 'remove'}}>X</button>

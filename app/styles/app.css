@@ -1,12 +1,31 @@
 @import 'components/port-component.css';
+@import 'components/module.css';
+@import 'patch.css';
 
-body {
+html {
   font-family: Monospace;
+  font-size: 12px;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem 0;
+  padding: 0;
+}
+
+button {
+  height: 1.75rem;
+  font-family: Monospace;
+  font-size: 12px;
+  display: inline-block;
+  margin: 0 0.5rem 0.5rem 0;
+  padding: 0.25rem 0.5rem;
 }
 
 .patches-list {
   list-style: none;
   padding: 0;
+  font-weight: bold;
 }
 
 .patches-list li {
@@ -14,10 +33,14 @@ body {
 }
 
 .patches-list a {
-  color: gray;
-  text-decoration: none;
+  border: 1px solid #ddd;
+  display: inline-block;
+  margin: 0 0.5rem 0.5rem 0;
+  padding: 0.25rem 0.5rem;
+  color: #bbb;
 }
 
 .patches-list a.active {
-  color: red;
+  color: #000;
+  border-color: #000;
 }
