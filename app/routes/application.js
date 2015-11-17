@@ -4,6 +4,15 @@ export default Ember.Route.extend({
   model() {
     return this.store.findAll('patch');
   },
+  
+  midi: Ember.inject.service(),
+
+  init() {
+    //initialize midi service
+    this.get('midi').start();
+    this._super.apply(this, arguments);
+  },
+
   actions: {
     new() {
       let patch = this.store.createRecord('patch', {name: 'my cool patch'});
