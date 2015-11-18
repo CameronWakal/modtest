@@ -6,10 +6,12 @@ export default Ember.Route.extend({
   },
   
   midi: Ember.inject.service(),
+  patchRunner: Ember.inject.service(),
 
   init() {
     //initialize midi service
-    this.get('midi').start();
+    this.get('midi').setup();
+    this.get('patchRunner').setup();
     this._super.apply(this, arguments);
   },
 

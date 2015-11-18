@@ -22,6 +22,15 @@ export default Ember.Controller.extend({
         }
       ]
     },
+    { module:'module-out',
+      ports:
+      [ 
+        { label:'trig',
+          signal:'event',
+          direction:'destination'
+        }
+      ]
+    },
     {
       module:'module-generic',
       ports:

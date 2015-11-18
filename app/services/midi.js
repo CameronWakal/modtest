@@ -4,7 +4,7 @@ export default Ember.Service.extend({
 
   midi: null,
 
-  start() {
+  setup() {
     // request MIDI access
     if(navigator.requestMIDIAccess){
         navigator.requestMIDIAccess({sysex: false}).then(this.onMIDISuccess.bind(this), this.onMIDIFailure.bind(this));

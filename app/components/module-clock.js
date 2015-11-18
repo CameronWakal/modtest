@@ -1,6 +1,10 @@
 import ModuleGenericComponent from './module-generic';
 
+//todo: computed properties, getters and setters to be more emberlike
+
 export default ModuleGenericComponent.extend({
+
+  patchRunner: Ember.inject.service(),
 
   resolution: 4, // ticks per beat
   tempo: null, // beats per minute
@@ -12,8 +16,20 @@ export default ModuleGenericComponent.extend({
 
   init() {
     this.setTempo(120);
-    //this.start();
     this._super.apply(this, arguments);
+  },
+
+  actions: {
+    start() {
+      this.set('startTime', window.performance.now());
+      this.set('isStarted', true);
+      this.set('tickCount', 0);
+      this.sendTrigger();
+    },
+
+    stop() {
+      this.set('isStarted', false);
+    },
   },
 
   sendTrigger() {
@@ -36,24 +52,14 @@ export default ModuleGenericComponent.extend({
                                                     //so the callbacks have some wiggle room
                                                     //without affecting the note timing.
 
-    /* send trigger to outputs 
-    this.outputs.forEach(function(item) {
-      item.onTrigger.call(item, this, outputTime);
-    });
-    */
-
-    console.log('sendTrigger at '+outputTime);
-  },
-
-  start() {
-    this.startTime = window.performance.now();
-    this.isStarted = true;
-    this.tickCount = 0;
-    this.sendTrigger();
-  },
-
-  stop() {
-    this.isStarted = false;
+    //send event to output ports
+    let ports = this.model.get('eventOutputPorts');
+    ports.forEach(function(port){
+      let destinations = port.get('destinations');
+      destinations.forEach(function(port){
+        this.get('patchRunner').sendEvent({'outputTime':outputTime}, port);
+      }, this);
+    }, this);
   },
 
   setTempo(aTempo) {

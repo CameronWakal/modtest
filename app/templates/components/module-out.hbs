@@ -1,10 +1,4 @@
-<h3>Clock</h3>
-
-{{#if isStarted}}
-  <button {{action 'stop'}}>Stop</button>
-{{else}}
-  <button {{action 'start'}}>Start</button>
-{{/if}}
+<h3>Out</h3>
 
 {{#each model.ports as |port|}}{{port-component  model=port 
                   select=(action 'selectPort' port) }}{{/each}}<button {{action 'remove'}}>X</button>
