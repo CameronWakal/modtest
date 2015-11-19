@@ -1,4 +1,5 @@
 import ModuleGenericComponent from './module-generic';
+import Ember from 'ember';
 
 //todo: computed properties, getters and setters to be more emberlike
 
@@ -6,7 +7,7 @@ export default ModuleGenericComponent.extend({
 
   patchRunner: Ember.inject.service(),
 
-  resolution: 4, // ticks per beat
+  resolution: 8, // ticks per beat
   tempo: null, // beats per minute
   tickDuration: null, // milliseconds per tick
   startTime: null,

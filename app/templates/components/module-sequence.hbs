@@ -1,4 +1,4 @@
-<h3>{{model.type}}</h3>
+<h3>Sequence</h3>
 
 {{#each model.ports as |port|}}{{port-component  model=port 
                   select=(action 'selectPort' port) }}{{/each}}<button {{action 'remove'}}>X</button>

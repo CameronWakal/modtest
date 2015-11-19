@@ -9,7 +9,7 @@ export default Ember.Controller.extend({
 
   portTemplates: 
   [
-    { module:'module-clock',
+    { module:'clock',
       ports:
       [ 
         { label:'trig',
@@ -22,7 +22,7 @@ export default Ember.Controller.extend({
         }
       ]
     },
-    { module:'module-out',
+    { module:'out',
       ports:
       [ 
         { label:'trig',
@@ -32,7 +32,7 @@ export default Ember.Controller.extend({
       ]
     },
     {
-      module:'module-generic',
+      module:'sequence',
       ports:
       [ 
         { label:'in',
@@ -81,12 +81,21 @@ export default Ember.Controller.extend({
 
       console.log('--- patchController destroying module '+module.id);
 
+      //destroy module kernel
+      let type = module.get('type');
+      let moduleInternal = module.get(type);
+      moduleInternal.then(function(moduleInternal){
+        moduleInternal.destroyRecord();
+      });
+
       module.destroyRecord();
 
     },
 
     addModule(type) {
-      let module = this.store.createRecord('module', {patch:this.model, type:type});
+      let module = this.store.createRecord('module', {patch:this.model, type:type, componentType:'module-'+type});
+      //the kernel of the module to hold the module-type-specific state
+      let moduleInternal = this.store.createRecord('module-'+type, {module:module});
 
       let portTemplate = this.portTemplates.findBy('module', type);
 
@@ -101,6 +110,7 @@ export default Ember.Controller.extend({
       }, this);
 
       module.save();
+      moduleInternal.save();
       this.model.save();
 
       console.log('--- patchController saved module '+module.id+' to patch '+this.model.id);

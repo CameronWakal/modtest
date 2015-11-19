@@ -1,12 +1,12 @@
 <div class="patch">
-  <button {{action 'addModule' 'module-generic'}}>Add Module</button><button {{action 'addModule' 'module-clock'}}>Add Clock Module</button><button {{action 'addModule' 'module-out'}}>Add Out Module</button>
+  <button {{action 'addModule' 'clock'}}>Add Clock Module</button><button {{action 'addModule' 'out'}}>Add Out Module</button><button {{action 'addModule' 'sequence'}}>Add Sequence Module</button>
 
   <p>Source: {{sourceModule.type}} {{sourcePort.label}}</p>
   <p>Dest: {{destModule.type}} {{destPort.label}}</p>
   <button {{action 'addConnection' sourcePort destPort}}>Connect</button>
 
   <ul class="modules-list">
-    {{#each model.modules as |module|}}<li>{{component  module.type 
+    {{#each model.modules as |module|}}<li>{{component  module.componentType 
                                                         model=module 
                                                         selectPort=(action 'selectModulePort' module) 
                                                         remove=(action 'removeModule' module)

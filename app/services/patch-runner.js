@@ -13,7 +13,7 @@ export default Ember.Service.extend({
     let moduleType = module.get('type');
 
     switch(moduleType) {
-      case 'module-out':
+      case 'out':
         this.moduleOutReceiveEvent(event, targetPort);
         break;
       default:
