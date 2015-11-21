@@ -54,7 +54,7 @@ export default ModuleGenericComponent.extend({
                                                     //without affecting the note timing.
 
     //send event to output ports
-    let ports = this.model.get('eventOutputPorts');
+    let ports = this.module.get('eventOutputPorts');
     ports.forEach(function(port){
       let destinations = port.get('destinations');
       destinations.forEach(function(port){

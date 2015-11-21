@@ -84,31 +84,58 @@ export default Ember.Controller.extend({
       //destroy module kernel
       let type = module.get('type');
       let moduleInternal = module.get(type);
-      moduleInternal.then(function(moduleInternal){
+      if(moduleInternal) {
+
+        //module-type specific destruction
+        switch(type) {
+          case 'sequence':
+            moduleInternal.get('steps').forEach(function(step){
+              step.destroyRecord();
+            });
+          break;
+          default:
+        }
+
         moduleInternal.destroyRecord();
-      });
+      }
 
       module.destroyRecord();
 
     },
 
     addModule(type) {
+      //module model contains info on ports and connections.
+      //internal module model contains data specific to the module type.
       let module = this.store.createRecord('module', {patch:this.model, type:type, componentType:'module-'+type});
-      //the kernel of the module to hold the module-type-specific state
       let moduleInternal = this.store.createRecord('module-'+type, {module:module});
-
+      
+      //create port models and attach to module, based on configuration presets 
       let portTemplate = this.portTemplates.findBy('module', type);
-
       portTemplate.ports.forEach(function(template){
-        let port = this.store.createRecord('port', {  signal:template.signal,
-                                                      direction:template.direction,
-                                                      label:template.label,
-                                                      module:module
+        let port = this.store.createRecord('port', {
+          signal:template.signal,
+          direction:template.direction,
+          label:template.label,
+          module:module
         });
         port.save();
         module.get('ports').pushObject(port);
       }, this);
 
+      //module-type specific setup
+      switch(type) {
+        case 'sequence':
+          let stepCount = moduleInternal.get('length');
+          var step;
+          for(var i = 0; i < stepCount; i++) {
+            step = this.store.createRecord('module-sequence-step', {sequence:moduleInternal});
+            step.save();
+          }
+        break;
+        default:
+      }
+
+      //save module and internal module
       module.save();
       moduleInternal.save();
       this.model.save();

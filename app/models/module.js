@@ -9,9 +9,9 @@ export default DS.Model.extend({
 
   //state data for specific module types.
   //only one will be defined, corresponding to the module type.
-  sequence: DS.belongsTo('moduleSequence'),
-  out: DS.belongsTo('moduleOut'),
-  clock: DS.belongsTo('moduleClock'),
+  sequence: DS.belongsTo('moduleSequence', {async:false}),
+  out: DS.belongsTo('moduleOut', {async:false}),
+  clock: DS.belongsTo('moduleClock', {async:false}),
 
   eventOutputPorts: Ember.computed('ports.@each.isEvent', 'ports.@each.isSource', function(){
     let ports = this.get('ports');

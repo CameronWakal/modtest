@@ -1,5 +1,6 @@
 @import 'components/port-component.css';
 @import 'components/module.css';
+@import 'components/module-sequence-step.css';
 @import 'patch.css';
 
 html {

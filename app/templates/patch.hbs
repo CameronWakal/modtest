@@ -7,7 +7,7 @@
 
   <ul class="modules-list">
     {{#each model.modules as |module|}}<li>{{component  module.componentType 
-                                                        model=module 
+                                                        module=module 
                                                         selectPort=(action 'selectModulePort' module) 
                                                         remove=(action 'removeModule' module)
           }}</li>{{/each}}

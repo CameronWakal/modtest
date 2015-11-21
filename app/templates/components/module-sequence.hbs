@@ -1,4 +1,8 @@
 <h3>Sequence</h3>
 
-{{#each model.ports as |port|}}{{port-component  model=port 
+<div class="module-sequence-steps">
+{{#each module.sequence.steps as |step|}}{{module-sequence-step step=step}}{{/each}}
+</div>
+
+{{#each module.ports as |port|}}{{port-component  port=port 
                   select=(action 'selectPort' port) }}{{/each}}<button {{action 'remove'}}>X</button>
