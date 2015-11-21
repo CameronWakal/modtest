@@ -28,7 +28,7 @@ export default Ember.Service.extend({
 
       }
       else {
-          log("Could not send note, midiAccess not initialized.");
+          console.log("Could not send note, midiAccess not initialized.");
       }
   },
 
@@ -52,12 +52,13 @@ export default Ember.Service.extend({
   },
 
   onMIDIMessage:function (event) {
-      data = event.data,
-      cmd = data[0] >> 4,
-      channel = data[0] & 0xf,
-      type = data[0] & 0xf0, // channel agnostic message type. Thanks, Phil Burk.
-      note = data[1],
-      velocity = data[2];
+      let data = event.data;
+      let cmd = data[0] >> 4;
+      let channel = data[0] & 0xf;
+      let type = data[0] & 0xf0; // channel agnostic message type. Thanks, Phil Burk.
+      let note = data[1];
+      let velocity = data[2];
+      
       // with pressure and tilt off
       // note off: 128, cmd: 8 
       // note on: 144, cmd: 9
@@ -74,13 +75,13 @@ export default Ember.Service.extend({
               break;
       }
       
-      log('data in', data, 'cmd', cmd, 'channel', channel);
-      this.logger(keyData, 'key data', data);
+      console.log('data in', data, 'cmd', cmd, 'channel', channel);
+      //this.logger(keyData, 'key data', data);
   },
 
   onStateChange:function (event) {
     var port = event.port, state = port.state, name = port.name, type = port.type;
-    console.log(state+': '+name+", port:", port);
+    console.log(state+': '+name+", port:", port, ' type:', type);
 
     this.showMIDIPorts();
   },
@@ -95,27 +96,53 @@ export default Ember.Service.extend({
       outputs = this.midi.outputs,
       string = '';
 
-    if(inputs.size) string += 'MIDI Inputs:\n';
+    if(inputs.size) {
+      string += 'MIDI Inputs:\n';
+    }
     inputs.forEach(function(port){
-      if(port.name) string += 'Name: '+port.name;
-      if(port.connection) string += ', Connection: '+port.connection;
-      if(port.state) string += ', State: '+port.state;
-      if(port.manufacturer) string += ', Manufacturer: '+port.manufacturer;
-      if(port.version) string += ', Version: '+port.version;
+      if(port.name) {
+        string += 'Name: '+port.name;
+      }
+      if(port.connection) {
+        string += ', Connection: '+port.connection;
+      }
+      if(port.state) {
+        string += ', State: '+port.state;
+      }
+      if(port.manufacturer) {
+        string += ', Manufacturer: '+port.manufacturer;
+      }
+      if(port.version) {
+        string += ', Version: '+port.version;
+      }
       string += '\n';
     });
 
-    if(outputs.size) string += 'MIDI Outputs:\n';
+    if(outputs.size) {
+      string += 'MIDI Outputs:\n';
+    }
     outputs.forEach(function(port){
-      if(port.name) string += 'Name: '+port.name;
-      if(port.connection) string += ', Connection: '+port.connection;
-      if(port.state) string += ', State: '+port.state;
-      if(port.manufacturer) string += ', Manufacturer: '+port.manufacturer;
-      if(port.version) string += ', Version: '+port.version;
+      if(port.name) {
+        string += 'Name: '+port.name;
+      }
+      if(port.connection) {
+        string += ', Connection: '+port.connection;
+      }
+      if(port.state) {
+        string += ', State: '+port.state;
+      }
+      if(port.manufacturer) {
+        string += ', Manufacturer: '+port.manufacturer;
+      }
+      if(port.version) {
+        string += ', Version: '+port.version;
+      }
       string += '\n';
     });
 
-    if(string) console.log(string);
+    if(string) {
+      console.log(string);
+    }
 
   }
 

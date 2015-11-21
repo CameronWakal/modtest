@@ -120,8 +120,6 @@ export default Ember.Controller.extend({
     addConnection(sourcePort, destPort) {
       console.log('connecting '+sourcePort+' to '+destPort);
 
-      let self = this;
-
       if(!sourcePort || !destPort) {
         console.log('Select a source and destination port before adding a connection.');
       } else if(sourcePort.get('signal') !== destPort.get('signal')) {
@@ -132,7 +130,6 @@ export default Ember.Controller.extend({
 
         if(currentSource !== null) {
           console.log('removing current source:'+currentSource);
-          //self.send('removeConnection', destPort);
           currentSource.get('destinations').removeObject(destPort);
           currentSource.save();
         }
