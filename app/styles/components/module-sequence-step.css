@@ -8,3 +8,7 @@
   color: #bbb;
   vertical-align: bottom;
 }
+
+.module-sequence-step.selected {
+  box-shadow: inset 0px 0px 0px 1px #ddd;
+}

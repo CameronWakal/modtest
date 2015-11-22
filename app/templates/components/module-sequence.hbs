@@ -1,8 +1,8 @@
 <h3>Sequence</h3>
 
 <div class="module-sequence-steps">
-{{#each module.sequence.steps as |step|}}{{module-sequence-step step=step}}{{/each}}
+{{#each module.sequence.steps as |step|}}{{module-sequence-step step=step select=(action 'selectStep' step)}}{{/each}}
 </div>
 
-{{#each module.ports as |port|}}{{port-component  port=port 
+{{#each module.ports as |port|}}{{port-component port=port 
                   select=(action 'selectPort' port) }}{{/each}}<button {{action 'remove'}}>X</button>
