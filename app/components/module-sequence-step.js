@@ -1,15 +1,12 @@
 import Ember from 'ember';
 
-export default Ember.Component.extend({
+export default Ember.TextField.extend({
 
   classNames: ['module-sequence-step'],
-  classNameBindings: ['isSelected:selected'],
 
-  isSelected: Ember.computed.alias('step.isSelected'),
-
-  click() {
-    console.log('------ sequence step component sending select action');
-    this.attrs.select();
+  onEvent: 'focusIn',
+  focusIn() {
+    this.$().select();
   }
 
 });

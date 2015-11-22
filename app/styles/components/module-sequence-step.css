@@ -1,14 +1,22 @@
 .module-sequence-step {
-  border: 1px solid #ddd;
   display: inline-block;
-  margin: 0 0.5rem 0.5rem 0;
-  padding: 0.25rem 0.25rem;
-  height: 1rem;
-  width: 1rem;
-  color: #bbb;
   vertical-align: bottom;
+  border: 1px solid #ddd;
+  margin: 0 0.5rem 0.5rem 0;
+  padding: 0.25rem 0;
+  height: 1rem;
+  width: 1.5rem;
+  color: #bbb;
+  text-align: center;
 }
 
-.module-sequence-step.selected {
-  box-shadow: inset 0px 0px 0px 1px #ddd;
+.module-sequence-step:focus {
+  outline: none;
+  border-color: #000;
+  color: transparent;
+  text-shadow: 0 0 0 #000;
+}
+
+.module-sequence-step::selection {
+  background-color: transparent;
 }
