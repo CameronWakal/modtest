@@ -3,7 +3,7 @@
 @import 'components/module-sequence-step.css';
 @import 'patch.css';
 
-html {
+html, input, button {
   font-family: Menlo, Monospace;
   font-size: 12px;
   -webkit-font-smoothing: antialiased;
@@ -17,12 +17,9 @@ h1,h2,h3,h4,h5,h6 {
 
 button {
   height: 1.75rem;
-  font-family: Menlo, Monospace;
-  font-size: 12px;
   display: inline-block;
   margin: 0 0.5rem 0.5rem 0;
   padding: 0.25rem 0.5rem;
-  -webkit-font-smoothing: antialiased;
 }
 
 .app-header {

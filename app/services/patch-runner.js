@@ -14,14 +14,43 @@ export default Ember.Service.extend({
 
     switch(moduleType) {
       case 'out':
-        this.moduleOutReceiveEvent(event, targetPort);
+        this.moduleOutReceiveEvent(event, module, targetPort);
+        break;
+      case 'sequence':
+        this.moduleSequenceReceiveEvent(event, module, targetPort);
         break;
       default:
         console.log('Error: patch runner did not recognize module type '+moduleType);
     }
   },
 
-  moduleOutReceiveEvent(event, targetPort) {
+  moduleClockReceiveEvent(event, mClock, targetPort) {
+
+  },
+
+  moduleSequenceReceiveEvent(event, module, targetPort) {
+
+    let portLabel = targetPort.get('label');
+    let sequence = module.get('sequence');
+    let currentStep = sequence.get('currentStep');
+
+    switch(portLabel) {
+      case 'inc step':
+        if(currentStep === null) {
+          sequence.set('currentStep', 0);
+        } else if ( currentStep >= sequence.get('length')-1 ) {
+          sequence.set('currentStep', 0);
+        } else {
+          sequence.set('currentStep', currentStep+1);
+        }
+      break;
+      default:
+        console.log('Error: patch runner no action found for port labelled '+portLabel);
+    }
+    
+  },
+
+  moduleOutReceiveEvent(event, mOut, targetPort) {
     //the clock adds some padding ms to the event timestamps to allow for callback latency.
     //send an alert if the callback latency is more than the allowed padding.
     let netLatency = window.performance.now()-event.outputTime;
@@ -30,6 +59,6 @@ export default Ember.Service.extend({
     }
 
     this.get('midi').sendNote(80,127,200,event.outputTime);
-  }
+  },
 
 });

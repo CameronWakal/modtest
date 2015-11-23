@@ -15,10 +15,6 @@ export default Ember.Controller.extend({
         { label:'trig',
           signal:'event',
           direction:'source'
-        },
-        { label:'tempo',
-          signal:'value',
-          direction:'destination'
         }
       ]
     },
@@ -28,6 +24,10 @@ export default Ember.Controller.extend({
         { label:'trig',
           signal:'event',
           direction:'destination'
+        },
+        { label:'note',
+          signal:'value',
+          direction:'destination'
         }
       ]
     },
@@ -35,11 +35,15 @@ export default Ember.Controller.extend({
       module:'sequence',
       ports:
       [ 
-        { label:'in',
+        { label:'inc step',
           signal:'event',
           direction:'destination'
         },
-        { label:'thru',
+        { label:'value',
+          signal:'value',
+          direction:'source'
+        },
+        { label:'trig',
           signal:'event',
           direction:'source'
         }
@@ -128,7 +132,7 @@ export default Ember.Controller.extend({
           let stepCount = moduleInternal.get('length');
           var step;
           for(var i = 0; i < stepCount; i++) {
-            step = this.store.createRecord('module-sequence-step', {sequence:moduleInternal});
+            step = this.store.createRecord('module-sequence-step', {sequence:moduleInternal, index:i});
             step.save();
           }
         break;

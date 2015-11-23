@@ -20,3 +20,7 @@
 .module-sequence-step::selection {
   background-color: transparent;
 }
+
+.module-sequence-step.current {
+  border-color: #000;
+}
