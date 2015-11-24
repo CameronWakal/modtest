@@ -23,4 +23,5 @@
 
 .module-sequence-step.current {
   border-color: #000;
+  color: #000;
 }

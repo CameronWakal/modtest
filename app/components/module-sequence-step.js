@@ -8,6 +8,11 @@ export default Ember.TextField.extend({
   onEvent: 'focusIn',
   focusIn() {
     this.$().select();
+  },
+
+  onEvent: 'focusOut',
+  focusOut() {
+    this.get('step').save();
   }
 
 });

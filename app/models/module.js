@@ -16,6 +16,22 @@ export default DS.Model.extend({
   eventOutputPorts: Ember.computed('ports.@each.isEvent', 'ports.@each.isSource', function(){
     let ports = this.get('ports');
     return ports.filterBy('isEvent', true).filterBy('isSource', true);
+  }),
+
+  moduleKernel: Ember.computed('sequence' ,'out', 'clock', function(){
+    let kernel = this.get('sequence');
+    if(kernel) {
+      return kernel;
+    }
+    kernel = this.get('out');
+    if(kernel) {
+      return kernel;
+    }
+    kernel = this.get('clock');
+    if(kernel) {
+      return kernel;
+    }
+
   })
 
 });

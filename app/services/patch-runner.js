@@ -50,7 +50,7 @@ export default Ember.Service.extend({
     
   },
 
-  moduleOutReceiveEvent(event, mOut, targetPort) {
+  moduleOutReceiveEvent(event, module, targetPort) {
     //the clock adds some padding ms to the event timestamps to allow for callback latency.
     //send an alert if the callback latency is more than the allowed padding.
     let netLatency = window.performance.now()-event.outputTime;
@@ -58,7 +58,32 @@ export default Ember.Service.extend({
         console.log('Note event is late by '+netLatency);
     }
 
-    this.get('midi').sendNote(80,127,200,event.outputTime);
+    //check the connection of the 'note' port for the value of the note to play.
+    let notePort = module.get('ports').findBy('label', 'note');
+    let noteValue = this.readPort(notePort);
+    
+    if(noteValue) {
+      this.get('midi').sendNote(noteValue,127,200,event.outputTime);
+    }
+
   },
+
+  //currently only works for reading from module type sequence
+  //also should check that the passed in port is of type signal/destination
+  //and check for port/kernel mismatch
+  readPort(port) {
+    let sourcePort = port.get('source');
+    var value;
+
+    if(sourcePort) {
+      let sourceModule = sourcePort.get('module');
+      let sourceModuleKernel = sourceModule.get('moduleKernel');
+      if(sourceModuleKernel) {
+        value = sourceModuleKernel.get(sourcePort.get('label'));
+      }
+    }
+
+    return value;
+  }
 
 });
