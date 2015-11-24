@@ -85,22 +85,16 @@ export default Ember.Controller.extend({
 
       console.log('--- patchController destroying module '+module.id);
 
-      //destroy module kernel
+      //destroy module members
       let type = module.get('type');
-      let moduleInternal = module.get(type);
-      if(moduleInternal) {
-
-        //module-type specific destruction
-        switch(type) {
-          case 'sequence':
-            moduleInternal.get('steps').forEach(function(step){
-              step.destroyRecord();
-            });
-          break;
-          default:
-        }
-
-        moduleInternal.destroyRecord();
+      //module-type specific destruction
+      switch(type) {
+        case 'sequence':
+          module.get('steps').forEach(function(step){
+            step.destroyRecord();
+          });
+        break;
+        default:
       }
 
       module.destroyRecord();
@@ -110,8 +104,7 @@ export default Ember.Controller.extend({
     addModule(type) {
       //module model contains info on ports and connections.
       //internal module model contains data specific to the module type.
-      let module = this.store.createRecord('module', {patch:this.model, type:type, componentType:'module-'+type});
-      let moduleInternal = this.store.createRecord('module-'+type, {module:module});
+      let module = this.store.createRecord('module-'+type, {patch:this.model, type:type, componentType:'module-'+type});
       
       //create port models and attach to module, based on configuration presets 
       let portTemplate = this.portTemplates.findBy('module', type);
@@ -129,19 +122,18 @@ export default Ember.Controller.extend({
       //module-type specific setup
       switch(type) {
         case 'sequence':
-          let stepCount = moduleInternal.get('length');
+          let stepCount = module.get('length');
           var step;
           for(var i = 0; i < stepCount; i++) {
-            step = this.store.createRecord('module-sequence-step', {sequence:moduleInternal, index:i});
+            step = this.store.createRecord('module-sequence-step', {sequence:module, index:i});
             step.save();
           }
         break;
         default:
       }
 
-      //save module and internal module
+      //save module
       module.save();
-      moduleInternal.save();
       this.model.save();
 
       console.log('--- patchController saved module '+module.id+' to patch '+this.model.id);

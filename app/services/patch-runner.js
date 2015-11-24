@@ -28,10 +28,9 @@ export default Ember.Service.extend({
 
   },
 
-  moduleSequenceReceiveEvent(event, module, targetPort) {
+  moduleSequenceReceiveEvent(event, sequence, targetPort) {
 
     let portLabel = targetPort.get('label');
-    let sequence = module.get('sequence');
     let currentStep = sequence.get('currentStep');
 
     switch(portLabel) {
@@ -68,18 +67,16 @@ export default Ember.Service.extend({
 
   },
 
-  //currently only works for reading from module type sequence
-  //also should check that the passed in port is of type signal/destination
-  //and check for port/kernel mismatch
+  //todo: also should check that the passed in port is of type signal/destination
+  //and check for port/member variable mismatch
   readPort(port) {
     let sourcePort = port.get('source');
     var value;
 
     if(sourcePort) {
       let sourceModule = sourcePort.get('module');
-      let sourceModuleKernel = sourceModule.get('moduleKernel');
-      if(sourceModuleKernel) {
-        value = sourceModuleKernel.get(sourcePort.get('label'));
+      if(sourceModule) {
+        value = sourceModule.get(sourcePort.get('label'));
       }
     }
 
