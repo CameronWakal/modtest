@@ -7,7 +7,7 @@ export default DS.Model.extend({
   label: DS.attr('string'),                               //briefly describing port use
   destinations: DS.hasMany('port', {inverse:'source'}),   //only source ports have destinations
   source: DS.belongsTo('port', {async: false}),                           //only destination ports have a source
-  module: DS.belongsTo('module', {async: false, polymorphic: true}),
+  module: DS.belongsTo('module', {async: false}),
 
   isSource: Ember.computed('direction', function() {
     return this.get('direction') === 'source';
