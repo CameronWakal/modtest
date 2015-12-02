@@ -3,8 +3,7 @@ import Ember from 'ember';
 
 export default DS.Model.extend({
   patch: DS.belongsTo('patch'),
-  ports: DS.hasMany('port', {async:true}),
-  componentType: DS.attr('string'),
+  ports: DS.hasMany('port'),
 
   eventOutputPorts: Ember.computed('ports.@each.isEvent', 'ports.@each.isSource', function(){
     let ports = this.get('ports');

@@ -11,7 +11,7 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
 
   //redefine JSONSerializer methods to support polymorphic hasMany relationship types
   //if the relationship is polymorphic, it will be represented as an array of objects with ids and types
-  
+
   serializeHasMany: function(snapshot, json, relationship) {
     let key = relationship.key;
     let isPolymorphic = relationship.options.polymorphic;
@@ -50,8 +50,6 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
 
     if (this._canSerialize(key)) {
       var belongsTo = snapshot.belongsTo(key);
-
-      console.log(belongsTo);
 
       // if provided, use the mapping provided by `attrs` in
       // the serializer
