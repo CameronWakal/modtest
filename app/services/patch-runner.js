@@ -10,7 +10,8 @@ export default Ember.Service.extend({
   sendEvent(event, targetPort) {
     
     let module = targetPort.get('module');
-    let moduleType = module.get('type');
+    console.log(module);
+    let moduleType = module.modelName;
 
     switch(moduleType) {
       case 'out':

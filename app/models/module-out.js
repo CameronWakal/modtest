@@ -1,7 +1,6 @@
 import DS from 'ember-data';
+import Module from './module';
 
-export default DS.Model.extend({
+export default Module.extend({
   
-  module: DS.belongsTo('module', { inverse: 'out'})
-
 });
