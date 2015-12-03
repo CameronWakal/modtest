@@ -10,13 +10,13 @@ export default Ember.Service.extend({
   sendEvent(event, targetPort) {
     
     let module = targetPort.get('module');
-    let moduleType = module.get('type');
+    let moduleType = module.get('constructor.modelName');
 
     switch(moduleType) {
-      case 'out':
+      case 'module-out':
         this.moduleOutReceiveEvent(event, module, targetPort);
         break;
-      case 'sequence':
+      case 'module-sequence':
         this.moduleSequenceReceiveEvent(event, module, targetPort);
         break;
       default:
@@ -28,10 +28,9 @@ export default Ember.Service.extend({
 
   },
 
-  moduleSequenceReceiveEvent(event, module, targetPort) {
+  moduleSequenceReceiveEvent(event, sequence, targetPort) {
 
     let portLabel = targetPort.get('label');
-    let sequence = module.get('sequence');
     let currentStep = sequence.get('currentStep');
 
     switch(portLabel) {
@@ -61,25 +60,23 @@ export default Ember.Service.extend({
     //check the connection of the 'note' port for the value of the note to play.
     let notePort = module.get('ports').findBy('label', 'note');
     let noteValue = this.readPort(notePort);
-    
+
     if(noteValue) {
       this.get('midi').sendNote(noteValue,127,200,event.outputTime);
     }
 
   },
 
-  //currently only works for reading from module type sequence
-  //also should check that the passed in port is of type signal/destination
-  //and check for port/kernel mismatch
+  //todo: also should check that the passed in port is of type signal/destination
+  //and check for port/member variable mismatch
   readPort(port) {
     let sourcePort = port.get('source');
     var value;
 
     if(sourcePort) {
       let sourceModule = sourcePort.get('module');
-      let sourceModuleKernel = sourceModule.get('moduleKernel');
-      if(sourceModuleKernel) {
-        value = sourceModuleKernel.get(sourcePort.get('label'));
+      if(sourceModule) {
+        value = sourceModule.get(sourcePort.get('label'));
       }
     }
 

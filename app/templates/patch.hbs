@@ -6,10 +6,11 @@
   <button {{action 'addConnection' sourcePort destPort}}>Connect</button>
 
   <ul class="modules-list">
-    {{#each model.modules as |module|}}<li>{{component  module.componentType 
+    {{#each model.modules as |module|}}<li>{{component  module.constructor.modelName
                                                         module=module 
                                                         selectPort=(action 'selectModulePort' module) 
                                                         remove=(action 'removeModule' module)
           }}</li>{{/each}}
   </ul>
+
 </div>

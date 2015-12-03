@@ -1,7 +1,19 @@
 import DS from 'ember-data';
+import Module from './module';
 
-export default DS.Model.extend({
+export default Module.extend({
   
-  module: DS.belongsTo('module', { inverse: 'clock'})
+  didCreate() {
+    //create ports
+    this.addPort('event', 'source', 'trig');
+
+    this.save();
+  },
+
+  destroyRecord(options) {
+    this.destroyPorts();
+    this.deleteRecord();
+    return this.save(options);
+  },
 
 });
