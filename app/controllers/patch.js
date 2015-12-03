@@ -85,18 +85,6 @@ export default Ember.Controller.extend({
 
       console.log('--- patchController destroying module '+module.id);
 
-      //destroy module members
-      let type = module.get('constructor.modelName');
-      //module-type specific destruction
-      switch(type) {
-        case 'module-sequence':
-          module.get('steps').forEach(function(step){
-            step.destroyRecord();
-          });
-        break;
-        default:
-      }
-
       module.destroyRecord();
 
     },
@@ -120,20 +108,6 @@ export default Ember.Controller.extend({
         port.save();
         module.get('ports').pushObject(port);
       }, this);
-
-
-      //module-type specific setup
-      switch(type) {
-        case 'sequence':
-          let stepCount = module.get('length');
-          var step;
-          for(var i = 0; i < stepCount; i++) {
-            step = this.store.createRecord('module-sequence-step', {sequence:module, index:i});
-            step.save();
-          }
-        break;
-        default:
-      }
 
       //save module
       module.save();

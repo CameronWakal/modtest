@@ -15,4 +15,33 @@ export default Module.extend({
     return step.get('value');
   }),
 
+  didCreate() {
+    console.log('sequence didCreate');
+
+    let stepCount = this.get('length');
+    var step;
+    for(var i = 0; i < stepCount; i++) {
+      step = this.store.createRecord('module-sequence-step', {sequence:this, index:i});
+      step.save();
+    }
+    this.save();
+
+  },
+
+  destroyRecord(options) {
+    console.log('sequence destroy');
+
+    this.get('steps').forEach(function(step){
+      step.destroyRecord();
+    });
+    this.deleteRecord();
+    return this.save(options);
+  
+  },
+
+  deleteRecord() {
+    console.log('Warning: deleting a sequence will not delete its member models. Use destroy instead.')
+    this._internalModel.deleteRecord();
+  },
+
 });

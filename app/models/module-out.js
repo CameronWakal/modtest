@@ -2,5 +2,5 @@ import DS from 'ember-data';
 import Module from './module';
 
 export default Module.extend({
-  
+
 });
