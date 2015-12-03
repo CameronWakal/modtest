@@ -104,10 +104,11 @@ export default Ember.Controller.extend({
     addModule(type) {
       //module model contains info on ports and connections.
       //internal module model contains data specific to the module type.
-      let module = this.store.createRecord('module-'+type);
+      let module = this.store.createRecord('module-'+type, { patch: this.model });
       this.model.get('modules').pushObject(module);
       
       //create port models and attach to module, based on configuration presets 
+      
       let portTemplate = this.portTemplates.findBy('module', type);
       portTemplate.ports.forEach(function(template){
         let port = this.store.createRecord('port', {
@@ -119,6 +120,7 @@ export default Ember.Controller.extend({
         port.save();
         module.get('ports').pushObject(port);
       }, this);
+
 
       //module-type specific setup
       switch(type) {

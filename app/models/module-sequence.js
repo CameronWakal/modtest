@@ -1,8 +1,9 @@
 import Ember from 'ember';
 import DS from 'ember-data';
 import Module from './module';
+import Patchable from '../mixins/patchable';
 
-export default Module.extend({
+export default Module.extend(Patchable, {
   
   length: DS.attr('number', { defaultValue: 16 }),
   steps: DS.hasMany('module-sequence-step'),

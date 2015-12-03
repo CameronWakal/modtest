@@ -37,7 +37,7 @@ export default ModuleGenericComponent.extend({
     if(!this.isStarted) {
       return;
     }
-    console.log('sendtrigger');
+
     //schedule a callback to self for the next trigger interval.
     //send a trigger event to all listeners immediately for the current trigger.
 

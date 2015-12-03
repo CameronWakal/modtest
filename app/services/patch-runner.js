@@ -13,10 +13,10 @@ export default Ember.Service.extend({
     let moduleType = module.get('constructor.modelName');
 
     switch(moduleType) {
-      case 'out':
+      case 'module-out':
         this.moduleOutReceiveEvent(event, module, targetPort);
         break;
-      case 'sequence':
+      case 'module-sequence':
         this.moduleSequenceReceiveEvent(event, module, targetPort);
         break;
       default:
@@ -60,7 +60,7 @@ export default Ember.Service.extend({
     //check the connection of the 'note' port for the value of the note to play.
     let notePort = module.get('ports').findBy('label', 'note');
     let noteValue = this.readPort(notePort);
-    
+
     if(noteValue) {
       this.get('midi').sendNote(noteValue,127,200,event.outputTime);
     }

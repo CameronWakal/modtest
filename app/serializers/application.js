@@ -46,7 +46,7 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
 
   serializeBelongsTo: function(snapshot, json, relationship) {
     let key = relationship.key;
-    let isPolymorphic = relationship.options.isPolymorphic;
+    let isPolymorphic = relationship.options.polymorphic;
 
     if (this._canSerialize(key)) {
       var belongsTo = snapshot.belongsTo(key);
@@ -61,14 +61,10 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
       if (Ember.isNone(belongsTo)) {
         //Need to check whether the id is there for new&async records
         json[payloadKey] = null;
-      } else if(isPolymorphic) {  
-        json[payloadKey] = { id: belongsTo.id, type: snapshot.modelName };
+      } else if(isPolymorphic) { 
+        json[payloadKey] = { id: belongsTo.id, type: belongsTo.modelName };
       } else {
         json[payloadKey] = belongsTo.id;
-      }
-
-      if (relationship.options.polymorphic) {
-        this.serializePolymorphicType(snapshot, json, relationship);
       }
     }
   }
