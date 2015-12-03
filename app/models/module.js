@@ -11,4 +11,21 @@ export default DS.Model.extend({
     return ports.filterBy('isEvent', true).filterBy('isSource', true);
   }),
 
+  addPort(signal, direction, label) {
+    let port = this.store.createRecord('port', {
+      signal:signal,
+      direction:direction,
+      label:label,
+      module:this
+    });
+    port.save();
+    this.get('ports').pushObject(port);
+  },
+
+  destroyPorts() {
+    this.get('ports').forEach(function(port) {
+      port.destroyRecord();
+    });
+  }
+
 });
