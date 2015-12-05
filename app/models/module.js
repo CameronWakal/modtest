@@ -26,6 +26,11 @@ export default DS.Model.extend({
     this.get('ports').forEach(function(port) {
       port.destroyRecord();
     });
-  }
+  },
+
+  deleteRecord() {
+    this.destroyPorts();
+    this._internalModel.deleteRecord();
+  },
 
 });

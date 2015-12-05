@@ -31,13 +31,12 @@ export default Module.extend({
     this.save();
   },
 
-  destroyRecord(options) {
+  deleteRecord() {
+    this.destroyPorts();
     this.get('steps').forEach(function(step){
       step.destroyRecord();
     });
-    this.destroyPorts();
-    this.deleteRecord();
-    return this.save(options);
+    this._internalModel.deleteRecord();
   },
 
 });

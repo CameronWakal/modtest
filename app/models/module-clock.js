@@ -10,10 +10,4 @@ export default Module.extend({
     this.save();
   },
 
-  destroyRecord(options) {
-    this.destroyPorts();
-    this.deleteRecord();
-    return this.save(options);
-  },
-
 });
