@@ -35,13 +35,7 @@ export default Ember.Service.extend({
 
     switch(portLabel) {
       case 'inc step':
-        if(currentStep === null) {
-          sequence.set('currentStep', 0);
-        } else if ( currentStep >= sequence.get('length')-1 ) {
-          sequence.set('currentStep', 0);
-        } else {
-          sequence.set('currentStep', currentStep+1);
-        }
+        sequence.incrementStep();
       break;
       default:
         console.log('Error: patch runner no action found for port labelled '+portLabel);

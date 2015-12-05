@@ -6,14 +6,24 @@ export default Module.extend({
   
   length: DS.attr('number', { defaultValue: 16 }),
   steps: DS.hasMany('module-sequence-step'),
-  currentStep: DS.attr('number'),
+  currentStep: DS.belongsTo('module-sequence-step', {async:false}),
 
-  //variable name is value, port with label value will look for it
-  value: Ember.computed('steps.@each.value', 'steps.@each.index', 'currentStep', function(){
-    let steps = this.get('steps');
-    let step = steps.findBy('index', this.get('currentStep'));
-    return step.get('value');
-  }),
+  incrementStep() {
+
+    let currentStep = this.get('currentStep');
+    let nextIndex = 0;
+    var currentIndex;
+
+    if(currentStep !== null) {
+      currentIndex = currentStep.get('index');
+      if( currentIndex <= this.get('length')-1 ) {
+        nextIndex = currentIndex+1;
+      }
+    }
+    
+    let nextStep = this.get('steps').findBy('index', nextIndex);
+    this.set('currentStep', nextStep);
+  },
 
   didCreate() {
     //create steps
