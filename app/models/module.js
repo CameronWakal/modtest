@@ -23,20 +23,15 @@ export default DS.Model.extend({
     this.get('ports').pushObject(port);
   },
 
-  destroyPorts() {
+  deleteRecord() {
     this.get('ports').forEach(function(port) {
       port.destroyRecord();
     });
-  },
-
-  deleteRecord() {
-    this.destroyPorts();
     this._internalModel.deleteRecord();
   },
 
   //this should be scrapped and replaced with a direct ember data alias
   readPort(port) {
-    let sourcePort = port.get('source');
     let sourceModule = port.get('source.module');
     let varName = port.get('source.label');
     var value;

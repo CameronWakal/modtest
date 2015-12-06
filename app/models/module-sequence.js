@@ -42,11 +42,14 @@ export default Module.extend({
   },
 
   deleteRecord() {
-    this.destroyPorts();
+    //currently all member models are destroyed immediately
+    //would be better but more complex to handle destruction/deletion/saving
+    //for member models?
     this.get('steps').forEach(function(step){
       step.destroyRecord();
     });
-    this._internalModel.deleteRecord();
+    
+    this._super();
   },
 
 });
