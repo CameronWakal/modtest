@@ -11,11 +11,12 @@ export default DS.Model.extend({
     return ports.filterBy('isEvent', true).filterBy('isSource', true);
   }),
 
-  addPort(signal, direction, label) {
+  addPort(signal, direction, label, targetMethod) {
     let port = this.store.createRecord('port', {
       signal:signal,
       direction:direction,
       label:label,
+      targetMethod:targetMethod,
       module:this
     });
     port.save();
@@ -31,6 +32,20 @@ export default DS.Model.extend({
   deleteRecord() {
     this.destroyPorts();
     this._internalModel.deleteRecord();
+  },
+
+  //this should be scrapped and replaced with a direct ember data alias
+  readPort(port) {
+    let sourcePort = port.get('source');
+    let sourceModule = port.get('source.module');
+    let varName = port.get('source.label');
+    var value;
+      
+    if(sourceModule) {
+      value = sourceModule.get(varName);
+    }
+
+    return value;
   },
 
 });

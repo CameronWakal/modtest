@@ -1,11 +1,8 @@
 import ModuleGenericComponent from './module-generic';
-import Ember from 'ember';
 
 //todo: computed properties, getters and setters to be more emberlike
 
 export default ModuleGenericComponent.extend({
-
-  patchRunner: Ember.inject.service(),
 
   resolution: 8, // ticks per beat
   tempo: null, // beats per minute
@@ -58,7 +55,7 @@ export default ModuleGenericComponent.extend({
     ports.forEach(function(port){
       let destinations = port.get('destinations');
       destinations.forEach(function(port){
-        this.get('patchRunner').sendEvent({'outputTime':outputTime}, port);
+        port.sendEvent({'outputTime':outputTime});
       }, this);
     }, this);
   },

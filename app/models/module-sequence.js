@@ -8,19 +8,19 @@ export default Module.extend({
   steps: DS.hasMany('module-sequence-step'),
   currentStep: DS.belongsTo('module-sequence-step', {async:false}),
 
+  currentIndex: Ember.computed.alias('currentStep.index'),
+  value: Ember.computed.alias('currentStep.value'),
+
   incrementStep() {
-
     let currentStep = this.get('currentStep');
+    let currentIndex = this.get('currentIndex');
+    let length = this.get('length');
     let nextIndex = 0;
-    var currentIndex;
 
-    if(currentStep !== null) {
-      currentIndex = currentStep.get('index');
-      if( currentIndex <= this.get('length')-1 ) {
+    if(currentStep && currentIndex <= length-1 ) {
         nextIndex = currentIndex+1;
-      }
     }
-    
+
     let nextStep = this.get('steps').findBy('index', nextIndex);
     this.set('currentStep', nextStep);
   },
@@ -34,7 +34,7 @@ export default Module.extend({
       step.save();
     }
     //create ports
-    this.addPort('event', 'destination', 'inc step');
+    this.addPort('event', 'destination', 'inc step', 'incrementStep');
     this.addPort('value', 'source', 'value');
     this.addPort('event', 'source', 'trig');
 

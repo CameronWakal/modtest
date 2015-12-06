@@ -9,6 +9,8 @@ export default DS.Model.extend({
   source: DS.belongsTo('port', {async: false}),           //only destination ports have a source
   module: DS.belongsTo('module', {polymorphic: true, async: false}),
 
+  targetMethod: DS.attr('string'), //method to call for event destination ports
+
   isSource: Ember.computed('direction', function() {
     return this.get('direction') === 'source';
   }),
@@ -27,5 +29,14 @@ export default DS.Model.extend({
     } else {
         return this.get('source') !== null;
     }
-  })
+  }),
+
+  sendEvent(event) {
+    let module = this.get('module');
+    let targetMethodName = this.get('targetMethod');
+    let targetMethod = module.get(targetMethodName).bind(module);
+
+    targetMethod(event);
+  },
+
 });
