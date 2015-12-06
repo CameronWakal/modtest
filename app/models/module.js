@@ -11,14 +11,26 @@ export default DS.Model.extend({
     return ports.filterBy('isEvent', true).filterBy('isSource', true);
   }),
 
-  addPort(signal, direction, label, targetMethod) {
-    let port = this.store.createRecord('port', {
-      signal:signal,
-      direction:direction,
-      label:label,
-      targetMethod:targetMethod,
-      module:this
-    });
+  //todo: clean up conditionals by subclassing ports into different types
+  addPort(signal, direction, label, target) {
+    var port;
+    if(signal === 'event') {
+      port = this.store.createRecord('port', {
+        signal:signal,
+        direction:direction,
+        label:label,
+        targetMethod:target,
+        module:this
+      });
+    } else {
+      port = this.store.createRecord('port', {
+        signal:signal,
+        direction:direction,
+        label:label,
+        targetVariable:target,
+        module:this
+      });
+    }
     port.save();
     this.get('ports').pushObject(port);
   },

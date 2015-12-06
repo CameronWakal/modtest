@@ -10,6 +10,7 @@ export default DS.Model.extend({
   module: DS.belongsTo('module', {polymorphic: true, async: false}),
 
   targetMethod: DS.attr('string'), //method to call for event destination ports
+  targetVariable: DS.attr('string'), //variable to check for value source ports
 
   isSource: Ember.computed('direction', function() {
     return this.get('direction') === 'source';
@@ -31,6 +32,8 @@ export default DS.Model.extend({
     }
   }),
 
+  //todo: pretty sure these can be made simpler with computed properties
+
   sendEvent(event) {
     let module = this.get('module');
     let targetMethodName = this.get('targetMethod');
@@ -38,5 +41,15 @@ export default DS.Model.extend({
 
     targetMethod(event);
   },
+
+  readValue() {
+    if( this.get('isEvent') ) {
+      console.log("Error: can't read value of an event port");
+    } else if( this.get('isSource') ) {
+      return this.get('module.'+this.get('targetVariable'));
+    } else {
+      return this.get('source').readValue();
+    }
+  }
 
 });

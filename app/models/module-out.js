@@ -1,4 +1,4 @@
-import DS from 'ember-data';
+import Ember from 'ember';
 import Module from './module';
 
 export default Module.extend({
@@ -15,7 +15,7 @@ export default Module.extend({
 
     //check the connection of the 'note' port for the value of the note to play.
     let notePort = this.get('ports').findBy('label', 'note');
-    let noteValue = this.readPort(notePort);
+    let noteValue = notePort.readValue();
 
     if(noteValue) {
       this.get('midi').sendNote(noteValue,127,200,event.outputTime);

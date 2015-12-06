@@ -9,7 +9,7 @@ export default Module.extend({
   currentStep: DS.belongsTo('module-sequence-step', {async:false}),
 
   currentIndex: Ember.computed.alias('currentStep.index'),
-  value: Ember.computed.alias('currentStep.value'),
+  currentValue: Ember.computed.alias('currentStep.value'),
 
   incrementStep() {
     let currentStep = this.get('currentStep');
@@ -35,7 +35,7 @@ export default Module.extend({
     }
     //create ports
     this.addPort('event', 'destination', 'inc step', 'incrementStep');
-    this.addPort('value', 'source', 'value');
+    this.addPort('value', 'source', 'value', 'currentValue');
     this.addPort('event', 'source', 'trig');
 
     this.save();
@@ -48,7 +48,7 @@ export default Module.extend({
     this.get('steps').forEach(function(step){
       step.destroyRecord();
     });
-    
+
     this._super();
   },
 
