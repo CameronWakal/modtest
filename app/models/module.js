@@ -4,7 +4,7 @@ import Ember from 'ember';
 export default DS.Model.extend({
   
   patch: DS.belongsTo('patch'),
-  ports: DS.hasMany('port'),
+  ports: DS.hasMany('port', {polymorphic:true}),
 
   eventOutputPorts: Ember.computed('ports.@each.isEvent', 'ports.@each.isSource', function(){
     let ports = this.get('ports');
@@ -14,18 +14,34 @@ export default DS.Model.extend({
   //todo: clean up conditionals by subclassing ports into different types
   addPort(signal, direction, label, target) {
     var port;
-    if(signal === 'event') {
-      port = this.store.createRecord('port', {
-        signal:signal,
-        direction:direction,
+    if(signal === 'event' && direction === 'source') {
+      port = this.store.createRecord('port-event-out', {
+        signal:'event',
+        direction:'source',
         label:label,
         targetMethod:target,
         module:this
       });
-    } else {
-      port = this.store.createRecord('port', {
-        signal:signal,
-        direction:direction,
+    } else if(signal === 'event' && direction === 'destination') {
+      port = this.store.createRecord('port-event-in', {
+        signal:'event',
+        direction:'destination',
+        label:label,
+        targetMethod:target,
+        module:this
+      });
+    } else if(signal === 'value' && direction === 'source') {
+      port = this.store.createRecord('port-value-out', {
+        signal:'value',
+        direction:'source',
+        label:label,
+        targetVariable:target,
+        module:this
+      });
+    } else if(signal === 'value' && direction === 'destination') {
+      port = this.store.createRecord('port-value-in', {
+        signal:'value',
+        direction:'destination',
         label:label,
         targetVariable:target,
         module:this

@@ -2,15 +2,35 @@ import DS from 'ember-data';
 import Ember from 'ember';
 
 export default DS.Model.extend({
-  signal: DS.attr('string'),                              //event or value
-  direction: DS.attr('string'),                           //source or destination
   label: DS.attr('string'),                               //briefly describing port use
-  destinations: DS.hasMany('port', {inverse:'source'}),   //only source ports have destinations
-  source: DS.belongsTo('port', {async: false}),           //only destination ports have a source
+  destinations: DS.hasMany('port', {polymorphic:true, inverse:'source'}),   //only source ports have destinations
+  source: DS.belongsTo('port', {polymorphic:true, async: false}),           //only destination ports have a source
   module: DS.belongsTo('module', {polymorphic: true, async: false}),
 
   targetMethod: DS.attr('string'), //method to call for event destination ports
   targetVariable: DS.attr('string'), //variable to check for value source ports
+
+  signal: Ember.computed('constructor.modelName', function(){
+    let modelName = this.get('constructor.modelName');
+    if(modelName==='port-event-in' || modelName==='port-event-out'){
+      return 'event';
+    } else {
+      return 'value';
+    }
+  }),
+  direction: Ember.computed('constructor.modelName', function(){
+    let modelName = this.get('constructor.modelName');
+    if(modelName==='port-event-in' || modelName==='port-value-in'){
+      return 'destination';
+    } else {
+      return 'source';
+    }
+  }),
+
+  value: Ember.computed('module', 'targetVariable', function(){
+    //only applicable to value source ports
+    return this.get('module.'+this.get('targetVariable'));
+  }),
 
   isSource: Ember.computed('direction', function() {
     return this.get('direction') === 'source';
@@ -40,16 +60,6 @@ export default DS.Model.extend({
     let targetMethod = module.get(targetMethodName).bind(module);
 
     targetMethod(event);
-  },
-
-  readValue() {
-    if( this.get('isEvent') ) {
-      console.log("Error: can't read value of an event port");
-    } else if( this.get('isSource') ) {
-      return this.get('module.'+this.get('targetVariable'));
-    } else {
-      return this.get('source').readValue();
-    }
   }
 
 });
