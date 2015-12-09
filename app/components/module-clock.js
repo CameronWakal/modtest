@@ -50,14 +50,10 @@ export default ModuleGenericComponent.extend({
                                                     //so the callbacks have some wiggle room
                                                     //without affecting the note timing.
 
-    //send event to output ports
-    let ports = this.module.get('eventOutputPorts');
-    ports.forEach(function(port){
-      let destinations = port.get('destinations');
-      destinations.forEach(function(port){
-        port.sendEvent({'outputTime':outputTime});
-      }, this);
-    }, this);
+    //send event to output port
+    let port = this.module.get('trigOutPort');
+    port.sendEvent({'outputTime':outputTime});
+
   },
 
   setTempo(aTempo) {

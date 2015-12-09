@@ -2,13 +2,8 @@ import DS from 'ember-data';
 import Ember from 'ember';
 
 export default DS.Model.extend({
-  label: DS.attr('string'),                               //briefly describing port use
-  destinations: DS.hasMany('port', {polymorphic:true, inverse:'source'}),   //only source ports have destinations
-  source: DS.belongsTo('port', {polymorphic:true, async: false}),           //only destination ports have a source
+  label: DS.attr('string'),
   module: DS.belongsTo('module', {polymorphic: true, async: false}),
-
-  targetMethod: DS.attr('string'), //method to call for event destination ports
-  targetVariable: DS.attr('string'), //variable to check for value source ports
 
   signal: Ember.computed('constructor.modelName', function(){
     let modelName = this.get('constructor.modelName');
@@ -27,11 +22,6 @@ export default DS.Model.extend({
     }
   }),
 
-  value: Ember.computed('module', 'targetVariable', function(){
-    //only applicable to value source ports
-    return this.get('module.'+this.get('targetVariable'));
-  }),
-
   isSource: Ember.computed('direction', function() {
     return this.get('direction') === 'source';
   }),
@@ -44,22 +34,9 @@ export default DS.Model.extend({
   isValue: Ember.computed('direction', function() {
     return this.get('signal') === 'value';
   }),
-  isConnected: Ember.computed('isSource', 'source', 'destinations', function() {
-    if(this.get('isSource')) {
-      return this.get('destinations').get('firstObject');
-    } else {
-        return this.get('source') !== null;
-    }
+
+  isConnected: Ember.computed('connections', function() {
+    return this.get('connections.length');
   }),
-
-  //todo: pretty sure these can be made simpler with computed properties
-
-  sendEvent(event) {
-    let module = this.get('module');
-    let targetMethodName = this.get('targetMethod');
-    let targetMethod = module.get(targetMethodName).bind(module);
-
-    targetMethod(event);
-  }
 
 });

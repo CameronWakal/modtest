@@ -41,31 +41,21 @@ export default Ember.Controller.extend({
         console.log('Ports must have the same signal type in order to connect.');
       } else {
 
-        let currentSource = destPort.get('source');
+        //todo: check if connection already exists
 
-        if(currentSource !== null) {
-          console.log('removing current source:'+currentSource);
-          currentSource.get('destinations').removeObject(destPort);
-          currentSource.save();
-        }
-
-        destPort.set('source', sourcePort);
+        destPort.get('connections').pushObject(sourcePort);
         destPort.save();
 
-        sourcePort.get('destinations').pushObject(destPort);
+        sourcePort.get('connections').pushObject(destPort);
         sourcePort.save();
 
       }
 
     },
 
-    removeConnection(destPort) {
-      console.log('--- patchController removing connection from destPort '+destPort);
-      let sourcePort = destPort.get('source');
-      sourcePort.get('destinations').removeObject(destPort);
-      sourcePort.save();
-      destPort.set('source', null);
-      destPort.save();
+    removeConnection(sourcePort, destPort) {
+      console.log('--- patchController removing connection between '+sourcePort+' and '+destPort);
+      console.log('NOT IMPLEMENTED');
     },
 
     selectModulePort(module, port) {

@@ -6,49 +6,54 @@ export default DS.Model.extend({
   patch: DS.belongsTo('patch'),
   ports: DS.hasMany('port', {polymorphic:true}),
 
-  eventOutputPorts: Ember.computed('ports.@each.isEvent', 'ports.@each.isSource', function(){
+  eventOutputPorts: Ember.computed('ports.@each.constructor.modelName', function(){
     let ports = this.get('ports');
-    return ports.filterBy('isEvent', true).filterBy('isSource', true);
+    return ports.filterBy('constructor.modelName', 'port-event-out');
   }),
 
-  //todo: clean up conditionals by subclassing ports into different types
-  addPort(signal, direction, label, target) {
-    var port;
-    if(signal === 'event' && direction === 'source') {
-      port = this.store.createRecord('port-event-out', {
-        signal:'event',
-        direction:'source',
-        label:label,
-        targetMethod:target,
-        module:this
-      });
-    } else if(signal === 'event' && direction === 'destination') {
-      port = this.store.createRecord('port-event-in', {
-        signal:'event',
-        direction:'destination',
-        label:label,
-        targetMethod:target,
-        module:this
-      });
-    } else if(signal === 'value' && direction === 'source') {
-      port = this.store.createRecord('port-value-out', {
-        signal:'value',
-        direction:'source',
-        label:label,
-        targetVariable:target,
-        module:this
-      });
-    } else if(signal === 'value' && direction === 'destination') {
-      port = this.store.createRecord('port-value-in', {
-        signal:'value',
-        direction:'destination',
-        label:label,
-        targetVariable:target,
-        module:this
-      });
-    }
+  //portVar is used to easily refer to this specific port from within the module
+  addEventOutPort(label, portVar) {
+    let port = this.store.createRecord('port-event-out', {
+      label:label,
+      module:this
+    });
     port.save();
     this.get('ports').pushObject(port);
+    console.log('portVar:',portVar,' port:',port);
+    this.set(portVar, port);
+  },
+
+  //targetMethod on the module is called by the port when the event comes in
+  addEventInPort(label, targetMethod) {
+    let port = this.store.createRecord('port-event-in', {
+      label:label,
+      targetMethod:targetMethod,
+      module:this
+    });
+    port.save();
+    this.get('ports').pushObject(port);
+  },
+
+  //targetVar is checked by the port when a request for the value comes in
+  addValueOutPort(label, targetVar) {
+    let port = this.store.createRecord('port-value-out', {
+      label:label,
+      targetVar:targetVar,
+      module:this
+    });
+    port.save();
+    this.get('ports').pushObject(port);
+  },
+
+  //portVar is used to easily refer to this specific port from within the module
+  addValueInPort(label, portVar) {
+    let port = this.store.createRecord('port-value-in', {
+      label:label,
+      module:this
+    });
+    port.save();
+    this.get('ports').pushObject(port);
+    this.set(portVar, port);
   },
 
   deleteRecord() {

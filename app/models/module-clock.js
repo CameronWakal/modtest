@@ -3,9 +3,11 @@ import Module from './module';
 
 export default Module.extend({
   
+  trigOutPort: DS.belongsTo('port-event-out', {async: false} ),
+
   didCreate() {
     //create ports
-    this.addPort('event', 'source', 'trig');
+    this.addEventOutPort('trig', 'trigOutPort');
 
     this.save();
   },

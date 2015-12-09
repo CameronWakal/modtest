@@ -1,15 +1,12 @@
 import Ember from 'ember';
 import Module from './module';
+import DS from 'ember-data';
 
 export default Module.extend({
 
   midi: Ember.inject.service(),
 
-  notePort: Ember.computed('ports.@each.label', function(){
-    return this.get('ports').findBy('label', 'note');
-  }),
-
-  noteValue: Ember.computed.alias('notePort.source.value'),
+  noteInPort: DS.belongsTo('port-value-in', {async:false}),
 
   sendEvent(event) {
     //the clock adds some padding ms to the event timestamps to allow for callback latency.
@@ -21,7 +18,7 @@ export default Module.extend({
 
     //check the connection of the 'note' port for the value of the note to play.
     //let notePort = this.get('ports').findBy('label', 'note');
-    let noteValue = this.get('noteValue');
+    let noteValue = this.get('noteInPort.value');
 
     if(noteValue) {
       this.get('midi').sendNote(noteValue,127,200,event.outputTime);
@@ -31,8 +28,8 @@ export default Module.extend({
 
   didCreate() {
     //create ports
-    this.addPort('event', 'destination', 'trig', 'sendEvent');
-    this.addPort('value', 'destination', 'note');
+    this.addEventInPort('trig', 'sendEvent');
+    this.addValueInPort('note', 'noteInPort');
 
     this.save();
   },
