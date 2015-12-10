@@ -18,7 +18,7 @@ export default Module.extend({
 
     //check the connection of the 'note' port for the value of the note to play.
     //let notePort = this.get('ports').findBy('label', 'note');
-    let noteValue = this.get('noteInPort.value');
+    let noteValue = this.get('noteInPort').getValue();
 
     if(noteValue) {
       this.get('midi').sendNote(noteValue,127,200,event.outputTime);

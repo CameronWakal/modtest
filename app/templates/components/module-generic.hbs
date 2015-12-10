@@ -1,4 +1,4 @@
 <h3>{{module.type}}</h3>
 
-{{#each module.ports as |port|}}{{port-component  port=port 
+{{#each module.ports as |port|}}{{component port.constructor.modelName  port=port 
                   select=(action 'selectPort' port) }}{{/each}}<button {{action 'remove'}}>X</button>

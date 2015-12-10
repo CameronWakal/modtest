@@ -4,5 +4,5 @@
 {{#each module.steps as |step|}}{{module-sequence-step step=step value=step.value}}{{/each}}
 </div>
 
-{{#each module.ports as |port|}}{{port-component port=port 
+{{#each module.ports as |port|}}{{component port.constructor.modelName port=port 
                   select=(action 'selectPort' port) }}{{/each}}<button {{action 'remove'}}>X</button>

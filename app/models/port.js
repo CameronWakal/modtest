@@ -22,19 +22,6 @@ export default DS.Model.extend({
     }
   }),
 
-  isSource: Ember.computed('direction', function() {
-    return this.get('direction') === 'source';
-  }),
-  isDestination: Ember.computed('direction', function() {
-    return this.get('direction') === 'destination';
-  }),
-  isEvent: Ember.computed('signal', function() {
-    return this.get('signal') === 'event';
-  }),
-  isValue: Ember.computed('direction', function() {
-    return this.get('signal') === 'value';
-  }),
-
   isConnected: Ember.computed('connections', function() {
     return this.get('connections.length');
   }),

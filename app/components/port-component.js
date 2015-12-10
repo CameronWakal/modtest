@@ -1,13 +1,9 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  classNames: ['port-component'],
-  classNameBindings: [  'port.isConnected:connected',
-                        'port.isSource:source',
-                        'port.isDestination:destination',
-                        'port.isValue:value',
-                        'port.isEvent:event'
-                      ],
+  classNames: ['port'],
+  
+  classNameBindings: ['port.isConnected:connected'],
 
   click() {
     console.log('----- port component sending select action');
