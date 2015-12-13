@@ -2,9 +2,12 @@ import DS from 'ember-data';
 import Ember from 'ember';
 
 export default DS.Model.extend({
-  
+
   patch: DS.belongsTo('patch'),
   ports: DS.hasMany('port', {polymorphic:true}),
+
+  xPos: DS.attr('number'),
+  yPos: DS.attr('number'),
 
   eventOutputPorts: Ember.computed('ports.@each.constructor.modelName', function(){
     let ports = this.get('ports');
@@ -61,19 +64,6 @@ export default DS.Model.extend({
       port.destroyRecord();
     });
     this._internalModel.deleteRecord();
-  },
-
-  //this should be scrapped and replaced with a direct ember data alias
-  readPort(port) {
-    let sourceModule = port.get('source.module');
-    let varName = port.get('source.label');
-    var value;
-      
-    if(sourceModule) {
-      value = sourceModule.get(varName);
-    }
-
-    return value;
   },
 
 });

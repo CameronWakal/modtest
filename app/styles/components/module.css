@@ -1,9 +1,11 @@
 .module {
   border: 1px solid #ddd;
-  display: inline-block;
   margin: 0 0.5rem 0.5rem 0;
   padding: 0.5rem 0 0 0.5rem;
   color: #bbb;
+  position: absolute;
+  background-color: rgba(255,255,255,0.66);
+  display: inline-block;
 }
 
 .module h3 {

@@ -35,21 +35,13 @@ export default Ember.Controller.extend({
     addConnection(sourcePort, destPort) {
       console.log('connecting '+sourcePort+' to '+destPort);
 
-      if(!sourcePort || !destPort) {
-        console.log('Select a source and destination port before adding a connection.');
-      } else if(sourcePort.get('signal') !== destPort.get('signal')) {
-        console.log('Ports must have the same signal type in order to connect.');
-      } else {
+      //todo: check if connection already exists
 
-        //todo: check if connection already exists
+      destPort.get('connections').pushObject(sourcePort);
+      destPort.save();
 
-        destPort.get('connections').pushObject(sourcePort);
-        destPort.save();
-
-        sourcePort.get('connections').pushObject(destPort);
-        sourcePort.save();
-
-      }
+      sourcePort.get('connections').pushObject(destPort);
+      sourcePort.save();
 
     },
 
