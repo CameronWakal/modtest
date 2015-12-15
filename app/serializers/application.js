@@ -1,5 +1,6 @@
 import LFSerializer from 'ember-localforage-adapter/serializers/localforage';
 import DS from 'ember-data';
+import Ember from 'ember';
 
 export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
   attrs: {
