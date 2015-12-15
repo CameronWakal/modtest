@@ -6,8 +6,6 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
     port: { embedded: 'always' },
     step: { embedded: 'always' },
     module: { embedded: 'always' },
-    source: { embedded: 'always' },
-    connections: { embedded: 'always' }
   },
 
   //redefine JSONSerializer methods to support polymorphic hasMany relationship types

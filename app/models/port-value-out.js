@@ -4,7 +4,7 @@ import Port from './port';
 
 export default Port.extend({
   //valueOut ports can have multiple valueIn ports as destinations
-  connections: DS.hasMany('port-value-in', {async: false}),
+  connections: DS.hasMany('port-value-in', {async: true}),
   //module variable to check on getValue
   targetVar: DS.attr('string'),
 

@@ -3,7 +3,7 @@ import Port from './port';
 
 export default Port.extend({
   //eventIn ports can have multiple eventOut ports as sources
-  connections: DS.hasMany('port-event-out', {async: false}),
+  connections: DS.hasMany('port-event-out', {async: true}),
   targetMethod: DS.attr('string'), //method to call onEvent
 
   //pass the event to the targetMethod of the module
