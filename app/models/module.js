@@ -6,8 +6,8 @@ export default DS.Model.extend({
   patch: DS.belongsTo('patch'),
   ports: DS.hasMany('port', {polymorphic:true, async: true}),
 
-  xPos: DS.attr('number'),
-  yPos: DS.attr('number'),
+  xPos: DS.attr('number', {defaultValue:0}),
+  yPos: DS.attr('number', {defaultValue:0}),
 
   // flag self for deferred removal if removal is requested
   // while save is in progress
