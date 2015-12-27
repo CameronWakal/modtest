@@ -13,18 +13,24 @@ export default Module.extend({
 
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
 
-  incrementStep() {
+  incrementStep(event) {
     let currentStep = this.get('currentStep');
     let currentIndex = this.get('currentIndex');
     let length = this.get('length');
     let nextIndex = 0;
 
+    //update currentStep
     if(currentStep && currentIndex <= length-1 ) {
         nextIndex = currentIndex+1;
     }
-
     let nextStep = this.get('steps').findBy('index', nextIndex);
     this.set('currentStep', nextStep);
+
+    //output event if current step has a value
+    let value = this.get('currentStep.value');
+    if(value) {
+      this.get('trigOutPort').sendEvent(event);
+    }
   },
 
   didCreate() {
