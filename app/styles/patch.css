@@ -1,11 +1,21 @@
 .patch {
-  border-top: 1px solid #ddd;
-  padding-top: 1rem;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.patch-connections {
+  position: relative;
+  z-index: 100;
 }
 
 .patch .modules-list {
   list-style-type: none;
   padding-left: 0;
+  position: relative;
+  z-index: 200;
 }
 
 .patch .modules-list li {

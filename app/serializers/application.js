@@ -3,12 +3,6 @@ import DS from 'ember-data';
 import Ember from 'ember';
 
 export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
-  attrs: {
-    port: { embedded: 'always' },
-    step: { embedded: 'always' },
-    module: { embedded: 'always' },
-  },
-
   //redefine JSONSerializer methods to support polymorphic hasMany relationship types
   //if the relationship is polymorphic, it will be represented as an array of objects with ids and types
 

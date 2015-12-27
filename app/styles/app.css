@@ -1,6 +1,7 @@
 @import 'components/port-component.css';
 @import 'components/module.css';
 @import 'components/module-sequence-step.css';
+@import 'components/patch-diagram.css';
 @import 'patch.css';
 
 html, input, button {
@@ -28,6 +29,9 @@ button {
 
 .app-header {
   padding: 0.5rem 0;
+  border-bottom: 1px solid #ddd;
+  position: relative;
+  z-index: 100;
 }
 
 .app-header h1 {

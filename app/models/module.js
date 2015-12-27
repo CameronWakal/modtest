@@ -4,15 +4,24 @@ import Ember from 'ember';
 export default DS.Model.extend({
 
   patch: DS.belongsTo('patch'),
-  ports: DS.hasMany('port', {polymorphic:true}),
+  ports: DS.hasMany('port', {polymorphic:true, async: true}),
 
   xPos: DS.attr('number'),
   yPos: DS.attr('number'),
 
-  eventOutputPorts: Ember.computed('ports.@each.constructor.modelName', function(){
+  /*
+  eventOutPorts: Ember.computed('ports.@each.constructor.modelName', function(){
     let ports = this.get('ports');
+    console.log('eventOutPort computed '+ports);
     return ports.filterBy('constructor.modelName', 'port-event-out');
   }),
+
+  valueOutPorts: Ember.computed('ports.@each.constructor.modelName', function(){
+    let ports = this.get('ports');
+    console.log('valueOutPort computed '+ports);
+    return ports.filterBy('constructor.modelName', 'port-value-out');
+  }),
+*/
 
   //portVar is used to easily refer to this specific port from within the module
   addEventOutPort(label, portVar) {
@@ -22,7 +31,6 @@ export default DS.Model.extend({
     });
     port.save();
     this.get('ports').pushObject(port);
-    console.log('portVar:',portVar,' port:',port);
     this.set(portVar, port);
   },
 

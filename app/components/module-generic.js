@@ -17,6 +17,7 @@ export default Ember.Component.extend({
   }),
 
   mouseDown(event) {
+    console.log('mousedown');
     this.set('isDragging', true);
     this.set('dragOffsetX', event.pageX - this.get('xPos') );
     this.set('dragOffsetY', event.pageY - this.get('yPos') );
