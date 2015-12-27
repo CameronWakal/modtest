@@ -18,17 +18,13 @@ export default Ember.Component.extend({
   }),
   
   mouseDown(event) {
-    console.log('mousedown');
     this.set('mouseIsDown', true);
     this.set('dragOffsetX', event.pageX - this.get('xPos') );
     this.set('dragOffsetY', event.pageY - this.get('yPos') );
   },
   
-  //todo: maybe this shouldn't save if property values aren't dirty?
   mouseUp(event) {
     if(this.get('mouseIsDragging')) {
-      this.set( 'xPos', event.pageX - this.get('dragOffsetX') );
-      this.set( 'yPos', event.pageY - this.get('dragOffsetY') );
       this.get('module').save();
     }
     this.set('mouseIsDown', false);
