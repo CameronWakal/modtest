@@ -22,7 +22,7 @@ export default Ember.Controller.extend({
     removeModule(module) {
       this.model.get('modules').removeObject(module);
       this.model.save();
-      module.destroyRecord();
+      module.remove();
     },
 
     addModule(type) {

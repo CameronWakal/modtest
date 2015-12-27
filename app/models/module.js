@@ -9,6 +9,10 @@ export default DS.Model.extend({
   xPos: DS.attr('number'),
   yPos: DS.attr('number'),
 
+  // flag self for deferred removal if removal is requested
+  // while save is in progress
+  needsRemoval: false, 
+
   /*
   eventOutPorts: Ember.computed('ports.@each.constructor.modelName', function(){
     let ports = this.get('ports');
@@ -67,11 +71,26 @@ export default DS.Model.extend({
     this.set(portVar, port);
   },
 
+  remove() {
+    if(this.get('isSaving')) {
+      this.set('needsRemoval', true);
+    } else {
+      this.destroyRecord();
+    }
+  },
+
+  removeLater: Ember.observer('isSaving', function(sender, key, value, rev) {
+    if( !this.get('isSaving') && this.get('needsRemoval') ){
+      this.set('needsRemoval', false);
+      this.destroyRecord();
+    }
+  }),
+
   deleteRecord() {
     this.get('ports').forEach(function(port) {
       port.destroyRecord();
     });
-    this._internalModel.deleteRecord();
+    this._super();
   },
 
 });
