@@ -4,7 +4,8 @@ export default Ember.Component.extend({
   classNames: ['module'],
   attributeBindings: ['inlineStyles:style'],
 
-  isDragging: false,
+  mouseIsDragging: false,
+  mouseIsDown: false,
   xPos: Ember.computed.alias('module.xPos'),
   yPos: Ember.computed.alias('module.yPos'),
 
@@ -18,21 +19,25 @@ export default Ember.Component.extend({
   
   mouseDown(event) {
     console.log('mousedown');
-    this.set('isDragging', true);
+    this.set('mouseIsDown', true);
     this.set('dragOffsetX', event.pageX - this.get('xPos') );
     this.set('dragOffsetY', event.pageY - this.get('yPos') );
   },
   
   //todo: maybe this shouldn't save if property values aren't dirty?
   mouseUp(event) {
-    this.set('isDragging', false);
-    this.set( 'xPos', event.pageX - this.get('dragOffsetX') );
-    this.set( 'yPos', event.pageY - this.get('dragOffsetY') );
-    this.get('module').save();
+    if(this.get('mouseIsDragging')) {
+      this.set( 'xPos', event.pageX - this.get('dragOffsetX') );
+      this.set( 'yPos', event.pageY - this.get('dragOffsetY') );
+      this.get('module').save();
+    }
+    this.set('mouseIsDown', false);
+    this.set('mouseIsDragging', false);
   },
   
   mouseMove(event) {
-    if(this.get('isDragging')){
+    if(this.get('mouseIsDown')){
+      this.set('mouseIsDragging', true);
       this.set('xPos', event.pageX - this.get('dragOffsetX') );
       this.set('yPos', event.pageY - this.get('dragOffsetY') );
     }

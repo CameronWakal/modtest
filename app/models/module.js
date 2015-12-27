@@ -71,14 +71,18 @@ export default DS.Model.extend({
     this.set(portVar, port);
   },
 
+  // 'remove' is the same as destroyRecord except that it checks for an in-progress
+  // save and waits for it to complete if necessary.
   remove() {
     if(this.get('isSaving')) {
+      console.log('tried to remove while saving!');
       this.set('needsRemoval', true);
     } else {
       this.destroyRecord();
     }
   },
 
+  //when the state of isSaving changes, check if this model is flagged for needsRemoval
   removeLater: Ember.observer('isSaving', function(sender, key, value, rev) {
     if( !this.get('isSaving') && this.get('needsRemoval') ){
       this.set('needsRemoval', false);
