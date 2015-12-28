@@ -8,12 +8,12 @@
 <div class="patch">
   {{patch-diagram patch=model}}
 
-  <ul class="modules-list">
-    {{#each model.modules as |module|}}<li>{{component  module.constructor.modelName
+  <div class="modules" id="modules">
+    {{#each model.modules as |module|}}{{component  module.constructor.modelName
                                                         module=module 
                                                         selectPort=(action 'selectModulePort' module) 
                                                         remove=(action 'removeModule' module)
-          }}</li>{{/each}}
-  </ul>
+          }}{{/each}}
+  </div>
 
 </div>

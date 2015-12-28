@@ -36,6 +36,7 @@ export default Ember.Component.extend({
       this.set('mouseIsDragging', true);
       this.set('xPos', event.pageX - this.get('dragOffsetX') );
       this.set('yPos', event.pageY - this.get('dragOffsetY') );
+      this.set('module.patch.needsDraw', true);
     }
   },
   

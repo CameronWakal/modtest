@@ -11,13 +11,7 @@
   z-index: 100;
 }
 
-.patch .modules-list {
-  list-style-type: none;
-  padding-left: 0;
+.patch .modules {
   position: relative;
   z-index: 200;
-}
-
-.patch .modules-list li {
-  display: inline;
 }
