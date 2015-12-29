@@ -23,6 +23,8 @@ export default Ember.Controller.extend({
       this.model.get('modules').removeObject(module);
       this.model.save();
       module.remove();
+      this.model.set('portsChanged', true);
+
     },
 
     addModule(type) {
@@ -43,11 +45,15 @@ export default Ember.Controller.extend({
       sourcePort.get('connections').pushObject(destPort);
       sourcePort.save();
 
+      this.model.set('portsChanged', true);
+
     },
 
     removeConnection(sourcePort, destPort) {
       console.log('--- patchController removing connection between '+sourcePort+' and '+destPort);
       console.log('NOT IMPLEMENTED');
+
+      this.model.set('portsChanged', true);
     },
 
     selectModulePort(module, port) {

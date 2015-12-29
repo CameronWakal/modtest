@@ -4,14 +4,37 @@ import Ember from 'ember';
 export default DS.Model.extend({
 
   patch: DS.belongsTo('patch'),
-  ports: DS.hasMany('port', {polymorphic:true, async: true}),
+  ports: DS.hasMany('port', {polymorphic:true}),
 
   xPos: DS.attr('number', {defaultValue:0}),
   yPos: DS.attr('number', {defaultValue:0}),
 
   // flag self for deferred removal if removal is requested
   // while save is in progress
-  needsRemoval: false, 
+  needsRemoval: false,
+  isReady: false,
+
+  //really hacky way to tell patch we've populated all our async data and are ready for a
+  //render update.
+  //for some reason this doesn't work observing isLoaded, but does observing the label change
+  onPortsChanged: Ember.observer('ports.@each.label', function(sender, key, value, rev) {
+
+    if(!this.get('isReady')){
+      let portsReady = this.get('ports').every(function(port, index, self){
+        return port.get('isLoaded');
+      });
+      this.set('isReady', portsReady);
+    }
+    
+    let self = this;
+    this.get('patch').then(function(patch){
+      if(patch && self.get('isReady')){
+        console.log('patch and ports ready!');
+          patch.onModuleReady();
+      }
+    });
+
+  }),
 
   eventOutPorts: Ember.computed('ports.@each.type', function(){
     let ports = this.get('ports');
