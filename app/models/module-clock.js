@@ -9,7 +9,6 @@ export default Module.extend({
     //create ports
     this.addEventOutPort('trig', 'trigOutPort');
 
-    this.save();
   },
 
 });

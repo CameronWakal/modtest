@@ -3,9 +3,10 @@ import Ember from 'ember';
 
 export default DS.Model.extend({
   modules: DS.hasMany('module', {polymorphic: true}),
-  layoutChanged: false,
+  portsMoved: false,
   portsChanged: false,
 
+  /*
   //super hacky way for the async modules and ports to inform the patch they're
   //ready for a render.
   onModuleReady() {
@@ -18,5 +19,6 @@ export default DS.Model.extend({
       this.set('portsChanged', true);
     }
   },
+  */
 
 });

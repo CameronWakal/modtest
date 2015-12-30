@@ -6,21 +6,25 @@ export default Ember.Component.extend({
   
   connections: [],
 
+  didInsertElement(){
+    
+  },
+
   onPortsChanged: Ember.observer('patch.portsChanged', function(sender, key, value, rev) {
     if(this.get('patch.portsChanged')){
       Ember.run.scheduleOnce('afterRender', this, function() {
-        console.log('afterrender');
         this.updateConnections();
+        this.drawConnections();
         this.set('patch.portsChanged', false);
-        this.set('patch.layoutChanged', true);
       });
     }
   }),
 
-  onLayoutChanged: Ember.observer('patch.layoutChanged', function(sender, key, value, rev) {
-    if(this.get('patch.layoutChanged')){
+  onPortsMoved: Ember.observer('patch.portsMoved', function(sender, key, value, rev) {
+    if(this.get('patch.portsMoved')){
+      console.log('ports moved');
       this.drawConnections();
-      this.set('patch.layoutChanged', false);
+      this.set('patch.portsMoved', false);
     }
   }),
 

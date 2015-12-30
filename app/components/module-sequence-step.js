@@ -10,7 +10,7 @@ export default Ember.TextField.extend({
   },
 
   focusOut() {
-    this.get('step').save();
+    this.get('step.sequence').save();
   }
 
 });

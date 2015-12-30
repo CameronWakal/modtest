@@ -30,8 +30,8 @@ export default Ember.Controller.extend({
     addModule(type) {
       let module = this.store.createRecord('module-'+type, { patch: this.model });
       this.model.get('modules').pushObject(module);
-      module.save();
       this.model.save();
+      module.save();
     },
 
     addConnection(sourcePort, destPort) {
@@ -40,10 +40,10 @@ export default Ember.Controller.extend({
       //todo: check if connection already exists
 
       destPort.get('connections').pushObject(sourcePort);
-      destPort.save();
+      destPort.get('module').save();
 
       sourcePort.get('connections').pushObject(destPort);
-      sourcePort.save();
+      sourcePort.get('module').save();
 
       this.model.set('portsChanged', true);
 
@@ -69,7 +69,7 @@ export default Ember.Controller.extend({
         this.set('destPort', port);
       }
       
-    }
+    },
 
   }
 });

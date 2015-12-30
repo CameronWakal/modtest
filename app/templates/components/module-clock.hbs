@@ -6,5 +6,8 @@
   <button {{action 'start'}}>Start</button>
 {{/if}}
 
-{{#each module.ports as |port|}}{{component port.constructor.modelName  port=port 
-                  select=(action 'selectPort' port) }}{{/each}}<button {{action 'remove'}}>X</button>
+{{#each module.ports as |port|}}{{component 
+  port.constructor.modelName 
+  port=port 
+  select=(action 'selectPort' port) 
+}}{{/each}}<button {{action 'remove'}}>X</button>

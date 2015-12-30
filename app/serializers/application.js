@@ -4,10 +4,58 @@ import Ember from 'ember';
 
 export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
 
-  //redefine JSONSerializer methods to support polymorphic hasMany relationship types
+  attrs: {
+    ports: { embedded: 'always' },
+    steps: { embedded: 'always' },
+  },
+
+  //redefine JSONSerializer and Embedded Records Mixin methods to support polymorphic hasMany relationship types
   //if the relationship is polymorphic, it will be represented as an array of objects with ids and types
 
   serializeHasMany: function(snapshot, json, relationship) {
+    var attr = relationship.key;
+    let isPolymorphic = relationship.options.polymorphic;
+
+    if (this.noSerializeOptionSpecified(attr)) {
+      this.serializeHasManyUnembedded(snapshot, json, relationship);
+      return;
+    }
+    var includeIds = this.hasSerializeIdsOption(attr);
+    var includeRecords = this.hasSerializeRecordsOption(attr);
+    var key, hasMany;
+    if (includeIds) {
+      key = this.keyForRelationship(attr, relationship.kind, 'serialize');
+      hasMany = snapshot.hasMany(attr);
+      let jsonOutput = Ember.A(hasMany).map((rel) => {
+        if(isPolymorphic){
+          return {id:rel.id, type:rel.modelName};
+        } else {
+          return rel.id;
+        }
+      });
+      json[key] = jsonOutput;
+    } else if (includeRecords) {
+      key = this.keyForAttribute(attr, 'serialize');
+      hasMany = snapshot.hasMany(attr);
+
+      Ember.warn(
+        `The embedded relationship '${key}' is undefined for '${snapshot.modelName}' with id '${snapshot.id}'. Please include it in your original payload.`,
+        Ember.typeOf(hasMany) !== 'undefined',
+        { id: 'ds.serializer.embedded-relationship-undefined' }
+      );
+
+      json[key] = Ember.A(hasMany).map((embeddedSnapshot) => {
+        var embeddedJson = embeddedSnapshot.record.serialize({ includeId: true });
+        this.removeEmbeddedForeignKey(snapshot, embeddedSnapshot, relationship, embeddedJson);
+        if(isPolymorphic){
+          embeddedJson['type'] = embeddedSnapshot.modelName;
+        }
+        return embeddedJson;
+      });
+    }
+  },
+
+  serializeHasManyUnembedded: function(snapshot, json, relationship) {
     let key = relationship.key;
     let isPolymorphic = relationship.options.polymorphic;
 
@@ -40,6 +88,43 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
   },
 
   serializeBelongsTo: function(snapshot, json, relationship) {
+    var attr = relationship.key;
+    let isPolymorphic = relationship.options.polymorphic;
+
+    if (this.noSerializeOptionSpecified(attr)) {
+      this.serializeBelongsToUnembedded(snapshot, json, relationship);
+      return;
+    }
+    var includeIds = this.hasSerializeIdsOption(attr);
+    var includeRecords = this.hasSerializeRecordsOption(attr);
+    var embeddedSnapshot = snapshot.belongsTo(attr);
+    var key;
+    if (includeIds) {
+      key = this.keyForRelationship(attr, relationship.kind, 'serialize');
+      if (!embeddedSnapshot) {
+        json[key] = null;
+      } else {
+        if(isPolymorphic){
+          json[key] = {id:embeddedSnapshot.id, type:embeddedSnapshot.modelName};
+        } else {
+          json[key] = embeddedSnapshot.id;
+        }
+      }
+    } else if (includeRecords) {
+      key = this.keyForAttribute(attr, 'serialize');
+      if (!embeddedSnapshot) {
+        json[key] = null;
+      } else {
+        if(isPolymorphic){
+          embeddedSnapshot['type'] = embeddedSnapshot.modelName;
+        }
+        json[key] = embeddedSnapshot.record.serialize({ includeId: true });
+        this.removeEmbeddedForeignKey(snapshot, embeddedSnapshot, relationship, json[key]);
+      }
+    }
+  },
+
+  serializeBelongsToUnembedded: function(snapshot, json, relationship) {
     let key = relationship.key;
     let isPolymorphic = relationship.options.polymorphic;
 
@@ -62,6 +147,6 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
         json[payloadKey] = belongsTo.id;
       }
     }
-  }
+  },
 
 });

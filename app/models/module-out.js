@@ -31,7 +31,6 @@ export default Module.extend({
     this.addEventInPort('trig', 'sendEvent');
     this.addValueInPort('note', 'noteInPort');
 
-    this.save();
   },
 
 });

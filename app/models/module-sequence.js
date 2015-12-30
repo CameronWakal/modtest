@@ -39,25 +39,11 @@ export default Module.extend({
     var step;
     for(var i = 0; i < stepCount; i++) {
       step = this.store.createRecord('module-sequence-step', {sequence:this, index:i});
-      step.save();
     }
     //create ports
     this.addEventInPort('inc step', 'incrementStep');
     this.addValueOutPort('value', 'currentValue');
     this.addEventOutPort('trig', 'trigOutPort');
-
-    this.save();
-  },
-
-  deleteRecord() {
-    //currently all member models are destroyed immediately
-    //would be better but more complex to handle destruction/deletion/saving
-    //for member models?
-    this.get('steps').forEach(function(step){
-      step.destroyRecord();
-    });
-
-    this._super();
   },
 
 });
