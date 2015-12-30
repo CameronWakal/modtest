@@ -7,24 +7,25 @@ export default Ember.Component.extend({
   connections: [],
 
   didInsertElement(){
-    
+      this.onPortsChanged();
   },
 
-  onPortsChanged: Ember.observer('patch.portsChanged', function(sender, key, value, rev) {
-    if(this.get('patch.portsChanged')){
+  onPortsChanged: Ember.observer('needsUpdate', function(sender, key, value, rev) {
+    if(this.get('needsUpdate')){
       Ember.run.scheduleOnce('afterRender', this, function() {
         this.updateConnections();
         this.drawConnections();
-        this.set('patch.portsChanged', false);
+        this.attrs.didUpdate();
       });
     }
   }),
 
-  onPortsMoved: Ember.observer('patch.portsMoved', function(sender, key, value, rev) {
-    if(this.get('patch.portsMoved')){
-      console.log('ports moved');
-      this.drawConnections();
-      this.set('patch.portsMoved', false);
+  onPortsMoved: Ember.observer('needsDraw', function(sender, key, value, rev) {
+    if(this.get('needsDraw')){
+      Ember.run.scheduleOnce('afterRender', this, function() {
+        this.drawConnections();
+        this.attrs.didDraw();
+      });
     }
   }),
 
@@ -55,7 +56,6 @@ export default Ember.Component.extend({
   },
 
   drawConnections() {
-    console.log('drawConnections');
     var c= this.$().get(0);
     var ctx=c.getContext("2d");
     ctx.canvas.width  = window.innerWidth;

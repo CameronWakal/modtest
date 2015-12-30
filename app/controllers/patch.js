@@ -7,8 +7,31 @@ export default Ember.Controller.extend({
   destModule: null,
   destPort: null,
 
+  diagramNeedsUpdate: false,
+  diagramNeedsDraw: false,
+
+  modelChanged: Ember.observer('model', function(sender, key, value, rev) {
+    this.set('diagramNeedsUpdate', true);
+  }),
+
   actions: {
     
+    drawDiagram(){
+      this.set('diagramNeedsDraw', true);
+    },
+
+    diagramDidUpdate(){
+      Ember.run.scheduleOnce('afterRender', this, function() {
+        this.set('diagramNeedsUpdate', false);
+      });
+    },
+
+    diagramDidDraw(){
+      Ember.run.scheduleOnce('afterRender', this, function() {
+        this.set('diagramNeedsDraw', false);
+      });
+    },
+
     removeCurrentPatch() {
       let modules = this.model.get('modules');
       let modulesList = modules.toArray();
@@ -23,7 +46,7 @@ export default Ember.Controller.extend({
       this.model.get('modules').removeObject(module);
       this.model.save();
       module.remove();
-      this.model.set('portsChanged', true);
+      this.set('diagramNeedsUpdate', true);
 
     },
 
@@ -45,7 +68,7 @@ export default Ember.Controller.extend({
       sourcePort.get('connections').pushObject(destPort);
       sourcePort.get('module').save();
 
-      this.model.set('portsChanged', true);
+      this.set('diagramNeedsUpdate', true);
 
     },
 
@@ -53,7 +76,7 @@ export default Ember.Controller.extend({
       console.log('--- patchController removing connection between '+sourcePort+' and '+destPort);
       console.log('NOT IMPLEMENTED');
 
-      this.model.set('portsChanged', true);
+      this.set('diagramNeedsUpdate', true);
     },
 
     selectModulePort(module, port) {
