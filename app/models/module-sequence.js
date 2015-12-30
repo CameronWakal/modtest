@@ -8,27 +8,27 @@ export default Module.extend({
   steps: DS.hasMany('module-sequence-step'),
   currentStep: DS.belongsTo('module-sequence-step', {async:false}),
 
-  currentIndex: Ember.computed.alias('currentStep.index'),
-  currentValue: Ember.computed.alias('currentStep.value'),
-
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
 
   incrementStep(event) {
-    let currentStep = this.get('currentStep');
-    let currentIndex = this.get('currentIndex');
+    let step = this.get('currentStep');
+    let index = this.get('currentStep.index');
     let length = this.get('length');
-    let nextIndex = 0;
+    let steps = this.get('steps');
+    var nextStep;
 
-    //update currentStep
-    if(currentStep && currentIndex <= length-1 ) {
-        nextIndex = currentIndex+1;
+    //update step
+    if(!step) {
+      nextStep = steps.findBy('index', 0);
+    } else if(index < length-1) {
+      nextStep = steps.findBy('index', index+1);
+    } else {
+      nextStep = steps.findBy('index', 0);
     }
-    let nextStep = this.get('steps').findBy('index', nextIndex);
     this.set('currentStep', nextStep);
 
     //output event if current step has a value
-    let value = this.get('currentStep.value');
-    if(value) {
+    if(this.get('currentStep.value')) {
       this.get('trigOutPort').sendEvent(event);
     }
   },
@@ -42,7 +42,7 @@ export default Module.extend({
     }
     //create ports
     this.addEventInPort('inc step', 'incrementStep');
-    this.addValueOutPort('value', 'currentValue');
+    this.addValueOutPort('value', 'currentStep.value');
     this.addEventOutPort('trig', 'trigOutPort');
   },
 
