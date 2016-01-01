@@ -18,28 +18,39 @@ export default Ember.Component.extend({
   }),
   
   mouseDown(event) {
+    event.preventDefault();
     this.set('mouseIsDown', true);
     this.set('dragOffsetX', event.pageX - this.get('xPos') );
     this.set('dragOffsetY', event.pageY - this.get('yPos') );
+    $(document).on('mousemove', this.mouseMoveBody.bind(this));
+    $(document).on('mouseup', this.mouseUpBody.bind(this));
   },
   
-  mouseUp(event) {
-    if(this.get('mouseIsDragging')) {
-      this.get('module').save();
-    }
-    this.set('mouseIsDown', false);
-    this.set('mouseIsDragging', false);
+  mouseUpBody(event) {
+    event.preventDefault();
+    let self = this;
+    Ember.run(function(){
+      if(self.get('mouseIsDragging')) {
+        self.get('module').save();
+      }
+      self.set('mouseIsDown', false);
+      self.set('mouseIsDragging', false);
+      $(document).off('mousemove');
+      $(document).off('mouseup'); 
+    });
   },
   
-  mouseMove(event) {
-    if(this.get('mouseIsDown')){
-      this.set('mouseIsDragging', true);
-      this.set('xPos', event.pageX - this.get('dragOffsetX') );
-      this.set('yPos', event.pageY - this.get('dragOffsetY') );
-      this.attrs.drawDiagram();
-    }
+  mouseMoveBody(event) {
+    event.preventDefault();
+    let self = this;
+    Ember.run(function(){
+      self.set('mouseIsDragging', true);
+      self.set('xPos', event.pageX - self.get('dragOffsetX') );
+      self.set('yPos', event.pageY - self.get('dragOffsetY') );
+      self.attrs.drawDiagram();
+    });
   },
-  
+
   actions: {
     remove() {
       this.attrs.remove();

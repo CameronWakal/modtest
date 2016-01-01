@@ -27,9 +27,7 @@ export default Ember.Controller.extend({
     },
 
     diagramDidDraw(){
-      Ember.run.scheduleOnce('afterRender', this, function() {
         this.set('diagramNeedsDraw', false);
-      });
     },
 
     removeCurrentPatch() {
