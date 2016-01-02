@@ -10,16 +10,18 @@
     patch=model 
     needsUpdate=diagramNeedsUpdate 
     needsDraw=diagramNeedsDraw 
+    shouldDrawNewConnection=diagramShouldDrawNewConnection 
     didUpdate=(action 'diagramDidUpdate')
     didDraw=(action 'diagramDidDraw')
   }}
 
   <div class="modules" id="modules">
     {{#each model.modules as |module|}}{{component  module.constructor.modelName
-                                                        module=module 
-                                                        selectPort=(action 'selectModulePort' module) 
-                                                        remove=(action 'removeModule' module) 
-                                                        drawDiagram=(action 'drawDiagram')
+                                                    module=module 
+                                                    selectPort=(action 'selectModulePort' module) 
+                                                    remove=(action 'removeModule' module) 
+                                                    drawDiagram=(action 'drawDiagram') 
+                                                    setDiagramShouldDrawNewConnection=(action 'setDiagramShouldDrawNewConnection')
           }}{{/each}}
   </div>
 

@@ -9,3 +9,8 @@
   color: #000;
   border-color: #000;
 }
+
+.port.connectingFrom {
+  color: red;
+  border-color: red;
+}

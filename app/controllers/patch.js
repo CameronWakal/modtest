@@ -9,6 +9,7 @@ export default Ember.Controller.extend({
 
   diagramNeedsUpdate: false,
   diagramNeedsDraw: false,
+  diagramShouldDrawNewConnection: false,
 
   modelChanged: Ember.observer('model', function(sender, key, value, rev) {
     this.set('diagramNeedsUpdate', true);
@@ -28,6 +29,10 @@ export default Ember.Controller.extend({
 
     diagramDidDraw(){
         this.set('diagramNeedsDraw', false);
+    },
+
+    setDiagramShouldDrawNewConnection(shouldDraw){
+        this.set('diagramShouldDrawNewConnection', shouldDraw);
     },
 
     removeCurrentPatch() {

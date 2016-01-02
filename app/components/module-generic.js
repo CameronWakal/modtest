@@ -3,9 +3,11 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   classNames: ['module'],
   attributeBindings: ['inlineStyles:style'],
+  classNameBindings: ['isConnectingFrom:connectingFrom'],
 
   mouseIsDragging: false,
   mouseIsDown: false,
+  isConnectingFrom: false,
   xPos: Ember.computed.alias('module.xPos'),
   yPos: Ember.computed.alias('module.yPos'),
 
@@ -24,6 +26,7 @@ export default Ember.Component.extend({
     this.set('dragOffsetY', event.pageY - this.get('yPos') );
     $(document).on('mousemove', this.mouseMoveBody.bind(this));
     $(document).on('mouseup', this.mouseUpBody.bind(this));
+    console.log('module mousedown');
   },
   
   mouseUpBody(event) {
@@ -58,6 +61,10 @@ export default Ember.Component.extend({
     selectPort(port) {
       console.log('---- module component sending select action for port '+port.get('label'));
       this.attrs.selectPort(port);
+    },
+    setDiagramShouldDrawNewConnection(shouldDraw){
+      this.set('isConnectingFrom', shouldDraw);
+      this.attrs.setDiagramShouldDrawNewConnection(shouldDraw);
     },
   },
   

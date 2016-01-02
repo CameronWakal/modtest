@@ -5,11 +5,13 @@ export default Ember.Component.extend({
   tagName: 'canvas',
   
   connections: [],
+  newConnectionFrom: null,
 
   didInsertElement(){
       this.onPortsChanged();
   },
 
+  //flag changes to true when controller wants diagram to update list of ports
   onPortsChanged: Ember.observer('needsUpdate', function(sender, key, value, rev) {
     if(this.get('needsUpdate')){
       Ember.run.scheduleOnce('afterRender', this, function() {
@@ -20,6 +22,21 @@ export default Ember.Component.extend({
     }
   }),
 
+  //flag represents whether diagram should be drawing connection between
+  //new connection port and current cursor location on mousemove
+  onShouldDrawNewConnection: Ember.observer('shouldDrawNewConnection', function(sender, key, value, rev) {
+    if(this.get('shouldDrawNewConnection')){
+      Ember.run.scheduleOnce('afterRender', this, function() {
+        this.addNewConnection();
+      });
+    } else {
+      Ember.run.scheduleOnce('afterRender', this, function() {
+        this.removeNewConnection();
+      });
+    }
+  }),
+
+  //flag is changed to true when controller wants diagram to redraw
   onPortsMoved: Ember.observer('needsDraw', function(sender, key, value, rev) {
     if(this.get('needsDraw')){
       Ember.run.scheduleOnce('afterRender', this, function() {
@@ -29,6 +46,8 @@ export default Ember.Component.extend({
     }
   }),
 
+  //search for connected ports in dom and store the jquery objects
+  //so we can draw connections between ports later.
   updateConnections() {
     console.log('update connections');
     var outPorts, inPorts, outPortDom, inPortDom;
@@ -55,12 +74,37 @@ export default Ember.Component.extend({
     });
   },
 
-  drawConnections() {
+  //start drawing a line from the new connection port to the cursor location on mouse move
+  addNewConnection() {
+    console.log('add new connection');
+    let module = this.$().siblings('#modules').children('.connectingFrom');
+    let port = $(module).children('.connectingFrom');
+    this.set('newConnectionFrom', port);
+    $(document).on('mousemove', this.mouseMoveBody.bind(this));
+  },
+
+  //stop drawing from the new connection port to the cursor location
+  removeNewConnection() {
+    console.log('remove new connection');
+    this.set('newConnectionFrom', null);
+    $(document).off('mousemove');
+    this.drawConnections();
+  },
+
+  //callback for mousemove on body
+  mouseMoveBody(event) {
+    this.drawConnections(event);
+  },
+
+  //draw connections between ports,
+  //draw line from new connection port to cursor position
+  drawConnections(event) {
     var c= this.$().get(0);
     var ctx=c.getContext("2d");
     ctx.canvas.width  = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
-    
+    ctx.strokeStyle = 'black';
+
     var startX, startY, endX, endY;
 
     let connections = this.get('connections');
@@ -77,6 +121,20 @@ export default Ember.Component.extend({
       ctx.stroke();
 
     });
+
+    //drawing a line from selected port to current mouse drag position
+    let newPort = this.get('newConnectionFrom');
+    if(newPort) {
+      startX = $(newPort).offset().left + $(newPort).outerWidth()/2;
+      startY = $(newPort).offset().top + $(newPort).outerHeight()/2;
+      
+      ctx.beginPath();
+      ctx.moveTo(startX, startY);
+      ctx.lineTo(event.pageX, event.pageY);
+      ctx.strokeStyle = 'red';
+      ctx.stroke();
+    }
+
   },
   
 
