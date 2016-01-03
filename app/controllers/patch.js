@@ -10,6 +10,7 @@ export default Ember.Controller.extend({
   diagramNeedsUpdate: false,
   diagramNeedsDraw: false,
   diagramShouldDrawNewConnection: false,
+  newConnectionClass: null,
 
   modelChanged: Ember.observer('model', function(sender, key, value, rev) {
     this.set('diagramNeedsUpdate', true);
@@ -31,8 +32,17 @@ export default Ember.Controller.extend({
         this.set('diagramNeedsDraw', false);
     },
 
-    setDiagramShouldDrawNewConnection(shouldDraw){
-        this.set('diagramShouldDrawNewConnection', shouldDraw);
+    setDiagramShouldDrawNewConnectionFrom(portType){
+      if(portType) {
+        this.set('diagramShouldDrawNewConnection', true);
+        this.set('newConnectionClass', 'new-connection new-connection-from-'+portType);
+        console.log('drawing new connection from '+portType);
+      } else {
+        this.set('diagramShouldDrawNewConnection', false);
+        this.set('newConnectionClass', null);
+        console.log('not drawing new connection');
+      }
+     
     },
 
     removeCurrentPatch() {

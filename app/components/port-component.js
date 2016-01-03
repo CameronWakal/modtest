@@ -20,7 +20,7 @@ export default Ember.Component.extend({
     this.set('mouseIsDown', true);
     this.set('isConnectingFrom', true);
     $(document).on('mouseup', this.mouseUpBody.bind(this));
-    this.attrs.setDiagramShouldDrawNewConnection(true);
+    this.attrs.setDiagramShouldDrawNewConnectionFrom(this.get('port.type'));
     return false;
   },
   
@@ -30,7 +30,7 @@ export default Ember.Component.extend({
     Ember.run(function(){
       self.set('mouseIsDown', false);
       self.set('isConnectingFrom', false);
-      self.attrs.setDiagramShouldDrawNewConnection(false);
+      self.attrs.setDiagramShouldDrawNewConnectionFrom(null);
       $(document).off('mouseup'); 
     });
   },

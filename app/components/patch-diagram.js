@@ -81,6 +81,7 @@ export default Ember.Component.extend({
     let port = $(module).children('.connectingFrom');
     this.set('newConnectionFrom', port);
     $(document).on('mousemove', this.mouseMoveBody.bind(this));
+    this.drawConnections();
   },
 
   //stop drawing from the new connection port to the cursor location
@@ -99,11 +100,16 @@ export default Ember.Component.extend({
   //draw connections between ports,
   //draw line from new connection port to cursor position
   drawConnections(event) {
+    let newPort = this.get('newConnectionFrom');
+
     var c= this.$().get(0);
     var ctx=c.getContext("2d");
     ctx.canvas.width  = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
     ctx.strokeStyle = 'black';
+    if(newPort) {
+      ctx.strokeStyle = '#bbb';
+    }
 
     var startX, startY, endX, endY;
 
@@ -123,8 +129,7 @@ export default Ember.Component.extend({
     });
 
     //drawing a line from selected port to current mouse drag position
-    let newPort = this.get('newConnectionFrom');
-    if(newPort) {
+    if(newPort && event) {
       startX = $(newPort).offset().left + $(newPort).outerWidth()/2;
       startY = $(newPort).offset().top + $(newPort).outerHeight()/2;
       

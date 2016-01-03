@@ -5,7 +5,7 @@
   <button {{action 'addConnection' sourcePort destPort}}>Connect</button>
 </div>
 
-<div class="patch">
+<div class="patch {{newConnectionClass}}">
   {{patch-diagram 
     patch=model 
     needsUpdate=diagramNeedsUpdate 
@@ -21,7 +21,7 @@
                                                     selectPort=(action 'selectModulePort' module) 
                                                     remove=(action 'removeModule' module) 
                                                     drawDiagram=(action 'drawDiagram') 
-                                                    setDiagramShouldDrawNewConnection=(action 'setDiagramShouldDrawNewConnection')
+                                                    setDiagramShouldDrawNewConnectionFrom=(action 'setDiagramShouldDrawNewConnectionFrom')
           }}{{/each}}
   </div>
 

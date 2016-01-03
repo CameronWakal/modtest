@@ -62,9 +62,15 @@ export default Ember.Component.extend({
       console.log('---- module component sending select action for port '+port.get('label'));
       this.attrs.selectPort(port);
     },
-    setDiagramShouldDrawNewConnection(shouldDraw){
-      this.set('isConnectingFrom', shouldDraw);
-      this.attrs.setDiagramShouldDrawNewConnection(shouldDraw);
+    setDiagramShouldDrawNewConnectionFrom(portType){
+      if(portType) {
+        this.set('isConnectingFrom', true);
+        this.attrs.setDiagramShouldDrawNewConnectionFrom(portType);
+      } else {
+        this.set('isConnectingFrom', false);
+        this.attrs.setDiagramShouldDrawNewConnectionFrom(null);
+      }
+      
     },
   },
   
