@@ -14,8 +14,8 @@ export default Ember.Route.extend({
   },
 
   actions: {
-    new() {
-      let patch = this.store.createRecord('patch', {name: 'my cool patch'});
+    newPatch() {
+      let patch = this.store.createRecord('patch');
       patch.save();
       this.transitionTo('patch', patch);
     },
