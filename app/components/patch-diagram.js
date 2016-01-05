@@ -77,10 +77,10 @@ export default Ember.Component.extend({
   //start drawing a line from the new connection port to the cursor location on mouse move
   addNewConnection() {
     console.log('add new connection');
-    let module = this.$().siblings('#modules').children('.connectingFrom');
+    let module = this.$().siblings('#modules').children('.portConnectingFrom');
     let port = $(module).children('.connectingFrom');
     this.set('newConnectionFrom', port);
-    //$(document).on('mousemove', this.mouseMoveBody.bind(this));
+    $(document).on('mousemove', this.mouseMoveBody.bind(this));
     this.drawConnections();
   },
 
@@ -88,22 +88,18 @@ export default Ember.Component.extend({
   removeNewConnection() {
     console.log('remove new connection');
     this.set('newConnectionFrom', null);
-    //$(document).off('mousemove');
+    $(document).off('mousemove');
     this.drawConnections();
   },
 
-  /*
-  mousemoves not working now that patch component is eventmanager
   //callback for mousemove on body
   mouseMoveBody(event) {
-    console.log('diagram mouseMoveBody');
     this.drawConnections(event);
   },
-  */
 
   //draw connections between ports,
   //draw line from new connection port to cursor position
-  drawConnections() {
+  drawConnections(event) {
     let newPort = this.get('newConnectionFrom');
 
     var c= this.$().get(0);
@@ -133,14 +129,13 @@ export default Ember.Component.extend({
     });
 
     //drawing a line from selected port to current mouse drag position
-    if(newPort) {
+    if(newPort && event) {
       startX = $(newPort).offset().left + $(newPort).outerWidth()/2;
       startY = $(newPort).offset().top + $(newPort).outerHeight()/2;
       
       ctx.beginPath();
       ctx.moveTo(startX, startY);
-      ctx.lineTo(this.get('connectingPosX'), this.get('connectingPosY'));
-      console.log(this.get('connectingPosX'),this.get('connectingPosY'));
+      ctx.lineTo(event.pageX, event.pageY);
       ctx.strokeStyle = 'red';
       ctx.stroke();
     }

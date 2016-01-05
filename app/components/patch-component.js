@@ -8,11 +8,6 @@ export default Ember.Component.extend({
     'newConnectionClass',
   ],
 
-  didInsertElement() {
-    console.log('inserted patch component');
-    this.set('eventManager.patchComponent', this);
-  },
-
   sourceModule: null,
   sourcePort: null,
   destModule: null,
@@ -23,60 +18,55 @@ export default Ember.Component.extend({
   diagramShouldDrawNewConnection: false,
   newConnectionClass: null,
 
-  eventManager: Ember.Object.create({
+  movingModule: null,
+  moveOffsetX: null,
+  moveOffsetY: null,
+  
+  connectingFromPort: null,
+  connectingPosX: null,
+  connectingPosY: null,
 
-    patchComponent: null,
-    movingModule: null,
-    moveOffsetX: null,
-    moveOffsetY: null,
-    
-    connectingFromPort: null,
-    connectingPosX: null,
-    connectingPosY: null,
-
-    mouseMove: function(event, view) {
-      event.preventDefault();
-      let module = this.get('movingModule');
-      if(module) {
-        module.set('xPos', event.pageX - this.get('moveOffsetX') );
-        module.set('yPos', event.pageY - this.get('moveOffsetY') );
-        this.get('patchComponent').send('drawDiagram');
-      }
-      let port = this.get('connectingFromPort');
-      if(port) {
-        this.get('patchComponent').send('drawDiagram');
-      }
+  mouseMove: function(event, view) {
+    event.preventDefault();
+    let module = this.get('movingModule');
+    if(module) {
+      module.set('xPos', event.pageX - this.get('moveOffsetX') );
+      module.set('yPos', event.pageY - this.get('moveOffsetY') );
+      this.send('drawDiagram');
     }
-  }),
+    let port = this.get('connectingFromPort');
+    if(port) {
+      this.send('drawDiagram');
+    }
+  },
   
   patchChanged: Ember.observer('patch', function(sender, key, value, rev) {
     this.set('diagramNeedsUpdate', true);
-    this.set('eventManager.patchComponent', this);
   }),
 
   actions: {
     
     moduleStartedMoving(module, event) {
-      this.set('eventManager.movingModule', module);
-      this.set('eventManager.moveOffsetX', event.pageX - module.get('xPos') );
-      this.set('eventManager.moveOffsetY', event.pageY - module.get('yPos') );
+      this.set('movingModule', module);
+      this.set('moveOffsetX', event.pageX - module.get('xPos') );
+      this.set('moveOffsetY', event.pageY - module.get('yPos') );
     },
 
     moduleFinishedMoving() {
       //todo: will this hit the service if coordinates have not changed?
-      this.get('eventManager.movingModule').save(); 
-      this.set('eventManager.movingModule', null);
+      this.get('movingModule').save(); 
+      this.set('movingModule', null);
     },
 
     portStartedConnecting(module, port, event) {
-      console.log('port started connecting', port, module);
-      this.set('eventManager.connectingFromPort', port);
+      console.log('port started connecting');
+      this.set('connectingFromPort', port);
       this.send('setDiagramShouldDrawNewConnectionFrom', port.get('type'));
     },
 
     portFinishedConnecting() {
       console.log('port finished connecting');
-      this.set('eventManager.connectingFromPort', null);
+      this.set('connectingFromPort', null);
       this.send('setDiagramShouldDrawNewConnectionFrom', null);
     },
 
