@@ -12,6 +12,8 @@
   shouldDrawNewConnection=diagramShouldDrawNewConnection 
   didUpdate=(action 'diagramDidUpdate')
   didDraw=(action 'diagramDidDraw')
+  connectingPosX=eventManager.connectingPosX 
+  connectingPosY=eventManager.connectingPosY 
 }}
 
 <div class="modules" id="modules">
@@ -20,6 +22,9 @@
                                                   selectPort=(action 'selectModulePort' module) 
                                                   remove=(action 'removeModule' module) 
                                                   drawDiagram=(action 'drawDiagram') 
-                                                  setDiagramShouldDrawNewConnectionFrom=(action 'setDiagramShouldDrawNewConnectionFrom')
+                                                  portStartedConnecting=(action 'portStartedConnecting' module)
+                                                  portFinishedConnecting=(action 'portFinishedConnecting') 
+                                                  startedMoving=(action 'moduleStartedMoving' module) 
+                                                  finishedMoving=(action 'moduleFinishedMoving')
         }}{{/each}}
 </div>

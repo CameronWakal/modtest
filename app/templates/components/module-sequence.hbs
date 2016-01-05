@@ -4,9 +4,4 @@
 {{#each module.steps as |step|}}{{module-sequence-step step=step value=step.value}}{{/each}}
 </div>
 
-{{#each module.ports as |port|}}{{component 
-  port.constructor.modelName 
-  port=port 
-  select=(action 'selectPort' port) 
-  setDiagramShouldDrawNewConnectionFrom=(action 'setDiagramShouldDrawNewConnectionFrom')
-}}{{/each}}<button {{action 'remove'}}>X</button>
+{{partial 'module-ports'}}<button {{action 'remove'}}>X</button>

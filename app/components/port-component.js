@@ -8,19 +8,13 @@ export default Ember.Component.extend({
     'port.uniqueCssIdentifier'
   ],
 
-  mouseIsDown: false,
   isConnectingFrom: false,
-
-  didInsertElement() {
-    
-  },
-
+  
   mouseDown(event) {
     event.preventDefault();
-    this.set('mouseIsDown', true);
     this.set('isConnectingFrom', true);
     $(document).on('mouseup', this.mouseUpBody.bind(this));
-    this.attrs.setDiagramShouldDrawNewConnectionFrom(this.get('port.type'));
+    this.sendAction('startedConnecting', event);
     return false;
   },
   
@@ -28,9 +22,8 @@ export default Ember.Component.extend({
     event.preventDefault();
     let self = this;
     Ember.run(function(){
-      self.set('mouseIsDown', false);
       self.set('isConnectingFrom', false);
-      self.attrs.setDiagramShouldDrawNewConnectionFrom(null);
+      self.sendAction('finishedConnecting');
       $(document).off('mouseup'); 
     });
   },
