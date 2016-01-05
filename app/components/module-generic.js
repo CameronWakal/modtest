@@ -3,15 +3,16 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   classNames: ['module'],
   attributeBindings: ['inlineStyles:style'],
-  classNameBindings: [
-    'portIsConnectingFrom:portConnectingFrom',
-    'isMoving:moving',
-  ],
+  classNameBindings: ['portIsConnectingFrom:portConnectingFrom'],
 
   isMoving: false,
-  portIsConnectingFrom: false,
+  didMove: false,
+  moveOffsetX: null,
+  moveOffsetY: null,
   xPos: Ember.computed.alias('module.xPos'),
   yPos: Ember.computed.alias('module.yPos'),
+
+  portIsConnectingFrom: false,
 
   inlineStyles: Ember.computed('xPos', 'yPos', function(){
     let styleString = 'left:'+this.get('xPos')+'px;'+'top:'+this.get('yPos')+'px';
@@ -20,9 +21,22 @@ export default Ember.Component.extend({
   
   mouseDown(event) {
     this.set('isMoving', true);
+    this.set('moveOffsetX', event.pageX - this.get('xPos') );
+    this.set('moveOffsetY', event.pageY - this.get('yPos') );
     $(document).on('mouseup', this.mouseUpBody.bind(this));
-    this.sendAction('startedMoving', event);
+    $(document).on('mousemove', this.mouseMoveBody.bind(this));
+    this.sendAction('startedMoving');
     console.log('module mousedown');
+  },
+
+  mouseMoveBody(event) {
+    event.preventDefault();
+    let self = this;
+    Ember.run(function(){
+      self.set('didMove', true);
+      self.set('xPos', event.pageX - self.get('moveOffsetX') );
+      self.set('yPos', event.pageY - self.get('moveOffsetY') );
+    });
   },
   
   mouseUpBody(event) {
@@ -30,8 +44,14 @@ export default Ember.Component.extend({
     let self = this;
     Ember.run(function(){
       self.set('isMoving', false);
+      if(self.get('didMove')) {
+        self.get('module').save();
+        self.set('didMove', false);
+        console.log('module position saved');
+      }
       self.sendAction('finishedMoving');
-      $(document).off('mouseup'); 
+      $(document).off('mouseup');
+      $(document).off('mousemove');
     });
   },
 

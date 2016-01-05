@@ -19,8 +19,6 @@ export default Ember.Component.extend({
   newConnectionClass: null,
 
   movingModule: null,
-  moveOffsetX: null,
-  moveOffsetY: null,
   
   connectingFromPort: null,
   connectingPosX: null,
@@ -28,14 +26,10 @@ export default Ember.Component.extend({
 
   mouseMove: function(event, view) {
     event.preventDefault();
-    let module = this.get('movingModule');
-    if(module) {
-      module.set('xPos', event.pageX - this.get('moveOffsetX') );
-      module.set('yPos', event.pageY - this.get('moveOffsetY') );
+    if(this.get('movingModule')) {
       this.send('drawDiagram');
     }
-    let port = this.get('connectingFromPort');
-    if(port) {
+    if(this.get('connectingFromPort')) {
       this.send('drawDiagram');
     }
   },
@@ -46,15 +40,11 @@ export default Ember.Component.extend({
 
   actions: {
     
-    moduleStartedMoving(module, event) {
+    moduleStartedMoving(module) {
       this.set('movingModule', module);
-      this.set('moveOffsetX', event.pageX - module.get('xPos') );
-      this.set('moveOffsetY', event.pageY - module.get('yPos') );
     },
 
     moduleFinishedMoving() {
-      //todo: will this hit the service if coordinates have not changed?
-      this.get('movingModule').save(); 
       this.set('movingModule', null);
     },
 
