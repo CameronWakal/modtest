@@ -43,17 +43,7 @@ export default Ember.Component.extend({
       });
     }
   }),
-
-  //flag is changed to true when controller wants diagram to redraw
-  onPortsMoved: Ember.observer('needsDraw', function(sender, key, value, rev) {
-    if(this.get('needsDraw')){
-      Ember.run.scheduleOnce('afterRender', this, function() {
-        this.drawConnections();
-        this.attrs.didDraw();
-      });
-    }
-  }),
-
+  
   //search for connected ports in dom and store the jquery objects
   //so we can draw connections between ports later.
   updateConnections() {
@@ -125,13 +115,10 @@ export default Ember.Component.extend({
   //callback for mousemove on body
   mouseMoveBody(event) {
     event.preventDefault();
-    console.log('diagram movingModule', this.get('movingModule'));
     if(this.get('movingModule')) {
-      console.log('diagram movingModule');
       this.drawConnections(event);
     }
     if(this.get('connectingFromPort')) {
-      console.log('diagram connectingFromPort');
       this.drawConnections(event);
     }
   },
@@ -169,7 +156,6 @@ export default Ember.Component.extend({
 
     //drawing a line from selected port to current mouse drag position
     if(newPort && event) {
-      console.log('newport', newPort);
       startX = $(newPort).offset().left + $(newPort).outerWidth()/2;
       startY = $(newPort).offset().top + $(newPort).outerHeight()/2;
       

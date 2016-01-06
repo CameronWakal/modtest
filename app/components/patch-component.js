@@ -49,21 +49,13 @@ export default Ember.Component.extend({
 
 
     //diagram shit
-
-    drawDiagram(){
-      this.set('diagramNeedsDraw', true);
-    },
-
+    
     diagramDidUpdate(){
       Ember.run.scheduleOnce('afterRender', this, function() {
         this.set('diagramNeedsUpdate', false);
       });
     },
-
-    diagramDidDraw(){
-        this.set('diagramNeedsDraw', false);
-    },
-
+    
     setDiagramShouldDrawNewConnectionFrom(portType){
       if(portType) {
         this.set('diagramShouldDrawNewConnection', true);
