@@ -3,10 +3,7 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   classNames: ['patch'],
 
-  classNameBindings: [
-    'diagramShouldDrawNewConnection:new-connection', 
-    'newConnectionClass',
-  ],
+  classNameBindings: ['newConnectionClass'],
 
   sourceModule: null,
   sourcePort: null,
@@ -14,8 +11,7 @@ export default Ember.Component.extend({
   destPort: null,
 
   diagramNeedsUpdate: true,
-  diagramNeedsDraw: false,
-  diagramShouldDrawNewConnection: false,
+  //css class to tell ports which type can accept the current pending connection
   newConnectionClass: null,
 
   movingModule: null,
@@ -58,11 +54,9 @@ export default Ember.Component.extend({
     
     setDiagramShouldDrawNewConnectionFrom(portType){
       if(portType) {
-        this.set('diagramShouldDrawNewConnection', true);
-        this.set('newConnectionClass', 'new-connection-from-'+portType);
+        this.set('newConnectionClass', 'new-connection new-connection-from-'+portType);
         console.log('drawing new connection from '+portType);
       } else {
-        this.set('diagramShouldDrawNewConnection', false);
         this.set('newConnectionClass', null);
         console.log('not drawing new connection');
       }

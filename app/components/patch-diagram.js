@@ -76,7 +76,6 @@ export default Ember.Component.extend({
   addNewConnection() {
     console.log('add new connection');
     let module = this.$().siblings('#modules').children('.portConnectingFrom');
-    console.log('addNewConnection module', module);
     let port = $(module).children('.connectingFrom');
     this.addMouseListener();
     this.set('newConnectionFrom', port);
