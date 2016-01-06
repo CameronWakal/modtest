@@ -74,6 +74,14 @@ export default Ember.Component.extend({
       this.sendAction('portFinishedConnecting');
     },
 
+    mouseEnterPort(port) {
+      this.sendAction('mouseEnterPort', port);
+    },
+
+    mouseLeavePort(port) {
+      this.sendAction('mouseLeavePort');
+    },
+
   },
   
 });

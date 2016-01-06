@@ -114,10 +114,7 @@ export default Ember.Component.extend({
   //callback for mousemove on body
   mouseMoveBody(event) {
     event.preventDefault();
-    if(this.get('movingModule')) {
-      this.drawConnections(event);
-    }
-    if(this.get('connectingFromPort')) {
+    if(this.get('movingModule') || this.get('connectingFromPort')) {
       this.drawConnections(event);
     }
   },
