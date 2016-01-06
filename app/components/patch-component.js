@@ -19,20 +19,7 @@ export default Ember.Component.extend({
   newConnectionClass: null,
 
   movingModule: null,
-  
   connectingFromPort: null,
-  connectingPosX: null,
-  connectingPosY: null,
-
-  mouseMove: function(event, view) {
-    event.preventDefault();
-    if(this.get('movingModule')) {
-      this.send('drawDiagram');
-    }
-    if(this.get('connectingFromPort')) {
-      this.send('drawDiagram');
-    }
-  },
   
   patchChanged: Ember.observer('patch', function(sender, key, value, rev) {
     this.set('diagramNeedsUpdate', true);

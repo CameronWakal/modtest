@@ -7,9 +7,31 @@ export default Ember.Component.extend({
   connections: [],
   newConnectionFrom: null,
 
+  mouseListenerAdded: false,
+
   didInsertElement(){
       this.onPortsChanged();
   },
+
+  onMovingModuleChanged: Ember.observer('movingModule', function(sender, key, value, rev) {
+    if(this.get('movingModule')) {
+      this.addMouseListener();
+    } else {
+      this.removeMouseListener();
+    }
+  }),
+
+  onConnectingFromPortChanged: Ember.observer('connectingFromPort', function(sender, key, value, rev) {
+    if(this.get('connectingFromPort')) {
+      Ember.run.scheduleOnce('afterRender', this, function() {
+        //if this isn't scheduled, the ember classNameBindings don't get updated
+        //in time to be used by this function.
+        this.addNewConnection();
+      });
+    } else {
+      this.removeNewConnection();
+    }
+  }),
 
   //flag changes to true when controller wants diagram to update list of ports
   onPortsChanged: Ember.observer('needsUpdate', function(sender, key, value, rev) {
@@ -18,20 +40,6 @@ export default Ember.Component.extend({
         this.updateConnections();
         this.drawConnections();
         this.attrs.didUpdate();
-      });
-    }
-  }),
-
-  //flag represents whether diagram should be drawing connection between
-  //new connection port and current cursor location on mousemove
-  onShouldDrawNewConnection: Ember.observer('shouldDrawNewConnection', function(sender, key, value, rev) {
-    if(this.get('shouldDrawNewConnection')){
-      Ember.run.scheduleOnce('afterRender', this, function() {
-        this.addNewConnection();
-      });
-    } else {
-      Ember.run.scheduleOnce('afterRender', this, function() {
-        this.removeNewConnection();
       });
     }
   }),
@@ -78,9 +86,10 @@ export default Ember.Component.extend({
   addNewConnection() {
     console.log('add new connection');
     let module = this.$().siblings('#modules').children('.portConnectingFrom');
+    console.log('addNewConnection module', module);
     let port = $(module).children('.connectingFrom');
+    this.addMouseListener();
     this.set('newConnectionFrom', port);
-    $(document).on('mousemove', this.mouseMoveBody.bind(this));
     this.drawConnections();
   },
 
@@ -88,13 +97,43 @@ export default Ember.Component.extend({
   removeNewConnection() {
     console.log('remove new connection');
     this.set('newConnectionFrom', null);
-    $(document).off('mousemove');
+    this.removeMouseListener();
     this.drawConnections();
+  },
+
+  //add a mouse listener if it isn't already set
+  addMouseListener() {
+    let mouseListenerAdded = this.get('mouseListenerAdded');
+    if(!mouseListenerAdded) {
+      $(document).on('mousemove', this.mouseMoveBody.bind(this));
+      this.set('mouseListenerAdded', true);
+    }
+  },
+
+  //remove the mouse listener only if there is neither a moving module or a connecting port
+  removeMouseListener() {
+    let mouseListenerAdded = this.get('mouseListenerAdded');
+    let movingModule = this.get('movingModule');
+    let connectingFromPort = this.get('connectingFromPort');
+    if(mouseListenerAdded && !movingModule && !connectingFromPort) {
+      $(document).off('mousemove');
+      this.set('mouseListenerAdded', false);
+    }
+    
   },
 
   //callback for mousemove on body
   mouseMoveBody(event) {
-    this.drawConnections(event);
+    event.preventDefault();
+    console.log('diagram movingModule', this.get('movingModule'));
+    if(this.get('movingModule')) {
+      console.log('diagram movingModule');
+      this.drawConnections(event);
+    }
+    if(this.get('connectingFromPort')) {
+      console.log('diagram connectingFromPort');
+      this.drawConnections(event);
+    }
   },
 
   //draw connections between ports,
@@ -130,6 +169,7 @@ export default Ember.Component.extend({
 
     //drawing a line from selected port to current mouse drag position
     if(newPort && event) {
+      console.log('newport', newPort);
       startX = $(newPort).offset().left + $(newPort).outerWidth()/2;
       startY = $(newPort).offset().top + $(newPort).outerHeight()/2;
       
