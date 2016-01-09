@@ -64,7 +64,7 @@ export default Ember.Component.extend({
     mouseEnterPort(toPort) {
       let fromPort = this.get('connectingFromPort');
       if(fromPort) { //we're dragging to create a new connection
-        if(toPort.get('type') == fromPort.get('compatibleType')) { //we mouseEntered a compatible port type
+        if(toPort.get('type') === fromPort.get('compatibleType')) { //we mouseEntered a compatible port type
           if(!fromPort.get('connections').findBy('id', toPort.id)) { //the two ports aren't already connected
             this.set('connectingToPort', toPort);
           }

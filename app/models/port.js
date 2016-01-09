@@ -24,4 +24,13 @@ export default DS.Model.extend({
     return this.get('connections.length');
   }),
 
+  //remove all connections
+  disconnect() {
+    let connections = this.get('connections').toArray();
+    connections.forEach(function(connection){
+      connection.get('connections').removeObject(this);
+      connection.get('module').save();
+    }, this);
+  },
+
 });
