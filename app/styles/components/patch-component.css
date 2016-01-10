@@ -7,7 +7,8 @@
 }
 
 .patch-connections {
-  position: relative;
+  position: absolute;
+  bottom: 0;
   z-index: 100;
 }
 

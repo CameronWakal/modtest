@@ -1,8 +1,3 @@
 <h3>Out</h3>
 
-{{#each module.ports as |port|}}{{component 
-  port.constructor.modelName 
-  port=port 
-  select=(action 'selectPort' port) 
-  setDiagramShouldDrawNewConnectionFrom=(action 'setDiagramShouldDrawNewConnectionFrom')
-}}{{/each}}<button {{action 'remove'}}>X</button>
+{{partial 'module-ports'}}<button {{action 'remove'}}>X</button>

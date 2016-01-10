@@ -2,7 +2,7 @@
 @import 'components/module.css';
 @import 'components/module-sequence-step.css';
 @import 'components/patch-diagram.css';
-@import 'patch.css';
+@import 'components/patch-component.css';
 
 html, input, button {
   font-family: Menlo, Monospace;

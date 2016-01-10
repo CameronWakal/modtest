@@ -8,29 +8,29 @@ export default DS.Model.extend({
   uniqueCssIdentifier: Ember.computed('id', function(){
     return 'port-'+this.id;
   }),
-
-  signal: Ember.computed('constructor.modelName', function(){
-    let modelName = this.get('constructor.modelName');
-    if(modelName==='port-event-in' || modelName==='port-event-out'){
-      return 'event';
-    } else {
-      return 'value';
-    }
-  }),
-  
-  direction: Ember.computed('constructor.modelName', function(){
-    let modelName = this.get('constructor.modelName');
-    if(modelName==='port-event-in' || modelName==='port-value-in'){
-      return 'destination';
-    } else {
-      return 'source';
-    }
-  }),
   
   type: Ember.computed.alias('constructor.modelName'),
+
+  compatibleType: Ember.computed(function() {
+    switch(this.constructor.modelName) {
+      case 'port-value-in': return 'port-value-out';
+      case 'port-value-out': return 'port-value-in';
+      case 'port-event-out': return 'port-event-in';
+      case 'port-event-in': return 'port-event-out';
+    }
+  }),
 
   isConnected: Ember.computed('connections', function() {
     return this.get('connections.length');
   }),
+
+  //remove all connections
+  disconnect() {
+    let connections = this.get('connections').toArray();
+    connections.forEach(function(connection){
+      connection.get('connections').removeObject(this);
+      connection.get('module').save();
+    }, this);
+  },
 
 });

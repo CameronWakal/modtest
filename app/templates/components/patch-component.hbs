@@ -1,0 +1,24 @@
+<div class="patch-connections">
+  <button {{action 'addModule' 'clock'}}>+Clock</button><button {{action 'addModule' 'out'}}>+Out</button><button {{action 'addModule' 'sequence'}}>+Sequence</button>
+</div>
+
+{{patch-diagram 
+  patch=patch 
+  needsUpdate=diagramNeedsUpdate 
+  didUpdate=(action 'diagramDidUpdate')
+  movingModule=movingModule
+  connectingFromPort=connectingFromPort
+}}
+
+<div class="modules" id="modules">
+  {{#each patch.modules as |module|}}{{component  module.constructor.modelName
+                                                  module=module 
+                                                  remove=(action 'removeModule' module)  
+                                                  portStartedConnecting=(action 'portStartedConnecting' module)
+                                                  portFinishedConnecting=(action 'portFinishedConnecting') 
+                                                  startedMoving=(action 'moduleStartedMoving' module) 
+                                                  finishedMoving=(action 'moduleFinishedMoving')
+                                                  mouseEnterPort=(action 'mouseEnterPort')
+                                                  mouseLeavePort=(action 'mouseLeavePort')
+        }}{{/each}}
+</div>

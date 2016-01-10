@@ -3,16 +3,16 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   classNames: ['module'],
   attributeBindings: ['inlineStyles:style'],
-  classNameBindings: ['isConnectingFrom:connectingFrom'],
+  classNameBindings: ['portIsConnectingFrom:portConnectingFrom'],
 
-  mouseIsDragging: false,
-  mouseIsDown: false,
-  isConnectingFrom: false,
+  isMoving: false,
+  didMove: false,
+  moveOffsetX: null,
+  moveOffsetY: null,
   xPos: Ember.computed.alias('module.xPos'),
   yPos: Ember.computed.alias('module.yPos'),
 
-  dragOffsetX: null,
-  dragOffsetY: null,
+  portIsConnectingFrom: false,
 
   inlineStyles: Ember.computed('xPos', 'yPos', function(){
     let styleString = 'left:'+this.get('xPos')+'px;'+'top:'+this.get('yPos')+'px';
@@ -20,37 +20,38 @@ export default Ember.Component.extend({
   }),
   
   mouseDown(event) {
-    event.preventDefault();
-    this.set('mouseIsDown', true);
-    this.set('dragOffsetX', event.pageX - this.get('xPos') );
-    this.set('dragOffsetY', event.pageY - this.get('yPos') );
-    $(document).on('mousemove', this.mouseMoveBody.bind(this));
+    this.set('isMoving', true);
+    this.set('moveOffsetX', event.pageX - this.get('xPos') );
+    this.set('moveOffsetY', event.pageY - this.get('yPos') );
     $(document).on('mouseup', this.mouseUpBody.bind(this));
+    $(document).on('mousemove', this.mouseMoveBody.bind(this));
+    this.sendAction('startedMoving');
     console.log('module mousedown');
+  },
+
+  mouseMoveBody(event) {
+    event.preventDefault();
+    let self = this;
+    Ember.run(function(){
+      self.set('didMove', true);
+      self.set('xPos', event.pageX - self.get('moveOffsetX') );
+      self.set('yPos', event.pageY - self.get('moveOffsetY') );
+    });
   },
   
   mouseUpBody(event) {
     event.preventDefault();
     let self = this;
     Ember.run(function(){
-      if(self.get('mouseIsDragging')) {
+      self.set('isMoving', false);
+      if(self.get('didMove')) {
         self.get('module').save();
+        self.set('didMove', false);
+        console.log('module position saved');
       }
-      self.set('mouseIsDown', false);
-      self.set('mouseIsDragging', false);
+      self.sendAction('finishedMoving');
+      $(document).off('mouseup');
       $(document).off('mousemove');
-      $(document).off('mouseup'); 
-    });
-  },
-  
-  mouseMoveBody(event) {
-    event.preventDefault();
-    let self = this;
-    Ember.run(function(){
-      self.set('mouseIsDragging', true);
-      self.set('xPos', event.pageX - self.get('dragOffsetX') );
-      self.set('yPos', event.pageY - self.get('dragOffsetY') );
-      self.attrs.drawDiagram();
     });
   },
 
@@ -62,16 +63,25 @@ export default Ember.Component.extend({
       console.log('---- module component sending select action for port '+port.get('label'));
       this.attrs.selectPort(port);
     },
-    setDiagramShouldDrawNewConnectionFrom(portType){
-      if(portType) {
-        this.set('isConnectingFrom', true);
-        this.attrs.setDiagramShouldDrawNewConnectionFrom(portType);
-      } else {
-        this.set('isConnectingFrom', false);
-        this.attrs.setDiagramShouldDrawNewConnectionFrom(null);
-      }
-      
+
+    portStartedConnecting(port) {
+      this.set('portIsConnectingFrom', true);
+      this.sendAction('portStartedConnecting', port);
     },
+
+    portFinishedConnecting() {
+      this.set('portIsConnectingFrom', false);
+      this.sendAction('portFinishedConnecting');
+    },
+
+    mouseEnterPort(port) {
+      this.sendAction('mouseEnterPort', port);
+    },
+
+    mouseLeavePort(port) {
+      this.sendAction('mouseLeavePort');
+    },
+
   },
   
 });
