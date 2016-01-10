@@ -5,6 +5,7 @@ export default Ember.Component.extend({
   tagName: 'canvas',
   
   connections: [],
+  selectedConnectionIndex: null,
   newConnectionFrom: null,
 
   mouseListenerAdded: false,
@@ -128,15 +129,11 @@ export default Ember.Component.extend({
     var ctx=c.getContext("2d");
     ctx.canvas.width  = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
-    ctx.strokeStyle = 'black';
-    if(newPort) {
-      ctx.strokeStyle = '#bbb';
-    }
 
     var startX, startY, endX, endY;
 
     let connections = this.get('connections');
-    connections.forEach(function(con){
+    connections.forEach(function(con, index){
 
       startX = $(con.outPortDom).offset().left + $(con.outPortDom).outerWidth()/2;
       startY = $(con.outPortDom).offset().top + $(con.outPortDom).outerHeight()/2;
@@ -146,9 +143,15 @@ export default Ember.Component.extend({
       ctx.beginPath();
       ctx.moveTo(startX, startY);
       ctx.lineTo(endX, endY);
+      ctx.strokeStyle = 'black';
+      if(newPort) {
+        ctx.strokeStyle = '#bbb';
+      } else if (index == this.get('selectedConnectionIndex')) {
+        ctx.strokeStyle = 'red';
+      }
       ctx.stroke();
 
-    });
+    }, this);
 
     //drawing a line from selected port to current mouse drag position
     if(newPort && event) {
@@ -162,6 +165,66 @@ export default Ember.Component.extend({
       ctx.stroke();
     }
 
+  },
+
+  // Check if mouse position is close to any connection line
+  // http://jsfiddle.net/mmansion/9K5p9/
+
+  mouseDown(event) {
+    console.log('patch diagram mouse down');
+    this.set('selectedConnectionIndex', null);
+    var startX, startY, endX, endY, point, lineStart, lineEnd, distance;
+    let cons = this.get('connections');
+    cons.forEach(function(con, index){
+
+      //todo: should cache this stuff instead of re-jquerying it
+      startX = $(con.outPortDom).offset().left + $(con.outPortDom).outerWidth()/2;
+      startY = $(con.outPortDom).offset().top + $(con.outPortDom).outerHeight()/2;
+      endX = $(con.inPortDom).offset().left + $(con.inPortDom).outerWidth()/2;
+      endY = $(con.inPortDom).offset().top + $(con.inPortDom).outerHeight()/2; 
+
+      point = {x: event.pageX, y: event.pageY };
+      lineStart = {x: startX, y: startY };
+      lineEnd = {x: endX, y: endY };
+
+      distance = this.distToSegment(point, lineStart, lineEnd);
+
+      if(distance < 5) {
+        this.set('selectedConnectionIndex', index);
+      }
+
+    }, this);
+
+    this.drawConnections();
+
+  },
+
+  // Functions to hittest mouse position and patch connections
+  // http://jsfiddle.net/mmansion/9K5p9/
+
+  sqr(x) { 
+      return x * x 
+  },
+
+  dist2(v, w) { 
+      return this.sqr(v.x - w.x) + this.sqr(v.y - w.y) 
+  },
+
+  distToSegmentSquared(p, v, w) {
+    var l2 = this.dist2(v, w);
+      
+    if (l2 == 0) return this.dist2(p, v);
+      
+    var t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+      
+    if (t < 0) return this.dist2(p, v);
+    if (t > 1) return this.dist2(p, w);
+      
+    return this.dist2(p, { x: v.x + t * (w.x - v.x), y: v.y + t * (w.y - v.y) });
+  },
+
+  distToSegment(p, v, w) { 
+      return Math.sqrt(this.distToSegmentSquared(p, v, w));
   },
   
 
