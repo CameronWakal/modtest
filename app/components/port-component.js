@@ -28,9 +28,4 @@ export default Ember.Component.extend({
     });
   },
 
-  click() {
-    console.log('----- port component sending select action');
-    this.attrs.select();
-  },
-
 });

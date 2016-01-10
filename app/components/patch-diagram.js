@@ -12,6 +12,7 @@ export default Ember.Component.extend({
 
   didInsertElement(){
       this.onPortsChanged();
+      $(document).on('keydown', this.keyDownBody.bind(this));
   },
 
   onMovingModuleChanged: Ember.observer('movingModule', function(sender, key, value, rev) {
@@ -67,7 +68,12 @@ export default Ember.Component.extend({
         inPorts.forEach(function(inPort){
 
           inPortDom = $(modulesDom).find('.'+inPort.get('uniqueCssIdentifier'));          
-          self.get('connections').addObject({ 'inPortDom':inPortDom, 'outPortDom':outPortDom });
+          self.get('connections').addObject({ 
+            'inPortDom':inPortDom, 
+            'outPortDom':outPortDom,
+            'inPort':inPort,
+            'outPort':outPort 
+          });
         });
       });
     });
@@ -117,6 +123,19 @@ export default Ember.Component.extend({
     event.preventDefault();
     if(this.get('movingModule') || this.get('connectingFromPort')) {
       this.drawConnections(event);
+    }
+  },
+
+  //if a connection is selected when the delete key is pressed, send disconnect action
+  keyDownBody(event) {
+    if(event.keyCode == 8) {
+      event.preventDefault();
+      let i = this.get('selectedConnectionIndex');
+      if(i != null) {
+        let con = this.get('connections').toArray().objectAt(i);
+        this.sendAction('removeConnection', con.inPort, con.outPort);
+        this.set('selectedConnectionIndex', null);
+      }
     }
   },
 

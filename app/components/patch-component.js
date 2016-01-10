@@ -92,7 +92,11 @@ export default Ember.Component.extend({
 
     removeConnection(sourcePort, destPort) {
       console.log('--- patchController removing connection between '+sourcePort+' and '+destPort);
-      console.log('NOT IMPLEMENTED');
+      
+      sourcePort.get('connections').removeObject(destPort);
+      sourcePort.get('module').save();
+      destPort.get('connections').removeObject(sourcePort);
+      destPort.get('module').save();
 
       this.set('diagramNeedsUpdate', true);
     },
