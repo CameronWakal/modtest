@@ -5,14 +5,16 @@ export default Ember.Component.extend({
 
   classNameBindings: ['newConnectionClass'],
 
-  sourceModule: null,
-  sourcePort: null,
-  destModule: null,
-  destPort: null,
-
   diagramNeedsUpdate: true,
   //css class to tell ports which type can accept the current pending connection
-  newConnectionClass: null,
+  newConnectionClass: Ember.computed('connectingFromPort', function(){
+    let port = this.get('connectingFromPort');
+    if(port) {
+      return 'new-connection new-connection-from-'+port.get('type');
+    } else {
+      return null;
+    }
+  }),
 
   movingModule: null,
   connectingFromPort: null,
@@ -21,19 +23,6 @@ export default Ember.Component.extend({
   patchChanged: Ember.observer('patch', function(sender, key, value, rev) {
     this.set('diagramNeedsUpdate', true);
   }),
-
-  addConnection(sourcePort, destPort) {
-    console.log('connecting '+sourcePort+' to '+destPort);
-
-    destPort.get('connections').pushObject(sourcePort);
-    destPort.get('module').save();
-
-    sourcePort.get('connections').pushObject(destPort);
-    sourcePort.get('module').save();
-
-    this.set('diagramNeedsUpdate', true);
-
-  },
 
   actions: {
     
@@ -46,9 +35,8 @@ export default Ember.Component.extend({
     },
 
     portStartedConnecting(module, port, event) {
-      console.log('port started connecting, compatible type:'+port.get('compatibleType'));
+      console.log('port started connecting');
       this.set('connectingFromPort', port);
-      this.send('setDiagramShouldDrawNewConnectionFrom', port.get('type'));
     },
 
     //if there is a toPort and fromPort when finished, make the connection!
@@ -77,25 +65,12 @@ export default Ember.Component.extend({
       this.set('connectingToPort', null);
     },
 
-
     //diagram shit
     
     diagramDidUpdate(){
       Ember.run.scheduleOnce('afterRender', this, function() {
         this.set('diagramNeedsUpdate', false);
       });
-    },
-    
-    //todo: simplify and rename this thing
-    setDiagramShouldDrawNewConnectionFrom(portType){
-      if(portType) {
-        this.set('newConnectionClass', 'new-connection new-connection-from-'+portType);
-        console.log('drawing new connection from '+portType);
-      } else {
-        this.set('newConnectionClass', null);
-        console.log('not drawing new connection');
-      }
-     
     },
 
     //module management
@@ -122,20 +97,18 @@ export default Ember.Component.extend({
       this.set('diagramNeedsUpdate', true);
     },
 
-    selectModulePort(module, port) {
-      console.log('--- patchController selecting module '+module.get('type')+' port '+port.get('label'));
+  },
 
-      let direction = port.get('direction');
+  addConnection(sourcePort, destPort) {
+    console.log('connecting '+sourcePort+' to '+destPort);
 
-      if(direction === 'source') {
-        this.set('sourceModule', module);
-        this.set('sourcePort', port);
-      } else if(direction === 'destination') {
-        this.set('destModule', module);
-        this.set('destPort', port);
-      }
-      
-    },
+    destPort.get('connections').pushObject(sourcePort);
+    destPort.get('module').save();
+
+    sourcePort.get('connections').pushObject(destPort);
+    sourcePort.get('module').save();
+
+    this.set('diagramNeedsUpdate', true);
 
   },
 
