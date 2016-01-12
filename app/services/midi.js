@@ -16,20 +16,22 @@ export default Ember.Service.extend({
 
   sendNote:function(midiNote, velocity, duration, timeStamp) {
 
-      if(this.midi) {
-          var noteOnMessage = [0x90, midiNote, velocity];    // note on, middle C, full velocity (0x7f == 127)
+    console.log('note out '+midiNote);
 
-          this.outputs = this.midi.outputs.values();
-          for(var output = this.outputs.next(); output && !output.done; output = this.outputs.next()) {
-              output.value.send( noteOnMessage, timeStamp );  //omitting the timestamp means send immediately.
-              output.value.send( [0x80, midiNote, 0x40], timeStamp + duration );// Inlined array creation- note off, middle C,  
-                                                                                 // release velocity = 64, timestamp = now + 1000ms.
-          }
+    if(this.midi) {
+      var noteOnMessage = [0x90, midiNote, velocity];    // note on, middle C, full velocity (0x7f == 127)
 
+      this.outputs = this.midi.outputs.values();
+      for(var output = this.outputs.next(); output && !output.done; output = this.outputs.next()) {
+          output.value.send( noteOnMessage, timeStamp );  //omitting the timestamp means send immediately.
+          output.value.send( [0x80, midiNote, 0x40], timeStamp + duration );// Inlined array creation- note off, middle C,  
+                                                                             // release velocity = 64, timestamp = now + 1000ms.
       }
-      else {
-          console.log("Could not send note, midiAccess not initialized.");
-      }
+
+    }
+    else {
+        console.log("Could not send note, midiAccess not initialized.");
+    }
   },
 
   onMIDISuccess:function (midiAccess) {

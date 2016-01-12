@@ -10,6 +10,10 @@ export default Module.extend({
 
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
 
+  getValue() {
+    return this.get('currentStep.value');
+  },
+
   incrementStep(event) {
     let step = this.get('currentStep');
     let index = this.get('currentStep.index');
@@ -28,7 +32,7 @@ export default Module.extend({
     this.set('currentStep', nextStep);
 
     //output event if current step has a value
-    if(this.get('currentStep.value')) {
+    if(this.get('currentStep.value') != null) {
       this.get('trigOutPort').sendEvent(event);
     }
   },
@@ -42,7 +46,7 @@ export default Module.extend({
     }
     //create ports
     this.addEventInPort('inc step', 'incrementStep');
-    this.addValueOutPort('value', 'currentStep.value');
+    this.addValueOutPort('value', 'getValue');
     this.addEventOutPort('trig', 'trigOutPort');
   },
 

@@ -129,9 +129,9 @@ export default Ember.Component.extend({
   //if a connection is selected when the delete key is pressed, send disconnect action
   keyDownBody(event) {
     if(event.keyCode == 8) {
-      event.preventDefault();
       let i = this.get('selectedConnectionIndex');
       if(i != null) {
+        event.preventDefault();
         let con = this.get('connections').toArray().objectAt(i);
         this.sendAction('removeConnection', con.inPort, con.outPort);
         this.set('selectedConnectionIndex', null);

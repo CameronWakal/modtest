@@ -53,10 +53,10 @@ export default DS.Model.extend({
   },
 
   //targetVar is checked by the port when a request for the value comes in
-  addValueOutPort(label, targetVar) {
+  addValueOutPort(label, targetMethod) {
     let port = this.store.createRecord('port-value-out', {
       label:label,
-      targetVar:targetVar,
+      targetMethod:targetMethod,
       module:this
     });
     this.get('ports').pushObject(port);

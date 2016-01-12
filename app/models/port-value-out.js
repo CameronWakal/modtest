@@ -4,11 +4,11 @@ import Port from './port';
 export default Port.extend({
   //valueOut ports can have multiple valueIn ports as destinations
   connections: DS.hasMany('port-value-in', {async: true}),
-  //module variable to check on getValue
-  targetVar: DS.attr('string'),
+  //module getter method for target value
+  targetMethod: DS.attr('string'),
 
   getValue(){
-    return this.get('module.'+this.get('targetVar'));
+    return this.get('module')[this.get('targetMethod')]();
   },
 
 });
