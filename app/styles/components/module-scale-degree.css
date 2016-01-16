@@ -1,0 +1,27 @@
+.module-scale-degree {
+  display: inline-block;
+  vertical-align: bottom;
+  border: 1px solid #ddd;
+  margin: 0 0.5rem 0.5rem 0;
+  padding: 0.25rem 0;
+  height: 1rem;
+  width: 1.5rem;
+  color: #bbb;
+  text-align: center;
+}
+
+.module-scale-degree:focus {
+  outline: none;
+  border-color: #000;
+  color: transparent;
+  text-shadow: 0 0 0 #000;
+}
+
+.module-scale-degree::selection {
+  background-color: transparent;
+}
+
+.module-scale-degree.current {
+  border-color: #000;
+  color: #000;
+}

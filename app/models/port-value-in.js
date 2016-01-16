@@ -12,12 +12,12 @@ export default Port.extend({
     var value = null;
     var totalValue = null;
     this.get('connections').forEach(function(port) {
-      value = parseInt(port.getValue());
+      value = port.getValue();
       if( value != null ) {
         if( totalValue == null ) {
           totalValue = 0;
         }
-        totalValue += value;
+        totalValue += parseInt(value);
       }
     });
     return totalValue;

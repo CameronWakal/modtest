@@ -7,6 +7,7 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
   attrs: {
     ports: { embedded: 'always' },
     steps: { embedded: 'always' },
+    degrees: { embedded: 'always' }
   },
 
   //redefine JSONSerializer and Embedded Records Mixin methods to support polymorphic hasMany relationship types

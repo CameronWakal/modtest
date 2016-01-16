@@ -1,14 +1,23 @@
-import ModuleGenericComponent from './module-generic';
+import Ember from 'ember';
+import DS from 'ember-data';
+import Module from './module';
 
-export default ModuleGenericComponent.extend({
+export default Module.extend({
   
-  degrees: DS.hasMany('module-sequence-degrees'),
+  degrees: DS.hasMany('module-scale-degree'),
+  degreesInScale: 7,
 
   degreeInPort: DS.belongsTo('port-value-in', {async:false}),
   octaveInPort: DS.belongsTo('port-value-in', {async:false}),
   rootInPort: DS.belongsTo('port-value-in', {async:false}),
 
   getNote() {
+
+    // 1. get input values
+    // 2. set defaults if they are null
+    // 3. convert to integers
+    // 4. do math
+
     let degree = this.get('degreeInPort').getValue();
     let octave = this.get('octaveInPort').getValue();
     let root = this.get('rootInPort').getValue();
@@ -17,12 +26,31 @@ export default ModuleGenericComponent.extend({
     if(octave == null) octave = 4;
     if(root == null) root = 0;
 
-    return ((octave+1)*12)+root+degree;
+    degree = parseInt(degree);
+    octave = parseInt(octave);
+    root = parseInt(root);
+
+    let degreeInOctave = this.mod(degree, this.get('degreesInScale'));
+    let intervalForDegree = this.get('degrees').findBy('index', degreeInOctave).get('value');
+
+    if(intervalForDegree == null) {
+      return null;
+    } else {
+      intervalForDegree = parseInt(intervalForDegree);
+    }
+
+    octave = octave + 1 + this.div(degree, this.get('degreesInScale'));
+
+    let note = (octave*12)+root+intervalForDegree;
+
+    console.log('octave:'+octave+' root:'+root+' degree:'+degree+' interval:'+intervalForDegree+' note:'+note);
+
+    return note;
   },
 
   didCreate() {
 
-    for(var i = 0; i < 7; i++) {
+    for(var i = 0; i < this.get('degreesInScale'); i++) {
       this.store.createRecord('module-scale-degree', {scale:this, index:i});
     }
 
@@ -33,5 +61,14 @@ export default ModuleGenericComponent.extend({
     this.addValueInPort('octave', 'octaveInPort');
     this.addValueInPort('root', 'rootInPort');
   },
+
+  mod(num, mod) {
+    var remain = num % mod;
+    return Math.floor(remain >= 0 ? remain : remain + mod);
+  },
+
+  div(num, denom) {
+    return Math[num > 0 ? 'floor' : 'ceil'](num / denom);
+  }
 
 });
