@@ -2,6 +2,8 @@ import ModuleGenericComponent from './module-generic';
 
 export default ModuleGenericComponent.extend({
   
+  degrees: DS.hasMany('module-sequence-degrees'),
+
   degreeInPort: DS.belongsTo('port-value-in', {async:false}),
   octaveInPort: DS.belongsTo('port-value-in', {async:false}),
   rootInPort: DS.belongsTo('port-value-in', {async:false}),
@@ -19,6 +21,11 @@ export default ModuleGenericComponent.extend({
   },
 
   didCreate() {
+
+    for(var i = 0; i < 7; i++) {
+      this.store.createRecord('module-scale-degree', {scale:this, index:i});
+    }
+
     //create ports
     this.addValueOutPort('note', 'getNote');
 
