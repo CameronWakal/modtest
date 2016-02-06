@@ -6,6 +6,11 @@
   color: #bbb;
   cursor: pointer;
 }
+
+.port:focus {
+  outline: none;
+}
+
 .port.connected {
   color: #000;
   border-color: #000;

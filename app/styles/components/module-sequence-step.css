@@ -12,7 +12,7 @@
 
 .module-sequence-step:focus {
   outline: none;
-  border-color: #000;
+  border-color: red;
   color: transparent;
   text-shadow: 0 0 0 #000;
 }

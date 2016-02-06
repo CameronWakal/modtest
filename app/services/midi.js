@@ -16,8 +16,6 @@ export default Ember.Service.extend({
 
   sendNote:function(midiNote, velocity, duration, timeStamp) {
 
-    console.log('note out '+midiNote);
-
     if(this.midi) {
       var noteOnMessage = [0x90, midiNote, velocity];    // note on, middle C, full velocity (0x7f == 127)
 

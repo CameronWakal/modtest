@@ -7,11 +7,14 @@ export default Ember.Component.extend({
     'isConnectingFrom:connectingFrom', 
     'port.uniqueCssIdentifier'
   ],
+  attributeBindings: ['tabindex'],
+  tabindex: -1,
 
   isConnectingFrom: false,
   
   mouseDown(event) {
     event.preventDefault();
+    this.$().focus();
     this.set('isConnectingFrom', true);
     $(document).on('mouseup', this.mouseUpBody.bind(this));
     this.sendAction('startedConnecting', event);
@@ -20,6 +23,7 @@ export default Ember.Component.extend({
   
   mouseUpBody(event) {
     event.preventDefault();
+    this.$().blur();
     let self = this;
     Ember.run(function(){
       self.set('isConnectingFrom', false);

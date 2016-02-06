@@ -1,6 +1,9 @@
 .patch-diagram {
-  background-color: #eee;
   position: absolute;
   width: 100%;
   height: 100%;
+}
+
+.patch-diagram:focus {
+
 }

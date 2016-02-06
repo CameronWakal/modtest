@@ -2,7 +2,9 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   classNames: ['patch-diagram'],
+  attributeBindings: ['tabindex'],
   tagName: 'canvas',
+  tabindex: -1,
   
   connections: [],
   selectedConnectionIndex: null,
@@ -136,6 +138,15 @@ export default Ember.Component.extend({
         this.sendAction('removeConnection', con.inPort, con.outPort);
         this.set('selectedConnectionIndex', null);
       }
+    }
+  },
+
+  //deselect selected connection on blur
+  focusOut() {
+    let selection = this.get('selectedConnectionIndex');
+    if( selection != null ) {
+      this.set('selectedConnectionIndex', null);
+      this.drawConnections();
     }
   },
 
