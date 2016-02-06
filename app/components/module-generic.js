@@ -23,8 +23,8 @@ export default Ember.Component.extend({
     this.set('isMoving', true);
     this.set('moveOffsetX', event.pageX - this.get('xPos') );
     this.set('moveOffsetY', event.pageY - this.get('yPos') );
-    $(document).on('mouseup', this.mouseUpBody.bind(this));
-    $(document).on('mousemove', this.mouseMoveBody.bind(this));
+    Ember.$(document).on('mouseup', this.mouseUpBody.bind(this));
+    Ember.$(document).on('mousemove', this.mouseMoveBody.bind(this));
     this.sendAction('startedMoving');
     console.log('module mousedown');
   },
@@ -50,8 +50,8 @@ export default Ember.Component.extend({
         console.log('module position saved');
       }
       self.sendAction('finishedMoving');
-      $(document).off('mouseup');
-      $(document).off('mousemove');
+      Ember.$(document).off('mouseup');
+      Ember.$(document).off('mousemove');
     });
   },
 
@@ -79,7 +79,7 @@ export default Ember.Component.extend({
     },
 
     mouseLeavePort(port) {
-      this.sendAction('mouseLeavePort');
+      this.sendAction('mouseLeavePort', port);
     },
 
   },

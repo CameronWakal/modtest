@@ -128,7 +128,7 @@ export default Ember.Component.extend({
 
   //if a connection is selected when the delete key is pressed, send disconnect action
   keyDownBody(event) {
-    if(event.keyCode == 8) {
+    if(event.keyCode === 8) {
       let i = this.get('selectedConnectionIndex');
       if(i != null) {
         event.preventDefault();
@@ -165,7 +165,7 @@ export default Ember.Component.extend({
       ctx.strokeStyle = 'black';
       if(newPort) {
         ctx.strokeStyle = '#bbb';
-      } else if (index == this.get('selectedConnectionIndex')) {
+      } else if (index === this.get('selectedConnectionIndex')) {
         ctx.strokeStyle = 'red';
       }
       ctx.stroke();
@@ -222,17 +222,17 @@ export default Ember.Component.extend({
   // http://jsfiddle.net/mmansion/9K5p9/
 
   sqr(x) { 
-      return x * x 
+      return x * x;
   },
 
   dist2(v, w) { 
-      return this.sqr(v.x - w.x) + this.sqr(v.y - w.y) 
+      return this.sqr(v.x - w.x) + this.sqr(v.y - w.y);
   },
 
   distToSegmentSquared(p, v, w) {
     var l2 = this.dist2(v, w);
       
-    if (l2 == 0) return this.dist2(p, v);
+    if (l2 === 0) return this.dist2(p, v);
       
     var t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
       

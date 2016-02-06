@@ -5,6 +5,7 @@ import Module from './module';
 export default Module.extend({
   
   degrees: DS.hasMany('module-scale-degree'),
+  currentDegree: DS.belongsTo('module-scale-degree', {async:false}),
   degreesInScale: 7,
 
   degreeInPort: DS.belongsTo('port-value-in', {async:false}),
@@ -23,7 +24,7 @@ export default Module.extend({
     let root = this.get('rootInPort').getValue();
 
     if(degree == null) degree = 0;
-    if(octave == null) octave = 4;
+    if(octave == null) octave = 3;
     if(root == null) root = 0;
 
     degree = parseInt(degree);
@@ -31,7 +32,9 @@ export default Module.extend({
     root = parseInt(root);
 
     let degreeInOctave = this.mod(degree, this.get('degreesInScale'));
-    let intervalForDegree = this.get('degrees').findBy('index', degreeInOctave).get('value');
+    let degreeModel = this.get('degrees').findBy('index', degreeInOctave);
+    this.set('currentDegree', degreeModel);
+    let intervalForDegree = degreeModel.get('value');
 
     if(intervalForDegree == null) {
       return null;
@@ -43,7 +46,7 @@ export default Module.extend({
 
     let note = (octave*12)+root+intervalForDegree;
 
-    console.log('octave:'+octave+' root:'+root+' degree:'+degree+' interval:'+intervalForDegree+' note:'+note);
+    //console.log('octave:'+octave+' root:'+root+' degree:'+degree+' interval:'+intervalForDegree+' note:'+note);
 
     return note;
   },
