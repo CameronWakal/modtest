@@ -10,6 +10,12 @@ export default Ember.TextField.extend({
   },
 
   focusOut() {
+    let value = parseInt( this.get('value') );
+    if(isNaN(value)) {
+      this.set('value', null);
+    } else {
+      this.set('value', value);
+    }
     this.get('step.sequence').save();
   }
 

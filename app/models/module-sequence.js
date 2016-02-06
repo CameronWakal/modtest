@@ -32,7 +32,7 @@ export default Module.extend({
     this.set('currentStep', nextStep);
 
     //output event if current step has a value
-    if(this.get('currentStep.value') != null) {
+    if( !isNaN( parseInt( this.get('currentStep.value') ) ) ) {
       this.get('trigOutPort').sendEvent(event);
     }
   },
