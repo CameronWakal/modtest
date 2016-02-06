@@ -3,8 +3,8 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   classNames: ['patch-diagram'],
   attributeBindings: ['tabindex'],
-  tagName: 'canvas',
   tabindex: -1,
+  tagName: 'canvas',
   
   connections: [],
   selectedConnectionIndex: null,
@@ -14,7 +14,6 @@ export default Ember.Component.extend({
 
   didInsertElement(){
       this.onPortsChanged();
-      $(document).on('keydown', this.keyDownBody.bind(this));
   },
 
   onMovingModuleChanged: Ember.observer('movingModule', function(sender, key, value, rev) {
@@ -129,7 +128,7 @@ export default Ember.Component.extend({
   },
 
   //if a connection is selected when the delete key is pressed, send disconnect action
-  keyDownBody(event) {
+  keyDown(event) {
     if(event.keyCode === 8) {
       let i = this.get('selectedConnectionIndex');
       if(i != null) {

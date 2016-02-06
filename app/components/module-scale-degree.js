@@ -11,6 +11,6 @@ export default Ember.TextField.extend({
 
   focusOut() {
     this.get('degree.scale').save();
-  }
+  },
 
 });

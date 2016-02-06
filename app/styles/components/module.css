@@ -8,6 +8,11 @@
   display: inline-block;
 }
 
+.module:focus {
+  border-color: red;
+  outline: none;
+}
+
 .module h3 {
   color: #000;
 }

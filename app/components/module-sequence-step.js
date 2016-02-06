@@ -17,6 +17,10 @@ export default Ember.TextField.extend({
       this.set('value', value);
     }
     this.get('step.sequence').save();
-  }
+  },
+
+  keyDown(event) {
+    
+  },
 
 });

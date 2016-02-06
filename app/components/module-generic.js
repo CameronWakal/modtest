@@ -2,8 +2,10 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   classNames: ['module'],
-  attributeBindings: ['inlineStyles:style'],
   classNameBindings: ['portIsConnectingFrom:portConnectingFrom'],
+  attributeBindings: ['inlineStyles:style', 'tabindex'],
+  tabindex: -1,
+  
 
   isMoving: false,
   didMove: false,
@@ -27,6 +29,14 @@ export default Ember.Component.extend({
     Ember.$(document).on('mousemove', this.mouseMoveBody.bind(this));
     this.sendAction('startedMoving');
     console.log('module mousedown');
+  },
+
+  keyDown(event) {
+    if( event.keyCode === 8 && this.$().is(':focus') ) {
+      event.preventDefault();
+      console.log('remove module');
+      this.sendAction('remove');
+    }
   },
 
   mouseMoveBody(event) {
