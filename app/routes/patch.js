@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
 
-  afterModel: function(patch) {
+  afterModel(patch){
     return patch.get('modules');
   }
 

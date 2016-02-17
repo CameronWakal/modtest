@@ -25,7 +25,7 @@ export default DS.Model.extend({
 
   outPorts: Ember.computed('ports.@each.type', function(){
     let ports = this.get('ports');
-    return ports.filter(function(item){
+    return ports.filter( item => {
       return item.get('type') === 'port-value-out' || item.get('type') === 'port-event-out';
     });
   }),
@@ -80,7 +80,7 @@ export default DS.Model.extend({
       this.set('needsRemoval', true);
     } else {
 
-      this.get('ports').forEach(function(port){
+      this.get('ports').forEach( port => {
         port.disconnect();
       });
 

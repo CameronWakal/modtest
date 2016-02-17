@@ -7,7 +7,7 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
   //redefine JSONSerializer and Embedded Records Mixin methods to support polymorphic hasMany relationship types
   //if the relationship is polymorphic, it will be represented as an array of objects with ids and types
 
-  serializeHasMany: function(snapshot, json, relationship) {
+  serializeHasMany(snapshot, json, relationship){
     var attr = relationship.key;
     let isPolymorphic = relationship.options.polymorphic;
 
@@ -21,7 +21,7 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
     if (includeIds) {
       key = this.keyForRelationship(attr, relationship.kind, 'serialize');
       hasMany = snapshot.hasMany(attr);
-      let jsonOutput = Ember.A(hasMany).map((rel) => {
+      let jsonOutput = Ember.A(hasMany).map( rel => {
         if(isPolymorphic){
           return {id:rel.id, type:rel.modelName};
         } else {
@@ -39,7 +39,7 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
         { id: 'ds.serializer.embedded-relationship-undefined' }
       );
 
-      json[key] = Ember.A(hasMany).map((embeddedSnapshot) => {
+      json[key] = Ember.A(hasMany).map( embeddedSnapshot => {
         var embeddedJson = embeddedSnapshot.record.serialize({ includeId: true });
         this.removeEmbeddedForeignKey(snapshot, embeddedSnapshot, relationship, embeddedJson);
         if(isPolymorphic){
@@ -50,7 +50,7 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
     }
   },
 
-  serializeHasManyUnembedded: function(snapshot, json, relationship) {
+  serializeHasManyUnembedded(snapshot, json, relationship){
     let key = relationship.key;
     let isPolymorphic = relationship.options.polymorphic;
 
@@ -67,12 +67,12 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
         var hasManyContent;
         if(isPolymorphic){
           //payload will be an array of objects with ids and types
-          hasManyContent = hasMany.map(function(snapshot){
+          hasManyContent = hasMany.map( snapshot => {
             return { id: snapshot.id, type: snapshot.modelName };
           });
         } else {
           //payload will be an array of ids
-          hasManyContent = hasMany.map(function(snapshot){
+          hasManyContent = hasMany.map( snapshot => {
             return snapshot.id;
           });
         }
@@ -82,7 +82,7 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
     }
   },
 
-  serializeBelongsTo: function(snapshot, json, relationship) {
+  serializeBelongsTo(snapshot, json, relationship){
     var attr = relationship.key;
     let isPolymorphic = relationship.options.polymorphic;
 
@@ -119,7 +119,7 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
     }
   },
 
-  serializeBelongsToUnembedded: function(snapshot, json, relationship) {
+  serializeBelongsToUnembedded(snapshot, json, relationship){
     let key = relationship.key;
     let isPolymorphic = relationship.options.polymorphic;
 

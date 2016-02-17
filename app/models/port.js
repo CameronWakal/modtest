@@ -27,7 +27,7 @@ export default DS.Model.extend({
   //remove all connections
   disconnect() {
     let connections = this.get('connections').toArray();
-    connections.forEach(function(connection){
+    connections.forEach( connection => {
       connection.get('connections').removeObject(this);
       connection.get('module').save();
     }, this);

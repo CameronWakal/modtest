@@ -7,7 +7,7 @@ export default Port.extend({
 
   //pass the event to connected ports
   sendEvent(event) {
-    this.get('connections').forEach(function(port){
+    this.get('connections').forEach( port => {
       port.sendEvent(event);
     });
   },

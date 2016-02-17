@@ -4,7 +4,7 @@ export default Ember.Service.extend({
 
   midi: null,
 
-  setup() {
+  setup(){
     // request MIDI access
     if(navigator.requestMIDIAccess){
         navigator.requestMIDIAccess({sysex: false}).then(this.onMIDISuccess.bind(this), this.onMIDIFailure.bind(this));
@@ -14,7 +14,7 @@ export default Ember.Service.extend({
     }
   },
 
-  sendNote:function(midiNote, velocity, duration, timeStamp) {
+  sendNote(midiNote, velocity, duration, timeStamp){
 
     if(this.midi) {
       var noteOnMessage = [0x90, midiNote, velocity];    // note on, middle C, full velocity (0x7f == 127)
@@ -32,7 +32,7 @@ export default Ember.Service.extend({
     }
   },
 
-  onMIDISuccess:function (midiAccess) {
+  onMIDISuccess(midiAccess){
     console.log('MIDI Initialized Successfully.');
       this.midi = midiAccess;
       var inputs = this.midi.inputs.values();
@@ -51,7 +51,7 @@ export default Ember.Service.extend({
 
   },
 
-  onMIDIMessage:function (event) {
+  onMIDIMessage(event){
       let data = event.data;
       let cmd = data[0] >> 4;
       let channel = data[0] & 0xf;
@@ -79,19 +79,19 @@ export default Ember.Service.extend({
       //this.logger(keyData, 'key data', data);
   },
 
-  onStateChange:function (event) {
+  onStateChange(event){
     var port = event.port, state = port.state, name = port.name, type = port.type;
     console.log(state+': '+name+", port:", port, ' type:', type);
 
     this.showMIDIPorts();
   },
 
-  onMIDIFailure:function (e) {
+  onMIDIFailure(e){
       console.log("No access to MIDI devices or your browser doesn't support WebMIDI API. Please use WebMIDIAPIShim " + e);
   },
 
   // MIDI utility functions
-  showMIDIPorts:function () {
+  showMIDIPorts(){
     var inputs = this.midi.inputs,
       outputs = this.midi.outputs,
       string = '';
@@ -99,7 +99,7 @@ export default Ember.Service.extend({
     if(inputs.size) {
       string += 'MIDI Inputs:\n';
     }
-    inputs.forEach(function(port){
+    inputs.forEach( port => {
       if(port.name) {
         string += 'Name: '+port.name;
       }
@@ -121,7 +121,7 @@ export default Ember.Service.extend({
     if(outputs.size) {
       string += 'MIDI Outputs:\n';
     }
-    outputs.forEach(function(port){
+    outputs.forEach( port => {
       if(port.name) {
         string += 'Name: '+port.name;
       }

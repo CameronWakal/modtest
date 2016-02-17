@@ -8,7 +8,7 @@ export default Ember.Controller.extend({
       let modules = this.model.get('modules');
       let modulesList = modules.toArray();
       this.model.destroyRecord();
-      modulesList.forEach(function(module){
+      modulesList.forEach( (module) => {
         module.destroyRecord();
       });
       this.transitionToRoute('index');

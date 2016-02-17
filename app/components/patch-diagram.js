@@ -58,15 +58,15 @@ export default Ember.Component.extend({
     this.set('connections', []);
     let self = this;
 
-    modules.forEach(function(module){
+    modules.forEach( module => {
       
       outPorts = module.get('outPorts');
-      outPorts.forEach(function(outPort){
+      outPorts.forEach( outPort => {
 
         outPortDom = Ember.$(modulesDom).find('.'+outPort.get('uniqueCssIdentifier'));
 
         inPorts = outPort.get('connections');
-        inPorts.forEach(function(inPort){
+        inPorts.forEach( inPort => {
 
           inPortDom = Ember.$(modulesDom).find('.'+inPort.get('uniqueCssIdentifier'));          
           self.get('connections').addObject({ 
@@ -162,7 +162,7 @@ export default Ember.Component.extend({
     var startX, startY, endX, endY;
 
     let connections = this.get('connections');
-    connections.forEach(function(con, index){
+    connections.forEach( (con, index) => {
 
       startX = Ember.$(con.outPortDom).offset().left + Ember.$(con.outPortDom).outerWidth()/2;
       startY = Ember.$(con.outPortDom).offset().top + Ember.$(con.outPortDom).outerHeight()/2;
@@ -204,7 +204,7 @@ export default Ember.Component.extend({
     this.set('selectedConnectionIndex', null);
     var startX, startY, endX, endY, point, lineStart, lineEnd, distance;
     let cons = this.get('connections');
-    cons.forEach(function(con, index){
+    cons.forEach( (con, index) => {
 
       //todo: should cache this stuff instead of re-jquerying it
       startX = Ember.$(con.outPortDom).offset().left + Ember.$(con.outPortDom).outerWidth()/2;

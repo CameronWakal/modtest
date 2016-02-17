@@ -11,7 +11,7 @@ export default Port.extend({
     //sum all input values but leave the result as null if all inputs are null
     var value = null;
     var totalValue = null;
-    this.get('connections').forEach(function(port) {
+    this.get('connections').forEach( port => {
       value = parseInt(port.getValue());
       if( !isNaN(value) ) {
         if( totalValue == null ) {
