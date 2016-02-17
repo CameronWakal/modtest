@@ -16,7 +16,7 @@ export default Ember.Component.extend({
       this.onPortsChanged();
   },
 
-  onMovingModuleChanged: Ember.observer('movingModule', function(sender, key, value, rev) {
+  onMovingModuleChanged: Ember.observer('movingModule', function() {
     if(this.get('movingModule')) {
       this.addMouseListener();
     } else {
@@ -24,7 +24,7 @@ export default Ember.Component.extend({
     }
   }),
 
-  onConnectingFromPortChanged: Ember.observer('connectingFromPort', function(sender, key, value, rev) {
+  onConnectingFromPortChanged: Ember.observer('connectingFromPort', function() {
     if(this.get('connectingFromPort')) {
       Ember.run.scheduleOnce('afterRender', this, function() {
         //if this isn't scheduled, the ember classNameBindings don't get updated
@@ -37,7 +37,7 @@ export default Ember.Component.extend({
   }),
 
   //flag changes to true when controller wants diagram to update list of ports
-  onPortsChanged: Ember.observer('needsUpdate', function(sender, key, value, rev) {
+  onPortsChanged: Ember.observer('needsUpdate', function() {
     if(this.get('needsUpdate')){
       Ember.run.scheduleOnce('afterRender', this, function() {
         this.updateConnections();
@@ -63,12 +63,12 @@ export default Ember.Component.extend({
       outPorts = module.get('outPorts');
       outPorts.forEach(function(outPort){
 
-        outPortDom = $(modulesDom).find('.'+outPort.get('uniqueCssIdentifier'));
+        outPortDom = Ember.$(modulesDom).find('.'+outPort.get('uniqueCssIdentifier'));
 
         inPorts = outPort.get('connections');
         inPorts.forEach(function(inPort){
 
-          inPortDom = $(modulesDom).find('.'+inPort.get('uniqueCssIdentifier'));          
+          inPortDom = Ember.$(modulesDom).find('.'+inPort.get('uniqueCssIdentifier'));          
           self.get('connections').addObject({ 
             'inPortDom':inPortDom, 
             'outPortDom':outPortDom,
@@ -84,7 +84,7 @@ export default Ember.Component.extend({
   addNewConnection() {
     console.log('add new connection');
     let module = this.$().siblings('#modules').children('.portConnectingFrom');
-    let port = $(module).children('.connectingFrom');
+    let port = Ember.$(module).children('.connectingFrom');
     this.addMouseListener();
     this.set('newConnectionFrom', port);
     this.drawConnections();
@@ -102,7 +102,7 @@ export default Ember.Component.extend({
   addMouseListener() {
     let mouseListenerAdded = this.get('mouseListenerAdded');
     if(!mouseListenerAdded) {
-      $(document).on('mousemove', this.mouseMoveBody.bind(this));
+      Ember.$(document).on('mousemove', this.mouseMoveBody.bind(this));
       this.set('mouseListenerAdded', true);
     }
   },
@@ -113,7 +113,7 @@ export default Ember.Component.extend({
     let movingModule = this.get('movingModule');
     let connectingFromPort = this.get('connectingFromPort');
     if(mouseListenerAdded && !movingModule && !connectingFromPort) {
-      $(document).off('mousemove');
+      Ember.$(document).off('mousemove');
       this.set('mouseListenerAdded', false);
     }
     
@@ -164,10 +164,10 @@ export default Ember.Component.extend({
     let connections = this.get('connections');
     connections.forEach(function(con, index){
 
-      startX = $(con.outPortDom).offset().left + $(con.outPortDom).outerWidth()/2;
-      startY = $(con.outPortDom).offset().top + $(con.outPortDom).outerHeight()/2;
-      endX = $(con.inPortDom).offset().left + $(con.inPortDom).outerWidth()/2;
-      endY = $(con.inPortDom).offset().top + $(con.inPortDom).outerHeight()/2; 
+      startX = Ember.$(con.outPortDom).offset().left + Ember.$(con.outPortDom).outerWidth()/2;
+      startY = Ember.$(con.outPortDom).offset().top + Ember.$(con.outPortDom).outerHeight()/2;
+      endX = Ember.$(con.inPortDom).offset().left + Ember.$(con.inPortDom).outerWidth()/2;
+      endY = Ember.$(con.inPortDom).offset().top + Ember.$(con.inPortDom).outerHeight()/2; 
 
       ctx.beginPath();
       ctx.moveTo(startX, startY);
@@ -184,8 +184,8 @@ export default Ember.Component.extend({
 
     //drawing a line from selected port to current mouse drag position
     if(newPort && event) {
-      startX = $(newPort).offset().left + $(newPort).outerWidth()/2;
-      startY = $(newPort).offset().top + $(newPort).outerHeight()/2;
+      startX = Ember.$(newPort).offset().left + Ember.$(newPort).outerWidth()/2;
+      startY = Ember.$(newPort).offset().top + Ember.$(newPort).outerHeight()/2;
       
       ctx.beginPath();
       ctx.moveTo(startX, startY);
@@ -207,10 +207,10 @@ export default Ember.Component.extend({
     cons.forEach(function(con, index){
 
       //todo: should cache this stuff instead of re-jquerying it
-      startX = $(con.outPortDom).offset().left + $(con.outPortDom).outerWidth()/2;
-      startY = $(con.outPortDom).offset().top + $(con.outPortDom).outerHeight()/2;
-      endX = $(con.inPortDom).offset().left + $(con.inPortDom).outerWidth()/2;
-      endY = $(con.inPortDom).offset().top + $(con.inPortDom).outerHeight()/2; 
+      startX = Ember.$(con.outPortDom).offset().left + Ember.$(con.outPortDom).outerWidth()/2;
+      startY = Ember.$(con.outPortDom).offset().top + Ember.$(con.outPortDom).outerHeight()/2;
+      endX = Ember.$(con.inPortDom).offset().left + Ember.$(con.inPortDom).outerWidth()/2;
+      endY = Ember.$(con.inPortDom).offset().top + Ember.$(con.inPortDom).outerHeight()/2; 
 
       point = {x: event.pageX, y: event.pageY };
       lineStart = {x: startX, y: startY };
@@ -242,12 +242,12 @@ export default Ember.Component.extend({
   distToSegmentSquared(p, v, w) {
     var l2 = this.dist2(v, w);
       
-    if (l2 === 0) return this.dist2(p, v);
-      
+    if (l2 === 0) { return this.dist2(p, v); }
+
     var t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
       
-    if (t < 0) return this.dist2(p, v);
-    if (t > 1) return this.dist2(p, w);
+    if (t < 0) { return this.dist2(p, v); }
+    if (t > 1) { return this.dist2(p, w); }
       
     return this.dist2(p, { x: v.x + t * (w.x - v.x), y: v.y + t * (w.y - v.y) });
   },

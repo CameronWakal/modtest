@@ -19,8 +19,4 @@ export default Ember.TextField.extend({
     this.get('step.sequence').save();
   },
 
-  keyDown(event) {
-    
-  },
-
 });

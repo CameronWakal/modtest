@@ -16,7 +16,7 @@ export default Ember.Component.extend({
     event.preventDefault();
     this.$().focus();
     this.set('isConnectingFrom', true);
-    $(document).on('mouseup', this.mouseUpBody.bind(this));
+    Ember.$(document).on('mouseup', this.mouseUpBody.bind(this));
     this.sendAction('startedConnecting', event);
     return false;
   },
@@ -28,7 +28,7 @@ export default Ember.Component.extend({
     Ember.run(function(){
       self.set('isConnectingFrom', false);
       self.sendAction('finishedConnecting');
-      $(document).off('mouseup'); 
+      Ember.$(document).off('mouseup'); 
     });
   },
 

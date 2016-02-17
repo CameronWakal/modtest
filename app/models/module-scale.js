@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import DS from 'ember-data';
 import Module from './module';
 
@@ -23,9 +22,9 @@ export default Module.extend({
     let octave = this.get('octaveInPort').getValue();
     let root = this.get('rootInPort').getValue();
 
-    if(degree == null) degree = 0;
-    if(octave == null) octave = 3;
-    if(root == null) root = 0;
+    if(degree == null) { degree = 0; }
+    if(octave == null) { octave = 3; }
+    if(root == null) { root = 0; }
 
     degree = parseInt(degree);
     octave = parseInt(octave);

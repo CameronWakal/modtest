@@ -20,7 +20,7 @@ export default Ember.Component.extend({
   connectingFromPort: null,
   connectingToPort: null,
   
-  patchChanged: Ember.observer('patch', function(sender, key, value, rev) {
+  patchChanged: Ember.observer('patch', function() {
     this.set('diagramNeedsUpdate', true);
   }),
 
@@ -34,7 +34,7 @@ export default Ember.Component.extend({
       this.set('movingModule', null);
     },
 
-    portStartedConnecting(module, port, event) {
+    portStartedConnecting(module, port) {
       console.log('port started connecting');
       this.set('connectingFromPort', port);
     },

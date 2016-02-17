@@ -25,7 +25,7 @@ export default DS.Model.extend({
 
   outPorts: Ember.computed('ports.@each.type', function(){
     let ports = this.get('ports');
-    return ports.filter(function(item, index, self){
+    return ports.filter(function(item){
       return item.get('type') === 'port-value-out' || item.get('type') === 'port-event-out';
     });
   }),
@@ -89,7 +89,7 @@ export default DS.Model.extend({
   },
 
   //when the state of isSaving changes, check if this model is flagged for needsRemoval
-  removeLater: Ember.observer('isSaving', function(sender, key, value, rev) {
+  removeLater: Ember.observer('isSaving', function() {
     if( !this.get('isSaving') && this.get('needsRemoval') ){
       this.set('needsRemoval', false);
       this.remove();
