@@ -1,7 +1,7 @@
 <h3>Sequence</h3>
 
 <div class="module-sequence-steps">
-{{#each module.steps as |step|}}{{module-sequence-step step=step value=step.value}}{{/each}}
+{{#each module.stepArray.inputs as |input|}}{{module-sequence-step input=input value=input.value}}{{/each}}
 </div>
 
 {{partial 'module-ports'}}

@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.TextField.extend({
 
   classNames: ['module-sequence-step'],
-  classNameBindings: ['step.isCurrentStep:current'],
+  classNameBindings: ['input.isCurrentInput:current'],
 
   focusIn() {
     this.$().select();
@@ -16,7 +16,11 @@ export default Ember.TextField.extend({
     } else {
       this.set('value', value);
     }
-    this.get('step.sequence').save();
+    this.get('input.array.module').save();
   },
+
+  keyDown(event) {
+    
+  }
 
 });

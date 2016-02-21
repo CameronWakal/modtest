@@ -3,45 +3,45 @@ import Module from './module';
 
 export default Module.extend({
   
-  length: DS.attr('number', { defaultValue: 16 }),
-  steps: DS.hasMany('module-sequence-step'),
-  currentStep: DS.belongsTo('module-sequence-step', {async:false}),
-
+  stepArray: DS.belongsTo('inputArray'),
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
 
   getValue() {
-    return this.get('currentStep.value');
+    return this.get('stepArray.currentInput.value');
   },
 
   incrementStep(event) {
-    let step = this.get('currentStep');
-    let index = this.get('currentStep.index');
-    let length = this.get('length');
-    let steps = this.get('steps');
-    var nextStep;
+    let input = this.get('stepArray.currentInput');
+    let index = this.get('stepArray.currentInput.index');
+    let length = this.get('stepArray.length');
+    let inputs = this.get('stepArray.inputs');
+    var nextInput;
 
     //update step
-    if(!step) {
-      nextStep = steps.findBy('index', 0);
+    if(!input) {
+      nextInput = inputs.findBy('index', 0);
     } else if(index < length-1) {
-      nextStep = steps.findBy('index', index+1);
+      nextInput = inputs.findBy('index', index+1);
     } else {
-      nextStep = steps.findBy('index', 0);
+      nextInput = inputs.findBy('index', 0);
     }
-    this.set('currentStep', nextStep);
+    this.set('stepArray.currentInput', nextInput);
 
     //output event if current step has a value
-    if( !isNaN( parseInt( this.get('currentStep.value') ) ) ) {
+    if( !isNaN( parseInt( this.get('stepArray.currentInput.value') ) ) ) {
       this.get('trigOutPort').sendEvent(event);
     }
   },
 
   didCreate() {
+    //create stepArray
+    this.set('stepArray', this.store.createRecord('inputArray', {module:this}));
+
     //create steps
-    let stepCount = this.get('length');
-    var step;
-    for(var i = 0; i < stepCount; i++) {
-      step = this.store.createRecord('module-sequence-step', {sequence:this, index:i});
+    let inputCount = this.get('stepArray.length');
+    var input;
+    for(var i = 0; i < inputCount; i++) {
+      input = this.store.createRecord('input', {array:this.get('stepArray'), index:i});
     }
     //create ports
     this.addEventInPort('inc step', 'incrementStep');
