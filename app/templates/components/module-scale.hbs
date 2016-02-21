@@ -1,7 +1,7 @@
 <h3>Scale</h3>
 
 <div class="module-scale-degrees">
-{{#each module.degrees as |degree|}}{{module-scale-degree degree=degree value=degree.value}}{{/each}}
+{{#each module.inputArray.inputs as |input|}}{{input-component input=input value=input.value}}{{/each}}
 </div>
 
 {{partial 'module-ports'}}

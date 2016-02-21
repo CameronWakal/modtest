@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.TextField.extend({
 
-  classNames: ['module-sequence-step'],
+  classNames: ['input'],
   classNameBindings: ['input.isCurrentInput:current'],
 
   focusIn() {
@@ -18,9 +18,5 @@ export default Ember.TextField.extend({
     }
     this.get('input.array.module').save();
   },
-
-  keyDown(event) {
-    
-  }
 
 });

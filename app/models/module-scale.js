@@ -3,8 +3,7 @@ import Module from './module';
 
 export default Module.extend({
   
-  degrees: DS.hasMany('module-scale-degree'),
-  currentDegree: DS.belongsTo('module-scale-degree', {async:false}),
+  inputArray: DS.belongsTo('inputArray'),
   degreesInScale: 7,
 
   degreeInPort: DS.belongsTo('port-value-in', {async:false}),
@@ -31,8 +30,8 @@ export default Module.extend({
     root = parseInt(root);
 
     let degreeInOctave = this.mod(degree, this.get('degreesInScale'));
-    let degreeModel = this.get('degrees').findBy('index', degreeInOctave);
-    this.set('currentDegree', degreeModel);
+    let degreeModel = this.get('inputArray.inputs').findBy('index', degreeInOctave);
+    this.set('inputArray.currentInput', degreeModel);
     let intervalForDegree = degreeModel.get('value');
 
     if(intervalForDegree == null) {
@@ -52,8 +51,12 @@ export default Module.extend({
 
   didCreate() {
 
+    //create inputArray
+    this.set('inputArray', this.store.createRecord('inputArray', {module:this}));
+
+    //create inputs
     for(var i = 0; i < this.get('degreesInScale'); i++) {
-      this.store.createRecord('module-scale-degree', {scale:this, index:i});
+      this.store.createRecord('input', {array:this.get('inputArray'), index:i});
     }
 
     //create ports
