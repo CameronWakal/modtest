@@ -36,7 +36,6 @@ export default Module.extend({
   },
 
   didCreate() {
-    console.log('sequence didcreate');
     //create inputArray
     let inputArray = this.store.createRecord('inputArray', {module:this, length:this.get('sequenceLength')});
     this.set('inputArray', inputArray);
