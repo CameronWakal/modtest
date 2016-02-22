@@ -3,6 +3,8 @@ import Module from './module';
 
 export default Module.extend({
   
+  sequenceLength: 16,
+
   inputArray: DS.belongsTo('inputArray'),
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
 
@@ -34,15 +36,12 @@ export default Module.extend({
   },
 
   didCreate() {
+    console.log('sequence didcreate');
     //create inputArray
-    this.set('inputArray', this.store.createRecord('inputArray', {module:this}));
+    let inputArray = this.store.createRecord('inputArray', {module:this, length:this.get('sequenceLength')});
+    this.set('inputArray', inputArray);
+    inputArray.initInputs();
 
-    //create steps
-    let inputCount = this.get('inputArray.length');
-    var input;
-    for(var i = 0; i < inputCount; i++) {
-      input = this.store.createRecord('input', {array:this.get('inputArray'), index:i});
-    }
     //create ports
     this.addEventInPort('inc step', 'incrementStep');
     this.addValueOutPort('value', 'getValue');
