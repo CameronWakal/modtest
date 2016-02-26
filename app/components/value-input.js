@@ -2,8 +2,8 @@ import Ember from 'ember';
 
 export default Ember.TextField.extend({
 
-  classNames: ['input'],
-  classNameBindings: ['input.isCurrentInput:current'],
+  classNames: ['value-input'],
+  classNameBindings: ['valueInput.isCurrentInput:current'],
 
   focusIn() {
     this.$().select();
@@ -16,7 +16,7 @@ export default Ember.TextField.extend({
     } else {
       this.set('value', value);
     }
-    this.get('input.array.module').save();
+    this.get('valueInput.array.module').save();
   },
 
 });

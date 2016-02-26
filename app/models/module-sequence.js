@@ -5,7 +5,7 @@ export default Module.extend({
   
   sequenceLength: 16,
 
-  inputArray: DS.belongsTo('inputArray'),
+  inputArray: DS.belongsTo('array'),
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
 
   getValue() {
@@ -37,7 +37,7 @@ export default Module.extend({
 
   didCreate() {
     //create inputArray
-    let inputArray = this.store.createRecord('inputArray', {module:this, length:this.get('sequenceLength')});
+    let inputArray = this.store.createRecord('array', {module:this, length:this.get('sequenceLength')});
     this.set('inputArray', inputArray);
     inputArray.initInputs();
 

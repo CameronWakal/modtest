@@ -5,7 +5,7 @@ export default Module.extend({
   
   degreesInScale: 7,
 
-  inputArray: DS.belongsTo('inputArray'),
+  inputArray: DS.belongsTo('array'),
 
   degreeInPort: DS.belongsTo('port-value-in', {async:false}),
   octaveInPort: DS.belongsTo('port-value-in', {async:false}),
@@ -52,7 +52,7 @@ export default Module.extend({
 
   didCreate() {
     //create inputArray
-    let inputArray = this.store.createRecord('inputArray', {module:this, length:this.get('degreesInScale')});
+    let inputArray = this.store.createRecord('array', {module:this, length:this.get('degreesInScale')});
     this.set('inputArray', inputArray);
     inputArray.initInputs();
 
