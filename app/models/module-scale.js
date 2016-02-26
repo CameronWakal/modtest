@@ -31,7 +31,7 @@ export default Module.extend({
     root = parseInt(root);
 
     let degreeInOctave = this.mod(degree, this.get('degreesInScale'));
-    let degreeModel = this.get('inputArray.inputs').findBy('index', degreeInOctave);
+    let degreeModel = this.get('inputArray.items').findBy('index', degreeInOctave);
     this.set('inputArray.currentItem', degreeModel);
     let intervalForDegree = degreeModel.get('value');
 
@@ -54,7 +54,7 @@ export default Module.extend({
     //create inputArray
     let inputArray = this.store.createRecord('array', {module:this, length:this.get('degreesInScale')});
     this.set('inputArray', inputArray);
-    inputArray.initInputs();
+    inputArray.initItems();
 
     //create ports
     this.addValueOutPort('note', 'getNote');

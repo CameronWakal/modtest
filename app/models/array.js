@@ -3,15 +3,14 @@ import DS from 'ember-data';
 export default DS.Model.extend({
   
   length: DS.attr('number'),
-  inputs: DS.hasMany('arrayItem'),
+  items: DS.hasMany('arrayItem'),
   currentItem: DS.belongsTo('arrayItem', {async:false}),
   module: DS.belongsTo('module', {async:false, polymorphic:true}),
 
-  initInputs() {
-    //init inputs
-    var input;
+  initItems() {
+    //init items
     for(var i = 0; i < this.get('length'); i++) {
-      input = this.store.createRecord('arrayItem', {array:this, index:i});
+      this.store.createRecord('arrayItem', {array:this, index:i});
     }
   }
 

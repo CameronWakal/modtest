@@ -16,7 +16,7 @@ export default Module.extend({
     let input = this.get('inputArray.currentItem');
     let index = this.get('inputArray.currentItem.index');
     let length = this.get('inputArray.length');
-    let inputs = this.get('inputArray.inputs');
+    let inputs = this.get('inputArray.items');
     var nextInput;
 
     //update step
@@ -39,7 +39,7 @@ export default Module.extend({
     //create inputArray
     let inputArray = this.store.createRecord('array', {module:this, length:this.get('sequenceLength')});
     this.set('inputArray', inputArray);
-    inputArray.initInputs();
+    inputArray.initItems();
 
     //create ports
     this.addEventInPort('inc step', 'incrementStep');
