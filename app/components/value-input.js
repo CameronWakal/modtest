@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.TextField.extend({
 
   classNames: ['value-input'],
-  classNameBindings: ['valueInput.isCurrentItem:current'],
+  classNameBindings: ['item.isCurrentItem:current'],
 
   focusIn() {
     this.$().select();
@@ -16,7 +16,7 @@ export default Ember.TextField.extend({
     } else {
       this.set('value', value);
     }
-    this.get('valueInput.array.module').save();
+    this.get('item.array.module').save();
   },
 
 });

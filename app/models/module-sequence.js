@@ -13,21 +13,21 @@ export default Module.extend({
   },
 
   incrementStep(event) {
-    let input = this.get('steps.currentItem');
+    let step = this.get('steps.currentItem');
     let index = this.get('steps.currentItem.index');
     let length = this.get('steps.length');
-    let inputs = this.get('steps.items');
-    var nextInput;
+    let steps = this.get('steps.items');
+    var nextStep;
 
     //update step
-    if(!input) {
-      nextInput = inputs.findBy('index', 0);
+    if(!step) {
+      nextStep = steps.findBy('index', 0);
     } else if(index < length-1) {
-      nextInput = inputs.findBy('index', index+1);
+      nextStep = steps.findBy('index', index+1);
     } else {
-      nextInput = inputs.findBy('index', 0);
+      nextStep = steps.findBy('index', 0);
     }
-    this.set('steps.currentItem', nextInput);
+    this.set('steps.currentItem', nextStep);
 
     //output event if current step has a value
     if( !isNaN( parseInt( this.get('steps.currentItem.value') ) ) ) {

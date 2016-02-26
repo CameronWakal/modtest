@@ -31,9 +31,9 @@ export default Module.extend({
     root = parseInt(root);
 
     let degreeInOctave = this.mod(degree, this.get('degreesInScale'));
-    let degreeModel = this.get('degrees.items').findBy('index', degreeInOctave);
-    this.set('degrees.currentItem', degreeModel);
-    let intervalForDegree = degreeModel.get('value');
+    let degreeItem = this.get('degrees.items').findBy('index', degreeInOctave);
+    this.set('degrees.currentItem', degreeItem);
+    let intervalForDegree = degreeItem.get('value');
 
     if(intervalForDegree == null) {
       return null;
