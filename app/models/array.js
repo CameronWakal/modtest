@@ -4,7 +4,7 @@ export default DS.Model.extend({
   
   length: DS.attr('number'),
   inputs: DS.hasMany('arrayItem'),
-  currentInput: DS.belongsTo('arrayItem', {async:false}),
+  currentItem: DS.belongsTo('arrayItem', {async:false}),
   module: DS.belongsTo('module', {async:false, polymorphic:true}),
 
   initInputs() {

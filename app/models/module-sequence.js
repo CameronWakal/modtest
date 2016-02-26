@@ -9,12 +9,12 @@ export default Module.extend({
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
 
   getValue() {
-    return this.get('inputArray.currentInput.value');
+    return this.get('inputArray.currentItem.value');
   },
 
   incrementStep(event) {
-    let input = this.get('inputArray.currentInput');
-    let index = this.get('inputArray.currentInput.index');
+    let input = this.get('inputArray.currentItem');
+    let index = this.get('inputArray.currentItem.index');
     let length = this.get('inputArray.length');
     let inputs = this.get('inputArray.inputs');
     var nextInput;
@@ -27,10 +27,10 @@ export default Module.extend({
     } else {
       nextInput = inputs.findBy('index', 0);
     }
-    this.set('inputArray.currentInput', nextInput);
+    this.set('inputArray.currentItem', nextInput);
 
     //output event if current step has a value
-    if( !isNaN( parseInt( this.get('inputArray.currentInput.value') ) ) ) {
+    if( !isNaN( parseInt( this.get('inputArray.currentItem.value') ) ) ) {
       this.get('trigOutPort').sendEvent(event);
     }
   },

@@ -7,8 +7,8 @@ export default DS.Model.extend({
   index: DS.attr('number'),
   array: DS.belongsTo('array', {async:false, inverse:'inputs'}),
 
-  isCurrentInput: Ember.computed('array.currentInput', function(){
-    return this === this.get('array.currentInput');
+  isCurrentItem: Ember.computed('array.currentItem', function(){
+    return this === this.get('array.currentItem');
   })
 
 });

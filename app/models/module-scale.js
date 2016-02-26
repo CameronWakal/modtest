@@ -32,7 +32,7 @@ export default Module.extend({
 
     let degreeInOctave = this.mod(degree, this.get('degreesInScale'));
     let degreeModel = this.get('inputArray.inputs').findBy('index', degreeInOctave);
-    this.set('inputArray.currentInput', degreeModel);
+    this.set('inputArray.currentItem', degreeModel);
     let intervalForDegree = degreeModel.get('value');
 
     if(intervalForDegree == null) {
