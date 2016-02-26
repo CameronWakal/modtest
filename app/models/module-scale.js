@@ -5,7 +5,7 @@ export default Module.extend({
   
   degreesInScale: 7,
 
-  inputArray: DS.belongsTo('array'),
+  degrees: DS.belongsTo('array'),
 
   degreeInPort: DS.belongsTo('port-value-in', {async:false}),
   octaveInPort: DS.belongsTo('port-value-in', {async:false}),
@@ -31,8 +31,8 @@ export default Module.extend({
     root = parseInt(root);
 
     let degreeInOctave = this.mod(degree, this.get('degreesInScale'));
-    let degreeModel = this.get('inputArray.items').findBy('index', degreeInOctave);
-    this.set('inputArray.currentItem', degreeModel);
+    let degreeModel = this.get('degrees.items').findBy('index', degreeInOctave);
+    this.set('degrees.currentItem', degreeModel);
     let intervalForDegree = degreeModel.get('value');
 
     if(intervalForDegree == null) {
@@ -51,10 +51,10 @@ export default Module.extend({
   },
 
   didCreate() {
-    //create inputArray
-    let inputArray = this.store.createRecord('array', {module:this, length:this.get('degreesInScale')});
-    this.set('inputArray', inputArray);
-    inputArray.initItems();
+    //create degrees
+    let degrees = this.store.createRecord('array', {module:this, length:this.get('degreesInScale')});
+    this.set('degrees', degrees);
+    degrees.initItems();
 
     //create ports
     this.addValueOutPort('note', 'getNote');
