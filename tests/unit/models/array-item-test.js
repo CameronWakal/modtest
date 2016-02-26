@@ -1,12 +1,12 @@
 import { moduleForModel, test } from 'ember-qunit';
 
-moduleForModel('module-sequence-step', 'Unit | Model | module sequence step', {
+moduleForModel('array-item', 'Unit | Model | array item', {
   // Specify the other units that are required for this test.
   needs: []
 });
 
 test('it exists', function(assert) {
-  var model = this.subject();
-  // var store = this.store();
+  let model = this.subject();
+  // let store = this.store();
   assert.ok(!!model);
 });

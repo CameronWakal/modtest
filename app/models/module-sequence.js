@@ -3,21 +3,20 @@ import Module from './module';
 
 export default Module.extend({
   
-  length: DS.attr('number', { defaultValue: 16 }),
-  steps: DS.hasMany('module-sequence-step'),
-  currentStep: DS.belongsTo('module-sequence-step', {async:false}),
+  sequenceLength: 16,
 
+  steps: DS.belongsTo('array'),
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
 
   getValue() {
-    return this.get('currentStep.value');
+    return this.get('steps.currentItem.value');
   },
 
   incrementStep(event) {
-    let step = this.get('currentStep');
-    let index = this.get('currentStep.index');
-    let length = this.get('length');
-    let steps = this.get('steps');
+    let step = this.get('steps.currentItem');
+    let index = this.get('steps.currentItem.index');
+    let length = this.get('steps.length');
+    let steps = this.get('steps.items');
     var nextStep;
 
     //update step
@@ -28,21 +27,20 @@ export default Module.extend({
     } else {
       nextStep = steps.findBy('index', 0);
     }
-    this.set('currentStep', nextStep);
+    this.set('steps.currentItem', nextStep);
 
     //output event if current step has a value
-    if( !isNaN( parseInt( this.get('currentStep.value') ) ) ) {
+    if( !isNaN( parseInt( this.get('steps.currentItem.value') ) ) ) {
       this.get('trigOutPort').sendEvent(event);
     }
   },
 
   didCreate() {
     //create steps
-    let stepCount = this.get('length');
-    var step;
-    for(var i = 0; i < stepCount; i++) {
-      step = this.store.createRecord('module-sequence-step', {sequence:this, index:i});
-    }
+    let steps = this.store.createRecord('array', {module:this, length:this.get('sequenceLength')});
+    this.set('steps', steps);
+    steps.initItems();
+
     //create ports
     this.addEventInPort('inc step', 'incrementStep');
     this.addValueOutPort('value', 'getValue');

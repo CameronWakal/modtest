@@ -1,4 +1,4 @@
-.module-sequence-step {
+.value-input {
   display: inline-block;
   vertical-align: bottom;
   border: 1px solid #ddd;
@@ -10,18 +10,18 @@
   text-align: center;
 }
 
-.module-sequence-step:focus {
+.value-input:focus {
   outline: none;
   border-color: red;
   color: transparent;
   text-shadow: 0 0 0 #000;
 }
 
-.module-sequence-step::selection {
+.value-input::selection {
   background-color: transparent;
 }
 
-.module-sequence-step.current {
+.value-input.current {
   border-color: #000;
   color: #000;
 }
