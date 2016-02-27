@@ -4,6 +4,8 @@ import DS from 'ember-data';
 
 export default Module.extend({
 
+  label: 'Out',
+
   midi: Ember.inject.service(),
 
   noteInPort: DS.belongsTo('port-value-in', {async:false}),

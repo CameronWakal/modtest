@@ -3,6 +3,7 @@ import Module from './module';
 
 export default Module.extend({
   
+  label: 'Sequence',
   sequenceLength: 16,
 
   steps: DS.belongsTo('array'),

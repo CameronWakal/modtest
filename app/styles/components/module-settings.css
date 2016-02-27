@@ -1,0 +1,14 @@
+.module-settings {
+  background: black;
+  color: white;
+  position: absolute;
+  height: 20%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.5rem;
+}
+
+.module-settings.empty {
+  display: none;
+}

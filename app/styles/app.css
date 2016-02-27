@@ -1,5 +1,6 @@
 @import 'components/port-component.css';
 @import 'components/module.css';
+@import 'components/module-settings.css';
 @import 'components/value-input.css';
 @import 'components/patch-diagram.css';
 @import 'components/patch-component.css';

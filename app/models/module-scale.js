@@ -3,6 +3,7 @@ import Module from './module';
 
 export default Module.extend({
   
+  label: 'Scale',
   degreesInScale: 7,
 
   degrees: DS.belongsTo('array'),

@@ -5,7 +5,6 @@ export default Ember.Component.extend({
   classNameBindings: ['portIsConnectingFrom:portConnectingFrom'],
   attributeBindings: ['inlineStyles:style', 'tabindex'],
   tabindex: -1,
-  
 
   isMoving: false,
   didMove: false,
@@ -27,6 +26,7 @@ export default Ember.Component.extend({
     this.set('moveOffsetY', event.pageY - this.get('yPos') );
     Ember.$(document).on('mouseup', this.mouseUpBody.bind(this));
     Ember.$(document).on('mousemove', this.mouseMoveBody.bind(this));
+    this.sendAction('selected');
     this.sendAction('startedMoving');
     console.log('module mousedown');
   },
