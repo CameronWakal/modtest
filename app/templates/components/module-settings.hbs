@@ -1,2 +1,8 @@
 <h4>{{module.label}} Settings</h4>
-{{yield}}
+<ul>
+{{#each module.settings as |setting|}}
+<li>
+{{setting.label}}:{{setting-input value=setting.value}}
+</li>
+{{/each}}
+</ul>

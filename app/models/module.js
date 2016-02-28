@@ -4,6 +4,7 @@ import Ember from 'ember';
 export default DS.Model.extend({
 
   label: null,
+  settings: DS.hasMany('module-setting'),
 
   patch: DS.belongsTo('patch', {async:false}),
   ports: DS.hasMany('port', {polymorphic:true, async:false}),
