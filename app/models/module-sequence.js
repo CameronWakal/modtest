@@ -1,21 +1,10 @@
-import Ember from 'ember';
 import DS from 'ember-data';
 import Module from './module';
 
 export default Module.extend({
   
   label: 'Sequence',
-  defaultSequenceLength: 8, 
-  
-  //todo: cleaner way? would this work as a computed FindBy rather than a separate relationship?
-  sequenceLengthSetting: DS.belongsTo('module-setting', {async: false}),
-  onSequenceLengthChanged: Ember.observer('sequenceLengthSetting.value', function() {
-    let newLength = this.get('sequenceLengthSetting.value');
-    let steps = this.get('steps');
-    if(steps && newLength) {
-      steps.set('length', newLength);
-    }
-  }),
+  defaultLength: 8, 
 
   steps: DS.belongsTo('array', {async: false}),
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
@@ -48,14 +37,18 @@ export default Module.extend({
   },
 
   didCreate() {
-    //create settings
-    let setting = this.store.createRecord('module-setting', {key:'sequenceLength', label:'Length', value:this.get('defaultSequenceLength')});
-    this.get('settings').pushObject(setting);
-    this.set('sequenceLengthSetting', setting);
-
     //create steps
-    let steps = this.store.createRecord('array', {module:this, length:this.get('defaultSequenceLength')});
+    let steps = this.store.createRecord('array', {module:this});
     this.set('steps', steps);
+
+    //create settings
+    let setting = this.store.createRecord('module-setting', {
+      label:'Length', 
+      value:this.get('defaultLength'),
+      module:this, 
+      targetVariable:'steps.length',
+    });
+    this.get('settings').pushObject(setting);
 
     //create ports
     this.addEventInPort('inc step', 'incrementStep');
