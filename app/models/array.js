@@ -27,6 +27,13 @@ export default DS.Model.extend({
 
     this.set('length', newLength);
     this.get('module').save();
+  },
+
+  remove() {
+    this.get('items').toArray().forEach( item => {
+      item.destroyRecord();
+    });
+    this.destroyRecord();
   }
 
 });

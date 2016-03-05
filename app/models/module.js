@@ -83,8 +83,13 @@ export default DS.Model.extend({
       this.set('needsRemoval', true);
     } else {
 
-      this.get('ports').forEach( port => {
+      this.get('ports').toArray().forEach( port => {
         port.disconnect();
+        port.destroyRecord();
+      });
+
+      this.get('settings').toArray().forEach( setting => {
+        setting.destroyRecord();
       });
 
       this.destroyRecord();

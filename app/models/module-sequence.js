@@ -9,12 +9,14 @@ export default Module.extend({
   
   //todo: cleaner way? would this work as a computed FindBy rather than a separate relationship?
   sequenceLengthSetting: DS.belongsTo('module-setting', {async: false}),
-  sequenceLength: Ember.computed.alias('sequenceLengthSetting.value'),
+  /*
   onSequenceLengthChanged: Ember.observer('sequenceLengthSetting.value', function() {
+    console.log('sequence length changed');
     if(this.get('steps')) {
-      this.get('steps').changeLength(this.get('sequenceLength'));
+      this.get('steps').changeLength(this.get('sequenceLengthSetting.value'));
     }
   }),
+  */
 
   steps: DS.belongsTo('array', {async: false}),
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
@@ -62,5 +64,10 @@ export default Module.extend({
     this.addValueOutPort('value', 'getValue');
     this.addEventOutPort('trig', 'trigOutPort');
   },
+
+  remove() {
+    this.get('steps').remove();
+    this._super();
+  }
 
 });
