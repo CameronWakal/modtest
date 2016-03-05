@@ -53,8 +53,7 @@ export default Module.extend({
 
   didCreate() {
     //create degrees
-    let degrees = this.store.createRecord('array', {module:this});
-    degrees.changeLength(this.get('degreesInScale'));
+    let degrees = this.store.createRecord('array', {module:this, length:this.get('degreesInScale')});
     this.set('degrees', degrees);
 
     //create ports

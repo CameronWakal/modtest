@@ -12,8 +12,8 @@ export default Module.extend({
   onSequenceLengthChanged: Ember.observer('sequenceLengthSetting.value', function() {
     let newLength = this.get('sequenceLengthSetting.value');
     let steps = this.get('steps');
-    if(steps) {
-      steps.changeLength(newLength);
+    if(steps && newLength) {
+      steps.set('length', newLength);
     }
   }),
 
@@ -54,8 +54,7 @@ export default Module.extend({
     this.set('sequenceLengthSetting', setting);
 
     //create steps
-    let steps = this.store.createRecord('array', {module:this});
-    steps.changeLength(this.get('defaultSequenceLength'));
+    let steps = this.store.createRecord('array', {module:this, length:this.get('defaultSequenceLength')});
     this.set('steps', steps);
 
     //create ports

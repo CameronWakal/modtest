@@ -1,17 +1,18 @@
 import DS from 'ember-data';
+import Ember from 'ember';
 
 export default DS.Model.extend({
   
-  length: DS.attr('number', {defaultValue: 0}),
+  length: DS.attr('number', {defaultValue:0}),
   items: DS.hasMany('arrayItem'),
   currentItem: DS.belongsTo('arrayItem', {async:false}),
   module: DS.belongsTo('module', {async:false, polymorphic:true}),
 
-  //todo: array should listen for change to its own property
-  //instead of someone else having to call this
-  changeLength(newLength) {
-    console.log('set length from '+this.get('length')+' to '+newLength);  
-    let length = this.get('length');
+  onLengthChanged: Ember.observer('length', function() {
+    
+    let length = this.get('items.length');
+    let newLength = this.get('length');
+    console.log('set length from '+length+' to '+newLength); 
 
     if(newLength > length) {
       for(let i = length; i < newLength; i++) {
@@ -25,9 +26,9 @@ export default DS.Model.extend({
       return;
     }
 
-    this.set('length', newLength);
     this.get('module').save();
-  },
+
+  }),
 
   remove() {
     this.get('items').toArray().forEach( item => {
