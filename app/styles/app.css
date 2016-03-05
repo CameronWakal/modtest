@@ -2,6 +2,7 @@
 @import 'components/module.css';
 @import 'components/module-settings.css';
 @import 'components/value-input.css';
+@import 'components/setting-input.css';
 @import 'components/patch-diagram.css';
 @import 'components/patch-component.css';
 
@@ -13,6 +14,7 @@ html, input, button {
 
 body {
   padding: 0;
+  margin: 0;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -29,8 +31,8 @@ button {
 }
 
 .app-header {
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #ddd;
+  padding: 0.5rem 0.5rem 0 0.5rem;
+  background: #eee;
   position: relative;
   z-index: 100;
 }

@@ -2,7 +2,7 @@
 <ul>
 {{#each module.settings as |setting|}}
 <li>
-{{setting.label}}:{{setting-input value=setting.value}}
+<span class="setting-label">{{setting.label}}</span>{{setting-input value=setting.value}}
 </li>
 {{/each}}
 </ul>

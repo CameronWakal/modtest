@@ -1,14 +1,27 @@
 .module-settings {
   background: black;
-  color: white;
+  color: #999;
   position: absolute;
-  height: 20%;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 0.5rem;
+  padding: 0.5rem 0.5rem 3.5rem;
 }
 
 .module-settings.empty {
   display: none;
+}
+
+.module-settings h4 {
+  padding: 0.5rem 0.5rem 0 0.5rem;
+  line-height: 1.5rem;
+}
+
+.module-settings ul {
+  margin: 0;
+  padding: 0 0 0 0.5rem;
+}
+
+.module-settings li {
+  list-style-type: none;
 }

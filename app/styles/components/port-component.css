@@ -1,5 +1,5 @@
 .port {
-  border: 1px solid #ddd;
+  box-shadow: 0px 0px 0px 1px #ddd;
   display: inline-block;
   margin: 0 0.5rem 0.5rem 0;
   padding: 0.25rem 0.5rem;
@@ -13,16 +13,16 @@
 
 .port.connected {
   color: #000;
-  border-color: #000;
+  box-shadow: 0px 0px 0px 1px #000;
 }
 
 .new-connection .port.connectingFrom {
   color: red;
-  border-color: red;
+  box-shadow: 0px 0px 0px 1px red;
 }
 
 .new-connection .port {
-  border: 1px solid #ddd;
+  box-shadow: 0px 0px 0px 1px #ddd;
   color: #bbb;
   cursor: default;
 }
@@ -32,6 +32,6 @@
 .new-connection-from-port-value-in .port-value-out,
 .new-connection-from-port-value-out .port-value-in {
   color: black;
-  border-color: black;
+  box-shadow: 0px 0px 0px 1px #000;
   cursor: pointer;
 }

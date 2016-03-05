@@ -9,7 +9,11 @@
 .patch-connections {
   position: absolute;
   bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
+  background: #ddd;
+  padding: 0.5rem 0 0 0.5rem;
 }
 
 .patch .modules {
