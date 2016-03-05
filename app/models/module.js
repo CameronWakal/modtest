@@ -3,6 +3,9 @@ import Ember from 'ember';
 
 export default DS.Model.extend({
 
+  label: null,
+  settings: DS.hasMany('module-setting'),
+
   patch: DS.belongsTo('patch', {async:false}),
   ports: DS.hasMany('port', {polymorphic:true, async:false}),
 
@@ -80,8 +83,13 @@ export default DS.Model.extend({
       this.set('needsRemoval', true);
     } else {
 
-      this.get('ports').forEach( port => {
+      this.get('ports').toArray().forEach( port => {
         port.disconnect();
+        port.destroyRecord();
+      });
+
+      this.get('settings').toArray().forEach( setting => {
+        setting.destroyRecord();
       });
 
       this.destroyRecord();

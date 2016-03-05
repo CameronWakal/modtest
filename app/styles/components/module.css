@@ -1,5 +1,5 @@
 .module {
-  border: 1px solid #ddd;
+  box-shadow: inset 0px 0px 0px 1px #ddd;
   margin: 0 0.5rem 0.5rem 0;
   padding: 0.5rem 0 0 0.5rem;
   color: #bbb;
@@ -9,7 +9,7 @@
 }
 
 .module:focus {
-  border-color: red;
+  box-shadow: inset 0px 0px 0px 1px red;
   outline: none;
 }
 

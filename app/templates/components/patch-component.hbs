@@ -11,15 +11,18 @@
   connectingFromPort=connectingFromPort
 }}
 
+{{module-settings module=selectedModule}}
+
 <div class="modules" id="modules">
   {{#each patch.modules as |module|}}{{component  module.constructor.modelName
                                                   module=module 
-                                                  remove=(action 'removeModule' module)  
+                                                  remove=(action 'removeModule' module) 
+                                                  selected=(action 'moduleSelected' module)
                                                   portStartedConnecting=(action 'portStartedConnecting' module)
                                                   portFinishedConnecting=(action 'portFinishedConnecting') 
                                                   startedMoving=(action 'moduleStartedMoving' module) 
                                                   finishedMoving=(action 'moduleFinishedMoving')
                                                   mouseEnterPort=(action 'mouseEnterPort')
-                                                  mouseLeavePort=(action 'mouseLeavePort')
+                                                  mouseLeavePort=(action 'mouseLeavePort') 
         }}{{/each}}
 </div>

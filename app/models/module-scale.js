@@ -3,6 +3,7 @@ import Module from './module';
 
 export default Module.extend({
   
+  label: 'Scale',
   degreesInScale: 7,
 
   degrees: DS.belongsTo('array'),
@@ -54,7 +55,6 @@ export default Module.extend({
     //create degrees
     let degrees = this.store.createRecord('array', {module:this, length:this.get('degreesInScale')});
     this.set('degrees', degrees);
-    degrees.initItems();
 
     //create ports
     this.addValueOutPort('note', 'getNote');

@@ -16,6 +16,7 @@ export default Ember.Component.extend({
     }
   }),
 
+  selectedModule: null,
   movingModule: null,
   connectingFromPort: null,
   connectingToPort: null,
@@ -25,7 +26,11 @@ export default Ember.Component.extend({
   }),
 
   actions: {
-    
+
+    moduleSelected(module) {
+      this.set('selectedModule', module);
+    },
+
     moduleStartedMoving(module) {
       this.set('movingModule', module);
     },

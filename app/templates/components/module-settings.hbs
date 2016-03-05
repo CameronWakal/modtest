@@ -1,0 +1,8 @@
+<h4>{{module.label}} Settings</h4>
+<ul>
+{{#each module.settings as |setting|}}
+<li>
+<span class="setting-label">{{setting.label}}</span>{{setting-input value=setting.value}}
+</li>
+{{/each}}
+</ul>

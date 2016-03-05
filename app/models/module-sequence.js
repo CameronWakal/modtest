@@ -3,9 +3,10 @@ import Module from './module';
 
 export default Module.extend({
   
-  sequenceLength: 16,
+  label: 'Sequence',
+  defaultLength: 8, 
 
-  steps: DS.belongsTo('array'),
+  steps: DS.belongsTo('array', {async: false}),
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
 
   getValue() {
@@ -37,14 +38,27 @@ export default Module.extend({
 
   didCreate() {
     //create steps
-    let steps = this.store.createRecord('array', {module:this, length:this.get('sequenceLength')});
+    let steps = this.store.createRecord('array', {module:this});
     this.set('steps', steps);
-    steps.initItems();
+
+    //create settings
+    let setting = this.store.createRecord('module-setting', {
+      label:'Length', 
+      value:this.get('defaultLength'),
+      module:this, 
+      targetVariable:'steps.length',
+    });
+    this.get('settings').pushObject(setting);
 
     //create ports
     this.addEventInPort('inc step', 'incrementStep');
     this.addValueOutPort('value', 'getValue');
     this.addEventOutPort('trig', 'trigOutPort');
   },
+
+  remove() {
+    this.get('steps').remove();
+    this._super();
+  }
 
 });
