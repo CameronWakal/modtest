@@ -1,4 +1,4 @@
-import ModuleGenericComponent from './module-generic';
+import ModuleGenericComponent from '../../components/module-generic';
 
 export default ModuleGenericComponent.extend({
 

@@ -1,4 +1,4 @@
-import ModuleSerializer from './module';
+import ModuleSerializer from '../../serializers/module';
 
 export default ModuleSerializer.extend({
 

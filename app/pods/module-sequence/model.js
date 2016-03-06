@@ -1,5 +1,5 @@
 import DS from 'ember-data';
-import Module from './module';
+import Module from '../../models/module';
 
 export default Module.extend({
   
