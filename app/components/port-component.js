@@ -12,6 +12,12 @@ export default Ember.Component.extend({
 
   isConnectingFrom: false,
   
+  onDisable: Ember.observer('port.isEnabled', function(){
+    if(!this.get('port.isEnabled')) {
+      this.sendAction('disconnect');
+    }
+  }),
+
   mouseDown(event) {
     event.preventDefault();
     this.$().focus();

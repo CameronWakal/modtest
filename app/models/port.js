@@ -3,6 +3,7 @@ import Ember from 'ember';
 
 export default DS.Model.extend({
   label: DS.attr('string'),
+  isEnabled: DS.attr('boolean', {defaultValue:true}),
   module: DS.belongsTo('module', {polymorphic: true, async: false}),
 
   uniqueCssIdentifier: Ember.computed('id', function(){
@@ -20,9 +21,7 @@ export default DS.Model.extend({
     }
   }),
 
-  isConnected: Ember.computed('connections', function() {
-    return this.get('connections.length');
-  }),
+  isConnected: Ember.computed.bool('connections.length'),
 
   //remove all connections
   disconnect() {

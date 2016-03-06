@@ -25,3 +25,7 @@
 .module-settings li {
   list-style-type: none;
 }
+
+.module-settings input[type=checkbox] {
+  margin: 0 0 0 0.5rem;
+}

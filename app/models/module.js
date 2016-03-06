@@ -16,22 +16,16 @@ export default DS.Model.extend({
   // while save is in progress
   needsRemoval: false,
 
-  eventOutPorts: Ember.computed('ports.@each.type', function(){
-    let ports = this.get('ports');
-    return ports.filterBy('type', 'port-event-out');
-  }),
-
-  valueOutPorts: Ember.computed('ports.@each.type', function(){
-    let ports = this.get('ports');
-    return ports.filterBy('type', 'port-value-out');
-  }),
-
+  eventOutPorts: Ember.computed.filterBy('ports', 'type', 'port-event-out'),
+  eventInPorts: Ember.computed.filterBy('ports', 'type', 'port-event-in'),
+  valueOutPorts: Ember.computed.filterBy('ports', 'type', 'port-value-out'),
+  valueInPorts: Ember.computed.filterBy('ports', 'type', 'port-value-in'),
   outPorts: Ember.computed('ports.@each.type', function(){
-    let ports = this.get('ports');
-    return ports.filter( item => {
+    return this.get('ports').filter( item => {
       return item.get('type') === 'port-value-out' || item.get('type') === 'port-event-out';
     });
   }),
+  enabledPorts: Ember.computed.filterBy('ports', 'isEnabled', true),
 
   //portVar is used to easily refer to this specific port from within the module
   addEventOutPort(label, portVar) {

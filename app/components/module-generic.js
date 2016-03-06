@@ -92,6 +92,12 @@ export default Ember.Component.extend({
       this.sendAction('mouseLeavePort', port);
     },
 
+    disconnectPort(port) {
+      port.disconnect();
+      this.get('module').save();
+      this.sendAction('portDisconnected', port);
+    }
+
   },
   
 });

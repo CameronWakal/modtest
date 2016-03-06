@@ -1,8 +1,9 @@
-{{#each module.ports as |port|}}{{component 
+{{#each module.enabledPorts as |port|}}{{component 
   port.constructor.modelName 
   port=port 
   startedConnecting=(action 'portStartedConnecting' port)
   finishedConnecting=(action 'portFinishedConnecting')
   mouseEnter=(action 'mouseEnterPort' port)
-  mouseLeave=(action 'mouseLeavePort')
+  mouseLeave=(action 'mouseLeavePort') 
+  disconnect=(action 'disconnectPort' port)
 }}{{/each}}

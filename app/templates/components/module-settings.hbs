@@ -1,8 +1,54 @@
-<h4>{{module.label}} Settings</h4>
-<ul>
-{{#each module.settings as |setting|}}
-<li>
-<span class="setting-label">{{setting.label}}</span>{{setting-input value=setting.value}}
-</li>
-{{/each}}
-</ul>
+{{#if hasSettings}}
+  <h4>{{module.label}} Settings</h4>
+  <ul>
+    {{#each module.settings as |setting|}}
+      <li>
+        <span class="setting-label">{{setting.label}}</span>{{setting-input value=setting.value}}
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+{{#if hasValueInPorts}}
+  <h4>{{module.label}} Value In Ports</h4>
+  <ul>
+    {{#each module.valueInPorts as |port|}}
+      <li>
+        <span class="setting-label">{{port.label}}{{input type="checkbox" checked=port.isEnabled}}</span>
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+{{#if hasValueOutPorts}}
+  <h4>{{module.label}} Value Out Ports</h4>
+  <ul>
+    {{#each module.valueOutPorts as |port|}}
+      <li>
+        <span class="setting-label">{{port.label}}{{input type="checkbox" checked=port.isEnabled}}</span>
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+{{#if hasEventOutPorts}}
+  <h4>{{module.label}} Event Out Ports</h4>
+  <ul>
+    {{#each module.eventOutPorts as |port|}}
+      <li>
+        <span class="setting-label">{{port.label}}{{input type="checkbox" checked=port.isEnabled}}</span>
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+{{#if hasEventInPorts}}
+  <h4>{{module.label}} Event In Ports</h4>
+  <ul>
+    {{#each module.eventInPorts as |port|}}
+      <li>
+        <span class="setting-label">{{port.label}}{{input type="checkbox" checked=port.isEnabled}}</span>
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
