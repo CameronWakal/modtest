@@ -13,7 +13,7 @@ export default Ember.Component.extend({
   isConnectingFrom: false,
   
   onDisable: Ember.observer('port.isEnabled', function(){
-    if(!this.get('port.isEnabled')) {
+    if( !this.get('port.isEnabled') && !Ember.isEmpty(this.get('port.connections')) ) {
       this.sendAction('disconnect');
     }
   }),

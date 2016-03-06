@@ -21,8 +21,6 @@ export default Ember.Route.extend({
     },
     removeCurrentPatch() {
       //destroy current patch including modules and ports, leave route
-      console.log('- application route removing current patch');
-
       let currentPatchController = this.controllerFor('patch');
       currentPatchController.send('removeCurrentPatch');
     }

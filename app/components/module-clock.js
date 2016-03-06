@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import ModuleGenericComponent from './module-generic';
 
 //todo: computed properties, getters and setters to be more emberlike
@@ -43,7 +44,14 @@ export default ModuleGenericComponent.extend({
     var currentTime = window.performance.now();
 
     var nextTickDelay = this.tickDuration - (currentTime-targetTime);
+    
+    //timeout way
     window.setTimeout(this.sendTrigger.bind(this), nextTickDelay);
+    
+    //ember way
+    //Ember.run.later(this, this.sendTrigger, nextTickDelay);
+
+
     this.tickCount++;
 
     var outputTime = targetTime + this.latency;     //we add some latency to the timestamp,

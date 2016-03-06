@@ -50,7 +50,6 @@ export default Ember.Component.extend({
   //search for connected ports in dom and store the jquery objects
   //so we can draw connections between ports later.
   updateConnections() {
-    console.log('update connections');
     var outPorts, inPorts, outPortDom, inPortDom;
 
     let modulesDom = this.$().siblings('#modules').children();
@@ -82,7 +81,6 @@ export default Ember.Component.extend({
 
   //start drawing a line from the new connection port to the cursor location on mouse move
   addNewConnection() {
-    console.log('add new connection');
     let module = this.$().siblings('#modules').children('.portConnectingFrom');
     let port = Ember.$(module).children('.connectingFrom');
     this.addMouseListener();
@@ -92,7 +90,6 @@ export default Ember.Component.extend({
 
   //stop drawing from the new connection port to the cursor location
   removeNewConnection() {
-    console.log('remove new connection');
     this.set('newConnectionFrom', null);
     this.removeMouseListener();
     this.drawConnections();
@@ -200,7 +197,6 @@ export default Ember.Component.extend({
   // http://jsfiddle.net/mmansion/9K5p9/
 
   mouseDown(event) {
-    console.log('patch diagram mouse down');
     this.set('selectedConnectionIndex', null);
     var startX, startY, endX, endY, point, lineStart, lineEnd, distance;
     let cons = this.get('connections');

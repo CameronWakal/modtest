@@ -33,7 +33,6 @@ export default Ember.Service.extend({
   },
 
   onMIDISuccess(midiAccess){
-    console.log('MIDI Initialized Successfully.');
       this.midi = midiAccess;
       var inputs = this.midi.inputs.values();
       // loop through all inputs

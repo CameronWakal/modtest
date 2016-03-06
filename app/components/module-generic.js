@@ -28,13 +28,11 @@ export default Ember.Component.extend({
     Ember.$(document).on('mousemove', this.mouseMoveBody.bind(this));
     this.sendAction('selected');
     this.sendAction('startedMoving');
-    console.log('module mousedown');
   },
 
   keyDown(event) {
     if( event.keyCode === 8 && this.$().is(':focus') ) {
       event.preventDefault();
-      console.log('remove module');
       this.sendAction('remove');
     }
   },
@@ -57,7 +55,6 @@ export default Ember.Component.extend({
       if(self.get('didMove')) {
         self.get('module').save();
         self.set('didMove', false);
-        console.log('module position saved');
       }
       self.sendAction('finishedMoving');
       Ember.$(document).off('mouseup');
@@ -70,7 +67,6 @@ export default Ember.Component.extend({
       this.attrs.remove();
     },
     selectPort(port) {
-      console.log('---- module component sending select action for port '+port.get('label'));
       this.attrs.selectPort(port);
     },
 

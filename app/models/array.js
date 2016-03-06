@@ -9,10 +9,8 @@ export default DS.Model.extend({
   module: DS.belongsTo('module', {async:false, polymorphic:true}),
 
   onLengthChanged: Ember.observer('length', function() {
-    
     let length = this.get('items.length');
     let newLength = this.get('length');
-    console.log('set length from '+length+' to '+newLength); 
 
     if(newLength > length) {
       for(let i = length; i < newLength; i++) {

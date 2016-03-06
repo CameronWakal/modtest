@@ -40,13 +40,11 @@ export default Ember.Component.extend({
     },
 
     portStartedConnecting(module, port) {
-      console.log('port started connecting');
       this.set('connectingFromPort', port);
     },
 
     //if there is a toPort and fromPort when finished, make the connection!
     portFinishedConnecting() {
-      console.log('port finished connecting');
       if(this.get('connectingToPort')) {
         this.addConnection(this.get('connectingFromPort'), this.get('connectingToPort'));
       }
@@ -55,7 +53,6 @@ export default Ember.Component.extend({
     },
 
     portDisconnected(port) {
-      console.log('patch: port disconnected');
       this.set('diagramNeedsUpdate', true);
     },
 
@@ -71,7 +68,6 @@ export default Ember.Component.extend({
     },
 
     mouseLeavePort() {
-      console.log('patch mouseLeavePort');
       this.set('connectingToPort', null);
     },
 
@@ -100,9 +96,7 @@ export default Ember.Component.extend({
       module.save();
     },
 
-    removeConnection(sourcePort, destPort) {
-      console.log('--- patchController removing connection between '+sourcePort+' and '+destPort);
-      
+    removeConnection(sourcePort, destPort) {      
       sourcePort.get('connections').removeObject(destPort);
       sourcePort.get('module').save();
       destPort.get('connections').removeObject(sourcePort);
@@ -114,8 +108,6 @@ export default Ember.Component.extend({
   },
 
   addConnection(sourcePort, destPort) {
-    console.log('connecting '+sourcePort+' to '+destPort);
-
     destPort.get('connections').pushObject(sourcePort);
     destPort.get('module').save();
 
