@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import ModuleGenericComponent from '../../components/module-generic';
+import ModuleGenericComponent from '../module/component';
 
 //todo: computed properties, getters and setters to be more emberlike
 

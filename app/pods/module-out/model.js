@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import Module from '../../models/module';
+import Module from '../module/model';
 import DS from 'ember-data';
 
 export default Module.extend({
