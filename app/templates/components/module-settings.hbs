@@ -14,7 +14,7 @@
   <ul>
     {{#each module.valueInPorts as |port|}}
       <li>
-        <span class="setting-label">{{port.label}}{{input type="checkbox" checked=port.isEnabled}}</span>
+        <span class="setting-label">{{input type="checkbox" checked=port.isEnabled}}{{port.label}}</span>{{#unless port.isEnabled}}{{setting-input value=port.disabledValue}}{{/unless}}
       </li>
     {{/each}}
   </ul>
@@ -25,7 +25,7 @@
   <ul>
     {{#each module.valueOutPorts as |port|}}
       <li>
-        <span class="setting-label">{{port.label}}{{input type="checkbox" checked=port.isEnabled}}</span>
+        <span class="setting-label">{{input type="checkbox" checked=port.isEnabled}}{{port.label}}</span>
       </li>
     {{/each}}
   </ul>
@@ -36,7 +36,7 @@
   <ul>
     {{#each module.eventOutPorts as |port|}}
       <li>
-        <span class="setting-label">{{port.label}}{{input type="checkbox" checked=port.isEnabled}}</span>
+        <span class="setting-label">{{input type="checkbox" checked=port.isEnabled}}{{port.label}}</span>
       </li>
     {{/each}}
   </ul>
@@ -47,7 +47,7 @@
   <ul>
     {{#each module.eventInPorts as |port|}}
       <li>
-        <span class="setting-label">{{port.label}}{{input type="checkbox" checked=port.isEnabled}}</span>
+        <span class="setting-label">{{input type="checkbox" checked=port.isEnabled}}{{port.label}}</span>
       </li>
     {{/each}}
   </ul>
