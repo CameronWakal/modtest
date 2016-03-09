@@ -36,6 +36,10 @@ export default Module.extend({
     }
   },
 
+  reset() {
+    this.set('steps.currentItem', null);
+  },
+
   didCreate() {
     //create steps
     let steps = this.store.createRecord('array', {module:this});
@@ -52,6 +56,7 @@ export default Module.extend({
 
     //create ports
     this.addEventInPort('inc step', 'incrementStep');
+    this.addEventInPort('reset', 'reset');
     this.addValueOutPort('value', 'getValue');
     this.addEventOutPort('trig', 'trigOutPort');
   },
