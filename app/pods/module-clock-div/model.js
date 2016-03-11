@@ -17,7 +17,11 @@ export default Module.extend({
   count: DS.attr('number', {defaultValue: 0}),
 
   isTriggering: Ember.computed('count', 'shiftBy', 'divBy', function() {
-    return this.get('count') - this.mod(this.get('shiftByPort').getValue(), this.get('divByPort').getValue()) <= 1;
+    if(this.get('shiftByPort') && this.get('divByPort')) {
+      return this.get('count') - this.mod(this.get('shiftByPort').getValue(), this.get('divByPort').getValue()) <= 1;
+    } else {
+      return false;
+    }
   }),
 
   onClockIn(event) {

@@ -67,14 +67,14 @@ export default Ember.Service.extend({
       // log('MIDI data', data);
       switch(type){
           case 144: // noteOn message 
-              this.listener.noteOn(note, velocity);
+              //this.listener.noteOn(note, velocity);
               break;
           case 128: // noteOff message 
-              this.listener.noteOff(note, velocity);
+              //this.listener.noteOff(note, velocity);
               break;
       }
       
-      console.log('data in', data, 'cmd', cmd, 'channel', channel);
+      //console.log('data in', data, 'cmd', cmd, 'channel', channel);
       //this.logger(keyData, 'key data', data);
   },
 
