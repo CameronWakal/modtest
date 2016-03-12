@@ -21,9 +21,9 @@ export default Module.extend({
     // 3. convert to integers
     // 4. do math
 
-    let degree = this.get('degreeInPort').getValue();
-    let octave = this.get('octaveInPort').getValue();
-    let root = this.get('rootInPort').getValue();
+    let degree = this.get('degreeInPort.value');
+    let octave = this.get('octaveInPort.value');
+    let root = this.get('rootInPort.value');
 
     if(degree == null) { degree = 0; }
     if(octave == null) { octave = 3; }
