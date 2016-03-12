@@ -14,7 +14,7 @@ export default Port.extend({
     'disabledValue',
     'connections.@each.value',
     function(){
-      
+
       if(!this.get('isEnabled')) {
         return this.get('disabledValue');
       }

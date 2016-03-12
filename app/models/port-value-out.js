@@ -6,10 +6,10 @@ export default Port.extend({
   //valueOut ports can have multiple valueIn ports as destinations
   connections: DS.hasMany('port-value-in', {async: true}),
   //module getter method for target value
-  targetProperty: DS.attr('string'),
+  sourceProperty: DS.attr('string'),
 
   ready() {
-    Ember.defineProperty(this, 'value', Ember.computed.alias('module.'+this.get('targetProperty')));
+    Ember.defineProperty(this, 'value', Ember.computed.alias('module.'+this.get('sourceProperty')));
   },
 
 });
