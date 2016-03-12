@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import Module from '../module/model';
 import DS from 'ember-data';
 
@@ -18,7 +19,7 @@ export default Module.extend({
 
   isTriggering: Ember.computed('count', 'shiftBy', 'divBy', function() {
     if(this.get('shiftByPort') && this.get('divByPort')) {
-      return this.get('count') - this.mod(this.get('shiftByPort').getValue(), this.get('divByPort').getValue()) <= 1;
+      return this.get('count') - this.mod(this.get('shiftByPort').getValue(), this.get('divByPort').getValue()) === 1;
     } else {
       return false;
     }
@@ -31,7 +32,7 @@ export default Module.extend({
     if( divBy == null ) { divBy = 1; }
     if( shiftBy == null ) { shiftBy = 0; }
 
-    if( count - this.mod(shiftBy, divBy) <= 0 ) {
+    if( count - this.mod(shiftBy, divBy) === 0 ) {
       this.get('trigOutPort').sendEvent(event);
     }
 

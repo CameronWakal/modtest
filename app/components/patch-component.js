@@ -52,7 +52,7 @@ export default Ember.Component.extend({
       this.set('connectingToPort', null);
     },
 
-    portDisconnected(port) {
+    portDisconnected() {
       this.set('diagramNeedsUpdate', true);
     },
 
