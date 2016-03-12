@@ -19,7 +19,7 @@ export default Module.extend({
 
   isTriggering: Ember.computed('count', 'shiftBy', 'divBy', function() {
     if(this.get('shiftByPort') && this.get('divByPort')) {
-      return this.get('count') - this.mod(this.get('shiftByPort').getValue(), this.get('divByPort').getValue()) === 1;
+      return this.get('count') - this.mod(this.get('shiftByPort.value'), this.get('divByPort.value')) === 1;
     } else {
       return false;
     }
@@ -27,8 +27,8 @@ export default Module.extend({
 
   onClockIn(event) {
     let count = this.get('count');
-    let divBy = this.get('divByPort').getValue();
-    let shiftBy = this.get('shiftByPort').getValue();
+    let divBy = this.get('divByPort.value');
+    let shiftBy = this.get('shiftByPort.value');
     if( divBy == null ) { divBy = 1; }
     if( shiftBy == null ) { shiftBy = 0; }
 
