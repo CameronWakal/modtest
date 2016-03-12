@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import DS from 'ember-data';
 import Port from './port';
 
@@ -7,8 +8,12 @@ export default Port.extend({
   //module getter method for target value
   targetMethod: DS.attr('string'),
 
+  ready() {
+    Ember.defineProperty(this, 'value', Ember.computed.alias('module.'+this.get('targetMethod')));
+  },
+
   getValue(){
-    return this.get('module')[this.get('targetMethod')]();
+    return this.get('value');
   },
 
 });

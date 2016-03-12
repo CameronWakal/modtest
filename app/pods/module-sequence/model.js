@@ -9,9 +9,7 @@ export default Module.extend({
   steps: DS.belongsTo('array', {async: false}),
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
 
-  getValue() {
-    return this.get('steps.currentItem.value');
-  },
+  currentValue: Ember.computed.alias('steps.currentItem.value'),
 
   incrementStep(event) {
     let step = this.get('steps.currentItem');
@@ -57,7 +55,7 @@ export default Module.extend({
     //create ports
     this.addEventInPort('inc step', 'incrementStep');
     this.addEventInPort('reset', 'reset');
-    this.addValueOutPort('value', 'getValue');
+    this.addValueOutPort('value', 'currentValue');
     this.addEventOutPort('trig', 'trigOutPort');
   },
 
