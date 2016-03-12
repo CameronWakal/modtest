@@ -12,7 +12,9 @@ export default Module.extend({
   octaveInPort: DS.belongsTo('port-value-in', {async:false}),
   rootInPort: DS.belongsTo('port-value-in', {async:false}),
 
-  getNote() {
+  getNote: Ember.computed( function() {
+
+    return 42;
 
     // 1. get input values
     // 2. set defaults if they are null
@@ -49,7 +51,7 @@ export default Module.extend({
     //console.log('octave:'+octave+' root:'+root+' degree:'+degree+' interval:'+intervalForDegree+' note:'+note);
 
     return note;
-  },
+  }),
 
   didCreate() {
     //create degrees
