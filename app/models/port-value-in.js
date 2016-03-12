@@ -18,7 +18,7 @@ export default Port.extend({
     var value = null;
     var totalValue = null;
     this.get('connections').forEach( port => {
-      value = parseInt(port.getValue());
+      value = parseInt(port.get('value'));
       if( !isNaN(value) ) {
         if( totalValue == null ) {
           totalValue = 0;

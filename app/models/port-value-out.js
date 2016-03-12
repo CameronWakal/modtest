@@ -12,8 +12,4 @@ export default Port.extend({
     Ember.defineProperty(this, 'value', Ember.computed.alias('module.'+this.get('targetProperty')));
   },
 
-  getValue(){
-    return this.get('value');
-  },
-
 });
