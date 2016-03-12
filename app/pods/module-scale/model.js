@@ -12,9 +12,13 @@ export default Module.extend({
   octaveInPort: DS.belongsTo('port-value-in', {async:false}),
   rootInPort: DS.belongsTo('port-value-in', {async:false}),
 
-  note: Ember.computed( function() {
-
-    return 42;
+  note: Ember.computed(
+    'degreeInPort.value',
+    'octaveInPort.value',
+    'rootInPort.value',
+    'degreesInScale',
+    'degrees.items.@each.value',
+    function() {
 
     // 1. get input values
     // 2. set defaults if they are null
