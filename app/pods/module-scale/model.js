@@ -12,7 +12,7 @@ export default Module.extend({
   octaveInPort: DS.belongsTo('port-value-in', {async:false}),
   rootInPort: DS.belongsTo('port-value-in', {async:false}),
 
-  getNote: Ember.computed( function() {
+  note: Ember.computed( function() {
 
     return 42;
 
@@ -59,7 +59,7 @@ export default Module.extend({
     this.set('degrees', degrees);
 
     //create ports
-    this.addValueOutPort('note', 'getNote');
+    this.addValueOutPort('note', 'note');
     this.addValueInPort('degree', 'degreeInPort');
     this.addValueInPort('octave', 'octaveInPort');
     this.addValueInPort('root', 'rootInPort');
