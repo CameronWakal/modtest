@@ -15,20 +15,19 @@ export default Module.extend({
   shiftByPort: DS.belongsTo('port-value-in', {async:false}),
   trigOutPort: DS.belongsTo('port-event-out', {async: false}),
 
+  divBy: Ember.computed.alias('divByPort.value'),
+  shiftBy: Ember.computed.alias('shiftByPort.value'),
+
   count: DS.attr('number', {defaultValue: 0}),
 
   isTriggering: Ember.computed('count', 'shiftBy', 'divBy', function() {
-    if(this.get('shiftByPort') && this.get('divByPort')) {
-      return this.get('count') - this.mod(this.get('shiftByPort.value'), this.get('divByPort.value')) === 1;
-    } else {
-      return false;
-    }
+    return this.get('count') - this.mod(this.get('shiftBy'), this.get('divBy')) === 1;
   }),
 
   onClockIn(event) {
     let count = this.get('count');
-    let divBy = this.get('divByPort.value');
-    let shiftBy = this.get('shiftByPort.value');
+    let divBy = this.get('divBy');
+    let shiftBy = this.get('shiftBy');
     if( divBy == null ) { divBy = 1; }
     if( shiftBy == null ) { shiftBy = 0; }
 
