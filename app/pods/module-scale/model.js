@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import DS from 'ember-data';
 import Module from '../module/model';
 
@@ -12,10 +13,14 @@ export default Module.extend({
   octaveInPort: DS.belongsTo('port-value-in', {async:false}),
   rootInPort: DS.belongsTo('port-value-in', {async:false}),
 
+  degree: Ember.computed.alias('degreeInPort.value'),
+  octave: Ember.computed.alias('octaveInPort.value'),
+  root: Ember.computed.alias('rootInPort.value'),
+
   note: Ember.computed(
-    'degreeInPort.value',
-    'octaveInPort.value',
-    'rootInPort.value',
+    'degree',
+    'octave',
+    'root',
     'degreesInScale',
     'degrees.items.@each.value',
     function() {
@@ -25,9 +30,9 @@ export default Module.extend({
     // 3. convert to integers
     // 4. do math
 
-    let degree = this.get('degreeInPort.value');
-    let octave = this.get('octaveInPort.value');
-    let root = this.get('rootInPort.value');
+    let degree = this.get('degree');
+    let octave = this.get('octave');
+    let root = this.get('root');
 
     if(degree == null) { degree = 0; }
     if(octave == null) { octave = 3; }
