@@ -6,6 +6,7 @@ export default Module.extend({
   
   label: 'Scale',
   degreesInScale: 7,
+  defaultOctave: 3,
 
   degrees: DS.belongsTo('array'),
 
@@ -13,41 +14,38 @@ export default Module.extend({
   octaveInPort: DS.belongsTo('port-value-in', {async:false}),
   rootInPort: DS.belongsTo('port-value-in', {async:false}),
 
-  degree: Ember.computed.alias('degreeInPort.value'),
-  octave: Ember.computed.alias('octaveInPort.value'),
-  root: Ember.computed.alias('rootInPort.value'),
+  //default value of 0 if input is null
+  degree: Ember.computed('degreeInPort.value', function(){
+    return this.get('degreeInPort.value')==null ? 0 : this.get('degreeInPort.value');
+  }),
+  //default base octave of 3 if input is null, plus more if the degree overflows the current octave
+  octave: Ember.computed('octaveInPort.value','defaultOctave','degreesInScale','degree', function(){
+    let baseOctave = this.get('octaveInPort.value')==null ? this.get('defaultOctave') : this.get('octaveInPort.value');
+    return baseOctave + this.div( this.get('degree'), this.get('degreesInScale') );
+  }),
+  //default value of 0 if input is null
+  root: Ember.computed('rootInPort.value', function(){
+    return this.get('rootInPort.value')==null ? 0 : this.get('rootInPort.value');
+  }),
+
+  degreeInOctave: Ember.computed('degree', 'degreesInScale', function(){
+    return this.mod(this.get('degree'), this.get('degreesInScale'));
+  }),
 
   note: Ember.computed(
-    'degree',
     'octave',
     'root',
-    'degreesInScale',
-    'degrees.items.@each.value',
+    'degreeInOctave',
+    'degrees.items.@each.intValue',
     function() {
 
-    // 1. get input values
-    // 2. set defaults if they are null
-    // 3. convert to integers
-    // 4. do math
-
-    let degree = this.get('degree')==null ? 0 : this.get('degree');
-    let octave = this.get('octave')==null ? 3 : this.get('octave');
-    let root = this.get('root')==null ? 0 : this.get('root');
-
-    let degreeInOctave = this.mod(degree, this.get('degreesInScale'));
-    let degreeItem = this.get('degrees.items').findBy('index', degreeInOctave);
+    let degreeItem = this.get('degrees.items').findBy('index', this.get('degreeInOctave'));
     this.set('degrees.currentItem', degreeItem);
-    let intervalForDegree = degreeItem.get('value');
 
-    if(intervalForDegree == null) {
-      return null;
-    } else {
-      intervalForDegree = parseInt(intervalForDegree);
-    }
+    let intervalForDegree = degreeItem.get('intValue');
+    if(intervalForDegree == null) { return null; };
 
-    octave = octave + 1 + this.div(degree, this.get('degreesInScale'));
-
-    let note = (octave*12)+root+intervalForDegree;
+    let note = (this.get('octave')*12)+this.get('root')+intervalForDegree;
 
     //console.log('octave:'+octave+' root:'+root+' degree:'+degree+' interval:'+intervalForDegree+' note:'+note);
 
