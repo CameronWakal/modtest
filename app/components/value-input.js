@@ -10,12 +10,9 @@ export default Ember.TextField.extend({
   },
 
   focusOut() {
-    let value = parseInt( this.get('value') );
-    if(isNaN(value)) {
-      this.set('value', null);
-    } else {
-      this.set('value', value);
-    }
+    let intValue = parseInt(this.get('value'));
+    this.set('value', isNaN(intValue) ? null : intValue );
+    
     this.get('item.array.module').save();
   },
 

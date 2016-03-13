@@ -14,20 +14,16 @@ export default Port.extend({
     'disabledValue',
     'connections.@each.value',
     function(){
-
       if(!this.get('isEnabled')) {
         return this.get('disabledValue');
       }
-
       //sum all input values but leave the result as null if all inputs are null
       var value = null;
       var totalValue = null;
       this.get('connections').forEach( port => {
-        value = parseInt(port.get('value'));
-        if( !isNaN(value) ) {
-          if( totalValue == null ) {
-            totalValue = 0;
-          }
+        value = port.get('value');
+        if( value != null ) {
+          totalValue = totalValue==null ? 0 : totalValue;
           totalValue += value;
         }
       });

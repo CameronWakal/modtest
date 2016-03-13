@@ -30,17 +30,9 @@ export default Module.extend({
     // 3. convert to integers
     // 4. do math
 
-    let degree = this.get('degree');
-    let octave = this.get('octave');
-    let root = this.get('root');
-
-    if(degree == null) { degree = 0; }
-    if(octave == null) { octave = 3; }
-    if(root == null) { root = 0; }
-
-    degree = parseInt(degree);
-    octave = parseInt(octave);
-    root = parseInt(root);
+    let degree = this.get('degree')==null ? 0 : this.get('degree');
+    let octave = this.get('octave')==null ? 3 : this.get('octave');
+    let root = this.get('root')==null ? 0 : this.get('root');
 
     let degreeInOctave = this.mod(degree, this.get('degreesInScale'));
     let degreeItem = this.get('degrees.items').findBy('index', degreeInOctave);
