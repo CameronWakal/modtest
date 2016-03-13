@@ -59,7 +59,7 @@ export default ModuleGenericComponent.extend({
 
     //send event to output port
     let port = this.module.get('trigOutPort');
-    port.sendEvent({'outputTime':outputTime});
+    port.sendEvent({'targetTime':targetTime, 'outputTime':outputTime, 'callbackTime':currentTime});
 
   },
 
