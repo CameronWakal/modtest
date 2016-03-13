@@ -8,11 +8,16 @@ export default DS.Model.extend({
   module: DS.belongsTo('module', {async:false, polymorphic:true}),
   targetVariable: DS.attr('string'),
 
-  onValueChanged: Ember.observer('value', function() {
-    let value = this.get('value');
+  intValue: Ember.computed('value', function(){
+    let intValue = parseInt(this.get('value'));
+    return isNaN(intValue) ? null : intValue;
+  }),
+
+  onIntValueChanged: Ember.observer('intValue', function() {
+    let intValue = this.get('intValue');
     let targetVariable = this.get('targetVariable');
-    if(value && targetVariable) {
-      this.get('module').set(this.get('targetVariable'), value);
+    if(intValue && targetVariable) {
+      this.get('module').set(this.get('targetVariable'), intValue);
     }
   }),
 

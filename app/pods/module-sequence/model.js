@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import DS from 'ember-data';
 import Module from '../module/model';
 
@@ -29,7 +30,7 @@ export default Module.extend({
     this.set('steps.currentItem', nextStep);
 
     //output event if current step has a value
-    if( !isNaN( parseInt( this.get('steps.currentItem.value') ) ) ) {
+    if( this.get('steps.currentItem.intValue') != null ){
       this.get('trigOutPort').sendEvent(event);
     }
   },
