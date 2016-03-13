@@ -51,6 +51,35 @@ export default Module.extend({
 
       }
       
+      
+    event.completionTime = window.performance.now();
+    this.get('events').push(event);
+    if(this.get('events.length') >= 64) {
+      
+      let callbackDeltas = this.get('events').map(item=>{
+        return item.callbackTime - item.targetTime;
+      });
+      let executionDeltas = this.get('events').map(item=>{
+        return item.completionTime - item.callbackTime;
+      });
+
+      let callbackTotal = callbackDeltas.reduce(function(prev, item){
+        return prev + item;
+      });
+      let executionTotal = executionDeltas.reduce(function(prev, item){
+        return prev + item;
+      });
+
+      let callbackAverage = callbackTotal / callbackDeltas.length;
+      let executionAverage = executionTotal / executionDeltas.length;
+
+      console.log(callbackAverage, executionAverage);
+
+      this.set('events', []);
+
+    }
+    */
+>>>>>>> timing diagnostics
 
     //check the connection of the 'note' port for the value of the note to play.
     //let notePort = this.get('ports').findBy('label', 'note');
