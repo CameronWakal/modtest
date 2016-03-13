@@ -13,11 +13,11 @@ export default DS.Model.extend({
     return isNaN(intValue) ? null : intValue;
   }),
 
-  onIntValueChanged: Ember.observer('intValue', function() {
-    let intValue = this.get('intValue');
+  onValueChanged: Ember.observer('value', function() {
+    let value = this.get('intValue');
     let targetVariable = this.get('targetVariable');
-    if(intValue && targetVariable) {
-      this.get('module').set(this.get('targetVariable'), intValue);
+    if(value && targetVariable) {
+      this.get('module').set(this.get('targetVariable'), value);
     }
   }),
 
