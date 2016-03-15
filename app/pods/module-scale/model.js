@@ -6,9 +6,9 @@ export default Module.extend({
   
   label: 'Scale',
   degreesInScale: 7,
-  defaultOctave: 3,
+  defaultOctave: 4,
 
-  degrees: DS.belongsTo('array'),
+  degrees: DS.belongsTo('array-scale'),
 
   degreeInPort: DS.belongsTo('port-value-in', {async:false}),
   octaveInPort: DS.belongsTo('port-value-in', {async:false}),
@@ -32,29 +32,15 @@ export default Module.extend({
     return this.mod(this.get('degree'), this.get('degreesInScale'));
   }),
 
-  note: Ember.computed(
-    'octave',
-    'root',
-    'degreeInOctave',
-    'degrees.items.@each.intValue',
-    function() {
-
-    let degreeItem = this.get('degrees.items').findBy('index', this.get('degreeInOctave'));
-    this.set('degrees.currentItem', degreeItem);
-
-    let intervalForDegree = degreeItem.get('intValue');
-    if(intervalForDegree == null) { return null; };
-
-    let note = (this.get('octave')*12)+this.get('root')+intervalForDegree;
-
-    //console.log('octave:'+octave+' root:'+root+' degree:'+degree+' interval:'+intervalForDegree+' note:'+note);
-
-    return note;
+  note: Ember.computed('octave','root','currentItem','currentItem.intValue',function() {
+      if(this.get('degrees.currentItem.intValue') == null) { return null; }
+      let note = (this.get('octave')*12)+this.get('root')+this.get('degrees.currentItem.intValue');
+      return note;
   }),
 
   didCreate() {
     //create degrees
-    let degrees = this.store.createRecord('array', {module:this, length:this.get('degreesInScale')});
+    let degrees = this.store.createRecord('array-scale', {module:this, length:this.get('degreesInScale')});
     this.set('degrees', degrees);
 
     //create ports
