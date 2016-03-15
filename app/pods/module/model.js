@@ -39,10 +39,10 @@ export default DS.Model.extend({
   },
 
   //targetMethod on the module is called by the port when the event comes in
-  addEventInPort(label, targetMethod) {
+  addEventInPort(label, targetMethodName) {
     let port = this.store.createRecord('port-event-in', {
       label:label,
-      targetMethod:targetMethod,
+      targetMethodName:targetMethodName,
       module:this
     });
     this.get('ports').pushObject(port);

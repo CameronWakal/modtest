@@ -5,7 +5,7 @@ export default DS.Model.extend({
   
   value: DS.attr('number'),
   index: DS.attr('number'),
-  array: DS.belongsTo('array', {async:false, inverse:'items'}),
+  array: DS.belongsTo('array', {async:false, inverse:'items', polymorphic:true}),
 
   intValue: Ember.computed('value', function(){
     let intValue = parseInt(this.get('value'));
