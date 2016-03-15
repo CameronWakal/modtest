@@ -18,7 +18,7 @@ export default Module.extend({
   degree: Ember.computed('degreeInPort.value', function(){
     return this.get('degreeInPort.value')==null ? 0 : this.get('degreeInPort.value');
   }),
-  //default base octave of 3 if input is null, plus more if the degree overflows the current octave
+  //default base octave if input is null, plus more if the degree overflows the current octave
   octave: Ember.computed('octaveInPort.value','defaultOctave','degreesInScale','degree', function(){
     let baseOctave = this.get('octaveInPort.value')==null ? this.get('defaultOctave') : this.get('octaveInPort.value');
     return baseOctave + this.div( this.get('degree'), this.get('degreesInScale') );
@@ -28,10 +28,12 @@ export default Module.extend({
     return this.get('rootInPort.value')==null ? 0 : this.get('rootInPort.value');
   }),
 
+  //degree % degrees in scale
   degreeInOctave: Ember.computed('degree', 'degreesInScale', function(){
     return this.mod(this.get('degree'), this.get('degreesInScale'));
   }),
 
+  //the note to output
   note: Ember.computed('octave','root','currentItem','currentItem.intValue',function() {
       if(this.get('degrees.currentItem.intValue') == null) { return null; }
       let note = (this.get('octave')*12)+this.get('root')+this.get('degrees.currentItem.intValue');
