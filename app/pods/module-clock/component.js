@@ -13,7 +13,7 @@ export default ModuleGenericComponent.extend({
   latency: 10, //milliseconds to add to the eventual midi event's timestamp to achieve stable timing
 
   init() {
-    this.setTempo(120);
+    this.setTempo(240);
     this._super.apply(this, arguments);
   },
 
