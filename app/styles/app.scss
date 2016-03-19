@@ -1,0 +1,75 @@
+@import 'components/port-component.scss';
+@import 'components/module.scss';
+@import 'components/module-settings.scss';
+@import 'components/value-input.scss';
+@import 'components/setting-input.scss';
+@import 'components/patch-diagram.scss';
+@import 'components/patch-component.scss';
+
+html, input, button {
+  font-family: Menlo, Monospace;
+  font-size: 12px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem 0;
+  padding: 0;
+}
+
+button {
+  height: 1.75rem;
+  display: inline-block;
+  margin: 0 0.5rem 0.5rem 0;
+  padding: 0.25rem 0.5rem;
+}
+
+.app-header {
+  padding: 0.5rem 0.5rem 0 0.5rem;
+  background: #eee;
+  position: relative;
+  z-index: 100;
+
+  h1 {
+    display: inline-block;
+  }
+
+  button {
+    float: right;
+    margin: 0 0 0.5rem 0.5rem;
+  }
+
+  .patches-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
+    display: inline-block;
+
+    li {
+      display: inline;
+    }
+
+    a {
+      border: 1px solid #ddd;
+      display: inline-block;
+      margin: 0 0.5rem 0.5rem 0;
+      padding: 0.25rem 0.5rem;
+      color: #bbb;
+
+      &.active {
+        color: #000;
+        border-color: #000;
+      }
+      
+    }
+
+  }
+
+}

@@ -1,0 +1,32 @@
+.module-settings {
+  background: black;
+  color: #999;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.5rem 0.5rem 3.5rem;
+
+  &.empty {
+    display: none;
+  }
+
+  h4 {
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    line-height: 1.5rem;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0 0 0 0.5rem;
+  }
+
+  li {
+    list-style-type: none;
+  }
+
+  input[type=checkbox] {
+    margin: 0 0.5rem 0 0;
+  }
+
+}

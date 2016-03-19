@@ -10,17 +10,18 @@
   color: #999;
   text-align: center;
   background: none;
-}
 
-.setting-input:focus {
-  outline: none;
-  box-shadow: 0px 0px 0px 1px red;
-  color: transparent;
-  text-shadow: 0 0 0 #fff;
-}
+  &:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 1px red;
+    color: transparent;
+    text-shadow: 0 0 0 #fff;
+  }
 
-.setting-input::selection {
-  background-color: transparent;
+  &::selection {
+    background-color: transparent;
+  }
+
 }
 
 .setting-label {
