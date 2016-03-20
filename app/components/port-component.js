@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   classNames: ['port'],
   classNameBindings: [
     'port.isConnected:connected', 
-    'isConnectingFrom:connectingFrom', 
+    'isConnectingFrom:connecting-from', 
     'port.uniqueCssIdentifier'
   ],
   attributeBindings: ['tabindex'],

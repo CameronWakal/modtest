@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   classNames: ['module'],
-  classNameBindings: ['portIsConnectingFrom:portConnectingFrom'],
+  classNameBindings: ['portIsConnectingFrom:port-connecting-from'],
   attributeBindings: ['inlineStyles:style', 'tabindex'],
   tabindex: -1,
 

@@ -81,8 +81,8 @@ export default Ember.Component.extend({
 
   //start drawing a line from the new connection port to the cursor location on mouse move
   addNewConnection() {
-    let module = this.$().siblings('#modules').children('.portConnectingFrom');
-    let port = Ember.$(module).children('.connectingFrom');
+    let module = this.$().siblings('#modules').children('.port-connecting-from');
+    let port = Ember.$(module).children('.connecting-from');
     this.addMouseListener();
     this.set('newConnectionFrom', port);
     this.drawConnections();
