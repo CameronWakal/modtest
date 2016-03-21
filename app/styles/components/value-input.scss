@@ -1,20 +1,39 @@
 .value-input {
+  background: white;
   border: 0;
-  box-shadow: 0 0 0 1px $lightgrey;
-  color: $textgrey;
+  box-shadow: 1px 0 0 0 $input-dividercolor;
+  color: $input-textcolor;
   display: inline-block;
-  height: 1rem;
-  margin: 0 .5rem .5rem 0;
-  padding: .25rem 0;
+  height: 1.75rem;
+  margin: 0 1px 0 0;
+  padding: 0;
   text-align: center;
   vertical-align: bottom;
-  width: 1.5rem;
+  width: 1.75rem;
+
+  &:first-child {
+    border-top-left-radius: $input-borderradius;
+    border-bottom-left-radius: $input-borderradius;
+  }
+
+  &:last-child {
+    border-top-right-radius: $input-borderradius;
+    border-bottom-right-radius: $input-borderradius;
+    box-shadow: none;
+    margin-right: 0;
+  }
 
   &:focus {
-    box-shadow: 0 0 0 1px $red;
+    background: $black;
+    box-shadow: inset 0 0 0 2px $input-focus-bordercolor,
+      1px 0 0 0 $input-dividercolor;
     color: transparent;
     outline: none;
-    text-shadow: 0 0 0 $black;
+    text-shadow: 0 0 0 $white;
+
+    &:last-child {
+      box-shadow: inset 0 0 0 2px $input-focus-bordercolor;
+    }
   }
 
   &::selection {
@@ -22,8 +41,14 @@
   }
 
   &.current {
-    box-shadow: 0 0 0 1px $black;
+    background-color: $white;
     color: $black;
+    box-shadow: 1px 0 0 0 $input-dividercolor,
+      0 2px 0 0 $black;
+
+      &:last-child {
+        box-shadow: 0 2px 0 0 $black;
+      }
   }
 
 }
