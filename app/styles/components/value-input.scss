@@ -25,14 +25,13 @@
 
   &:focus {
     background: $black;
-    box-shadow: inset 0 0 0 2px $input-focus-bordercolor,
-      1px 0 0 0 $input-dividercolor;
+    box-shadow: 1px 0 0 0 $input-dividercolor;
     color: transparent;
     outline: none;
     text-shadow: 0 0 0 $white;
 
     &:last-child {
-      box-shadow: inset 0 0 0 2px $input-focus-bordercolor;
+      //box-shadow: inset 0 0 0 2px $input-focus-bordercolor;
     }
   }
 

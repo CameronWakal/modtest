@@ -57,10 +57,10 @@ export default Module.extend({
     this.set('degrees', degrees);
 
     //create ports
-    this.addValueOutPort('note', 'getNote');
     this.addValueInPort('degree', 'degreeInPort');
     this.addValueInPort('octave', 'octaveInPort');
     this.addValueInPort('root', 'rootInPort');
+    this.addValueOutPort('note', 'getNote');
   },
 
   mod(num, mod) {

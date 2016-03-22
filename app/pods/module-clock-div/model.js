@@ -46,9 +46,9 @@ export default Module.extend({
   didCreate() {
     this.addEventInPort('clock', 'onClockIn');
     this.addEventInPort('reset', 'onResetIn');
-    this.addEventOutPort('trig', 'trigOutPort');
     this.addValueInPort('div', 'divByPort');
     this.addValueInPort('shift', 'shiftByPort');
+    this.addEventOutPort('trig', 'trigOutPort');
   },
 
   mod(num, mod) {
