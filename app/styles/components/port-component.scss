@@ -3,6 +3,7 @@
   color: $port-off-textcolor;
   cursor: pointer;
   display: inline-block;
+  margin: 0 0 0 1px;
   padding: 0 .5rem;
 
   &:first-child {
@@ -15,19 +16,19 @@
   }
 
   &.connected {
-    //background: $port-on-bgcolor;
-    color: $black;
+    background: $port-on-bgcolor;
+    color: $darkcolor;
   }
 }
 
 .new-connection .port {
-  //background-color: $port-off-bgcolor;
-  //color: $port-off-textcolor;
+  background-color: $port-off-bgcolor;
+  color: $port-off-textcolor;
   cursor: default;
 
   &.connecting-from {
-    background-color: $white;
-    color: $black;
+    background-color: $port-connecting-color;
+    color: $darkcolor;
   }
 
 }
@@ -45,8 +46,8 @@
 .new-connection-from-port-event-out .port-event-in,
 .new-connection-from-port-value-in .port-value-out,
 .new-connection-from-port-value-out .port-value-in {
-  background-color: $white;
-  //color: $black;
+  background-color: $port-connecting-color;
+  color: $darkcolor;
   cursor: pointer;
 }
 

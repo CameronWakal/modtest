@@ -1,19 +1,19 @@
-$white: #fff;
-$black: #1a202b;
-$patch-bgcolor: #00bfbc;
+$lightcolor: #fff;
+$darkcolor: #1a202b;
+$midcolor: adjust-hue(darken(desaturate(#00bfbc, 0%), 2%), 2%);
 
-$module-bgcolor: rgba(42, 214, 208, .85);
+$module-bgcolor: rgba(lighten($midcolor, 4%), .85);
 $module-borderradius: 4px;
 
 $input-borderradius: 2px;
-$input-dividercolor: rgba(255, 255, 255, .75);
-$input-textcolor: $patch-bgcolor;
-$input-focus-bordercolor: $white;
+$input-dividercolor: rgba($lightcolor, .75);
+$input-textcolor: darken($midcolor, 5%);
+$input-focus-bordercolor: $lightcolor;
 
-$port-off-bgcolor: rgba(255, 255, 255, .25);
-$port-on-bgcolor: rgba(255, 255, 255, .5);
-$port-off-textcolor: $patch-bgcolor;
-$port-connecting-outline-color: $white;
+$port-off-bgcolor: rgba($lightcolor, .15);
+$port-on-bgcolor: rgba($lightcolor, .30);
+$port-off-textcolor: darken($midcolor, 10%);
+$port-connecting-color: rgba($lightcolor, .60);
 
 $lightestgrey: #eee;
 $lightgrey: #ddd;
@@ -41,7 +41,7 @@ button {
 }
 
 body {
-  background: $patch-bgcolor;
+  background: $midcolor;
   margin: 0;
   padding: 0;
 }
@@ -99,8 +99,8 @@ button {
     padding: .25rem .5rem;
 
     &.active {
-      border-color: $black;
-      color: $black;
+      border-color: $darkcolor;
+      color: $darkcolor;
     }
 
   }

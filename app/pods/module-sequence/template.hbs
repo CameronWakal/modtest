@@ -1,7 +1,7 @@
 <h3>{{module.label}}</h3>
 
 <div class="module-content">
-{{#each module.steps.items as |item|}}{{value-input item=item value=item.value}}{{/each}}
+{{#each module.steps.items as |item|}}{{value-input item=item}}{{/each}}
 </div>
 
 {{partial 'module-ports'}}
