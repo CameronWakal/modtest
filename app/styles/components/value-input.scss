@@ -1,5 +1,5 @@
 .value-input {
-  background: white;
+  background: $white;
   border: 0;
   box-shadow: 1px 0 0 0 $input-dividercolor;
   color: $input-textcolor;
@@ -12,13 +12,13 @@
   width: 1.75rem;
 
   &:first-child {
-    border-top-left-radius: $input-borderradius;
     border-bottom-left-radius: $input-borderradius;
+    border-top-left-radius: $input-borderradius;
   }
 
   &:last-child {
-    border-top-right-radius: $input-borderradius;
     border-bottom-right-radius: $input-borderradius;
+    border-top-right-radius: $input-borderradius;
     box-shadow: none;
     margin-right: 0;
   }
@@ -41,13 +41,13 @@
 
   &.current {
     background-color: $white;
-    color: $black;
     box-shadow: 1px 0 0 0 $input-dividercolor,
       0 2px 0 0 $black;
+    color: $black;
 
-      &:last-child {
-        box-shadow: 0 2px 0 0 $black;
-      }
+    &:last-child {
+      box-shadow: 0 2px 0 0 $black;
+    }
   }
 
 }
