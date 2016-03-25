@@ -47,7 +47,7 @@
   &.current {
     background-color: $lightcolor;
     box-shadow: 1px 0 0 0 $input-dividercolor,
-      0 2px 0 0 $darkcolor;
+      0 3px 0 0 $darkcolor;
     color: $darkcolor;
 
     &:last-child {
@@ -57,7 +57,7 @@
     &:focus {
       background: $darkcolor;
       box-shadow: 1px 0 0 0 $input-dividercolor,
-      0 2px 0 0 $lightcolor;
+      0 3px 0 0 $lightcolor;
       color: transparent;
     }
   }
