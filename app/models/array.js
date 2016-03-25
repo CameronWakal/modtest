@@ -28,6 +28,40 @@ export default DS.Model.extend({
 
   }),
 
+  incrementAll() {
+    this.get('items').forEach(item=>{
+      item.set('value', item.get('value')+1);
+    });
+  },
+
+  decrementAll() {
+    this.get('items').forEach(item=>{
+      item.set('value', item.get('value')-1);
+    });
+  },
+
+  shiftForward() {
+    let oldValues = this.get('items').mapBy('value');
+    this.get('items').forEach((item,index)=>{
+      if(index < oldValues.length-1) {
+        item.set('value', oldValues[index+1]);
+      } else {
+        item.set('value', oldValues[0]);
+      }
+    });
+  },
+
+  shiftBackward() {
+    let oldValues = this.get('items').mapBy('value');
+    this.get('items').forEach((item,index)=>{
+      if(index > 0) {
+        item.set('value', oldValues[index-1]);
+      } else {
+        item.set('value', oldValues[oldValues.length-1]);
+      }
+    });
+  },
+
   remove() {
     this.get('items').toArray().forEach( item => {
       item.destroyRecord();

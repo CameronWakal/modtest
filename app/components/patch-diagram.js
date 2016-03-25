@@ -82,7 +82,7 @@ export default Ember.Component.extend({
   //start drawing a line from the new connection port to the cursor location on mouse move
   addNewConnection() {
     let module = this.$().siblings('#modules').children('.port-connecting-from');
-    let port = Ember.$(module).children('.connecting-from');
+    let port = Ember.$(module).children('.module-ports').children('.connecting-from');
     this.addMouseListener();
     this.set('newConnectionFrom', port);
     this.drawConnections();
@@ -155,6 +155,7 @@ export default Ember.Component.extend({
     var ctx=c.getContext("2d");
     ctx.canvas.width  = window.innerWidth;
     ctx.canvas.height = window.innerHeight;
+    ctx.lineWidth = 1;
 
     var startX, startY, endX, endY;
 
@@ -169,11 +170,13 @@ export default Ember.Component.extend({
       ctx.beginPath();
       ctx.moveTo(startX, startY);
       ctx.lineTo(endX, endY);
-      ctx.strokeStyle = 'black';
+      ctx.strokeStyle = '#1A202B';
+      ctx.lineWidth = 1;
       if(newPort) {
-        ctx.strokeStyle = '#bbb';
+        ctx.strokeStyle = '#1A202B';
       } else if (index === this.get('selectedConnectionIndex')) {
-        ctx.strokeStyle = 'red';
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
       }
       ctx.stroke();
 
@@ -187,7 +190,8 @@ export default Ember.Component.extend({
       ctx.beginPath();
       ctx.moveTo(startX, startY);
       ctx.lineTo(event.pageX, event.pageY);
-      ctx.strokeStyle = 'red';
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 2;
       ctx.stroke();
     }
 
