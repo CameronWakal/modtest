@@ -9,45 +9,12 @@
   </ul>
 {{/if}}
 
-{{#if hasValueInPorts}}
-  <h4>{{module.label}} Value In Ports</h4>
+{{#if hasPorts}}
+  <h4>{{module.label}} Ports</h4>
   <ul>
-    {{#each module.valueInPorts as |port|}}
+    {{#each module.ports as |port|}}
       <li>
-        <span class="setting-label">{{input type="checkbox" checked=port.isEnabled}}{{port.label}}</span>{{#unless port.isEnabled}}{{setting-input value=port.disabledValue}}{{/unless}}
-      </li>
-    {{/each}}
-  </ul>
-{{/if}}
-
-{{#if hasValueOutPorts}}
-  <h4>{{module.label}} Value Out Ports</h4>
-  <ul>
-    {{#each module.valueOutPorts as |port|}}
-      <li>
-        <span class="setting-label">{{input type="checkbox" checked=port.isEnabled}}{{port.label}}</span>
-      </li>
-    {{/each}}
-  </ul>
-{{/if}}
-
-{{#if hasEventOutPorts}}
-  <h4>{{module.label}} Event Out Ports</h4>
-  <ul>
-    {{#each module.eventOutPorts as |port|}}
-      <li>
-        <span class="setting-label">{{input type="checkbox" checked=port.isEnabled}}{{port.label}}</span>
-      </li>
-    {{/each}}
-  </ul>
-{{/if}}
-
-{{#if hasEventInPorts}}
-  <h4>{{module.label}} Event In Ports</h4>
-  <ul>
-    {{#each module.eventInPorts as |port|}}
-      <li>
-        <span class="setting-label">{{input type="checkbox" checked=port.isEnabled}}{{port.label}}</span>
+        {{port-setting port=port}}
       </li>
     {{/each}}
   </ul>

@@ -1,11 +1,13 @@
 .module-settings {
   background: $darkcolor;
+  border-bottom-left-radius: $module-borderradius;
   border-top-left-radius: $module-borderradius;
-  bottom: 0;
-  color: $textgrey-inv;
-  padding: .5rem;
+  bottom: 3rem;
+  color: $settings-mid-color;
+  padding: 1rem;
   position: absolute;
   right: 0;
+  width: 150px;
   
   &.empty {
     display: none;
@@ -13,7 +15,7 @@
 
   h4 {
     line-height: 1.5rem;
-    padding: .5rem .5rem 0;
+    padding: 0 .5rem;
   }
 
   ul {

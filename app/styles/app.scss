@@ -17,6 +17,9 @@ $port-on-bgcolor: rgba($lightcolor, .30);
 $port-off-textcolor: darken($midcolor, 10%);
 $port-connecting-color: rgba($lightcolor, .60);
 
+$settings-light-color: $lightcolor;
+$settings-mid-color: desaturate(lighten($darkcolor, 45%), 15%);
+
 $lightestgrey: #eee;
 $lightgrey: #ddd;
 $textgrey: #bbb;
@@ -32,6 +35,7 @@ $grey-inv: #555;
 @import 'components/setting-input';
 @import 'components/patch-diagram';
 @import 'components/patch-component';
+@import 'components/port-setting';
 
 html, 
 input, 
