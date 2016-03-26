@@ -8,7 +8,7 @@ export default Ember.Component.extend({
     'port.isEnabled:enabled'
   ],
 
-  portIsValueOut: Ember.computed.equal('port.type', 'port-value-out'),
+  portIsValueIn: Ember.computed.equal('port.type', 'port-value-in'),
   labelWithType: Ember.computed('port.label', 'port.type', function(){
     let type = this.get('port.type');
     let label = this.get('port.label');
