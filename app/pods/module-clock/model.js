@@ -48,33 +48,27 @@ export default Module.extend({
 
     let newTickDuration = 60000 / (tempo*res); // milliseconds per tick
 
-    if( this.tickDuration !== newTickDuration ) { // changing from existing tempo or resolution
+    //if the tempo or resolution has changed, reset the startTime and tickCount
+    if( this.tickDuration !== newTickDuration ) {
       this.startTime += this.tickCount * this.tickDuration;
       this.tickCount = 0;
       this.tickDuration = newTickDuration;
     }
 
     //schedule a callback to self for the next trigger interval.
-    //send a trigger event to all listeners immediately for the current trigger.
-
-    var targetTime = this.startTime + (this.tickCount*this.tickDuration);   //the time the note should be sent out,
-                                                                            //not including latency.
-    var currentTime = window.performance.now();
-
-    var nextTickDelay = this.tickDuration - (currentTime-targetTime);
-    
+    let targetTime = this.startTime + (this.tickCount*this.tickDuration);
+    let currentTime = window.performance.now();
+    let nextTickDelay = this.tickDuration - (currentTime-targetTime);
     window.setTimeout(this.sendTrigger.bind(this), nextTickDelay);
 
-    this.tickCount++;
-
-    var outputTime = targetTime + this.latency;     //we add some latency to the timestamp,
-                                                    //so the callbacks have some wiggle room
-                                                    //without affecting the note timing.
+    //add some latency to the midi output time to allow room for callback inaccuracy and event execution
+    let outputTime = targetTime + this.latency;
 
     //send event to output port
     let port = this.get('trigOutPort');
     port.sendEvent({'targetTime':targetTime, 'outputTime':outputTime, 'callbackTime':currentTime});
 
+    this.tickCount++;
   },
 
 });
