@@ -9,7 +9,7 @@ export default Ember.TextField.extend({
   ],
 
   isPending: Ember.computed('value', 'item.value', function(){
-    return this.get('value') != this.get('item.value');
+    return parseInt(this.get('value')) !== this.get('item.value');
   }),
 
   onModelChanged: Ember.observer('item.value', function(){

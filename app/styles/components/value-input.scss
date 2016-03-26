@@ -31,9 +31,9 @@
     background: $darkcolor;
     box-shadow: 1px 0 0 0 $input-dividercolor;
     color: rgba($lightcolor, .25);
+    font-weight: bold;
     outline: none;
     text-shadow: 0 0 0 $lightcolor;
-    font-weight: bold;
 
     &:last-child {
       box-shadow: none;

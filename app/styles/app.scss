@@ -1,6 +1,8 @@
+$teal: #00bfbc;
+
 $lightcolor: #fff;
 $darkcolor: #1a202b;
-$midcolor: adjust-hue(darken(desaturate(#00bfbc, 0%), 2%), 2%);
+$midcolor: adjust-hue(darken(desaturate($teal, 0%), 2%), 2%);
 
 $module-bgcolor: rgba(lighten($midcolor, 4%), .85);
 $module-borderradius: 4px;

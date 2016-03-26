@@ -1,12 +1,12 @@
 .module-settings {
   background: $darkcolor;
+  border-top-left-radius: $module-borderradius;
+  bottom: 0;
   color: $textgrey-inv;
   padding: .5rem;
   position: absolute;
   right: 0;
-  bottom: 0;
-  border-top-left-radius: $module-borderradius;
-
+  
   &.empty {
     display: none;
   }
