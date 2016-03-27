@@ -46,19 +46,15 @@ export default Module.extend({
     this.set('steps', steps);
 
     //create settings
-    let setting = this.store.createRecord('module-setting', {
-      label:'Length', 
-      value:this.get('defaultLength'),
-      module:this, 
-      targetVariable:'steps.length',
-    });
-    this.get('settings').pushObject(setting);
+    this.addSetting('Length', 'steps.length', this.get('defaultLength'));
 
     //create ports
     this.addEventInPort('inc step', 'incrementStep');
     this.addEventInPort('reset', 'reset');
     this.addValueOutPort('value', 'getValue');
     this.addEventOutPort('trig', 'trigOutPort');
+
+    this.save();
   },
 
   remove() {

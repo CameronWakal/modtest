@@ -19,11 +19,17 @@ export default Module.extend({
   tickDuration: null,
   latency: 10, //milliseconds to add to the eventual midi event's timestamp to achieve stable timing
 
+  useExternalSource: 0, //should be a bool eventually... 0 for internal, 1 for external
+
   didCreate() {
+    //create settings
+    this.addSetting('External', 'useExternalSource', this.get('useExternalSource'));
+
     //create ports
     this.addValueInPort('tempo', 'tempoInPort');
     this.addValueInPort('res', 'resInPort');
     this.addEventOutPort('trig', 'trigOutPort');
+    this.save();
   },
 
   start() {

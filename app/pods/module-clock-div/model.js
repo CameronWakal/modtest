@@ -49,6 +49,7 @@ export default Module.extend({
     this.addValueInPort('div', 'divByPort');
     this.addValueInPort('shift', 'shiftByPort');
     this.addEventOutPort('trig', 'trigOutPort');
+    this.save();
   },
 
   mod(num, mod) {

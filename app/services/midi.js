@@ -52,11 +52,11 @@ export default Ember.Service.extend({
 
   onMIDIMessage(event){
       let data = event.data;
-      //let cmd = data[0] >> 4;
-      //let channel = data[0] & 0xf;
+      let cmd = data[0] >> 4;
+      let channel = data[0] & 0xf;
       let type = data[0] & 0xf0; // channel agnostic message type. Thanks, Phil Burk.
-      //let note = data[1];
-      //let velocity = data[2];
+      let note = data[1];
+      let velocity = data[2];
       
       // with pressure and tilt off
       // note off: 128, cmd: 8 
@@ -74,7 +74,7 @@ export default Ember.Service.extend({
               break;
       }
       
-      //console.log('data in', data, 'cmd', cmd, 'channel', channel);
+      console.log('data in', data, 'cmd', cmd, 'channel', channel, 'type', type, 'note', note, 'velocity', velocity);
       //this.logger(keyData, 'key data', data);
   },
 

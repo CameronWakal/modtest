@@ -35,7 +35,6 @@ export default DS.Model.extend({
     });
     this.get('ports').pushObject(port);
     this.set(portVar, port);
-    this.save();
   },
 
   //targetMethod on the module is called by the port when the event comes in
@@ -46,7 +45,6 @@ export default DS.Model.extend({
       module:this
     });
     this.get('ports').pushObject(port);
-    this.save();
   },
 
   //targetVar is checked by the port when a request for the value comes in
@@ -57,7 +55,6 @@ export default DS.Model.extend({
       module:this
     });
     this.get('ports').pushObject(port);
-    this.save();
   },
 
   //portVar is used to easily refer to this specific port from within the module
@@ -68,7 +65,16 @@ export default DS.Model.extend({
     });
     this.get('ports').pushObject(port);
     this.set(portVar, port);
-    this.save();
+  },
+
+  addSetting(label, targetVariable, defaultValue) {
+    let setting = this.store.createRecord('module-setting', {
+      label:label, 
+      value:defaultValue,
+      module:this, 
+      targetVariable:targetVariable,
+    });
+    this.get('settings').pushObject(setting);
   },
 
   remove() {

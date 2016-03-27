@@ -61,6 +61,8 @@ export default Module.extend({
     this.addValueInPort('octave', 'octaveInPort');
     this.addValueInPort('root', 'rootInPort');
     this.addValueOutPort('note', 'getNote');
+
+    this.save();
   },
 
   mod(num, mod) {
