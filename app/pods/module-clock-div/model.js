@@ -29,7 +29,7 @@ export default Module.extend({
     let count = this.get('count');
     let divBy = this.get('divByPort').getValue();
     let shiftBy = this.get('shiftByPort').getValue();
-    if( divBy == null ) { divBy = 1; }
+    if( divBy == null ) { divBy = 8; }
     if( shiftBy == null ) { shiftBy = 0; }
 
     if( count - this.mod(shiftBy, divBy) === 0 ) {

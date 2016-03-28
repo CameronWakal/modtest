@@ -9,9 +9,10 @@ export default DS.Model.extend({
   targetVariable: DS.attr('string'),
 
   onValueChanged: Ember.observer('value', function() {
-    let value = this.get('value');
+    let value = parseInt(this.get('value'));
+    if(isNaN(value)) { value = null; }
     let targetVariable = this.get('targetVariable');
-    if(value && targetVariable) {
+    if(value !== null && targetVariable) {
       this.get('module').set(this.get('targetVariable'), value);
     }
   }),

@@ -1,9 +1,12 @@
+import Ember from 'ember';
 import DS from 'ember-data';
 import Module from '../module/model';
 
 export default Module.extend({
   
   label: 'Clock',
+
+  midi: Ember.inject.service(),
 
   //external properties, use Ember getters and setters
   isStarted: false,
@@ -31,6 +34,25 @@ export default Module.extend({
     this.addEventOutPort('trig', 'trigOutPort');
     this.save();
   },
+
+  onMidiTimingClock() {
+    if(!this.isStarted) { return; }
+    let targetTime = window.performance.now();
+    let outputTime = targetTime + this.latency;
+    let currentTime = targetTime;
+    let port = this.get('trigOutPort');
+    port.sendEvent({'targetTime':targetTime, 'outputTime':outputTime, 'callbackTime':currentTime});
+  },
+
+  onExternalSourceChanged: Ember.observer('useExternalSource', function(){
+    if(this.get('useExternalSource') === 0) {
+      console.log('clock: use internal source');
+      this.get('midi').removeTimingListener(this);
+    } else if(this.get('useExternalSource') === 1) {
+      console.log('clock: use external source');
+      this.get('midi').addTimingListener(this);
+    }
+  }),
 
   start() {
     this.set('isStarted', true);
