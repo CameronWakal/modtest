@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Service.extend({
 
   midi: null,
-  timingListeners: [],
+  timingCallbacks: [],
 
   setup(){
     // request MIDI access
@@ -51,12 +51,12 @@ export default Ember.Service.extend({
 
   },
 
-  addTimingListener(listener) {
-    this.get('timingListeners').pushObject(listener);
+  addTimingCallback(callback) {
+    this.get('timingCallbacks').pushObject(callback);
   },
 
-  removeTimingListener(listener) {
-    this.get('timingListeners').removeObject(listener);
+  removeTimingCallback(callback) {
+    this.get('timingCallbacks').removeObject(callback);
   },
 
   onMIDIMessage(event){
@@ -105,8 +105,8 @@ export default Ember.Service.extend({
   },
 
   sendTimingClock() {
-    this.get('timingListeners').forEach(listener=>{
-      listener.onMidiTimingClock();
+    this.get('timingCallbacks').forEach(callback=>{
+      callback();
     });
   },
 
