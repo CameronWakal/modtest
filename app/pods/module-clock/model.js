@@ -35,22 +35,17 @@ export default Module.extend({
     this.save();
   },
 
-  onMidiTimingClock() {
-    if(!this.isStarted) { return; }
-    let targetTime = window.performance.now();
-    let outputTime = targetTime + this.latency;
-    let currentTime = targetTime;
-    let port = this.get('trigOutPort');
-    port.sendEvent({'targetTime':targetTime, 'outputTime':outputTime, 'callbackTime':currentTime});
-  },
-
   onExternalSourceChanged: Ember.observer('useExternalSource', function(){
     if(this.get('useExternalSource') === 0) {
       console.log('clock: use internal source');
-      this.get('midi').removeTimingCallback(this.sendTrigger.bind(this));
+      this.get('midi').timingCallback = null;
+      if(this.isStarted) { // reset the internal clock
+        this.startTime = window.performance.now();
+        this.tickCount = 0;
+      }
     } else if(this.get('useExternalSource') === 1) {
       console.log('clock: use external source');
-      this.get('midi').addTimingCallback(this.sendTrigger.bind(this));
+      this.get('midi').timingCallback = this.sendTrigger.bind(this);
     }
   }),
 
@@ -69,11 +64,14 @@ export default Module.extend({
 
   sendTrigger() {
     if(this.isStarted) { 
+      let targetTime;
+      let currentTime = window.performance.now();
+
       if(this.useExternalSource) {
-        console.log('midiclock!');
-      } else {
-        console.log('internalclock!');
-        /*
+        //external event is not timestamped, send it through right away
+        targetTime = currentTime;
+      } else {   
+        //internal events get accurate target times based on tempo, resolution, and start time     
         let tempo = this.get('tempoInPort').getValue();
         if(tempo == null) { tempo = this.defaultTempo; }
 
@@ -90,21 +88,18 @@ export default Module.extend({
         }
 
         //schedule a callback to self for the next trigger interval.
-        let targetTime = this.startTime + (this.tickCount*this.tickDuration);
-        let currentTime = window.performance.now();
+        targetTime = this.startTime + (this.tickCount*this.tickDuration);
         let nextTickDelay = this.tickDuration - (currentTime-targetTime);
         window.setTimeout(this.sendTrigger.bind(this), nextTickDelay);
 
-        //add some latency to the midi output time to allow room for callback inaccuracy and event execution
-        let outputTime = targetTime + this.latency;
-
-        //send event to output port
-        let port = this.get('trigOutPort');
-        port.sendEvent({'targetTime':targetTime, 'outputTime':outputTime, 'callbackTime':currentTime});
-
         this.tickCount++;
-        */
       }
+
+      //add some latency to the midi output time to allow room for callback inaccuracy and event execution
+      let outputTime = targetTime + this.latency;
+      //send event to output port
+      let port = this.get('trigOutPort');
+      port.sendEvent({'targetTime':targetTime, 'outputTime':outputTime, 'callbackTime':currentTime});
     }
   }
 

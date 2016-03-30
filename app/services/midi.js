@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Service.extend({
 
   midi: null,
-  timingCallbacks: [],
+  timingCallback: null,
 
   setup(){
     // request MIDI access
@@ -51,14 +51,6 @@ export default Ember.Service.extend({
 
   },
 
-  addTimingCallback(callback) {
-    this.get('timingCallbacks').pushObject(callback);
-  },
-
-  removeTimingCallback(callback) {
-    this.get('timingCallbacks').removeObject(callback);
-  },
-
   onMIDIMessage(event){
       let data = event.data;
       let cmd = data[0] >> 4;
@@ -80,7 +72,9 @@ export default Ember.Service.extend({
           break;
         case 248:
           //timing clock, 24 times per quarter note
-          this.sendTimingClock();
+          if(this.timingCallback) {
+            this.timingCallback();
+          }
           break;
         case 250:
           console.log('start');
@@ -102,12 +96,6 @@ export default Ember.Service.extend({
               break;
           }
       }
-  },
-
-  sendTimingClock() {
-    this.get('timingCallbacks').forEach(callback=>{
-      callback();
-    });
   },
 
   onStateChange(event){
