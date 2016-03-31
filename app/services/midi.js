@@ -52,13 +52,15 @@ export default Ember.Service.extend({
   },
 
   onMIDIMessage(event){
-      let data = event.data;
+      let data = event.data;      
+      /*
       let cmd = data[0] >> 4;
       let channel = data[0] & 0xf;
       let type = data[0] & 0xf0; // channel agnostic message type. Thanks, Phil Burk.
       let note = data[1];
       let velocity = data[2];
-      
+      */
+
       // with pressure and tilt off
       // note off: 128, cmd: 8 
       // note on: 144, cmd: 9
@@ -67,14 +69,14 @@ export default Ember.Service.extend({
       // bend: 224, cmd: 14
       
       switch(data[0]) {
-        case 242:
-          console.log('set song position', data[1], data[2]);
-          break;
         case 248:
           //timing clock, 24 times per quarter note
           if(this.timingCallback) {
-            this.timingCallback();
+            this.timingCallback(event.receivedTime);
           }
+          break;
+        case 242:
+          console.log('set song position', data[1], data[2]);
           break;
         case 250:
           console.log('start');
@@ -86,12 +88,14 @@ export default Ember.Service.extend({
           console.log('stop');
           break;
         default:
-          console.log('data in', data, 'cmd', cmd, 'channel', channel, 'type', type, 'note', note, 'velocity', velocity);
+          let type = data[0] & 0xf0; // channel agnostic message type.
           switch(type){
             case 144: // noteOn message 
+              console.log('note on')
               //this.listener.noteOn(note, velocity);
               break;
             case 128: // noteOff message 
+              console.log('note off')
               //this.listener.noteOff(note, velocity);
               break;
           }

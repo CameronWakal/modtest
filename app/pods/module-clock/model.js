@@ -22,11 +22,12 @@ export default Module.extend({
   tickDuration: null,
   latency: 10, //milliseconds to add to the eventual midi event's timestamp to achieve stable timing
 
-  useExternalSource: null, //should be a bool eventually... 0 for internal, 1 for external
+  useExternalSourceSetting: DS.attr('number', {defaultValue:0}), //should be a bool eventually... 0 for internal, 1 for external
+  useExternalSource: null,
 
   didCreate() {
     //create settings
-    this.addSetting('External', 'useExternalSource', 0);
+    this.addSetting('External', 'useExternalSourceSetting', 0);
 
     //create ports
     this.addValueInPort('tempo', 'tempoInPort');
@@ -35,16 +36,17 @@ export default Module.extend({
     this.save();
   },
 
-  onExternalSourceChanged: Ember.observer('useExternalSource', function(){
-    if(this.get('useExternalSource') === 0) {
+  onExternalSourceSettingChanged: Ember.observer('useExternalSourceSetting', function(){
+    if(this.get('useExternalSourceSetting') === 0) {
       console.log('clock: use internal source');
+      this.set('useExternalSource', false);
       this.get('midi').timingCallback = null;
       if(this.isStarted) { // reset the internal clock
-        this.startTime = window.performance.now();
-        this.tickCount = 0;
+        this.start();
       }
-    } else if(this.get('useExternalSource') === 1) {
+    } else if(this.get('useExternalSourceSetting') === 1) {
       console.log('clock: use external source');
+      this.set('useExternalSource', true);
       this.get('midi').timingCallback = this.sendTrigger.bind(this);
     }
   }),
@@ -62,14 +64,14 @@ export default Module.extend({
     this.set('isStarted', false);
   },
 
-  sendTrigger() {
+  sendTrigger(receivedTime) {
     if(this.isStarted) { 
       let targetTime;
       let currentTime = window.performance.now();
 
       if(this.useExternalSource) {
         //external event is not timestamped, send it through right away
-        targetTime = currentTime;
+        targetTime = receivedTime;
       } else {   
         //internal events get accurate target times based on tempo, resolution, and start time     
         let tempo = this.get('tempoInPort').getValue();
