@@ -3,6 +3,7 @@ import Ember from 'ember';
 export default Ember.Service.extend({
 
   midi: null,
+  timingCallback: null,
 
   setup(){
     // request MIDI access
@@ -51,31 +52,54 @@ export default Ember.Service.extend({
   },
 
   onMIDIMessage(event){
-      let data = event.data;
+      let data = event.data;      
+      /*
       let cmd = data[0] >> 4;
       let channel = data[0] & 0xf;
       let type = data[0] & 0xf0; // channel agnostic message type. Thanks, Phil Burk.
       let note = data[1];
       let velocity = data[2];
-      
+      */
+
       // with pressure and tilt off
       // note off: 128, cmd: 8 
       // note on: 144, cmd: 9
       // pressure / tilt on
       // pressure: 176, cmd 11: 
       // bend: 224, cmd: 14
-      // log('MIDI data', data);
-      switch(type){
-          case 144: // noteOn message 
+      
+      switch(data[0]) {
+        case 248:
+          //timing clock, 24 times per quarter note
+          if(this.timingCallback) {
+            this.timingCallback(event.receivedTime);
+          }
+          break;
+        case 242:
+          console.log('set song position', data[1], data[2]);
+          break;
+        case 250:
+          console.log('start');
+          break;
+        case 251:
+          console.log('continue');
+          break;
+        case 252:
+          console.log('stop');
+          break;
+        default:
+          let type = data[0] & 0xf0; // channel agnostic message type.
+          switch(type){
+            case 144: // noteOn message 
+              console.log('note on')
               //this.listener.noteOn(note, velocity);
               break;
-          case 128: // noteOff message 
+            case 128: // noteOff message 
+              console.log('note off')
               //this.listener.noteOff(note, velocity);
               break;
+          }
       }
-      
-      console.log('data in', data, 'cmd', cmd, 'channel', channel, 'type', type, 'note', note, 'velocity', velocity);
-      //this.logger(keyData, 'key data', data);
   },
 
   onStateChange(event){
