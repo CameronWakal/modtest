@@ -10,9 +10,10 @@ export default Module.extend({
 
   //external properties, use Ember getters and setters
   isStarted: false,
-  trigOutPort: DS.belongsTo('port-event-out', {async: false} ),
   tempoInPort: DS.belongsTo('port-value-in', {async: false} ),
   resInPort: DS.belongsTo('port-value-in', {async: false} ),
+  resetOutPort: DS.belongsTo('port-event-out', {async: false} ),
+  trigOutPort: DS.belongsTo('port-event-out', {async: false} ),
 
   //internal properties, don't use Ember getters and setters
   defaultRes: 24, // ticks per beat
@@ -32,6 +33,7 @@ export default Module.extend({
     //create ports
     this.addValueInPort('tempo', 'tempoInPort');
     this.addValueInPort('res', 'resInPort');
+    this.addEventOutPort('reset', 'resetOutPort');
     this.addEventOutPort('trig', 'trigOutPort');
     this.save();
   },
@@ -40,18 +42,21 @@ export default Module.extend({
     if(this.get('useExternalSourceSetting') === 0) {
       console.log('clock: use internal source');
       this.set('useExternalSource', false);
-      this.get('midi').timingCallback = null;
+      this.get('midi').timingListener = null;
       if(this.isStarted) { // reset the internal clock
         this.start();
       }
     } else if(this.get('useExternalSourceSetting') === 1) {
       console.log('clock: use external source');
       this.set('useExternalSource', true);
-      this.get('midi').timingCallback = this.sendTrigger.bind(this);
+      this.get('midi').timingListener = this;
     }
   }),
 
   start() {
+    if(this.get('isStarted')) {
+      this.reset();
+    }
     this.set('isStarted', true);
     if(!this.useExternalSource) {
       this.startTime = window.performance.now();
@@ -61,7 +66,14 @@ export default Module.extend({
   },
 
   stop() {
+    if(!this.get('isStarted')) {
+      this.reset();
+    }
     this.set('isStarted', false);
+  },
+
+  reset() {
+    this.get('resetOutPort').sendEvent();
   },
 
   sendTrigger(receivedTime) {
@@ -99,9 +111,11 @@ export default Module.extend({
 
       //add some latency to the midi output time to allow room for callback inaccuracy and event execution
       let outputTime = targetTime + this.latency;
-      //send event to output port
-      let port = this.get('trigOutPort');
-      port.sendEvent({'targetTime':targetTime, 'outputTime':outputTime, 'callbackTime':currentTime});
+      this.get('trigOutPort').sendEvent({
+        'targetTime':targetTime, 
+        'outputTime':outputTime, 
+        'callbackTime':currentTime
+      });
     }
   }
 

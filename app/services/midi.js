@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Service.extend({
 
   midi: null,
-  timingCallback: null,
+  timingListener: null,
 
   setup(){
     // request MIDI access
@@ -71,8 +71,8 @@ export default Ember.Service.extend({
       switch(data[0]) {
         case 248:
           //timing clock, 24 times per quarter note
-          if(this.timingCallback) {
-            this.timingCallback(event.receivedTime);
+          if(this.timingListener) {
+            this.timingListener.sendTrigger(event.receivedTime);
           }
           break;
         case 242:
@@ -80,22 +80,32 @@ export default Ember.Service.extend({
           break;
         case 250:
           console.log('start');
+          if(this.timingListener) {
+            this.timingListener.reset();
+            this.timingListener.start();
+          }
           break;
         case 251:
           console.log('continue');
+          if(this.timingListener) {
+            this.timingListener.start();
+          }
           break;
         case 252:
           console.log('stop');
+          if(this.timingListener) {
+            this.timingListener.stop();
+          }
           break;
         default:
           let type = data[0] & 0xf0; // channel agnostic message type.
           switch(type){
             case 144: // noteOn message 
-              console.log('note on')
+              console.log('note on');
               //this.listener.noteOn(note, velocity);
               break;
             case 128: // noteOff message 
-              console.log('note off')
+              console.log('note off');
               //this.listener.noteOff(note, velocity);
               break;
           }

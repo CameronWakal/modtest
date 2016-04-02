@@ -15,6 +15,10 @@ export default ModuleGenericComponent.extend({
     stop() {
       this.get('module').stop();
     },
+
+    reset() {
+      this.get('module').reset();
+    },
   },
 
 });

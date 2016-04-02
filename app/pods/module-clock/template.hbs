@@ -1,9 +1,5 @@
 <h3>{{module.label}}</h3>
-
-{{#if isStarted}}
-  <button {{action 'stop'}}>Stop</button>
-{{else}}
-  <button {{action 'start'}}>Start</button>
-{{/if}}
+<button {{action 'start'}}>Start</button>
+<button {{action 'stop'}}>Stop</button>
 
 {{partial 'module-ports'}}
