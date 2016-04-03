@@ -33,6 +33,22 @@ export default Ember.Service.extend({
     }
   },
 
+  sendCC(number, value, channel) {
+    if(this.midi) {
+      //first four binary digits are '11' for CC messages, last four are the message channel
+      let code = (11 << 4) + channel;
+      var message = [code, number, value];
+
+      this.outputs = this.midi.outputs.values();
+      for(var output = this.outputs.next(); output && !output.done; output = this.outputs.next()) {
+          output.value.send( message ); 
+      }
+    }
+    else {
+        console.log("Could not send control change, midiAccess not initialized.");
+    }
+  },
+
   onMIDISuccess(midiAccess){
       this.midi = midiAccess;
       var inputs = this.midi.inputs.values();
