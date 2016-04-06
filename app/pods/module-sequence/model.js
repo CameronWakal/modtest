@@ -1,4 +1,5 @@
 import DS from 'ember-data';
+import Ember from 'ember';
 import Module from '../module/model';
 
 export default Module.extend({
@@ -8,6 +9,14 @@ export default Module.extend({
 
   steps: DS.belongsTo('array', {async: false}),
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
+  lengthSetting: DS.belongsTo('module-setting', {async:false}),
+
+  onLengthSettingChanged: Ember.observer('lengthSetting.value', function() {
+    let value = parseInt(this.get('lengthSetting.value'));
+    if(value !== null && !isNaN(value) ) {
+      this.set('steps.length', value);
+    }
+  }),
 
   getValue() {
     return this.get('steps.currentItem.value');
@@ -46,7 +55,7 @@ export default Module.extend({
     this.set('steps', steps);
 
     //create settings
-    this.addSetting('Length', 'steps.length', this.get('defaultLength'));
+    this.addSetting('Length', 'lengthSetting', this.get('defaultLength'));
 
     //create ports
     this.addEventInPort('inc step', 'incrementStep');

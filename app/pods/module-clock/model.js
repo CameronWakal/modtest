@@ -7,6 +7,7 @@ export default Module.extend({
   label: 'Clock',
 
   midi: Ember.inject.service(),
+  defaultUseExternalSource: 0,
 
   //external properties, use Ember getters and setters
   isStarted: false,
@@ -23,12 +24,27 @@ export default Module.extend({
   tickDuration: null,
   latency: 10, //milliseconds to add to the eventual midi event's timestamp to achieve stable timing
 
-  useExternalSourceSetting: DS.attr('number', {defaultValue:0}), //should be a bool eventually... 0 for internal, 1 for external
+  useExternalSourceSetting: DS.belongsTo('module-setting', {async:false}), 
   useExternalSource: null,
+
+  onExternalSourceSettingChanged: Ember.observer('useExternalSourceSetting.value', function(){
+    if(this.get('useExternalSourceSetting.value') === 0) {
+      console.log('clock: use internal source');
+      this.set('useExternalSource', false);
+      this.get('midi').timingListener = null;
+      if(this.isStarted) { // reset the internal clock
+        this.start();
+      }
+    } else if(this.get('useExternalSourceSetting.value') === 1) {
+      console.log('clock: use external source');
+      this.set('useExternalSource', true);
+      this.get('midi').timingListener = this;
+    }
+  }),
 
   didCreate() {
     //create settings
-    this.addSetting('External', 'useExternalSourceSetting', 0);
+    this.addSetting('External', 'useExternalSourceSetting', this.get('defaultUseExternalSource'));
 
     //create ports
     this.addValueInPort('tempo', 'tempoInPort');
@@ -37,21 +53,6 @@ export default Module.extend({
     this.addEventOutPort('trig', 'trigOutPort');
     this.save();
   },
-
-  onExternalSourceSettingChanged: Ember.observer('useExternalSourceSetting', function(){
-    if(this.get('useExternalSourceSetting') === 0) {
-      console.log('clock: use internal source');
-      this.set('useExternalSource', false);
-      this.get('midi').timingListener = null;
-      if(this.isStarted) { // reset the internal clock
-        this.start();
-      }
-    } else if(this.get('useExternalSourceSetting') === 1) {
-      console.log('clock: use external source');
-      this.set('useExternalSource', true);
-      this.get('midi').timingListener = this;
-    }
-  }),
 
   start() {
     if(this.get('isStarted')) {

@@ -67,14 +67,13 @@ export default DS.Model.extend({
     this.set(portVar, port);
   },
 
-  addSetting(label, targetVariable, defaultValue) {
+  addSetting(label, settingVar, defaultValue) {
     let setting = this.store.createRecord('module-setting', {
       label:label, 
       value:defaultValue,
-      module:this, 
-      targetVariable:targetVariable,
     });
     this.get('settings').pushObject(setting);
+    this.set(settingVar, setting);
   },
 
   remove() {

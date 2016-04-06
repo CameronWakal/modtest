@@ -18,7 +18,7 @@ export default Module.extend({
     let control = this.get('controlInPort').getValue();
     if(value != null && control != null) {
       let channel = this.get('channelInPort').getValue();
-      if( channel == null ) { channel = 0 };
+      if( channel == null ) { channel = 0; }
       this.get('midi').sendCC(control,value,channel);
     }
 
