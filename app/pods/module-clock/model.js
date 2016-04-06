@@ -24,7 +24,10 @@ export default Module.extend({
   tickDuration: null,
   latency: 10, //milliseconds to add to the eventual midi event's timestamp to achieve stable timing
 
-  useExternalSourceSetting: DS.belongsTo('module-setting', {async:false}), 
+  useExternalSourceSetting: DS.belongsTo('module-setting-number', {async:false}),
+
+  menuSetting: DS.belongsTo('module-setting-menu', {async:false}),
+
   useExternalSource: null,
 
   onExternalSourceSettingChanged: Ember.observer('useExternalSourceSetting.value', function(){
@@ -44,7 +47,8 @@ export default Module.extend({
 
   didCreate() {
     //create settings
-    this.addSetting('External', 'useExternalSourceSetting', this.get('defaultUseExternalSource'));
+    this.addNumberSetting('External', 'useExternalSourceSetting', this.defaultUseExternalSource);
+    this.addMenuSetting('External', 'menuSetting', ['item one', 'item two', 'item three']);
 
     //create ports
     this.addValueInPort('tempo', 'tempoInPort');

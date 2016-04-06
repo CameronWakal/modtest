@@ -4,7 +4,7 @@ import Ember from 'ember';
 export default DS.Model.extend({
 
   label: null,
-  settings: DS.hasMany('module-setting'),
+  settings: DS.hasMany('module-setting', {polymorphic:true}),
 
   patch: DS.belongsTo('patch', {async:false}),
   ports: DS.hasMany('port', {polymorphic:true, async:false}),
@@ -67,11 +67,29 @@ export default DS.Model.extend({
     this.set(portVar, port);
   },
 
-  addSetting(label, settingVar, defaultValue) {
-    let setting = this.store.createRecord('module-setting', {
+  addNumberSetting(label, settingVar, defaultValue) {
+    let setting = this.store.createRecord('module-setting-number', {
       label:label, 
       value:defaultValue,
     });
+    this.get('settings').pushObject(setting);
+    this.set(settingVar, setting);
+  },
+
+  addMenuSetting(label, settingVar, values) {
+
+    let items = Ember.A();
+    values.forEach(value=>{
+      items.pushObject(this.store.createRecord('item-string', {
+        value:value,
+      }));
+    });
+
+    let setting = this.store.createRecord('module-setting-menu', {
+      label:label,
+      items:items,
+    });
+
     this.get('settings').pushObject(setting);
     this.set(settingVar, setting);
   },
