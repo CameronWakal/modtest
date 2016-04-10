@@ -9,4 +9,8 @@ export default DS.Model.extend({
     return this.get('type') === 'module-setting-number';
   }),
 
+  remove() {
+    this.destroyRecord();
+  },
+
 });

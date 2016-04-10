@@ -7,11 +7,7 @@
           {{#if setting.isNumber}}
             {{setting-input value=setting.value setting=setting}}
           {{else}}
-            <select name={{setting.label}}>
-              {{#each setting.items as |item|}}
-                <option value={{item.value}}>{{item.value}}</option> 
-              {{/each}}
-            </select>
+            {{select-menu name=setting.label items=setting.items selectedItem=setting.selectedItem}}
           {{/if}}
       </li>
     {{/each}}

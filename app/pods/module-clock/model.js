@@ -7,7 +7,6 @@ export default Module.extend({
   label: 'Clock',
 
   midi: Ember.inject.service(),
-  defaultUseExternalSource: 0,
 
   //external properties, use Ember getters and setters
   isStarted: false,
@@ -24,31 +23,30 @@ export default Module.extend({
   tickDuration: null,
   latency: 10, //milliseconds to add to the eventual midi event's timestamp to achieve stable timing
 
-  useExternalSourceSetting: DS.belongsTo('module-setting-number', {async:false}),
+  sourceSetting: DS.belongsTo('module-setting-menu', {async:false}),
 
-  menuSetting: DS.belongsTo('module-setting-menu', {async:false}),
+  onSourceChanged: Ember.observer('sourceSetting.value', function(){
+    Ember.run.once(this, 'updateSource');
+  }),
 
-  useExternalSource: null,
-
-  onExternalSourceSettingChanged: Ember.observer('useExternalSourceSetting.value', function(){
-    if(this.get('useExternalSourceSetting.value') === 0) {
+  updateSource() {
+    if(this.get('sourceSetting.value') === 'Internal') {
       console.log('clock: use internal source');
-      this.set('useExternalSource', false);
       this.get('midi').timingListener = null;
       if(this.isStarted) { // reset the internal clock
         this.start();
       }
-    } else if(this.get('useExternalSourceSetting.value') === 1) {
+    } else if(this.get('sourceSetting.value') === 'External') {
       console.log('clock: use external source');
-      this.set('useExternalSource', true);
       this.get('midi').timingListener = this;
+    } else {
+      console.log('error: tried to update source to', this.get('sourceSetting.value'));
     }
-  }),
+  },
 
   didCreate() {
     //create settings
-    this.addNumberSetting('External', 'useExternalSourceSetting', this.defaultUseExternalSource);
-    this.addMenuSetting('External', 'menuSetting', ['item one', 'item two', 'item three']);
+    this.addMenuSetting('Source', 'sourceSetting', ['Internal', 'External'], 'Internal');
 
     //create ports
     this.addValueInPort('tempo', 'tempoInPort');
@@ -63,7 +61,7 @@ export default Module.extend({
       this.reset();
     }
     this.set('isStarted', true);
-    if(!this.useExternalSource) {
+    if( this.get('sourceSetting.value') === 'Internal' ) {
       this.startTime = window.performance.now();
       this.tickCount = 0;
       this.sendTrigger();
@@ -86,10 +84,10 @@ export default Module.extend({
       let targetTime;
       let currentTime = window.performance.now();
 
-      if(this.useExternalSource) {
+      if( this.get('sourceSetting.value') === 'External' ) {
         //external event is not timestamped, send it through right away
         targetTime = receivedTime;
-      } else {   
+      } else if ( this.get('sourceSetting.value') === 'Internal' ) {   
         //internal events get accurate target times based on tempo, resolution, and start time     
         let tempo = this.get('tempoInPort').getValue();
         if(tempo == null) { tempo = this.defaultTempo; }
@@ -112,6 +110,9 @@ export default Module.extend({
         window.setTimeout(this.sendTrigger.bind(this), nextTickDelay);
 
         this.tickCount++;
+      } else {
+        console.log('error sending trigger, unrecognized source setting of', this.get('sourceSetting.value'));
+        return;
       }
 
       //add some latency to the midi output time to allow room for callback inaccuracy and event execution
