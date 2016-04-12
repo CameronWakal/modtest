@@ -1,0 +1,21 @@
+input[type=range] {
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  width: 10rem; /* Specific width is required for Firefox. */
+  height: 1rem;
+  background: white;
+  //-webkit-transform:rotate(90deg);
+  display: inline-block;
+
+
+  &:focus {
+    outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+  }
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: black;
+    width: 0.25rem;
+    height: 1rem;
+  }
+
+}

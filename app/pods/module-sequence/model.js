@@ -4,12 +4,22 @@ import Module from '../module/model';
 
 export default Module.extend({
   
-  label: 'Sequence',
-  defaultLength: 8, 
+  label: 'Sequence', 
 
   steps: DS.belongsTo('array', {async: false}),
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
   lengthSetting: DS.belongsTo('module-setting-number', {async:false}),
+
+  //for faders
+  inputTypeSetting: DS.belongsTo('module-setting-menu', {async:false}),
+  inputMinSetting: DS.belongsTo('module-setting-number', {async:false}),
+  inputMaxSetting: DS.belongsTo('module-setting-number', {async:false}),
+  inputStepSetting: DS.belongsTo('module-setting-number', {async:false}),
+
+  inputType: Ember.computed.alias('inputTypeSetting.value'),
+  inputMin: Ember.computed.alias('inputMinSetting.value'),
+  inputMax: Ember.computed.alias('inputMaxSetting.value'),
+  inputStep: Ember.computed.alias('inputStepSetting.value'),
 
   onLengthSettingChanged: Ember.observer('lengthSetting.value', function() {
     let value = parseInt(this.get('lengthSetting.value'));
@@ -55,7 +65,13 @@ export default Module.extend({
     this.set('steps', steps);
 
     //create settings
-    this.addNumberSetting('Length', 'lengthSetting', this.get('defaultLength'));
+    this.addNumberSetting('Length', 'lengthSetting', 8);
+
+    //for faders
+    this.addMenuSetting('Input Type', 'inputTypeSetting', ['value-input', 'value-input-fader'], 'value-input');
+    this.addNumberSetting('Input Min', 'inputMinSetting', 0);
+    this.addNumberSetting('Input Max', 'inputMaxSetting', 127);
+    this.addNumberSetting('Input Step', 'inputStepSetting', 1);
 
     //create ports
     this.addEventInPort('inc step', 'incrementStep');
