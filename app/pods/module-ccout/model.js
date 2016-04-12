@@ -9,6 +9,7 @@ export default Module.extend({
   midi: Ember.inject.service(),
 
   controlInPort: DS.belongsTo('port-value-in', {async:false}),
+  channelInPort: DS.belongsTo('port-value-in', {async:false}),
   valueInPort: DS.belongsTo('port-value-in', {async:false}),
 
   sendEvent() {
