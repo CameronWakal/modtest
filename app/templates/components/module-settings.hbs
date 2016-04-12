@@ -7,7 +7,7 @@
           {{#if setting.isNumber}}
             {{setting-input value=setting.value setting=setting}}
           {{else}}
-            {{select-menu name=setting.label items=setting.items selectedItem=setting.selectedItem}}
+            {{select-menu setting=setting}}
           {{/if}}
       </li>
     {{/each}}
