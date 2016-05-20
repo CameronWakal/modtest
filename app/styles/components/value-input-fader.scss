@@ -1,21 +1,67 @@
-input[type=range] {
-  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
-  width: 10rem; /* Specific width is required for Firefox. */
-  height: 1rem;
-  background: white;
-  //-webkit-transform:rotate(90deg);
+.value-input-fader {
   display: inline-block;
+}
 
+.rangeslider,
+.rangeslider__fill {
+  display: block;
+}
 
-  &:focus {
-    outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
-  }
+.rangeslider {
+  background: #e6e6e6;
+  position: relative;
+}
 
-  &::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    background: black;
-    width: 0.25rem;
-    height: 1rem;
-  }
+.rangeslider--horizontal {
+  height: 20px;
+  width: 100%;
+}
 
+.rangeslider--vertical {
+  width: 20px;
+  min-height: 150px;
+  max-height: 100%;
+}
+
+.rangeslider--disabled {
+  opacity: 0.4;
+}
+
+.rangeslider__fill {
+  background: #00ff00;
+  position: absolute;
+}
+.rangeslider--horizontal .rangeslider__fill {
+  top: 0;
+  height: 100%;
+}
+.rangeslider--vertical .rangeslider__fill {
+  bottom: 0;
+  width: 100%;
+}
+
+.rangeslider__handle {
+  background: white;
+  cursor: pointer;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+}
+
+.rangeslider__handle:active {
+  
+}
+
+.rangeslider--horizontal .rangeslider__handle {
+  touch-action: pan-y;
+  -ms-touch-action: pan-y;
+}
+.rangeslider--vertical .rangeslider__handle {
+  touch-action: pan-x;
+  -ms-touch-action: pan-x;
+}
+
+input[type="range"]:focus + .rangeslider .rangeslider__handle {
+  
 }
