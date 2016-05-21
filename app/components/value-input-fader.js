@@ -4,7 +4,9 @@ import Ember from 'ember';
 //not possible with chrome html5 range input
 
 export default Ember.Component.extend({
-
+  //tagName: 'input',
+  //attributeBindings: ['type'],
+  //type: 'range',
   classNames: ['value-input-fader'],
 
   onRangeUpdated: Ember.observer('min', 'max', 'step', function() {

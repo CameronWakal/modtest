@@ -21,13 +21,17 @@ export default Ember.Component.extend({
   }),
   
   mouseDown(event) {
-    this.set('isMoving', true);
-    this.set('moveOffsetX', event.pageX - this.get('xPos') );
-    this.set('moveOffsetY', event.pageY - this.get('yPos') );
-    Ember.$(document).on('mouseup', this.mouseUpBody.bind(this));
-    Ember.$(document).on('mousemove', this.mouseMoveBody.bind(this));
-    this.sendAction('selected');
-    this.sendAction('startedMoving');
+    if( Ember.$(event.target).hasClass('module') ||
+        Ember.$(event.target).hasClass('module-label')
+      ) {
+      this.set('isMoving', true);
+      this.set('moveOffsetX', event.pageX - this.get('xPos') );
+      this.set('moveOffsetY', event.pageY - this.get('yPos') );
+      Ember.$(document).on('mouseup', this.mouseUpBody.bind(this));
+      Ember.$(document).on('mousemove', this.mouseMoveBody.bind(this));
+      this.sendAction('selected');
+      this.sendAction('startedMoving');
+    }
   },
 
   keyDown(event) {
