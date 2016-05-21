@@ -1,7 +1,3 @@
-.value-input-fader {
-  display: inline-block;
-}
-
 .rangeslider,
 .rangeslider__fill {
   display: block;
@@ -10,6 +6,7 @@
 .rangeslider {
   background: #e6e6e6;
   position: relative;
+  display: inline-block;
 }
 
 .rangeslider--horizontal {

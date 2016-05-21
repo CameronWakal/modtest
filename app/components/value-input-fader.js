@@ -4,73 +4,57 @@ import Ember from 'ember';
 //not possible with chrome html5 range input
 
 export default Ember.Component.extend({
-  //tagName: 'input',
-  //attributeBindings: ['type'],
-  //type: 'range',
+  tagName: 'input',
+  attributeBindings: ['type', 'data-orientation', 'value', 'min', 'max', 'step'],
+  type: 'range',
+  'data-orientation': 'vertical',
+  value: null,
   classNames: ['value-input-fader'],
 
   onRangeUpdated: Ember.observer('min', 'max', 'step', function() {
     console.log('range updated', this.get('min'), this.get('max'), this.get('step'));
-    this.$('input[type="range"]').rangeslider('update', true);
+    this.$().rangeslider('update', true);
   }),
 
-  mouseDown(event) {
-    console.log('fader mousedown!');
-    //event.preventDefault();
-    //this.$().focus();
-    //Ember.$(document).on('mouseup', this.mouseUpBody.bind(this));
-    //return false;
-  },
-
-  mouseMove(event) {
-    console.log('fader mousemove!');
-    //return false;
-  },
-
-  mouseUp(event) {
-    console.log('fader mouseup!');
-    console.log('value:', this.$('input[type="range"]')[0].value);
-  },
-
   didInsertElement() {
-    console.log('inserted slider!');
-    this.$('input[type="range"]').rangeslider({
+    console.log('didInsertElement, value is', this.get('attrs.value.value'));
+    let self = this;
+    self.$().rangeslider({
 
-        // Feature detection the default is `true`.
-        // Set this to `false` if you want to use
-        // the polyfill also in Browsers which support
-        // the native <input type="range"> element.
-        polyfill: false,
+      // Feature detection the default is `true`.
+      // Set this to `false` if you want to use
+      // the polyfill also in Browsers which support
+      // the native <input type="range"> element.
+      polyfill: false,
 
-        // Default CSS classes
-        rangeClass: 'rangeslider',
-        disabledClass: 'rangeslider--disabled',
-        horizontalClass: 'rangeslider--horizontal',
-        verticalClass: 'rangeslider--vertical',
-        fillClass: 'rangeslider__fill',
-        handleClass: 'rangeslider__handle',
-        
-        // Callback function
-        onInit: function() {
-          console.log('rangeslider onInit!');
-        },
+      // Default CSS classes
+      rangeClass: 'rangeslider',
+      disabledClass: 'rangeslider--disabled',
+      horizontalClass: 'rangeslider--horizontal',
+      verticalClass: 'rangeslider--vertical',
+      fillClass: 'rangeslider__fill',
+      handleClass: 'rangeslider__handle',
+      
+      // Callback function
+      onInit: function() {
 
-        // Callback function
-        onSlide: function(position, value) {
-          console.log('rangeslider onSlide!', position, value);
-        },
+      },
 
-        // Callback function
-        onSlideEnd: function(position, value) {
-          console.log('rangeslider onSlideEnd!');
-        }
+      // Callback function
+      onSlide: function(position, value) {
+        self.set('value', value);
+      },
+
+      // Callback function
+      onSlideEnd: function(position, value) {
+
+      }
         
     });
   },
 
   willDestroyElement() {
-    console.log('destroying slider!');
-    this.$('input[type="range"]').rangeslider('destroy');
+    this.$().rangeslider('destroy');
   }
 
 });
