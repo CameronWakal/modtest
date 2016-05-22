@@ -12,12 +12,12 @@ export default Ember.Component.extend({
   classNames: ['value-input-fader'],
 
   onRangeUpdated: Ember.observer('min', 'max', 'step', function() {
-    console.log('range updated', this.get('min'), this.get('max'), this.get('step'));
+    console.log('range updated max', this.get('max'), 'attr max', this.attrs.max.value);
     this.$().rangeslider('update', true);
   }),
 
   didInsertElement() {
-    console.log('didInsertElement, value is', this.get('attrs.value.value'));
+    console.log('did insert fader, value is', this.get('value'), 'max is', this.get('max'));
     let self = this;
     self.$().rangeslider({
 
@@ -37,7 +37,7 @@ export default Ember.Component.extend({
       
       // Callback function
       onInit: function() {
-
+        console.log('slider init, value is', self.get('value'), 'element', self.$()[0], 'element value', self.$()[0].value, 'element max', self.$()[0].max);
       },
 
       // Callback function
