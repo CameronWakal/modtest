@@ -3,10 +3,7 @@ import Ember from 'ember';
 export default Ember.TextField.extend({
 
   classNames: ['value-input-number'],
-  classNameBindings:[
-    'item.isCurrentItem:current',
-    'isPending:pending'
-  ],
+  classNameBindings:['isPending:pending'],
 
   isPending: Ember.computed('value', 'item.value', function(){
     return parseInt(this.get('value')) !== this.get('item.value');
@@ -41,22 +38,6 @@ export default Ember.TextField.extend({
 
   resetValue() {
     this.set('value', this.get('item.value'));
-  },
-
-  selectNext() {
-    if(this.$().next().length) {
-      this.$().next().focus();
-    } else {
-      this.$().siblings().first().focus();
-    } 
-  },
-
-  selectPrevious() {
-    if(this.$().prev().length) {
-      this.$().prev().focus();
-    } else {
-      this.$().siblings().last().focus();
-    } 
   },
 
   keyUp(event) {

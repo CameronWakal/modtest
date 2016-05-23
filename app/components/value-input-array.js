@@ -1,5 +1,8 @@
 import Ember from 'ember';
 
+//renders a series of value inputs.
+//depending on inputType, could be a numeric input field, a slider, or both. 
+
 export default Ember.Component.extend({
 
   classNames: ['value-input-array'],
