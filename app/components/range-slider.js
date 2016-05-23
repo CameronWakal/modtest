@@ -9,25 +9,28 @@ export default XRangeInputComponent.extend({
   attributeBindings: ['data-orientation'],
   'data-orientation': 'vertical',
 
+  onValueChanged: Ember.observer('value', function(){
+    console.log('value changed to', this.get('value'));
+    this.$().val(this.get('value')).change();
+  }),
+
   didInsertElement() {
     this._super();
-    if (this.get('type') === 'range') {
-        var self = this;
-        self.$().rangeslider({
-            polyfill: false,
-            onInit: function() {
-                self.sendAction('onInit');
-            },
-            onSlide: function(position, value) {
-                self.set('value', value);
-                self.sendAction('onSlide', position, value);
-            },
-            onSlideEnd: function(position, value) {
-                self.set('value', value);
-                self.sendAction('onSlideEnd', position, value);
-            },
-        });
-    }
+    var self = this;
+    self.$().rangeslider({
+      polyfill: false,
+      onInit: function() {
+          self.sendAction('onInit');
+      },
+      onSlide: function(position, value) {
+          self.set('value', value);
+          self.sendAction('onSlide', position, value);
+      },
+      onSlideEnd: function(position, value) {
+          self.set('value', value);
+          self.sendAction('onSlideEnd', position, value);
+      },
+    });
   },
 
   willDestroyElement() {

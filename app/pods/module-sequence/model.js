@@ -68,7 +68,7 @@ export default Module.extend({
     this.addNumberSetting('Length', 'lengthSetting', 8);
 
     //for faders
-    this.addMenuSetting('Input Type', 'inputTypeSetting', ['value-input-number', 'value-input-fader', 'value-input-numberfader'], 'value-input-number');
+    this.addMenuSetting('Input Type', 'inputTypeSetting', ['Number', 'Slider', 'Both'], 'Number');
     this.addNumberSetting('Input Min', 'inputMinSetting', 0);
     this.addNumberSetting('Input Max', 'inputMaxSetting', 127);
     this.addNumberSetting('Input Step', 'inputStepSetting', 1);

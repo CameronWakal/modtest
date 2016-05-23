@@ -1,15 +1,13 @@
 {{partial 'module-label'}}
 
 <div class="module-content">
-{{#each module.steps.items as |item|}}
-{{~component module.inputType 
-  item=item 
-  min=module.inputMin
-  max=module.inputMax
+{{value-input-array 
+  array=module.steps 
+  inputType=module.inputType 
+  min=module.inputMin 
+  max=module.inputMax 
   step=module.inputStep
-  value=item.value
-~}}
-{{/each}}
+}}
 </div>
 
 {{partial 'module-ports'}}

@@ -12,7 +12,7 @@ export default Ember.TextField.extend({
     return parseInt(this.get('value')) !== this.get('item.value');
   }),
 
-  onModelChanged: Ember.observer('item.value', function(){
+  onItemValueChanged: Ember.observer('item.value', function(){
     this.resetValue();
   }),
 
@@ -37,7 +37,6 @@ export default Ember.TextField.extend({
       this.set('value', value);
       this.set('item.value', value);
     }
-    this.get('item.array.module').save();
   },
 
   resetValue() {
