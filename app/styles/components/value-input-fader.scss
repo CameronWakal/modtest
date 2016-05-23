@@ -20,8 +20,12 @@
   max-height: 100%;
 }
 
-.rangeslider--disabled {
-  opacity: 0.4;
+.rangeslider--disabled .rangeslider__fill {
+  display: none;
+}
+
+.rangeslider--disabled .rangeslider__handle {
+  display: none;
 }
 
 .rangeslider__fill {
