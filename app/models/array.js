@@ -30,13 +30,17 @@ export default DS.Model.extend({
 
   incrementAll() {
     this.get('items').forEach(item=>{
-      item.set('value', item.get('value')+1);
+      if(item.get('value') != null) {
+        item.set('value', item.get('value')+1);
+      }
     });
   },
 
   decrementAll() {
     this.get('items').forEach(item=>{
-      item.set('value', item.get('value')-1);
+      if(item.get('value') != null) {
+        item.set('value', item.get('value')-1);
+      }
     });
   },
 
