@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.TextField.extend({
 
-  classNames: ['value-input'],
+  classNames: ['value-input-number'],
   classNameBindings:[
     'item.isCurrentItem:current',
     'isPending:pending'
