@@ -14,6 +14,10 @@ export default XRangeInputComponent.extend({
     this.$().val(this.get('value')).change();
   }),
 
+  onSettingsChanged: Ember.observer('min', 'max', 'step', function(){
+    this.$().rangeslider('update', true);
+  }),
+
   didInsertElement() {
     this._super();
     var self = this;
