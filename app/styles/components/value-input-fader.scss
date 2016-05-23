@@ -1,3 +1,7 @@
+.value-input-fader {
+  display: inline-block;
+}
+
 .rangeslider,
 .rangeslider__fill {
   display: block;
@@ -6,7 +10,6 @@
 .rangeslider {
   background: #e6e6e6;
   position: relative;
-  display: inline-block;
 }
 
 .rangeslider--horizontal {
@@ -20,12 +23,12 @@
   max-height: 100%;
 }
 
-.rangeslider--disabled .rangeslider__fill {
-  display: none;
+.no-value .rangeslider__fill {
+  background: none;
 }
 
-.rangeslider--disabled .rangeslider__handle {
-  display: none;
+.no-value .rangeslider__handle {
+  background: none;
 }
 
 .rangeslider__fill {
