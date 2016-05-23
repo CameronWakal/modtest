@@ -9,13 +9,17 @@ export default XRangeInputComponent.extend({
   attributeBindings: ['data-orientation'],
   'data-orientation': 'vertical',
 
-  onValueChanged: Ember.observer('value', function(){
-    console.log('value changed to', this.get('value'));
-    this.$().val(this.get('value')).change();
+  onAttrsChanged: Ember.observer('min', 'max', 'step', function(){
+    let self = this;
+    //seems that if you call rangeslider right away, ember hasn't yet updated the
+    //changed attributes in the DOM, so the update doesn't work.
+    Ember.run.next(function(){
+      self.$().rangeslider('update', true);
+    });
   }),
 
-  onSettingsChanged: Ember.observer('min', 'max', 'step', function(){
-    this.$().rangeslider('update', true);
+  onValueChanged: Ember.observer('value', function(){
+    this.$().val(this.get('value')).change();
   }),
 
   didInsertElement() {
@@ -24,15 +28,13 @@ export default XRangeInputComponent.extend({
     self.$().rangeslider({
       polyfill: false,
       onInit: function() {
-          self.sendAction('onInit');
+        //self.sendAction('onInit');
       },
       onSlide: function(position, value) {
-          self.set('value', value);
-          self.sendAction('onSlide', position, value);
+        //self.sendAction('onSlide', position, value);
       },
       onSlideEnd: function(position, value) {
-          self.set('value', value);
-          self.sendAction('onSlideEnd', position, value);
+        //self.sendAction('onSlideEnd', position, value);
       },
     });
   },

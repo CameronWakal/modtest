@@ -49,13 +49,7 @@ export default Ember.TextField.extend({
       case 27: //escape
         this.$().select();
       break;
-      case 37: //left arrow
-        this.$().select();
-      break;
       case 38: //up arrow
-        this.$().select();
-      break;
-      case 39: //right arrow
         this.$().select();
       break;
       case 40: //down arrow
@@ -74,33 +68,13 @@ export default Ember.TextField.extend({
       case 27: //escape
         this.resetValue();
       break;
-      case 37: //left arrow
-        if(event.shiftKey) {
-          this.get('item.array').shiftForward();
-        }
-        this.selectPrevious();
-      break;
       case 38: //up arrow
-        if(event.shiftKey) {
-          this.get('item.array').incrementAll();
-        } else {
         this.incrementProperty('value');
         this.updateValue();
-        }
-      break;
-      case 39: //right arrow
-        if(event.shiftKey) {
-          this.get('item.array').shiftBackward();
-        }
-        this.selectNext();
       break;
       case 40: //down arrow
-        if(event.shiftKey) {
-          this.get('item.array').decrementAll();
-        } else {
-          this.decrementProperty('value');
-          this.updateValue();
-        }
+        this.decrementProperty('value');
+        this.updateValue();
     }
   }
 

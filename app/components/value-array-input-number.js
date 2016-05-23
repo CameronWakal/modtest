@@ -7,6 +7,7 @@ import ValueInputNumber from './value-input-number';
 
 export default ValueInputNumber.extend({
 
+  classNames: ['value-array-input-number'],
   classNameBindings:['item.isCurrentItem:current'],
 
   selectNext() {
@@ -26,7 +27,6 @@ export default ValueInputNumber.extend({
   },
 
   keyUp(event) {
-    this._super(event);
 
     switch(event.keyCode) {
       case 37: //left arrow
@@ -34,11 +34,13 @@ export default ValueInputNumber.extend({
       break;
       case 39: //right arrow
         this.$().select();
+      break;
+      default:
+        this._super(event);
     }
   },
 
   keyDown(event) {
-    this._super(event);
 
     switch(event.keyCode) {
       case 37: //left arrow
@@ -52,6 +54,25 @@ export default ValueInputNumber.extend({
           this.get('item.array').shiftBackward();
         }
         this.selectNext();
+      break;
+      case 38: //up arrow
+        if(event.shiftKey) {
+          this.get('item.array').incrementAll();
+        } else {
+        this.incrementProperty('value');
+        this.updateValue();
+        }
+      break;
+      case 40: //down arrow
+        if(event.shiftKey) {
+          this.get('item.array').decrementAll();
+        } else {
+          this.decrementProperty('value');
+          this.updateValue();
+        }
+      break;
+      default:
+        this._super(event);
     }
   }
 
