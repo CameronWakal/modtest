@@ -76,6 +76,15 @@ export default DS.Model.extend({
     this.set(settingVar, setting);
   },
 
+  addNumberrefSetting(label, targetValue, module) {
+    let setting = this.store.createRecord('module-setting-numberref', {
+      label:label, 
+      targetValue:targetValue,
+      module:module,
+    });
+    this.get('settings').pushObject(setting);
+  },
+
   addMenuSetting(label, settingVar, values, selected) {
 
     let items = Ember.A();

@@ -1,12 +1,11 @@
-{{max}}
 {{#if shouldIncludeSlider}}
   <div class="value-input-array-sliders">
     {{#each array.items as |item|}}
       {{~value-input-fader 
         item=item
-        min=min
-        max=max
-        step=step
+        min=array.valueMin
+        max=array.valueMax
+        step=array.valueStep
       ~}}
     {{/each}}
   </div>
@@ -16,9 +15,9 @@
     {{#each array.items as |item|}}
       {{~value-array-input-number 
         item=item 
-        min=min
-        max=max
-        step=step
+        min=array.valueMin
+        max=array.valueMax
+        step=array.valueStep
       ~}}
     {{/each}}
   </div>
