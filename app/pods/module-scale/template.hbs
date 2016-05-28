@@ -1,7 +1,10 @@
 {{partial 'module-label'}}
 
 <div class="module-content">
-{{#each module.degrees.items as |item|}}{{value-input-number item=item}}{{/each}}
+{{value-input-array 
+  array=module.degrees 
+  inputType=module.inputType
+}}
 </div>
 
 {{partial 'module-ports'}}

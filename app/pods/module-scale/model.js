@@ -8,6 +8,9 @@ export default Module.extend({
 
   degrees: DS.belongsTo('array'),
 
+  inputTypeSetting: DS.belongsTo('module-setting-menu', {async:false}),
+  inputType: Ember.computed.alias('inputTypeSetting.value'),
+
   degreeInPort: DS.belongsTo('port-value-in', {async:false}),
   octaveInPort: DS.belongsTo('port-value-in', {async:false}),
   rootInPort: DS.belongsTo('port-value-in', {async:false}),
@@ -57,7 +60,12 @@ export default Module.extend({
   didCreate() {
     //create degrees
     let degrees = this.store.createRecord('array', {module:this, length:this.get('degreesInScale')});
+    degrees.set('valueMax', 11),
     this.set('degrees', degrees);
+
+    //create settings
+    //todo: set up the menu setting in the new reference style like module-setting-numberref
+    this.addMenuSetting('Input Type', 'inputTypeSetting', ['Number', 'Slider', 'Both'], 'Number');
 
     //create ports
     this.addValueInPort('degree', 'degreeInPort');
