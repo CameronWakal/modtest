@@ -5,11 +5,11 @@ export default Ember.TextField.extend({
   classNames: ['value-input-number'],
   classNameBindings:['isPending:pending'],
 
-  isPending: Ember.computed('value', 'item.value', function(){
-    return parseInt(this.get('value')) !== this.get('item.value');
+  isPending: Ember.computed('value', 'boundValue', function(){
+    return parseInt(this.get('value')) !== this.get('boundValue');
   }),
 
-  onItemValueChanged: Ember.observer('item.value', function(){
+  onBoundValueChanged: Ember.observer('boundValue', function(){
     this.resetValue();
   }),
 
@@ -29,15 +29,15 @@ export default Ember.TextField.extend({
     let value = parseInt( this.get('value') );
     if(isNaN(value)) {
       this.set('value', null);
-      this.set('item.value', null);
+      this.set('boundValue', null);
     } else {
       this.set('value', value);
-      this.set('item.value', value);
+      this.set('boundValue', value);
     }
   },
 
   resetValue() {
-    this.set('value', this.get('item.value'));
+    this.set('value', this.get('boundValue'));
   },
 
   keyUp(event) {

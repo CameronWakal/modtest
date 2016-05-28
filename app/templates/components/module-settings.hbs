@@ -5,7 +5,7 @@
       <li>
         <span class="setting-label">{{setting.label}}</span>
           {{#if setting.isNumber}}
-            {{value-input-number item=setting}}
+            {{value-input-number boundValue=setting.value}}
           {{else}}
             {{select-menu setting=setting}}
           {{/if}}

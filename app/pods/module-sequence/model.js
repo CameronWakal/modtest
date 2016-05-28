@@ -54,10 +54,10 @@ export default Module.extend({
     this.addMenuSetting('Input Type', 'inputTypeSetting', ['Number', 'Slider', 'Both'], 'Number');
 
     //todo: make config option for settings that must have a non-null numeric value
-    this.addNumberrefSetting('Length', 'steps.length', this);
-    this.addNumberrefSetting('Input Min', 'steps.valueMin', this);
-    this.addNumberrefSetting('Input Max', 'steps.valueMax', this);
-    this.addNumberrefSetting('Input Step', 'steps.valueStep', this);
+    this.addNumberSetting('Length', 'steps.length', this);
+    this.addNumberSetting('Input Min', 'steps.valueMin', this);
+    this.addNumberSetting('Input Max', 'steps.valueMax', this);
+    this.addNumberSetting('Input Step', 'steps.valueStep', this);
 
     //create ports
     this.addEventInPort('inc step', 'incrementStep');

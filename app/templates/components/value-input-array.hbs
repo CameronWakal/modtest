@@ -15,6 +15,7 @@
     {{#each array.items as |item|}}
       {{~value-array-input-number 
         item=item 
+        boundValue=item.value
         min=array.valueMin
         max=array.valueMax
         step=array.valueStep

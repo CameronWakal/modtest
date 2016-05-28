@@ -1,1 +1,1 @@
-<span class="setting-label">{{input type="checkbox" checked=port.isEnabled}}{{labelWithType}}</span>{{#if portIsValueIn}}{{#unless port.isEnabled}}{{setting-input value=port.disabledValue}}{{/unless}}{{/if}}
+<span class="setting-label">{{input type="checkbox" checked=port.isEnabled}}{{labelWithType}}</span>{{#if portIsValueIn}}{{#unless port.isEnabled}}{{value-input-number boundValue=port.disabledValue}}{{/unless}}{{/if}}
