@@ -1,13 +1,12 @@
-//$teal: #00bfbc;
-
 $lightcolor: #fff;
-//$darkcolor: #1a202b;
 $darkcolor: #000;
 $midcolor: #333;
-//$midcolor: adjust-hue(darken(desaturate($teal, 0%), 2%), 2%);
 
-$module-bgcolor: rgba(lighten($midcolor, 4%), .85);
-$module-borderradius: 4px;
+$app-bgcolor: $darkcolor;
+
+$module-bgcolor: rgba(0,0,0,0);
+$module-borderradius: 3px;
+$module-bordercolor: rgba($lightcolor, 0.33);
 
 $input-borderradius: 2px;
 $input-dividercolor: rgba($lightcolor, .75);
@@ -52,7 +51,7 @@ button {
 }
 
 body {
-  background: $midcolor;
+  background: $app-bgcolor;
   margin: 0;
   padding: 0;
 }

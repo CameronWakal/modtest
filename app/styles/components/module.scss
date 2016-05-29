@@ -1,6 +1,7 @@
 .module {
   background-color: $module-bgcolor;
   border-radius: $module-borderradius;
+  box-shadow: inset 0 0 0 1px $module-bordercolor;
   color: $textgrey;
   display: inline-block;
   overflow: hidden;
@@ -8,7 +9,7 @@
   position: absolute;
 
   &:focus {
-    box-shadow: inset 0 0 0 2px $lightcolor;
+    box-shadow: inset 0 0 0 1px $lightcolor;
     outline: none;
   }
 
