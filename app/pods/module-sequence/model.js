@@ -1,5 +1,4 @@
 import DS from 'ember-data';
-import Ember from 'ember';
 import Module from '../module/model';
 
 export default Module.extend({
@@ -8,9 +7,7 @@ export default Module.extend({
 
   steps: DS.belongsTo('array', {async: false}),
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
-
-  inputTypeSetting: DS.belongsTo('module-setting-menu', {async:false}),
-  inputType: Ember.computed.alias('inputTypeSetting.value'),
+  inputType: DS.attr('string', {defaultValue:'Number'}),
 
   getValue() {
     return this.get('steps.currentItem.value');
@@ -50,8 +47,7 @@ export default Module.extend({
     this.set('steps.length', 8);
 
     //create settings
-    //todo: set up the menu setting in the new reference style like module-setting-numberref
-    this.addMenuSetting('Input Type', 'inputTypeSetting', ['Number', 'Slider', 'Both'], 'Number');
+    this.addMenuSetting('Input Type', 'inputType', this, ['Number', 'Slider', 'Both']);
 
     //todo: make config option for settings that must have a non-null numeric value
     this.addNumberSetting('Length', 'steps.length', this);
