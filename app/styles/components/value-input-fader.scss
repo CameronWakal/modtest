@@ -1,71 +1,65 @@
+$slider-background-color: #e6e6e6;
+$slider-fill-color: #0f0;
+$slider-handle-color: #fff;
+
 .value-input-fader {
   display: inline-block;
-}
 
-.rangeslider,
-.rangeslider__fill {
-  display: block;
-}
+  .rangeslider {
+    background: $slider-background-color;
+    display: block;
+    position: relative;
+  }
 
-.rangeslider {
-  background: #e6e6e6;
-  position: relative;
-}
+  .rangeslider-fill {
+    background: $slider-fill-color;
+    display: block;
+    position: absolute;
+  }
 
-.rangeslider--horizontal {
-  height: 20px;
-  width: 100%;
-}
+  .rangeslider-handle {
+    background: $slider-handle-color;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    position: absolute;
+    width: 20px;
+  }
 
-.rangeslider--vertical {
-  width: 20px;
-  min-height: 150px;
-  max-height: 100%;
-}
+  .rangeslider-horizontal {
+    height: 20px;
+    width: 100%;
 
-.no-value .rangeslider__fill {
-  background: none;
-}
+    .rangeslider-fill {
+      height: 100%;
+      top: 0;
+    }
 
-.no-value .rangeslider__handle {
-  background: none;
-}
+    .rangeslider-handle {
+      touch-action: pan-y;
+    }
+  }
 
-.rangeslider__fill {
-  background: #00ff00;
-  position: absolute;
-}
-.rangeslider--horizontal .rangeslider__fill {
-  top: 0;
-  height: 100%;
-}
-.rangeslider--vertical .rangeslider__fill {
-  bottom: 0;
-  width: 100%;
-}
+  .rangeslider-vertical {
+    max-height: 100%;
+    min-height: 150px;
+    width: 20px;
 
-.rangeslider__handle {
-  background: white;
-  cursor: pointer;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  position: absolute;
-}
+    .rangeslider-fill {
+      bottom: 0;
+      width: 100%;
+    }
 
-.rangeslider__handle:active {
-  
-}
+    .rangeslider-handle {
+      touch-action: pan-x;
+    }
+  }
 
-.rangeslider--horizontal .rangeslider__handle {
-  touch-action: pan-y;
-  -ms-touch-action: pan-y;
-}
-.rangeslider--vertical .rangeslider__handle {
-  touch-action: pan-x;
-  -ms-touch-action: pan-x;
-}
+  &.no-value {
+    .rangeslider-fill,
+    .rangeslider-handle {
+      background: none;
+    }
+  } 
 
-input[type="range"]:focus + .rangeslider .rangeslider__handle {
-  
 }

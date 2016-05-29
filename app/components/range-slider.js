@@ -27,15 +27,12 @@ export default XRangeInputComponent.extend({
     var self = this;
     self.$().rangeslider({
       polyfill: false,
-      onInit: function() {
-        //self.sendAction('onInit');
-      },
-      onSlide: function(position, value) {
-        //self.sendAction('onSlide', position, value);
-      },
-      onSlideEnd: function(position, value) {
-        //self.sendAction('onSlideEnd', position, value);
-      },
+      rangeClass: 'rangeslider',
+      disabledClass: 'rangeslider-disabled',
+      horizontalClass: 'rangeslider-horizontal',
+      verticalClass: 'rangeslider-vertical',
+      fillClass: 'rangeslider-fill',
+      handleClass: 'rangeslider-handle',
     });
   },
 

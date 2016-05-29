@@ -1,5 +1,6 @@
 import DS from 'ember-data';
 import Module from '../module/model';
+import Ember from 'ember';
 
 export default Module.extend({
   
@@ -60,7 +61,7 @@ export default Module.extend({
   didCreate() {
     //create degrees
     let degrees = this.store.createRecord('array', {module:this, length:this.get('degreesInScale')});
-    degrees.set('valueMax', 11),
+    degrees.set('valueMax', 11);
     this.set('degrees', degrees);
 
     //create settings
