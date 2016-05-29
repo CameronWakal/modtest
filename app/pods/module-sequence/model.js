@@ -56,10 +56,10 @@ export default Module.extend({
     this.addNumberSetting('Input Step', 'steps.valueStep', this);
 
     //create ports
-    this.addEventInPort('inc step', 'incrementStep');
-    this.addEventInPort('reset', 'reset');
-    this.addValueOutPort('value', 'getValue');
-    this.addEventOutPort('trig', 'trigOutPort');
+    this.addEventInPort('inc', 'incrementStep', true);
+    this.addEventInPort('reset', 'reset', false);
+    this.addValueOutPort('value', 'getValue', true);
+    this.addEventOutPort('trig', 'trigOutPort', false);
 
     this.save();
   },

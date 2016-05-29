@@ -28,9 +28,10 @@ export default DS.Model.extend({
   enabledPorts: Ember.computed.filterBy('ports', 'isEnabled', true),
 
   //portVar is used to easily refer to this specific port from within the module
-  addEventOutPort(label, portVar) {
+  addEventOutPort(label, portVar, isEnabled) {
     let port = this.store.createRecord('port-event-out', {
       label:label,
+      isEnabled:isEnabled,
       module:this
     });
     this.get('ports').pushObject(port);
@@ -38,29 +39,32 @@ export default DS.Model.extend({
   },
 
   //targetMethod on the module is called by the port when the event comes in
-  addEventInPort(label, targetMethod) {
+  addEventInPort(label, targetMethod, isEnabled) {
     let port = this.store.createRecord('port-event-in', {
       label:label,
       targetMethod:targetMethod,
+      isEnabled:isEnabled,
       module:this
     });
     this.get('ports').pushObject(port);
   },
 
   //targetVar is checked by the port when a request for the value comes in
-  addValueOutPort(label, targetMethod) {
+  addValueOutPort(label, targetMethod, isEnabled) {
     let port = this.store.createRecord('port-value-out', {
       label:label,
       targetMethod:targetMethod,
+      isEnabled:isEnabled,
       module:this
     });
     this.get('ports').pushObject(port);
   },
 
   //portVar is used to easily refer to this specific port from within the module
-  addValueInPort(label, portVar) {
+  addValueInPort(label, portVar, isEnabled) {
     let port = this.store.createRecord('port-value-in', {
       label:label,
+      isEnabled:isEnabled,
       module:this
     });
     this.get('ports').pushObject(port);

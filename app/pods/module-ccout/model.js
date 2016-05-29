@@ -27,10 +27,10 @@ export default Module.extend({
 
   didCreate() {
     //create ports
-    this.addEventInPort('trig', 'sendEvent');
-    this.addValueInPort('control', 'controlInPort');
-    this.addValueInPort('channel', 'channelInPort');
-    this.addValueInPort('value', 'valueInPort');
+    this.addEventInPort('trig', 'sendEvent', true);
+    this.addValueInPort('control', 'controlInPort', false);
+    this.addValueInPort('channel', 'channelInPort', false);
+    this.addValueInPort('value', 'valueInPort', true);
     this.save();
   },
 

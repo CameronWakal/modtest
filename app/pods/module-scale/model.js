@@ -1,6 +1,5 @@
 import DS from 'ember-data';
 import Module from '../module/model';
-import Ember from 'ember';
 
 export default Module.extend({
   
@@ -66,11 +65,11 @@ export default Module.extend({
     this.addMenuSetting('Input Type', 'inputType', this, ['Number', 'Slider', 'Both']);
 
     //create ports
-    this.addValueInPort('degree', 'degreeInPort');
-    this.addValueInPort('octave', 'octaveInPort');
-    this.addValueInPort('root', 'rootInPort');
-    this.addValueInPort('shift', 'shiftInPort');
-    this.addValueOutPort('note', 'getNote');
+    this.addValueInPort('degree', 'degreeInPort', true);
+    this.addValueInPort('octave', 'octaveInPort', false);
+    this.addValueInPort('root', 'rootInPort', false);
+    this.addValueInPort('shift', 'shiftInPort', false);
+    this.addValueOutPort('note', 'getNote', true);
 
     this.save();
   },

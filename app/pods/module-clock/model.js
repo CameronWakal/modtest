@@ -23,36 +23,31 @@ export default Module.extend({
   tickDuration: null,
   latency: 10, //milliseconds to add to the eventual midi event's timestamp to achieve stable timing
 
-  sourceSetting: DS.belongsTo('module-setting-menu', {async:false}),
-
-  onSourceChanged: Ember.observer('sourceSetting.value', function(){
-    Ember.run.once(this, 'updateSource');
-  }),
-
-  updateSource() {
-    if(this.get('sourceSetting.value') === 'Internal') {
+  source: DS.attr('string', {defaultValue:'Internal'}),
+  onSourceChanged: Ember.observer('source', function(){
+    if(this.get('source') === 'Internal') {
       console.log('clock: use internal source');
       this.get('midi').timingListener = null;
       if(this.isStarted) { // reset the internal clock
         this.start();
       }
-    } else if(this.get('sourceSetting.value') === 'External') {
+    } else if(this.get('source') === 'External') {
       console.log('clock: use external source');
       this.get('midi').timingListener = this;
     } else {
       console.log('error: tried to update source to', this.get('sourceSetting.value'));
     }
-  },
+  }),
 
   didCreate() {
     //create settings
-    this.addMenuSetting('Source', 'sourceSetting', ['Internal', 'External'], 'Internal');
+    this.addMenuSetting('Source', 'source', this, ['Internal', 'External']);
 
     //create ports
-    this.addValueInPort('tempo', 'tempoInPort');
-    this.addValueInPort('res', 'resInPort');
-    this.addEventOutPort('reset', 'resetOutPort');
-    this.addEventOutPort('trig', 'trigOutPort');
+    this.addValueInPort('tempo', 'tempoInPort', false);
+    this.addValueInPort('res', 'resInPort', false);
+    this.addEventOutPort('reset', 'resetOutPort', false);
+    this.addEventOutPort('trig', 'trigOutPort', true);
     this.save();
   },
 
@@ -61,7 +56,7 @@ export default Module.extend({
       this.reset();
     }
     this.set('isStarted', true);
-    if( this.get('sourceSetting.value') === 'Internal' ) {
+    if( this.get('source') === 'Internal' ) {
       this.startTime = window.performance.now();
       this.tickCount = 0;
       this.sendTrigger();
@@ -84,10 +79,10 @@ export default Module.extend({
       let targetTime;
       let currentTime = window.performance.now();
 
-      if( this.get('sourceSetting.value') === 'External' ) {
+      if( this.get('source') === 'External' ) {
         //external event is not timestamped, send it through right away
         targetTime = receivedTime;
-      } else if ( this.get('sourceSetting.value') === 'Internal' ) {   
+      } else if ( this.get('source') === 'Internal' ) {   
         //internal events get accurate target times based on tempo, resolution, and start time     
         let tempo = this.get('tempoInPort').getValue();
         if(tempo == null) { tempo = this.defaultTempo; }

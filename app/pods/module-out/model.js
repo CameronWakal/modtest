@@ -62,8 +62,8 @@ export default Module.extend({
 
   didCreate() {
     //create ports
-    this.addEventInPort('trig', 'sendEvent');
-    this.addValueInPort('note', 'noteInPort');
+    this.addEventInPort('trig', 'sendEvent', true);
+    this.addValueInPort('note', 'noteInPort', true);
     this.save();
   },
 

@@ -17,10 +17,10 @@ export default Module.extend({
 
   didCreate() {
     //create ports
-    this.addValueInPort('in0', 'in0Port');
-    this.addValueInPort('in1', 'in1Port');
-    this.addValueInPort('switch', 'switchInPort');
-    this.addValueOutPort('out', 'getValue');
+    this.addValueInPort('in0', 'in0Port', true);
+    this.addValueInPort('in1', 'in1Port', true);
+    this.addValueInPort('switch', 'switchInPort', true);
+    this.addValueOutPort('out', 'getValue', true);
   },
 
 });

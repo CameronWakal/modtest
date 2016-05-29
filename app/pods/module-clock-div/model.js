@@ -44,11 +44,11 @@ export default Module.extend({
   },
 
   didCreate() {
-    this.addEventInPort('clock', 'onClockIn');
-    this.addEventInPort('reset', 'onResetIn');
-    this.addValueInPort('div', 'divByPort');
-    this.addValueInPort('shift', 'shiftByPort');
-    this.addEventOutPort('trig', 'trigOutPort');
+    this.addEventInPort('clock', 'onClockIn', true);
+    this.addEventInPort('reset', 'onResetIn', false);
+    this.addValueInPort('div', 'divByPort', false);
+    this.addValueInPort('shift', 'shiftByPort', false);
+    this.addEventOutPort('trig', 'trigOutPort', true);
     this.save();
   },
 
