@@ -1,15 +1,7 @@
-.value-input {
-  background: $lightcolor;
-  border: 0;
+.value-array-input-number {
+  border-radius: 0;
   box-shadow: 1px 0 0 0 $input-dividercolor;
-  color: $input-textcolor;
-  display: inline-block;
-  height: 1.75rem;
   margin: 0 1px 0 0;
-  padding: 0;
-  text-align: center;
-  vertical-align: bottom;
-  width: 1.75rem;
 
   &:first-child {
     border-bottom-left-radius: $input-borderradius;
@@ -23,42 +15,25 @@
     margin-right: 0;
   }
 
-  &.pending:focus {
-    text-shadow: 0 0 0 rgba($lightcolor, .5);
-  }
-
   &:focus {
-    background: $darkcolor;
     box-shadow: 1px 0 0 0 $input-dividercolor;
-    color: rgba($lightcolor, .25);
-    font-weight: bold;
-    outline: none;
-    text-shadow: 0 0 0 $lightcolor;
 
     &:last-child {
       box-shadow: none;
     }
   }
 
-  &::selection {
-    background-color: transparent;
-  }
-
   &.current {
-    background-color: $lightcolor;
     box-shadow: 1px 0 0 0 $input-dividercolor,
       0 3px 0 0 $darkcolor;
-    color: $darkcolor;
 
     &:last-child {
       box-shadow: 0 3px 0 0 $darkcolor;
     }
 
     &:focus {
-      background: $darkcolor;
       box-shadow: 1px 0 0 0 $input-dividercolor,
-      0 3px 0 0 $lightcolor;
-      color: transparent;
+        0 3px 0 0 $lightcolor;
     }
   }
 

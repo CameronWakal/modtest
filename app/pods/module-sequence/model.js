@@ -1,22 +1,13 @@
 import DS from 'ember-data';
-import Ember from 'ember';
 import Module from '../module/model';
 
 export default Module.extend({
   
-  label: 'Sequence',
-  defaultLength: 8, 
+  label: 'Sequence', 
 
   steps: DS.belongsTo('array', {async: false}),
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
-  lengthSetting: DS.belongsTo('module-setting-number', {async:false}),
-
-  onLengthSettingChanged: Ember.observer('lengthSetting.value', function() {
-    let value = parseInt(this.get('lengthSetting.value'));
-    if(value !== null && !isNaN(value) ) {
-      this.set('steps.length', value);
-    }
-  }),
+  inputType: DS.attr('string', {defaultValue:'Number'}),
 
   getValue() {
     return this.get('steps.currentItem.value');
@@ -53,9 +44,16 @@ export default Module.extend({
     //create steps
     let steps = this.store.createRecord('array', {module:this});
     this.set('steps', steps);
+    this.set('steps.length', 8);
 
     //create settings
-    this.addNumberSetting('Length', 'lengthSetting', this.get('defaultLength'));
+    this.addMenuSetting('Input Type', 'inputType', this, ['Number', 'Slider', 'Both']);
+
+    //todo: make config option for settings that must have a non-null numeric value
+    this.addNumberSetting('Length', 'steps.length', this);
+    this.addNumberSetting('Input Min', 'steps.valueMin', this);
+    this.addNumberSetting('Input Max', 'steps.valueMax', this);
+    this.addNumberSetting('Input Step', 'steps.valueStep', this);
 
     //create ports
     this.addEventInPort('inc step', 'incrementStep');

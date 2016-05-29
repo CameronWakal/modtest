@@ -1,5 +1,5 @@
 import DS from 'ember-data';
-import Port from './port';
+import Port from '../port/model';
 
 export default Port.extend({
   //valueOut ports can have multiple valueIn ports as destinations

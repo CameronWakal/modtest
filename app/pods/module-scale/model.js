@@ -1,5 +1,6 @@
 import DS from 'ember-data';
 import Module from '../module/model';
+import Ember from 'ember';
 
 export default Module.extend({
   
@@ -7,6 +8,7 @@ export default Module.extend({
   degreesInScale: 7,
 
   degrees: DS.belongsTo('array'),
+  inputType: DS.attr('string', {defaultValue:'Number'}),
 
   degreeInPort: DS.belongsTo('port-value-in', {async:false}),
   octaveInPort: DS.belongsTo('port-value-in', {async:false}),
@@ -57,7 +59,11 @@ export default Module.extend({
   didCreate() {
     //create degrees
     let degrees = this.store.createRecord('array', {module:this, length:this.get('degreesInScale')});
+    degrees.set('valueMax', 11);
     this.set('degrees', degrees);
+
+    //create settings
+    this.addMenuSetting('Input Type', 'inputType', this, ['Number', 'Slider', 'Both']);
 
     //create ports
     this.addValueInPort('degree', 'degreeInPort');

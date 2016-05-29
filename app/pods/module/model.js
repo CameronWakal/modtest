@@ -67,35 +67,31 @@ export default DS.Model.extend({
     this.set(portVar, port);
   },
 
-  addNumberSetting(label, settingVar, defaultValue) {
-    let setting = this.store.createRecord('module-setting-number', {
+  addNumberSetting(label, targetValue, module) {
+    let setting = this.store.createRecord('module-setting', {
       label:label, 
-      value:defaultValue,
+      targetValue:targetValue,
+      module:module,
     });
     this.get('settings').pushObject(setting);
-    this.set(settingVar, setting);
   },
 
-  addMenuSetting(label, settingVar, values, selected) {
+  addMenuSetting(label, targetValue, module, values) {
 
     let items = Ember.A();
-    let selectedItem;
     values.forEach(value=>{
       let item = this.store.createRecord('item-string', { value:value });
       items.pushObject(item);
-      if( value === selected ) {
-        selectedItem = item;
-      }
     });
 
     let setting = this.store.createRecord('module-setting-menu', {
       label:label,
       items:items,
-      selectedItem:selectedItem,
+      module:module,
+      targetValue:targetValue,
     });
 
     this.get('settings').pushObject(setting);
-    this.set(settingVar, setting);
   },
 
   remove() {

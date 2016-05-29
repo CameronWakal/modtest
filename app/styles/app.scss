@@ -1,8 +1,10 @@
-$teal: #00bfbc;
+//$teal: #00bfbc;
 
 $lightcolor: #fff;
-$darkcolor: #1a202b;
-$midcolor: adjust-hue(darken(desaturate($teal, 0%), 2%), 2%);
+//$darkcolor: #1a202b;
+$darkcolor: #000;
+$midcolor: #333;
+//$midcolor: adjust-hue(darken(desaturate($teal, 0%), 2%), 2%);
 
 $module-bgcolor: rgba(lighten($midcolor, 4%), .85);
 $module-borderradius: 4px;
@@ -31,8 +33,10 @@ $grey-inv: #555;
 @import 'components/port-component';
 @import 'components/module';
 @import 'components/module-settings';
-@import 'components/value-input';
-@import 'components/setting-input';
+@import 'components/value-input-number';
+@import 'components/value-array-input-number';
+@import 'components/value-input-fader';
+@import 'components/value-input-numberfader';
 @import 'components/patch-diagram';
 @import 'components/patch-component';
 @import 'components/port-setting';
@@ -40,9 +44,10 @@ $grey-inv: #555;
 html, 
 input, 
 button {
-  font-family: 'Karla', sans-serif;
-  font-size: 12px;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 11px;
   -webkit-font-smoothing: antialiased;
+  font-weight: 500;
   line-height: 1rem;
 }
 

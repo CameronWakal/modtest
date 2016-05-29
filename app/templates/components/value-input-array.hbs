@@ -1,0 +1,25 @@
+{{#if shouldIncludeSlider}}
+  <div class="value-input-array-sliders">
+    {{#each array.items as |item|}}
+      {{~value-input-fader 
+        item=item
+        min=array.valueMin
+        max=array.valueMax
+        step=array.valueStep
+      ~}}
+    {{/each}}
+  </div>
+{{/if}}
+{{#if shouldIncludeNumber}}
+  <div class="value-input-array-numbers">
+    {{#each array.items as |item|}}
+      {{~value-array-input-number 
+        item=item 
+        boundValue=item.value
+        min=array.valueMin
+        max=array.valueMax
+        step=array.valueStep
+      ~}}
+    {{/each}}
+  </div>
+{{/if}}

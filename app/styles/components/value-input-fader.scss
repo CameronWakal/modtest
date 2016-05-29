@@ -1,0 +1,65 @@
+$slider-background-color: #e6e6e6;
+$slider-fill-color: #0f0;
+$slider-handle-color: #fff;
+
+.value-input-fader {
+  display: inline-block;
+
+  .rangeslider {
+    background: $slider-background-color;
+    display: block;
+    position: relative;
+  }
+
+  .rangeslider-fill {
+    background: $slider-fill-color;
+    display: block;
+    position: absolute;
+  }
+
+  .rangeslider-handle {
+    background: $slider-handle-color;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    position: absolute;
+    width: 20px;
+  }
+
+  .rangeslider-horizontal {
+    height: 20px;
+    width: 100%;
+
+    .rangeslider-fill {
+      height: 100%;
+      top: 0;
+    }
+
+    .rangeslider-handle {
+      touch-action: pan-y;
+    }
+  }
+
+  .rangeslider-vertical {
+    max-height: 100%;
+    min-height: 150px;
+    width: 20px;
+
+    .rangeslider-fill {
+      bottom: 0;
+      width: 100%;
+    }
+
+    .rangeslider-handle {
+      touch-action: pan-x;
+    }
+  }
+
+  &.no-value {
+    .rangeslider-fill,
+    .rangeslider-handle {
+      background: none;
+    }
+  } 
+
+}

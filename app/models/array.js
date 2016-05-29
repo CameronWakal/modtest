@@ -5,6 +5,11 @@ export default DS.Model.extend({
   
   length: DS.attr('number', {defaultValue:0}),
   items: DS.hasMany('arrayItem'),
+
+  valueMin: DS.attr('number', {defaultValue:0}),
+  valueMax: DS.attr('number', {defaultValue:127}),
+  valueStep: DS.attr('number', {defaultValue:1}),
+
   currentItem: DS.belongsTo('arrayItem', {async:false}),
   module: DS.belongsTo('module', {async:false, polymorphic:true}),
 
@@ -30,13 +35,17 @@ export default DS.Model.extend({
 
   incrementAll() {
     this.get('items').forEach(item=>{
-      item.set('value', item.get('value')+1);
+      if(item.get('value') != null) {
+        item.set('value', item.get('value')+1);
+      }
     });
   },
 
   decrementAll() {
     this.get('items').forEach(item=>{
-      item.set('value', item.get('value')-1);
+      if(item.get('value') != null) {
+        item.set('value', item.get('value')-1);
+      }
     });
   },
 
