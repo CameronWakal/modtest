@@ -8,20 +8,21 @@ $app-bgcolor: $darkcolor;
 
 $module-bgcolor: rgba($darkcolor, 0.75);
 $module-borderradius: 3px;
-$module-bordercolor: $midcolor;
+$module-bordercolor: rgba($midcolor, 0.25);
 $module-labelcolor: rgba($lightcolor, 0.5);
-$module-bordercolor-secondary: rgba($lightcolor, 0.25);
 
 $input-borderradius: 3px;
-$input-bordercolor: $module-bordercolor;
-$input-dividercolor: $module-bordercolor-secondary;
+$input-bordercolor: rgba($lightcolor, 0.33);
+$input-dividercolor: $module-bordercolor;
 $input-textcolor: $module-labelcolor;
 $input-focus-bordercolor: $lightcolor;
 $input-current-bgcolor: $input-bordercolor;
 
+$fader-bordercolor: $module-bordercolor;
+
 $port-off-bgcolor: rgba($lightcolor, .15);
 $port-on-bgcolor: rgba($lightcolor, .30);
-$port-off-textcolor: $midcolor;
+$port-off-textcolor: $module-labelcolor;
 $eventport-on-textcolor: $accentcolor1;
 $valueport-on-textcolor: $accentcolor2;
 $port-connecting-color: rgba($lightcolor, .60);
