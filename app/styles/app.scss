@@ -1,4 +1,4 @@
-$darkcolor: hsla(192, 70%, 10%, 1);
+$darkcolor: hsla(198, 65%, 8%, 1);
 $lightcolor: lighten($darkcolor, 80%);
 $midcolor: desaturate(lighten($darkcolor, 25%), 50%);
 $accentcolor1: complement(lighten($darkcolor, 60%));
@@ -7,7 +7,7 @@ $accentcolor2: adjust-hue(desaturate(lighten($darkcolor, 50%), 15%), -45deg);
 $app-bgcolor: $darkcolor;
 
 $module-bgcolor: rgba($darkcolor, 0.75);
-$module-borderradius: 4px;
+$module-borderradius: 3px;
 $module-bordercolor: $midcolor;
 $module-labelcolor: rgba($lightcolor, 0.5);
 $module-bordercolor-secondary: rgba($lightcolor, 0.25);
