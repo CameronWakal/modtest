@@ -1,14 +1,33 @@
 $slider-background-color: #e6e6e6;
-$slider-fill-color: #0f0;
-$slider-handle-color: #fff;
+$slider-fill-color: rgba($midcolor, 0.1);
+$slider-handle-color: $midcolor;
 
 .value-input-fader {
   display: inline-block;
 
   .rangeslider {
-    background: $slider-background-color;
+    //background: $slider-background-color;
     display: block;
     position: relative;
+    border-radius: $input-borderradius;
+    border: 1px solid $input-bordercolor;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+    padding: 1px 1px 1px 0;
+  }
+
+  &:first-child .rangeslider {
+    border-bottom-left-radius: $input-borderradius;
+    border-top-left-radius: $input-borderradius;
+    border-left: 1px solid $input-bordercolor;
+  }
+
+  &:last-child .rangeslider {
+    border-bottom-right-radius: $input-borderradius;
+    border-top-right-radius: $input-borderradius;
+    border-right: 1px solid $input-bordercolor;
+    padding-right: 0;
   }
 
   .rangeslider-fill {
@@ -18,12 +37,13 @@ $slider-handle-color: #fff;
   }
 
   .rangeslider-handle {
-    background: $slider-handle-color;
+    //background: $slider-handle-color;
+    border-top: 2px solid $slider-handle-color;
     cursor: pointer;
     display: inline-block;
-    height: 20px;
+    height: 5px;
     position: absolute;
-    width: 20px;
+    width: 1.75rem;
   }
 
   .rangeslider-horizontal {
@@ -43,11 +63,11 @@ $slider-handle-color: #fff;
   .rangeslider-vertical {
     max-height: 100%;
     min-height: 150px;
-    width: 20px;
+    width: 1.75rem;
 
     .rangeslider-fill {
       bottom: 0;
-      width: 100%;
+      width: 1.75rem;
     }
 
     .rangeslider-handle {
@@ -59,6 +79,10 @@ $slider-handle-color: #fff;
     .rangeslider-fill,
     .rangeslider-handle {
       background: none;
+    }
+
+    .rangeslider-handle {
+      border-top: none;
     }
   } 
 

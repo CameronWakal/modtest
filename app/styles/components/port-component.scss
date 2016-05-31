@@ -1,5 +1,5 @@
 .port {
-  background: $port-off-bgcolor;
+  //background: $port-off-bgcolor;
   color: $port-off-textcolor;
   cursor: pointer;
   display: inline-block;
@@ -15,10 +15,14 @@
     outline: none;
   }
 
-  &.connected {
-    background: $port-on-bgcolor;
-    color: $darkcolor;
-  }
+}
+
+.port-event.connected {
+  color: $eventport-on-textcolor;
+}
+
+.port-value.connected {
+  color: $valueport-on-textcolor;
 }
 
 .new-connection .port {

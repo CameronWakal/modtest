@@ -149,8 +149,9 @@ export default Ember.Component.extend({
   //draw connections between ports,
   //draw line from new connection port to cursor position
   drawConnections(event) {
-    const normalLineColor = 'rgba(255,255,255,0.4)';
-    const selectedLineColor = 'white';
+    const eventLineColor = '#e8927d';
+    const valueLineColor = '#61d193';
+    const selectedLineColor = '#d4f0f7';
 
     let newPort = this.get('newConnectionFrom');
 
@@ -173,11 +174,15 @@ export default Ember.Component.extend({
       ctx.beginPath();
       ctx.moveTo(startX, startY);
       ctx.lineTo(endX, endY);
-      ctx.strokeStyle = normalLineColor;
       ctx.lineWidth = 1;
+      if(con.inPort.get('type') === 'port-event-in' || con.inPort.get('type') === 'port-event-out') {
+        ctx.strokeStyle = eventLineColor;
+      } else {
+        ctx.strokeStyle = valueLineColor;
+      }
       if(newPort) {
         //style for other connections when a new connection is being made
-        ctx.strokeStyle = normalLineColor;
+        //ctx.strokeStyle = normalLineColor;
       } else if (index === this.get('selectedConnectionIndex')) {
         //style for a selected connection
         ctx.strokeStyle = selectedLineColor;
