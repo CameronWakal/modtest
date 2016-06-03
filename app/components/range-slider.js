@@ -18,6 +18,11 @@ export default XRangeInputComponent.extend({
     });
   }),
 
+  onDisplayScaleChanged: Ember.observer('displayScale', function() {
+    //in the case of the new height, the update delay doesn't seem to be required.
+    this.$().rangeslider('update', true);
+  }),
+
   onValueChanged: Ember.observer('value', function(){
     this.$().val(this.get('value')).change();
   }),

@@ -28,14 +28,16 @@
   }
 
   &.current {
-    //background: $input-current-bgcolor;
-    //border: 1px solid rgba(87, 255, 168, 1);
-    //border-right: 0;
-    color: $lightcolor;
-    text-decoration: underline;
+    border: 1px solid $accentcolor2;
+    border-right: 0;
+    color: $accentcolor2;
+
+    & + .value-array-input-number {
+      border-left: 1px solid $accentcolor2;
+    }
 
     &:last-child {
-      //border-right: 1px solid rgba($lightcolor, 0);
+      border-right: 1px solid $accentcolor2;
     }
 
     &:focus {

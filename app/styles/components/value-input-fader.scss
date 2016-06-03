@@ -1,6 +1,6 @@
 $slider-background-color: #e6e6e6;
 $slider-fill-color: rgba($midcolor, 0.1);
-$slider-handle-color: $midcolor;
+$slider-handle-color: rgba($midcolor, 0.5);
 
 .value-input-fader {
   display: inline-block;
@@ -42,11 +42,15 @@ $slider-handle-color: $midcolor;
     //border-top: 2px solid $slider-handle-color;
     cursor: pointer;
     display: inline-block;
-    height: 5px;
+    min-height: 5px;
     position: absolute;
     width: 89%;
     margin: 0 6%;
     border-radius: 2px;
+  }
+
+  &.current .rangeslider-handle {
+    background: $accentcolor2;
   }
 
   .rangeslider-horizontal {
@@ -64,12 +68,11 @@ $slider-handle-color: $midcolor;
   }
 
   .rangeslider-vertical {
-    max-height: 100%;
-    min-height: 150px;
+    height: 100%;
     width: 1.75rem;
 
     .rangeslider-fill {
-      bottom: 0;
+      height: 100%;
       width: 1.75rem;
     }
 
