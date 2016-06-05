@@ -1,12 +1,11 @@
 $slider-background-color: #e6e6e6;
 $slider-fill-color: rgba($midcolor, 0.1);
-$slider-handle-color: rgba($midcolor, 0.5);
 
 .value-input-fader {
   display: inline-block;
 
   .rangeslider {
-    background: rgba($fader-bordercolor, 0.1);
+    background: $fader-bgcolor;
     display: block;
     position: relative;
     border-radius: $input-borderradius;

@@ -1,9 +1,10 @@
 import Ember from 'ember';
 import ModuleGenericComponent from '../module/component';
 
-//todo: computed properties, getters and setters to be more emberlike
-
 export default ModuleGenericComponent.extend({
+
+  classNames: ['module-clock'],
+  classNameBindings: ['isStarted:started'],
 
   isStarted: Ember.computed.alias('module.isStarted'),
 

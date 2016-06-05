@@ -1,5 +1,4 @@
 .port {
-  //background: $port-off-bgcolor;
   color: $port-off-textcolor;
   cursor: pointer;
   display: inline-block;
@@ -25,17 +24,20 @@
   color: $valueport-on-textcolor;
 }
 
-.new-connection .port {
-  background-color: $port-off-bgcolor;
-  color: $port-off-textcolor;
-  cursor: default;
-
-  &.connecting-from {
-    background-color: $port-connecting-color;
-    color: $darkcolor;
+.new-connection {
+  .port {
+    color: $port-off-textcolor;
+    cursor: default;
   }
 
-}
+  .port-event.connecting-from {
+    color: $accentcolor1;
+  }
+
+  .port-value.connecting-from {
+    color: $accentcolor2;
+  }
+} 
 
 .port-component-label,
 .port-component-type {
@@ -50,8 +52,13 @@
 .new-connection-from-port-event-out .port-event-in,
 .new-connection-from-port-value-in .port-value-out,
 .new-connection-from-port-value-out .port-value-in {
-  background-color: $port-connecting-color;
-  color: $darkcolor;
-  cursor: pointer;
+  &.port-value {
+    color: $accentcolor2;
+    cursor: pointer;
+  }
+  &.port-event {
+    color: $accentcolor1;
+    cursor: pointer;
+  }
 }
 

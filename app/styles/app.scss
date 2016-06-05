@@ -19,6 +19,11 @@ $input-focus-bordercolor: $lightcolor;
 $input-current-bgcolor: $input-bordercolor;
 
 $fader-bordercolor: $module-bordercolor;
+$fader-bgcolor: rgba($fader-bordercolor, 0.1);
+$slider-handle-color: rgba($midcolor, 0.5);
+
+$button-borderradius: 3px;
+$button-color: $slider-handle-color;
 
 $port-off-bgcolor: rgba($lightcolor, .15);
 $port-on-bgcolor: rgba($lightcolor, .30);
@@ -40,6 +45,7 @@ $grey-inv: #555;
 
 @import 'components/port-component';
 @import 'components/module';
+@import 'components/module-clock';
 @import 'components/module-settings';
 @import 'components/value-input-number';
 @import 'components/value-array-input-number';
@@ -79,8 +85,27 @@ h6 {
 button {
   display: inline-block;
   height: 1.75rem;
-  margin: 0 .5rem .5rem 0;
+  margin: 0 0 0 .5rem;
   padding: .25rem .5rem;
+  background: $button-color;
+  border-radius: $button-borderradius;
+  color: $app-bgcolor;
+  border: none;
+  outline: none;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &:focus {
+    box-shadow: inset 0 0 0 1px $lightcolor;
+    color: $lightcolor;
+  }
+
+  &:active {
+    background: $lightcolor;
+    color: $app-bgcolor;
+  }
 }
 
 .app-header {
