@@ -8,6 +8,7 @@
   position: absolute;
   right: 0;
   width: 170px;
+  z-index: 300;
   
   &.empty {
     display: none;

@@ -11,7 +11,9 @@
   connectingFromPort=connectingFromPort
 }}
 
-{{module-settings module=selectedModule}}
+{{#ember-wormhole to="module-settings-container"}}
+  {{module-settings module=selectedModule}}
+{{/ember-wormhole}}
 
 <div class="modules" id="modules">
   {{#each patch.modules as |module|}}{{component  module.constructor.modelName
