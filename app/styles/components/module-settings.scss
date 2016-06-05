@@ -1,27 +1,14 @@
 .module-settings {
-  background: $darkcolor;
-  border-bottom-left-radius: $module-borderradius;
-  border-top-left-radius: $module-borderradius;
-  bottom: 3rem;
   color: $settings-mid-color;
-  padding: 1rem;
-  position: absolute;
-  right: 0;
-  width: 170px;
-  z-index: 300;
-  
-  &.empty {
-    display: none;
-  }
 
   h4 {
     line-height: 1.5rem;
-    padding: 0 .5rem;
+    padding: 0;
   }
 
   ul {
     margin: 0;
-    padding: 0 0 0 .5rem;
+    padding: 0;
   }
 
   li {

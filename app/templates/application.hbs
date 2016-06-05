@@ -1,4 +1,4 @@
-<header class="app-header">
+<div class="app-sidebar">
   <h1>Patches</h1>
   <ul class="patches-list">
     {{#each model as |patch index|}}<li>{{#link-to 'patch' patch}}
@@ -6,7 +6,7 @@
         {{/link-to}}</li>{{/each}}
   </ul>
   <button {{action 'newPatch'}}>Add</button><button {{action 'removeCurrentPatch'}}>Remove</button>
-</header>
-<div id="module-settings-container">
+  <div id="module-settings-container">
+  </div>
 </div>
 {{outlet}}

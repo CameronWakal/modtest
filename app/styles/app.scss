@@ -108,11 +108,17 @@ button {
   }
 }
 
-.app-header {
-  padding: .5rem .5rem 0;
-  position: relative;
+.app-sidebar {
+  padding: 0 1rem;
+  margin: 1rem 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 20rem;
   z-index: 100;
   color: $midcolor;
+  border-left: 1px solid $module-bordercolor;
 
   h1 {
     display: inline-block;
