@@ -1,17 +1,17 @@
 .port-setting {
   .setting-label {
-    color: $settings-mid-color;
+    color: $textcolor;
   }
 
   &.connected.enabled {
     .setting-label {
-      color: $settings-light-color;
+      color: $lightcolor;
     }
   }
 
   &.enabled {
     .setting-label {
-      color: $settings-mid-color;
+      color: $textcolor;
     }
   }
 }
