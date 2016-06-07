@@ -4,14 +4,17 @@
   }
 
   &.connected.enabled {
-    .setting-label {
-      color: $lightcolor;
+    &.event-port-setting {
+      .setting-label {
+        color: $accentcolor1;
+      }
+    }
+
+    &.value-port-setting {
+      .setting-label {
+        color: $accentcolor2;
+      }
     }
   }
 
-  &.enabled {
-    .setting-label {
-      color: $textcolor;
-    }
-  }
 }

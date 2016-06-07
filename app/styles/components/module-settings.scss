@@ -2,18 +2,33 @@
   color: $textcolor;
 
   h4 {
-    line-height: 1.75rem;
+    line-height: 2.25rem;
     padding: 0;
+    margin: 0;
     font-weight: 500;
+    color: $textcolor;
+    float: left;
+  }
+
+  h5 {
+    line-height: 2.25rem;
+    padding: 0;
+    margin: 0;
+    font-weight: 500;
+    float: right;
   }
 
   ul {
     margin: 0;
     padding: 0;
+    clear: both;
   }
 
   li {
     list-style-type: none;
+    text-align: right;
+    line-height: 2.25rem;
+    clear: both;
   }
 
   [type=checkbox] {
@@ -21,7 +36,19 @@
   }
 
   select {
-    margin: 0 0 .5rem;
+    margin: 0;
+    padding: 0 0.5rem;
+    background: none;
+    border: 1px solid $input-bordercolor;
+    -webkit-appearance: none;
+    border-radius: $input-borderradius;
+    color: $textcolor;
+    height: 1.75rem;
+    line-height: 1.75rem;
+  }
+
+  .setting-label {
+    float: left;
   }
 
 }

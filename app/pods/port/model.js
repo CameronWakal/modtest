@@ -21,6 +21,13 @@ export default DS.Model.extend({
     }
   }),
 
+  isValuePort: Ember.computed('type', function(){
+    return this.get('type') === 'port-value-in' || this.get('type') === 'port-value-out';
+  }),
+  isEventPort: Ember.computed('type', function(){
+    return this.get('type') === 'port-event-in' || this.get('type') === 'port-event-out';
+  }),
+
   isConnected: Ember.computed.bool('connections.length'),
 
   //remove all connections
