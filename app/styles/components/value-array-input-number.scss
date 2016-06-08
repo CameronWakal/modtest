@@ -1,7 +1,7 @@
 .value-array-input-number {
   border-radius: 0;
-  box-shadow: 1px 0 0 0 $input-dividercolor;
-  margin: 0 1px 0 0;
+  border-right: 0;
+
 
   &:first-child {
     border-bottom-left-radius: $input-borderradius;
@@ -10,30 +10,44 @@
 
   &:last-child {
     border-bottom-right-radius: $input-borderradius;
+    border-right: 1px solid $input-bordercolor;
     border-top-right-radius: $input-borderradius;
-    box-shadow: none;
-    margin-right: 0;
   }
 
   &:focus {
-    box-shadow: 1px 0 0 0 $input-dividercolor;
+    border: 1px solid $lightcolor;
+    border-right: 0;
 
     &:last-child {
-      box-shadow: none;
+      border-right: 1px solid $lightcolor;
+    }
+
+    + .value-array-input-number {
+      border-left: 1px solid $lightcolor;
     }
   }
 
   &.current {
-    box-shadow: 1px 0 0 0 $input-dividercolor,
-      0 3px 0 0 $darkcolor;
+    border: 1px solid $accentcolor2;
+    border-right: 0;
+    color: $accentcolor2;
+
+    + .value-array-input-number {
+      border-left: 1px solid $accentcolor2;
+    }
 
     &:last-child {
-      box-shadow: 0 3px 0 0 $darkcolor;
+      border-right: 1px solid $accentcolor2;
     }
 
     &:focus {
-      box-shadow: 1px 0 0 0 $input-dividercolor,
-        0 3px 0 0 $lightcolor;
+      background: $input-current-bgcolor;
+      border: 1px solid $lightcolor;
+      border-right: 0;
+    }
+
+    &:focus:last-child {
+      border-right: 1px solid $lightcolor;
     }
   }
 

@@ -1,26 +1,37 @@
 .module {
   background-color: $module-bgcolor;
+  border: 1px solid $module-bordercolor;
   border-radius: $module-borderradius;
-  color: $textgrey;
+  //box-shadow: inset 0 0 0 1px $module-bordercolor;
+  color: $module-labelcolor;
   display: inline-block;
   overflow: hidden;
   padding: 0;
   position: absolute;
 
   &:focus {
-    box-shadow: inset 0 0 0 2px $lightcolor;
+    border: 1px solid $lightcolor;
+    color: $lightcolor;
     outline: none;
   }
 
   h3 {
-    color: $lightcolor;
+    font-weight: 500;
     line-height: 1.75rem;
     margin: 0 .5rem;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .module-content {
     display: inline-block;
     margin: 0 .5rem .5rem;
+  }
+
+  .module-ports {
+    border-top: 1px solid $module-bordercolor;
   }
 
 }

@@ -1,53 +1,59 @@
 .port {
-  background: $port-off-bgcolor;
   color: $port-off-textcolor;
   cursor: pointer;
   display: inline-block;
-  margin: 0 0 0 1px;
-  padding: 0 .5rem;
+  margin: 0;
+  padding: 0 .5rem 0 0;
 
   &:first-child {
-    box-shadow: none;
-    margin: 0;
+    padding-left: .5rem;
   }
 
   &:focus {
     outline: none;
   }
 
-  &.connected {
-    background: $port-on-bgcolor;
-    color: $darkcolor;
-  }
 }
 
-.new-connection .port {
-  background-color: $port-off-bgcolor;
-  color: $port-off-textcolor;
-  cursor: default;
-
-  &.connecting-from {
-    background-color: $port-connecting-color;
-    color: $darkcolor;
-  }
-
+.port-event.connected {
+  color: $eventport-on-textcolor;
 }
 
-.port-component-label,
-.port-component-type {
+.port-value.connected {
+  color: $valueport-on-textcolor;
+}
+
+.new-connection {
+  .port {
+    color: $port-off-textcolor;
+    cursor: default;
+  }
+
+  .port-event.connecting-from {
+    color: $accentcolor1;
+  }
+
+  .port-value.connecting-from {
+    color: $accentcolor2;
+  }
+} 
+
+.port-component-label {
   line-height: 1.75rem;
-}
-
-.port-component-type {
-  letter-spacing: -1px;
 }
 
 .new-connection-from-port-event-in .port-event-out,
 .new-connection-from-port-event-out .port-event-in,
 .new-connection-from-port-value-in .port-value-out,
 .new-connection-from-port-value-out .port-value-in {
-  background-color: $port-connecting-color;
-  color: $darkcolor;
-  cursor: pointer;
+  &.port-value {
+    color: $accentcolor2;
+    cursor: pointer;
+  }
+  
+  &.port-event {
+    color: $accentcolor1;
+    cursor: pointer;
+  }
 }
 

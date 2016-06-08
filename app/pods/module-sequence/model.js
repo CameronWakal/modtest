@@ -8,6 +8,7 @@ export default Module.extend({
   steps: DS.belongsTo('array', {async: false}),
   trigOutPort: DS.belongsTo('port-event-out', {async:false}),
   inputType: DS.attr('string', {defaultValue:'Number'}),
+  displayScale: DS.attr('number', {defaultValue:1}),
 
   getValue() {
     return this.get('steps.currentItem.value');
@@ -54,6 +55,7 @@ export default Module.extend({
     this.addNumberSetting('Input Min', 'steps.valueMin', this);
     this.addNumberSetting('Input Max', 'steps.valueMax', this);
     this.addNumberSetting('Input Step', 'steps.valueStep', this);
+    this.addNumberSetting('Display Scale', 'displayScale', this);
 
     //create ports
     this.addEventInPort('inc', 'incrementStep', true);

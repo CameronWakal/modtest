@@ -5,7 +5,9 @@ export default Ember.Component.extend({
   classNames: ['port-setting'],
   classNameBindings: [
     'port.isConnected:connected', 
-    'port.isEnabled:enabled'
+    'port.isEnabled:enabled',
+    'port.isValuePort:value-port-setting',
+    'port.isEventPort:event-port-setting'
   ],
 
   portIsValueIn: Ember.computed.equal('port.type', 'port-value-in'),
@@ -14,13 +16,13 @@ export default Ember.Component.extend({
     let label = this.get('port.label');
     switch(type){
       case 'port-value-in':
-        return '> ' + label;
+        return '>' + label;
       case 'port-value-out':
-        return label + ' >';
+        return label + '>';
       case 'port-event-in':
-        return '-> ' + label;
+        return '->' + label;
       case 'port-event-out':
-        return label + ' ->';
+        return label + '->';
     }
   })
 });

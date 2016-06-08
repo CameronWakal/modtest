@@ -1,29 +1,22 @@
 .module-settings {
-  background: $darkcolor;
-  border-bottom-left-radius: $module-borderradius;
-  border-top-left-radius: $module-borderradius;
-  bottom: 3rem;
-  color: $settings-mid-color;
-  padding: 1rem;
-  position: absolute;
-  right: 0;
-  width: 170px;
-  
-  &.empty {
-    display: none;
-  }
+  color: $textcolor;
 
   h4 {
-    line-height: 1.5rem;
-    padding: 0 .5rem;
+    color: $textcolor;
+    font-weight: 500;
+    line-height: 2.25rem;
+    margin: 0;
+    padding: 0;
   }
 
   ul {
     margin: 0;
-    padding: 0 0 0 .5rem;
+    padding: 0;
   }
 
   li {
+    display: flex;
+    line-height: 2.25rem;
     list-style-type: none;
   }
 
@@ -32,7 +25,31 @@
   }
 
   select {
-    margin: 0 0 .5rem;
+    background: none;
+    border: 0;
+    color: $textcolor;
+    height: 1.75rem;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+  }
+
+  [type=text] {
+    align-self: center;
+  }
+
+  .setting-menu-wrapper {
+    align-self: center;
+    border: 1px solid $input-bordercolor;
+    border-radius: $input-borderradius;
+    display: inline-block;
+    flex: 0 0 auto;
+    height: 1.75rem;
+  }
+
+  .setting-label {
+    align-self: center;
+    flex: 1 0 auto;
   }
 
 }

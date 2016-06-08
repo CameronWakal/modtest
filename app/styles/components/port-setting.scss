@@ -1,17 +1,36 @@
 .port-setting {
-  .setting-label {
-    color: $settings-mid-color;
-  }
+  display: flex;
+  width: 100%;
 
-  &.connected.enabled {
-    .setting-label {
-      color: $settings-light-color;
+  .setting-label {
+    color: $textcolor;
+    flex: 1 0 auto;
+    text-decoration: line-through;
+
+    &:hover {
+      cursor: pointer;
     }
   }
 
-  &.enabled {
-    .setting-label {
-      color: $settings-mid-color;
+  [type='checkbox'] {
+    display: none;
+  }
+
+  [type='text'] {
+    flex: 0 0 auto;
+  }
+
+  &.enabled .setting-label {
+    text-decoration: none;
+  }
+
+  &.enabled.connected {
+    &.event-port-setting .setting-label {
+      color: $accentcolor1;
+    }
+
+    &.value-port-setting .setting-label {
+      color: $accentcolor2;
     }
   }
 }
