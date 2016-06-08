@@ -1,20 +1,36 @@
 .port-setting {
+  display: flex;
+  width: 100%;
+
   .setting-label {
     color: $textcolor;
-  }
+    flex: 1 0 auto;
+    text-decoration: line-through;
 
-  &.connected.enabled {
-    &.event-port-setting {
-      .setting-label {
-        color: $accentcolor1;
-      }
-    }
-
-    &.value-port-setting {
-      .setting-label {
-        color: $accentcolor2;
-      }
+    &:hover {
+      cursor: pointer;
     }
   }
 
+  [type='checkbox'] {
+    display: none;
+  }
+
+  [type='text'] {
+    flex: 0 0 auto;
+  }
+
+  &.enabled .setting-label {
+    text-decoration: none;
+  }
+
+  &.enabled.connected {
+    &.event-port-setting .setting-label {
+      color: $accentcolor1;
+    }
+
+    &.value-port-setting .setting-label {
+      color: $accentcolor2;
+    }
+  }
 }

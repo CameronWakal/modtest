@@ -10,19 +10,19 @@
 
   &:last-child {
     border-bottom-right-radius: $input-borderradius;
-    border-top-right-radius: $input-borderradius;
     border-right: 1px solid $input-bordercolor;
+    border-top-right-radius: $input-borderradius;
   }
 
   &:focus {
     border: 1px solid $lightcolor;
-    border-right: none;
+    border-right: 0;
 
     &:last-child {
       border-right: 1px solid $lightcolor;
     }
 
-    & + .value-array-input-number {
+    + .value-array-input-number {
       border-left: 1px solid $lightcolor;
     }
   }
@@ -32,7 +32,7 @@
     border-right: 0;
     color: $accentcolor2;
 
-    & + .value-array-input-number {
+    + .value-array-input-number {
       border-left: 1px solid $accentcolor2;
     }
 
@@ -41,13 +41,13 @@
     }
 
     &:focus {
+      background: $input-current-bgcolor;
       border: 1px solid $lightcolor;
       border-right: 0;
-      background: $input-current-bgcolor;
+    }
 
-      &:last-child {
-        border-right: 1px solid $lightcolor;
-      }
+    &:focus:last-child {
+      border-right: 1px solid $lightcolor;
     }
   }
 

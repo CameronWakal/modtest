@@ -9,7 +9,7 @@
               {{#if setting.isNumber}}
                 {{value-input-number boundValue=setting.value}}
               {{else}}
-                {{select-menu setting=setting}}
+                <div class="setting-menu-wrapper">{{select-menu setting=setting}}</div>
               {{/if}}
           </li>
         {{/each}}

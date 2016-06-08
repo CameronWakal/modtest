@@ -1,51 +1,45 @@
 $slider-background-color: #e6e6e6;
-$slider-fill-color: rgba($midcolor, 0.1);
+$slider-fill-color: rgba($midcolor, .1);
 
 .value-input-fader {
   display: inline-block;
 
   .rangeslider {
     background: $fader-bgcolor;
-    display: block;
-    position: relative;
-    border-radius: $input-borderradius;
-    //border: 1px solid $fader-bordercolor;
-    border-right: 0;
     border-left: 0;
     border-radius: 0;
-    padding: 0;
+    border-right: 0;
+    display: block;
     margin: 0 0 0 1px;
+    padding: 0;
+    position: relative;
   }
 
   &:first-child .rangeslider {
     border-bottom-left-radius: $input-borderradius;
     border-top-left-radius: $input-borderradius;
-    //border-left: 1px solid $fader-bordercolor;
   }
 
   &:last-child .rangeslider {
     border-bottom-right-radius: $input-borderradius;
     border-top-right-radius: $input-borderradius;
-    //border-right: 1px solid $fader-bordercolor;
     padding-right: 0;
   }
 
   .rangeslider-fill {
-    //background: $slider-fill-color;
     display: block;
     position: absolute;
   }
 
   .rangeslider-handle {
     background: $slider-handle-color;
-    //border-top: 2px solid $slider-handle-color;
+    border-radius: 2px;
     cursor: pointer;
     display: inline-block;
+    margin: 0 6%;
     min-height: 5px;
     position: absolute;
     width: 89%;
-    margin: 0 6%;
-    border-radius: 2px;
   }
 
   &.current .rangeslider-handle {
@@ -87,7 +81,7 @@ $slider-fill-color: rgba($midcolor, 0.1);
     }
 
     .rangeslider-handle {
-      border-top: none;
+      border-top: 0;
     }
   } 
 

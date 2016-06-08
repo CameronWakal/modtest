@@ -8,21 +8,19 @@
     }
   }
 
-  &.started {
-    .button-stop {
-      background: $button-color;
+  &.started .button-stop {
+    background: $button-color;
 
-      &:active {
-        background: $lightcolor;
-      }
+    &:active {
+      background: $lightcolor;
     }
+  }
 
-    .button-start {
-      background: $accentcolor1;
+  &.started .button-start {
+    background: $accentcolor1;
 
-      &:active {
-        background: $lightcolor;
-      }
+    &:active {
+      background: $lightcolor;
     }
   }
 }

@@ -2,33 +2,22 @@
   color: $textcolor;
 
   h4 {
-    line-height: 2.25rem;
-    padding: 0;
-    margin: 0;
-    font-weight: 500;
     color: $textcolor;
-    float: left;
-  }
-
-  h5 {
-    line-height: 2.25rem;
-    padding: 0;
-    margin: 0;
     font-weight: 500;
-    float: right;
+    line-height: 2.25rem;
+    margin: 0;
+    padding: 0;
   }
 
   ul {
     margin: 0;
     padding: 0;
-    clear: both;
   }
 
   li {
-    list-style-type: none;
-    text-align: right;
+    display: flex;
     line-height: 2.25rem;
-    clear: both;
+    list-style-type: none;
   }
 
   [type=checkbox] {
@@ -36,19 +25,31 @@
   }
 
   select {
-    margin: 0;
-    padding: 0 0.5rem;
     background: none;
-    border: 1px solid $input-bordercolor;
-    -webkit-appearance: none;
-    border-radius: $input-borderradius;
+    border: 0;
     color: $textcolor;
     height: 1.75rem;
-    line-height: 1.75rem;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+  }
+
+  [type=text] {
+    align-self: center;
+  }
+
+  .setting-menu-wrapper {
+    align-self: center;
+    border: 1px solid $input-bordercolor;
+    border-radius: $input-borderradius;
+    display: inline-block;
+    flex: 0 0 auto;
+    height: 1.75rem;
   }
 
   .setting-label {
-    float: left;
+    align-self: center;
+    flex: 1 0 auto;
   }
 
 }
