@@ -1,0 +1,46 @@
+$toggle-borderradius: 2px;
+$toggle-inset: 6px;
+$toggle-accent-inset: 3px;
+
+.value-array-input-button {
+
+  border-radius: 0;
+  margin-left: 1px;
+  width: 1.75rem;
+  padding: 0;
+  position: relative;
+  background: $fader-bgcolor;
+
+  &:first-child {
+    border-bottom-left-radius: $input-borderradius;
+    border-top-left-radius: $input-borderradius;
+  }
+
+  &:last-child {
+    border-bottom-right-radius: $input-borderradius;
+    border-top-right-radius: $input-borderradius;
+  }
+
+  &.on::before { 
+    content: '-';
+    background: $slider-handle-color;
+    color: $transparent;
+    position: absolute;
+    top: $toggle-inset;
+    left: $toggle-inset;
+    bottom: $toggle-inset;
+    right: $toggle-inset;
+    border-radius: $toggle-borderradius;
+  }
+
+  &.accent::before {
+    top: $toggle-accent-inset;
+    bottom: $toggle-accent-inset;
+    left: $toggle-accent-inset;
+    right: $toggle-accent-inset;
+  }
+
+  &.current.on::before {
+    background: $accentcolor2;
+  }
+}
