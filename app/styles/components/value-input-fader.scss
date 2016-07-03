@@ -15,6 +15,10 @@ $slider-fill-color: rgba($midcolor, .1);
     position: relative;
   }
 
+  &.current .rangeslider {
+    background: rgba($fader-bordercolor, 0.15);
+  }
+
   &:first-child .rangeslider {
     border-bottom-left-radius: $input-borderradius;
     border-top-left-radius: $input-borderradius;

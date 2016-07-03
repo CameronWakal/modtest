@@ -55,7 +55,7 @@ export default Module.extend({
     //let notePort = this.get('ports').findBy('label', 'note');
     let noteValue = this.get('noteInPort').getValue();
     if(noteValue != null) {
-      this.get('midi').sendNote(noteValue,127,200,event.outputTime);
+      this.get('midi').sendNote(noteValue,127,1,event.outputTime);
     }
 
   },

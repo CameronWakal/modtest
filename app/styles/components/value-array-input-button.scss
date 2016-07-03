@@ -11,6 +11,10 @@ $toggle-accent-inset: 3px;
   position: relative;
   background: $fader-bgcolor;
 
+  &.current {
+    background: rgba($fader-bordercolor, 0.15);
+  }
+
   &:first-child {
     border-bottom-left-radius: $input-borderradius;
     border-top-left-radius: $input-borderradius;
