@@ -48,7 +48,7 @@ export default Module.extend({
     this.set('steps.length', 8);
 
     //create settings
-    this.addMenuSetting('Input Type', 'inputType', this, ['Number', 'Slider', 'Both']);
+    this.addMenuSetting('Input Type', 'inputType', this, ['Number', 'Slider', 'Both', 'Button']);
 
     //todo: make config option for settings that must have a non-null numeric value
     this.addNumberSetting('Length', 'steps.length', this);

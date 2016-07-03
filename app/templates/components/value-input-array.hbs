@@ -24,3 +24,14 @@
     {{/each}}
   </div>
 {{/if}}
+{{#if isTypeButton}}
+  <div class="value-input-array-buttons">
+    {{#each array.items as |item|}}
+      {{~value-array-input-button 
+        item=item 
+        min=array.valueMin
+        max=array.valueMax
+      ~}}
+    {{/each}}
+  </div>
+{{/if}}

@@ -1,3 +1,4 @@
+$transparent: rgba(0, 0, 0, 0);
 $darkcolor: hsla(198, 65%, 8%, 1);
 $lightcolor: lighten($darkcolor, 80%);
 $midcolor: desaturate(lighten($darkcolor, 25%), 50%);
@@ -47,6 +48,7 @@ $grey-inv: #555;
 @import 'components/module-settings';
 @import 'components/value-input-number';
 @import 'components/value-array-input-number';
+@import 'components/value-array-input-button';
 @import 'components/value-input-fader';
 @import 'components/value-input-numberfader';
 @import 'components/patch-diagram';
