@@ -9,6 +9,7 @@ export default Module.extend({
   midi: Ember.inject.service(),
 
   noteInPort: DS.belongsTo('port-value-in', {async:false}),
+  velInPort: DS.belongsTo('port-value-in', {async:false}),
 
   events: [],
 
@@ -54,8 +55,9 @@ export default Module.extend({
     //check the connection of the 'note' port for the value of the note to play.
     //let notePort = this.get('ports').findBy('label', 'note');
     let noteValue = this.get('noteInPort').getValue();
+    let velValue = this.get('velInPort').getValue();
     if(noteValue != null) {
-      this.get('midi').sendNote(noteValue,127,1,event.outputTime);
+      this.get('midi').sendNote(noteValue,velValue,20,event.outputTime);
     }
 
   },
@@ -64,6 +66,7 @@ export default Module.extend({
     //create ports
     this.addEventInPort('trig', 'sendEvent', true);
     this.addValueInPort('note', 'noteInPort', true);
+    this.addValueInPort('vel', 'velInPort', true);
     this.save();
   },
 
