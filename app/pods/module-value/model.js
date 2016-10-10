@@ -3,6 +3,7 @@ import Module from '../module/model';
 
 export default Module.extend({
   
+  type: 'module-value', //modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   label: 'Value', 
   value: DS.attr('number'),
 

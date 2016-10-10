@@ -1,5 +1,5 @@
 <div class="module-ports">{{#each module.enabledPorts as |port|}}{{component 
-  port.constructor.modelName 
+  port.type 
   port=port 
   startedConnecting=(action 'portStartedConnecting' port)
   finishedConnecting=(action 'portFinishedConnecting')

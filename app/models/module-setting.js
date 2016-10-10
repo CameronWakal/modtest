@@ -4,7 +4,7 @@ import DS from 'ember-data';
 export default DS.Model.extend({
   
   label: DS.attr('string'),
-  type: Ember.computed.alias('constructor.modelName'),
+  type: 'module-setting', //modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   module: DS.belongsTo('module', {async:false, polymorphic:true}),
   isNumber: Ember.computed.equal('type','module-setting'),
 

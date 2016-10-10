@@ -3,6 +3,7 @@ import Ember from 'ember';
 
 export default DS.Model.extend({
 
+  type: 'module', //modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   label: null,
   settings: DS.hasMany('module-setting', {polymorphic:true}),
 

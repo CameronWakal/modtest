@@ -3,6 +3,7 @@ import Module from '../module/model';
 
 export default Module.extend({
   
+  type: 'module-maybe', //modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   label: 'Maybe', 
 
   eventInPort: DS.belongsTo('port-event-in', {async: false} ),

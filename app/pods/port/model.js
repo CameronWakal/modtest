@@ -10,10 +10,10 @@ export default DS.Model.extend({
     return 'port-'+this.id;
   }),
   
-  type: Ember.computed.alias('constructor.modelName'),
+  type: 'port', //modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
 
   compatibleType: Ember.computed(function() {
-    switch(this.constructor.modelName) {
+    switch(this.get('type')) {
       case 'port-value-in': return 'port-value-out';
       case 'port-value-out': return 'port-value-in';
       case 'port-event-out': return 'port-event-in';

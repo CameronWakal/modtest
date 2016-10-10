@@ -4,6 +4,7 @@ import DS from 'ember-data';
 
 export default Module.extend({
 
+  type: 'module-clock-div', //modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   label: 'Clock Div',
 
   // receives input events and sends an output on the first event, and then every nth event after,

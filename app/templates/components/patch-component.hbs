@@ -16,7 +16,7 @@
 {{/ember-wormhole}}
 
 <div class="modules" id="modules">
-  {{#each patch.modules as |module|}}{{component  module.constructor.modelName
+  {{#each patch.modules as |module|}}{{component  module.type
                                                   module=module 
                                                   remove=(action 'removeModule' module) 
                                                   selected=(action 'moduleSelected' module)
