@@ -17,7 +17,7 @@ export default Ember.Component.extend({
 
   inlineStyles: Ember.computed('xPos', 'yPos', function(){
     let styleString = 'left:'+this.get('xPos')+'px;'+'top:'+this.get('yPos')+'px';
-    return new Ember.Handlebars.SafeString(styleString);
+    return new Ember.String.htmlSafe(styleString);
   }),
   
   mouseDown(event) {
