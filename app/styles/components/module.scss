@@ -1,8 +1,7 @@
 .module {
-  background-color: $module-bgcolor;
-  border: 1px solid $module-bordercolor;
+  background-color: rgba($color-neutral-dark, .75);
+  border: 1px solid $color-border;
   border-radius: $module-borderradius;
-  //box-shadow: inset 0 0 0 1px $module-bordercolor;
   color: $module-labelcolor;
   display: inline-block;
   overflow: hidden;
@@ -10,8 +9,8 @@
   position: absolute;
 
   &:focus {
-    border: 1px solid $lightcolor;
-    color: $lightcolor;
+    border: 1px solid $color-neutral-bright;
+    color: $color-neutral-bright;
     outline: none;
   }
 
@@ -31,7 +30,7 @@
   }
 
   .module-ports {
-    border-top: 1px solid $module-bordercolor;
+    border-top: 1px solid $color-border;
   }
 
 }

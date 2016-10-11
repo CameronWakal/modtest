@@ -1,26 +1,26 @@
 .module-clock {
 
   .button-stop {
-    background: $accentcolor1;
+    background: $color-cool-bright;
 
     &:active {
-      background: $lightcolor;
+      background: $color-neutral-bright;
     }
   }
 
   &.started .button-stop {
-    background: $button-color;
+    background: $color-button;
 
     &:active {
-      background: $lightcolor;
+      background: $color-neutral-bright;
     }
   }
 
   &.started .button-start {
-    background: $accentcolor1;
+    background: $color-cool-bright;
 
     &:active {
-      background: $lightcolor;
+      background: $color-neutral-bright;
     }
   }
 }

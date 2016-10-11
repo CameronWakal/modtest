@@ -12,14 +12,14 @@
   width: 1.75rem;
 
   &.pending:focus {
-    text-shadow: 0 0 0 rgba($lightcolor, .5);
+    text-shadow: 0 0 0 rgba($color-neutral-bright, .5);
   }
 
   &:focus {
-    background: $darkcolor;
-    color: rgba($lightcolor, .25);
+    background: $color-neutral-dark;
+    color: rgba($color-neutral-bright, .25);
     outline: none;
-    text-shadow: 0 0 0 $lightcolor;
+    text-shadow: 0 0 0 $color-neutral-bright;
   }
 
   &::selection {

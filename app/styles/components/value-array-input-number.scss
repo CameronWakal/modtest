@@ -14,39 +14,39 @@
   }
 
   &:focus {
-    border: 1px solid $lightcolor;
+    border: 1px solid $color-neutral-bright;
     border-right: 0;
 
     &:last-child {
-      border-right: 1px solid $lightcolor;
+      border-right: 1px solid $color-neutral-bright;
     }
 
     + .value-array-input-number {
-      border-left: 1px solid $lightcolor;
+      border-left: 1px solid $color-neutral-bright;
     }
   }
 
   &.current {
-    border: 1px solid $accentcolor2;
+    border: 1px solid $color-warm-bright;
     border-right: 0;
-    color: $accentcolor2;
+    color: $color-warm-bright;
 
     + .value-array-input-number {
-      border-left: 1px solid $accentcolor2;
+      border-left: 1px solid $color-warm-bright;
     }
 
     &:last-child {
-      border-right: 1px solid $accentcolor2;
+      border-right: 1px solid $color-warm-bright;
     }
 
     &:focus {
       background: $input-current-bgcolor;
-      border: 1px solid $lightcolor;
+      border: 1px solid $color-neutral-bright;
       border-right: 0;
     }
 
     &:focus:last-child {
-      border-right: 1px solid $lightcolor;
+      border-right: 1px solid $color-neutral-bright;
     }
   }
 

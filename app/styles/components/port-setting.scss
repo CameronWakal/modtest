@@ -26,11 +26,11 @@
 
   &.enabled.connected {
     &.event-port-setting .setting-label {
-      color: $accentcolor1;
+      color: $color-cool-bright;
     }
 
     &.value-port-setting .setting-label {
-      color: $accentcolor2;
+      color: $color-warm-bright;
     }
   }
 }

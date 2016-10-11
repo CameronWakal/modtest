@@ -12,7 +12,7 @@ $toggle-accent-inset: 3px;
   background: $fader-bgcolor;
 
   &.current {
-    background: rgba($fader-bordercolor, 0.15);
+    background: rgba($color-neutral-dim, 0.15);
   }
 
   &:first-child {
@@ -27,7 +27,7 @@ $toggle-accent-inset: 3px;
 
   &.on::before { 
     content: '-';
-    background: $slider-handle-color;
+    background: $color-button;
     color: $transparent;
     position: absolute;
     top: $toggle-inset;
@@ -45,6 +45,6 @@ $toggle-accent-inset: 3px;
   }
 
   &.current.on::before {
-    background: $accentcolor2;
+    background: $color-warm-bright;
   }
 }

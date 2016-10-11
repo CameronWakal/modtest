@@ -1,47 +1,8 @@
-$transparent: rgba(0, 0, 0, 0);
-$darkcolor: hsla(198, 65%, 8%, 1);
-$lightcolor: lighten($darkcolor, 80%);
-$midcolor: desaturate(lighten($darkcolor, 25%), 50%);
-$accentcolor1: complement(lighten($darkcolor, 60%));
-$accentcolor2: adjust-hue(desaturate(lighten($darkcolor, 50%), 15%), -45deg);
-
-$app-bgcolor: $darkcolor;
-$textcolor: rgba($lightcolor, .5);
-
-$module-bgcolor: rgba($darkcolor, .75);
 $module-borderradius: 3px;
-$module-bordercolor: rgba($midcolor, .25);
-$module-labelcolor: $textcolor;
-
 $input-borderradius: 3px;
-$input-bordercolor: rgba($lightcolor, .25);
-$input-dividercolor: $module-bordercolor;
-$input-textcolor: $module-labelcolor;
-$input-focus-bordercolor: $lightcolor;
-$input-current-bgcolor: $input-bordercolor;
-
-$fader-bordercolor: $module-bordercolor;
-$fader-bgcolor: rgba($fader-bordercolor, .1);
-$slider-handle-color: rgba($midcolor, .5);
-
 $button-borderradius: 3px;
-$button-color: $slider-handle-color;
 
-$port-off-bgcolor: rgba($lightcolor, .15);
-$port-on-bgcolor: rgba($lightcolor, .30);
-$port-off-textcolor: $module-labelcolor;
-$eventport-on-textcolor: $accentcolor1;
-$valueport-on-textcolor: $accentcolor2;
-$port-connecting-color: rgba($lightcolor, .60);
-
-$lightestgrey: #eee;
-$lightgrey: #ddd;
-$textgrey: #bbb;
-$red: #f00;
-
-$textgrey-inv: #999;
-$grey-inv: #555;
-
+@import 'colors.scss';
 @import 'components/port-component';
 @import 'components/module';
 @import 'components/module-clock';
@@ -68,7 +29,7 @@ select {
 }
 
 body {
-  background: $app-bgcolor;
+  background: $color-neutral-dark;
   margin: 0;
   padding: 0;
 }
@@ -85,10 +46,10 @@ h6 {
 }
 
 button {
-  background: $button-color;
+  background: $color-button;
   border: 0;
   border-radius: $button-borderradius;
-  color: $app-bgcolor;
+  color: $color-neutral-dark;
   display: inline-block;
   height: 1.75rem;
   margin: 0 0 0 .5rem;
@@ -100,18 +61,17 @@ button {
   }
 
   &:focus {
-    box-shadow: inset 0 0 0 1px $lightcolor;
-    color: $lightcolor;
+    box-shadow: inset 0 0 0 1px $color-neutral-bright;
+    color: $color-neutral-bright;
   }
 
   &:active {
-    background: $lightcolor;
-    color: $app-bgcolor;
+    background: $color-neutral-bright;
+    color: $color-neutral-dark;
   }
 }
 
 .app-sidebar {
-  //border-left: 1px solid $module-bordercolor;
   bottom: 0;
   color: $textcolor;
   margin: 0;
@@ -139,7 +99,7 @@ button {
   }
 
   .app-sidebar-section {
-    border-bottom: 1px solid $module-bordercolor;
+    border-bottom: 1px solid $color-border;
     margin-bottom: .5rem;
     padding-bottom: .5rem;
   }
@@ -171,7 +131,7 @@ button {
     padding: 0;
 
     &.active {
-      color: $lightcolor;
+      color: $color-neutral-bright;
       text-decoration: none;
     }
 
