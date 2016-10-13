@@ -1,11 +1,8 @@
-$slider-background-color: #e6e6e6;
-$slider-fill-color: rgba($color-neutral-dim, .1);
-
 .value-input-fader {
   display: inline-block;
 
   .rangeslider {
-    background: $fader-bgcolor;
+    background: $color-control;
     border-left: 0;
     border-radius: 0;
     border-right: 0;
@@ -16,7 +13,7 @@ $slider-fill-color: rgba($color-neutral-dim, .1);
   }
 
   &.current .rangeslider {
-    background: rgba($color-neutral-dim, 0.15);
+    background: $color-control-current;
   }
 
   &:first-child .rangeslider {

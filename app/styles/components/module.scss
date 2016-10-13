@@ -1,8 +1,8 @@
 .module {
-  background-color: rgba($color-neutral-dark, .75);
+  background-color: $color-module-background;
   border: 1px solid $color-border;
   border-radius: $module-borderradius;
-  color: $module-labelcolor;
+  color: $color-text;
   display: inline-block;
   overflow: hidden;
   padding: 0;

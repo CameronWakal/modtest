@@ -1,8 +1,8 @@
 .module-settings {
-  color: $textcolor;
+  color: $color-text;
 
   h4 {
-    color: $textcolor;
+    color: $color-text;
     font-weight: 500;
     line-height: 2.25rem;
     margin: 0;
@@ -27,7 +27,7 @@
   select {
     background: none;
     border: 0;
-    color: $textcolor;
+    color: $color-text;
     height: 1.75rem;
     margin: 0;
     padding: 0;
@@ -40,7 +40,7 @@
 
   .setting-menu-wrapper {
     align-self: center;
-    border: 1px solid $input-bordercolor;
+    border: 1px solid $color-border-bright;
     border-radius: $input-borderradius;
     display: inline-block;
     flex: 0 0 auto;

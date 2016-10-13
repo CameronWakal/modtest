@@ -9,7 +9,7 @@
 
   &:last-child {
     border-bottom-right-radius: $input-borderradius;
-    border-right: 1px solid $input-bordercolor;
+    border-right: 1px solid $color-border-bright;
     border-top-right-radius: $input-borderradius;
   }
 
@@ -40,7 +40,7 @@
     }
 
     &:focus {
-      background: $input-current-bgcolor;
+      background: $color-border-bright;
       border: 1px solid $color-neutral-bright;
       border-right: 0;
     }

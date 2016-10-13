@@ -1,8 +1,8 @@
 .value-input-number {
   background: none;
-  border: 1px solid $input-bordercolor;
+  border: 1px solid $color-border-bright;
   border-radius: $input-borderradius;
-  color: $input-textcolor;
+  color: $color-text;
   display: inline-block;
   height: 1.75rem;
   margin: 0;
@@ -12,12 +12,13 @@
   width: 1.75rem;
 
   &.pending:focus {
-    text-shadow: 0 0 0 rgba($color-neutral-bright, .5);
+    text-shadow: 0 0 0 $color-text;
+    color: $transparent;
   }
 
   &:focus {
     background: $color-neutral-dark;
-    color: rgba($color-neutral-bright, .25);
+    color: $transparent;
     outline: none;
     text-shadow: 0 0 0 $color-neutral-bright;
   }
