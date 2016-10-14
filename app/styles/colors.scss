@@ -1,4 +1,5 @@
 
+
 //BASE PALETTE
 $color-neutral-dark: hsla(198, 65%, 8%, 1);
 $color-neutral-dim: desaturate(lighten($color-neutral-dark, 25%), 50%);
@@ -6,11 +7,12 @@ $color-neutral-bright: lighten($color-neutral-dark, 80%);
 $color-cool-bright: complement(lighten($color-neutral-dark, 60%));
 $color-warm-bright: adjust-hue(desaturate(lighten($color-neutral-dark, 50%), 15%), -45deg);
 
+
 //ALPHA VARIANTS
-$transparent: rgba(0, 0, 0, 0);
+$color-transparent: rgba(0, 0, 0, 0);
 
 //dim border on modules, etc.
-$color-border: rgba($color-neutral-dim, .25);
+$color-border-dim: rgba($color-neutral-dim, .25);
 
 //normal border around input fields, etc.
 $color-border-bright: rgba($color-neutral-bright, .25);
@@ -25,7 +27,7 @@ $color-text: rgba($color-neutral-bright, .5);
 $color-control: rgba($color-neutral-dim, .1);
 
 //highlighted version for current control:
-$color-control-current: rgba($color-neutral-dim, 0.15);
+$color-control-current: rgba($color-neutral-dim, .15);
 
 //transparent module background:
 $color-module-background: rgba($color-neutral-dark, .75);

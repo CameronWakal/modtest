@@ -4,15 +4,19 @@ $toggle-accent-inset: 3px;
 
 .value-array-input-button {
 
+  background: $color-control;
   border-radius: 0;
   margin-left: 1px;
-  width: 1.75rem;
   padding: 0;
   position: relative;
-  background: $color-control;
+  width: 1.75rem;
 
   &.current {
     background: $color-control-current;
+
+    &.on::before {
+      background: $color-warm-bright;
+    }
   }
 
   &:first-child {
@@ -26,25 +30,21 @@ $toggle-accent-inset: 3px;
   }
 
   &.on::before { 
-    content: '-';
     background: $color-button;
-    color: $transparent;
-    position: absolute;
-    top: $toggle-inset;
-    left: $toggle-inset;
-    bottom: $toggle-inset;
-    right: $toggle-inset;
     border-radius: $toggle-borderradius;
+    bottom: $toggle-inset;
+    color: $color-transparent;
+    content: '-';
+    left: $toggle-inset;
+    position: absolute;
+    right: $toggle-inset;
+    top: $toggle-inset;
   }
 
   &.accent::before {
-    top: $toggle-accent-inset;
     bottom: $toggle-accent-inset;
     left: $toggle-accent-inset;
     right: $toggle-accent-inset;
-  }
-
-  &.current.on::before {
-    background: $color-warm-bright;
+    top: $toggle-accent-inset;
   }
 }

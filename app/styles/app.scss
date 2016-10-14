@@ -2,7 +2,7 @@ $module-borderradius: 3px;
 $input-borderradius: 3px;
 $button-borderradius: 3px;
 
-@import 'colors.scss';
+@import 'colors';
 @import 'components/port-component';
 @import 'components/module';
 @import 'components/module-clock';
@@ -99,7 +99,7 @@ button {
   }
 
   .app-sidebar-section {
-    border-bottom: 1px solid $color-border;
+    border-bottom: 1px solid $color-border-dim;
     margin-bottom: .5rem;
     padding-bottom: .5rem;
   }

@@ -1,6 +1,6 @@
 .module {
   background-color: $color-module-background;
-  border: 1px solid $color-border;
+  border: 1px solid $color-border-dim;
   border-radius: $module-borderradius;
   color: $color-text;
   display: inline-block;
@@ -30,7 +30,7 @@
   }
 
   .module-ports {
-    border-top: 1px solid $color-border;
+    border-top: 1px solid $color-border-dim;
   }
 
 }

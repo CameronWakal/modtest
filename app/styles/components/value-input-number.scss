@@ -12,19 +12,19 @@
   width: 1.75rem;
 
   &.pending:focus {
+    color: $color-transparent;
     text-shadow: 0 0 0 $color-text;
-    color: $transparent;
   }
 
   &:focus {
     background: $color-neutral-dark;
-    color: $transparent;
+    color: $color-transparent;
     outline: none;
     text-shadow: 0 0 0 $color-neutral-bright;
   }
 
   &::selection {
-    background-color: transparent;
+    background-color: $color-transparent;
   }
 
 }
