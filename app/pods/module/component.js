@@ -20,7 +20,7 @@ export default Ember.Component.extend({
     return new Ember.String.htmlSafe(styleString);
   }),
 
-  portsChanged: Ember.observer( 'module.ports.@each.isEnabled', function(){
+  onPortsChanged: Ember.observer( 'module.ports.@each.isEnabled', function(){
     this.sendAction('portsChanged');
   }),
   
