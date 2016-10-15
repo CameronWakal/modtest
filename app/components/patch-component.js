@@ -56,6 +56,10 @@ export default Ember.Component.extend({
       this.set('diagramNeedsUpdate', true);
     },
 
+    portsChanged(module) {
+      this.set('diagramNeedsUpdate', true);
+    },
+
     mouseEnterPort(toPort) {
       let fromPort = this.get('connectingFromPort');
       if(fromPort) { //we're dragging to create a new connection
@@ -72,7 +76,7 @@ export default Ember.Component.extend({
     },
 
     //diagram shit
-    
+
     diagramDidUpdate(){
       Ember.run.scheduleOnce('afterRender', this, function() {
         this.set('diagramNeedsUpdate', false);

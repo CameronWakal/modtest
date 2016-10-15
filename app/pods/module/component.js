@@ -19,6 +19,10 @@ export default Ember.Component.extend({
     let styleString = 'left:'+this.get('xPos')+'px;'+'top:'+this.get('yPos')+'px';
     return new Ember.String.htmlSafe(styleString);
   }),
+
+  portsChanged: Ember.observer( 'module.ports.@each.isEnabled', function(){
+    this.sendAction('portsChanged');
+  }),
   
   mouseDown(event) {
     if( Ember.$(event.target).hasClass('module') ||
