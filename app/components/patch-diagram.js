@@ -14,6 +14,7 @@ export default Ember.Component.extend({
 
   didInsertElement(){
       this.onPortsChanged();
+      Ember.$(window).on('resize', Ember.run.bind(this, this.drawConnections));
   },
 
   onMovingModuleChanged: Ember.observer('movingModule', function() {

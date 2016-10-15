@@ -56,11 +56,11 @@ export default Ember.Component.extend({
       this.set('diagramNeedsUpdate', true);
     },
 
-    modulePortsChanged(module) {
+    modulePortsChanged() {
       this.set('diagramNeedsUpdate', true);
     },
 
-    moduleContentChanged(module) {
+    moduleContentChanged() {
       this.set('diagramNeedsUpdate', true);
     },
 
