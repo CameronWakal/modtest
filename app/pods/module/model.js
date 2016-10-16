@@ -126,4 +126,8 @@ export default DS.Model.extend({
     }
   }),
 
+  saveLater() {
+    Ember.run.debounce(this, this.save, 1000);
+  },
+
 });

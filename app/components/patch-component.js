@@ -106,9 +106,9 @@ export default Ember.Component.extend({
 
     removeConnection(sourcePort, destPort) {      
       sourcePort.get('connections').removeObject(destPort);
-      sourcePort.get('module').save();
+      sourcePort.get('module').saveLater();
       destPort.get('connections').removeObject(sourcePort);
-      destPort.get('module').save();
+      destPort.get('module').saveLater();
 
       this.set('diagramNeedsUpdate', true);
     },
@@ -117,10 +117,10 @@ export default Ember.Component.extend({
 
   addConnection(sourcePort, destPort) {
     destPort.get('connections').pushObject(sourcePort);
-    destPort.get('module').save();
+    destPort.get('module').saveLater();
 
     sourcePort.get('connections').pushObject(destPort);
-    sourcePort.get('module').save();
+    sourcePort.get('module').saveLater();
 
     this.set('diagramNeedsUpdate', true);
 

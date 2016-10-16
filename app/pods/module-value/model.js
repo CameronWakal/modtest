@@ -16,7 +16,7 @@ export default Module.extend({
     //create ports
     this.addValueOutPort('value', 'getValue', true);
 
-    this.save();
+    this.saveLater();
   },
 
 });

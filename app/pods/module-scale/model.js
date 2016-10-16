@@ -69,7 +69,7 @@ export default Module.extend({
     this.addValueInPort('shift', 'shiftInPort', false);
     this.addValueOutPort('note', 'getNote', true);
 
-    this.save();
+    this.saveLater();
   },
 
   mod(num, mod) {

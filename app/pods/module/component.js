@@ -61,7 +61,7 @@ export default Ember.Component.extend({
     Ember.run(function(){
       self.set('isMoving', false);
       if(self.get('didMove')) {
-        self.get('module').save();
+        self.get('module').saveLater();
         self.set('didMove', false);
       }
       self.sendAction('finishedMoving');
@@ -98,7 +98,7 @@ export default Ember.Component.extend({
 
     disconnectPort(port) {
       port.disconnect();
-      this.get('module').save();
+      this.get('module').saveLater();
       this.sendAction('portDisconnected', port);
     }
 

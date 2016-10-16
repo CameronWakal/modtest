@@ -50,7 +50,7 @@ export default Module.extend({
     this.addValueInPort('div', 'divByPort', false);
     this.addValueInPort('shift', 'shiftByPort', false);
     this.addEventOutPort('trig', 'trigOutPort', true);
-    this.save();
+    this.saveLater();
   },
 
   mod(num, mod) {

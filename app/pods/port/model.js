@@ -35,7 +35,7 @@ export default DS.Model.extend({
     let connections = this.get('connections').toArray();
     connections.forEach( connection => {
       connection.get('connections').removeObject(this);
-      connection.get('module').save();
+      connection.get('module').saveLater();
     }, this);
   },
 

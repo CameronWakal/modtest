@@ -49,7 +49,7 @@ export default Module.extend({
     this.addValueInPort('res', 'resInPort', false);
     this.addEventOutPort('reset', 'resetOutPort', false);
     this.addEventOutPort('trig', 'trigOutPort', true);
-    this.save();
+    this.saveLater();
   },
 
   start() {

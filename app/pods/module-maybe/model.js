@@ -34,7 +34,7 @@ export default Module.extend({
     this.addValueInPort('numerator', 'numeratorInPort', true);
     this.addValueInPort('denominator', 'denominatorInPort', true);
 
-    this.save();
+    this.saveLater();
   },
 
 });

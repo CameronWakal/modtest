@@ -64,7 +64,7 @@ export default Module.extend({
     this.addValueOutPort('value', 'getValue', true);
     this.addEventOutPort('trig', 'trigOutPort', false);
 
-    this.save();
+    this.saveLater();
   },
 
   remove() {

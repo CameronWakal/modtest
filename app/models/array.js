@@ -29,7 +29,7 @@ export default DS.Model.extend({
       return;
     }
 
-    this.get('module').save();
+    this.get('module').saveLater();
 
   }),
 
