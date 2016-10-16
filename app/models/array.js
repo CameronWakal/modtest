@@ -29,8 +29,10 @@ export default DS.Model.extend({
       return;
     }
 
-    this.get('module').saveLater();
+  }),
 
+  onValueChanged: Ember.observer('items.@each.value', function() {
+    this.get('module').saveLater();
   }),
 
   incrementAll() {

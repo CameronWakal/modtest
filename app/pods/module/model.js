@@ -127,7 +127,13 @@ export default DS.Model.extend({
   }),
 
   saveLater() {
-    Ember.run.debounce(this, this.save, 1000);
+    console.log('save later');
+    Ember.run.debounce(this, this.saveNow, 1000);
   },
+
+  saveNow() {
+    console.log('saving module');
+    this.save();
+  }
 
 });
