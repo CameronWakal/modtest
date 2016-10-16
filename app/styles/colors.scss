@@ -1,7 +1,7 @@
 
 
 //BASE PALETTE
-$color-neutral-dark: hsla(198, 40%, 15%, 1);
+$color-neutral-dark: hsla(195, 70%, 12%, 1);
 $color-neutral-dim: desaturate(lighten($color-neutral-dark, 25%), 50%);
 $color-neutral-bright: lighten($color-neutral-dark, 80%);
 $color-cool-bright: complement(saturate(lighten($color-neutral-dark, 60%), 100%));

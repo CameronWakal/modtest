@@ -60,7 +60,7 @@ export default Ember.Component.extend({
       this.set('diagramNeedsUpdate', true);
     },
 
-    moduleContentChanged() {
+    moduleLayoutChanged() {
       this.set('diagramNeedsUpdate', true);
     },
 
