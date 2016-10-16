@@ -39,4 +39,11 @@ export default DS.Model.extend({
     }, this);
   },
 
+  onEnabledChanged: Ember.observer('isEnabled', function(){
+    let module = this.get('module');
+    if(module) {
+      module.saveLater();
+    }
+  })
+
 });

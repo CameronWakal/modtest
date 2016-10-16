@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import DS from 'ember-data';
 import Module from '../module/model';
 
@@ -18,5 +19,9 @@ export default Module.extend({
 
     this.saveLater();
   },
+
+  onValueChanged: Ember.observer('value', function(){
+    this.saveLater();
+  })
 
 });

@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import DS from 'ember-data';
 import Port from '../port/model';
 
@@ -5,9 +6,6 @@ export default Port.extend({
 
   type: 'port-value-in', //modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
 
-  //valueIn ports can have only one valueOut port as a source
-
-  //todo: get the _super model and the patch controller working with this being a belongsTo
   connections: DS.hasMany('port-value-out', {async: true}),
   disabledValue: DS.attr('number'),
 
@@ -31,5 +29,12 @@ export default Port.extend({
     });
     return totalValue;
   },
+
+  onDisabledValueChanged: Ember.observer('disabledValue', function(){
+    let module = this.get('module');
+    if(module) {
+      module.saveLater();
+    }
+  })
 
 });

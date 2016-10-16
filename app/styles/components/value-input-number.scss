@@ -18,6 +18,7 @@
 
   &:focus {
     background: $color-neutral-dark;
+    border: 1px solid $color-neutral-bright;
     color: $color-transparent;
     outline: none;
     text-shadow: 0 0 0 $color-neutral-bright;
