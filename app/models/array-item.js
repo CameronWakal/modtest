@@ -13,16 +13,19 @@ export default DS.Model.extend({
 
   onValueChanged: Ember.observer('value', function() {
     if( this.get('hasDirtyAttributes') ) {
-      console.log('array-item.hasDirtyAttributes - saving');
-      this.save();
+      this.requestSave();
     }
   }),
 
+  //mark myself as saved when requested by my managing module.
   save() {
     this._super({adapterOptions: {dontPersist: true}});
-    if( !this.get('isDeleted') ) {
-      this.get('array').save();
-    }
+  },
+
+  //ask managing module to save me when my properties have changed.
+  requestSave() {
+    console.log('array-item requestSave')
+    this.get('array').requestSave();
   }
 
 });

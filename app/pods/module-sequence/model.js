@@ -66,7 +66,7 @@ export default Module.extend({
       this.addValueOutPort('value', 'getValue', true);
       this.addEventOutPort('trig', 'trigOutPort', false);
 
-      this.save();
+      this.requestSave();
     }
   },
 
@@ -82,7 +82,7 @@ export default Module.extend({
   }),
 
   requestSave() {
-    console.log('module-sequence.requestSave');
+    console.log('module-sequence requestSave');
     Ember.run.once(this, this.save);
   },
 
@@ -92,6 +92,8 @@ export default Module.extend({
     } else {
       console.log('MODULE-SEQUENCE DELETE');
     }
+
+    this.get('steps').save();
     this._super();
   }
 

@@ -42,15 +42,16 @@ export default DS.Model.extend({
 
   save() {
     this._super({adapterOptions: {dontPersist: true}});
-    if( !this.get('isDeleted') && !this.get('isNew') ) {
-      this.get('module').requestSave();
-    }
+  },
+
+  requestSave() {
+    this.get('module').requestSave();
   },
 
   onAttrChanged: Ember.observer('isEnabled', 'label', function(){
     if( this.get('hasDirtyAttributes') && !this.get('isNew') ) {
-      console.log('port attrchanged, not new');
-      this.save();
+      console.log('port attrchanged');
+      this.requestSave();
     }
   })
 

@@ -30,14 +30,11 @@ export default Port.extend({
     return totalValue;
   },
 
-  /*
   onDisabledValueChanged: Ember.observer('disabledValue', function(){
-    let module = this.get('module');
-    if(module) {
-      console.log('port.onDisabledValueChanged() requestSave()');
-      module.requestSave();
+    if( this.get('hasDirtyAttributes') && !this.get('isNew') ) {
+      console.log('port-value-in disabledValueChanged');
+      this.requestSave();
     }
   })
-  */
 
 });
