@@ -68,8 +68,8 @@ export default Module.extend({
     this.addValueInPort('root', 'rootInPort', false);
     this.addValueInPort('shift', 'shiftInPort', false);
     this.addValueOutPort('note', 'getNote', true);
-
-    this.saveLater();
+    console.log('module-scale.didCreate() requestSave()');
+    this.requestSave();
   },
 
   mod(num, mod) {

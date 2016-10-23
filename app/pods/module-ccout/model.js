@@ -32,7 +32,8 @@ export default Module.extend({
     this.addValueInPort('control', 'controlInPort', false);
     this.addValueInPort('channel', 'channelInPort', false);
     this.addValueInPort('value', 'valueInPort', true);
-    this.saveLater();
+    console.log('module-ccout.didCreate() requestSave()');
+    this.requestSave();
   },
 
 });

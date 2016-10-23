@@ -17,4 +17,8 @@ export default ModuleSetting.extend({
     this._super();
   },
 
+  save() {
+    this._super({adapterOptions: {dontPersist: true}});
+  }
+
 });

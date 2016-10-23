@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import DS from 'ember-data';
 import Module from '../module/model';
 
@@ -42,33 +43,55 @@ export default Module.extend({
     this.set('steps.currentItem', null);
   },
 
-  didCreate() {
-    //create steps
-    let steps = this.store.createRecord('array', {module:this});
-    this.set('steps', steps);
-    this.set('steps.length', 8);
+  ready() {
+    if( this.get('isNew') ) {
+      //create steps
+      let steps = this.store.createRecord('array', {module:this});
+      this.set('steps', steps);
+      this.set('steps.length', 8);
 
-    //create settings
-    this.addMenuSetting('Input Type', 'inputType', this, ['Number', 'Slider', 'Both', 'Button']);
+      //create settings
+      this.addMenuSetting('Input Type', 'inputType', this, ['Number', 'Slider', 'Both', 'Button']);
 
-    //todo: make config option for settings that must have a non-null numeric value
-    this.addNumberSetting('Length', 'steps.length', this);
-    this.addNumberSetting('Input Min', 'steps.valueMin', this);
-    this.addNumberSetting('Input Max', 'steps.valueMax', this);
-    this.addNumberSetting('Input Step', 'steps.valueStep', this);
-    this.addNumberSetting('Display Scale', 'displayScale', this);
+      //todo: make config option for settings that must have a non-null numeric value
+      this.addNumberSetting('Length', 'steps.length', this);
+      this.addNumberSetting('Input Min', 'steps.valueMin', this);
+      this.addNumberSetting('Input Max', 'steps.valueMax', this);
+      this.addNumberSetting('Input Step', 'steps.valueStep', this);
+      this.addNumberSetting('Display Scale', 'displayScale', this);
 
-    //create ports
-    this.addEventInPort('inc', 'incrementStep', true);
-    this.addEventInPort('reset', 'reset', false);
-    this.addValueOutPort('value', 'getValue', true);
-    this.addEventOutPort('trig', 'trigOutPort', false);
+      //create ports
+      this.addEventInPort('inc', 'incrementStep', true);
+      this.addEventInPort('reset', 'reset', false);
+      this.addValueOutPort('value', 'getValue', true);
+      this.addEventOutPort('trig', 'trigOutPort', false);
 
-    this.saveLater();
+      this.save();
+    }
   },
 
   remove() {
     this.get('steps').remove();
+    this._super();
+  },
+
+  onAttrChanged: Ember.observer('inputType', 'displayScale', function() {
+    if( this.get('hasDirtyAttributes') ) {
+      this.requestSave();
+    }
+  }),
+
+  requestSave() {
+    console.log('module-sequence.requestSave');
+    Ember.run.once(this, this.save);
+  },
+
+  save() {
+    if( !this.get('isDeleted') ) {
+      console.log('MODULE-SEQUENCE SAVE');
+    } else {
+      console.log('MODULE-SEQUENCE DELETE');
+    }
     this._super();
   }
 

@@ -33,8 +33,8 @@ export default Module.extend({
     this.addEventOutPort('out', 'eventOutPort', true);
     this.addValueInPort('numerator', 'numeratorInPort', true);
     this.addValueInPort('denominator', 'denominatorInPort', true);
-
-    this.saveLater();
+    console.log('module-maybe.didCreate() requestSave()');
+    this.requestSave();
   },
 
 });

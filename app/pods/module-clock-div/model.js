@@ -50,7 +50,8 @@ export default Module.extend({
     this.addValueInPort('div', 'divByPort', false);
     this.addValueInPort('shift', 'shiftByPort', false);
     this.addEventOutPort('trig', 'trigOutPort', true);
-    this.saveLater();
+    console.log('module-clock-div.didCreate() requestSave()');
+    this.requestSave();
   },
 
   mod(num, mod) {

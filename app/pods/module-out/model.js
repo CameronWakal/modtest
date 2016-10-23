@@ -68,7 +68,8 @@ export default Module.extend({
     this.addEventInPort('trig', 'sendEvent', true);
     this.addValueInPort('note', 'noteInPort', true);
     this.addValueInPort('vel', 'velInPort', true);
-    this.saveLater();
+    console.log('module-out.didCreate() requestSave()');
+    this.requestSave();
   },
 
 });

@@ -16,12 +16,13 @@ export default Module.extend({
   didCreate() {
     //create ports
     this.addValueOutPort('value', 'getValue', true);
-
-    this.saveLater();
+    console.log('module-value didCreate saveLater');
+    this.requestSave();
   },
 
   onValueChanged: Ember.observer('value', function(){
-    this.saveLater();
+    console.log('module-value.onValueChanged() requestSave()');
+    this.requestSave();
   })
 
 });

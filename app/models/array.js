@@ -31,9 +31,18 @@ export default DS.Model.extend({
 
   }),
 
-  onValueChanged: Ember.observer('items.@each.value', function() {
-    this.get('module').saveLater();
+  onAttrChanged: Ember.observer('length', 'valueMin', 'valueMax', 'valueStep', function() {
+    if( this.get('hasDirtyAttributes') ) {
+      this.save();
+    }
   }),
+
+  save() {
+    this._super({adapterOptions: {dontPersist: true}});
+    if( !this.get('isDeleted') && !this.get('isNew') ) {
+      this.get('module').requestSave();
+    }
+  },
 
   incrementAll() {
     this.get('items').forEach(item=>{

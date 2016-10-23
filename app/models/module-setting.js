@@ -21,8 +21,8 @@ export default DS.Model.extend({
     this.destroyRecord();
   }, 
 
-  onValueChanged: Ember.observer('value', function(){
-    this.get('module').saveLater();
-  }),
+  save() {
+    this._super({adapterOptions: {dontPersist: true}});
+  }
 
 });

@@ -22,7 +22,8 @@ export default Module.extend({
     this.addValueInPort('in1', 'in1Port', true);
     this.addValueInPort('switch', 'switchInPort', true);
     this.addValueOutPort('out', 'getValue', true);
-    this.saveLater();
+    console.log('module-switch.didCreate() requestSave()');
+    this.requestSave();
   },
 
 });
