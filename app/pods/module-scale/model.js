@@ -7,7 +7,7 @@ export default Module.extend({
   label: 'Scale',
   degreesInScale: 7,
 
-  degrees: DS.belongsTo('array'),
+  degrees: DS.belongsTo('array', {async: false}),
   inputType: 'Number',
 
   degreeInPort: DS.belongsTo('port-value-in', {async:false}),
@@ -56,20 +56,32 @@ export default Module.extend({
     return note;
   },
 
-  didCreate() {
-    //create degrees
-    let degrees = this.store.createRecord('array', {module:this, length:this.get('degreesInScale')});
-    degrees.set('valueMax', 11);
-    this.set('degrees', degrees);
+  ready() {
+    if( this.get('isNew') ) {
+      //create degrees
+      let degrees = this.store.createRecord('array', {module:this, length:this.get('degreesInScale')});
+      degrees.set('valueMax', 11);
+      this.set('degrees', degrees);
 
-    //create ports
-    this.addValueInPort('degree', 'degreeInPort', true);
-    this.addValueInPort('octave', 'octaveInPort', false);
-    this.addValueInPort('root', 'rootInPort', false);
-    this.addValueInPort('shift', 'shiftInPort', false);
-    this.addValueOutPort('note', 'getNote', true);
-    console.log('module-scale.didCreate() requestSave()');
-    this.requestSave();
+      //create ports
+      this.addValueInPort('degree', 'degreeInPort', true);
+      this.addValueInPort('octave', 'octaveInPort', false);
+      this.addValueInPort('root', 'rootInPort', false);
+      this.addValueInPort('shift', 'shiftInPort', false);
+      this.addValueOutPort('note', 'getNote', true);
+      console.log('module-scale.didCreate() requestSave()');
+      this.requestSave();
+    }
+  },
+
+  remove() {
+    this.get('degrees').remove();
+    this._super();
+  },
+
+  save() {
+    this.get('degrees').save();
+    this._super();
   },
 
   mod(num, mod) {

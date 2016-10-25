@@ -26,14 +26,16 @@ export default Module.extend({
 
   },
 
-  didCreate() {
-    //create ports
-    this.addEventInPort('trig', 'sendEvent', true);
-    this.addValueInPort('control', 'controlInPort', false);
-    this.addValueInPort('channel', 'channelInPort', false);
-    this.addValueInPort('value', 'valueInPort', true);
-    console.log('module-ccout.didCreate() requestSave()');
-    this.requestSave();
+  ready() {
+    if( this.get('isNew') ) {
+      //create ports
+      this.addEventInPort('trig', 'sendEvent', true);
+      this.addValueInPort('control', 'controlInPort', false);
+      this.addValueInPort('channel', 'channelInPort', false);
+      this.addValueInPort('value', 'valueInPort', true);
+      console.log('module-ccout.didCreate() requestSave()');
+      this.requestSave();
+    }
   },
 
 });

@@ -27,14 +27,16 @@ export default Module.extend({
 
   },
 
-  didCreate() {
-    //create ports
-    this.addEventInPort('in', 'onEventIn', true);
-    this.addEventOutPort('out', 'eventOutPort', true);
-    this.addValueInPort('numerator', 'numeratorInPort', true);
-    this.addValueInPort('denominator', 'denominatorInPort', true);
-    console.log('module-maybe.didCreate() requestSave()');
-    this.requestSave();
+  ready() {
+    if( this.get('isNew') ) {
+      //create ports
+      this.addEventInPort('in', 'onEventIn', true);
+      this.addEventOutPort('out', 'eventOutPort', true);
+      this.addValueInPort('numerator', 'numeratorInPort', true);
+      this.addValueInPort('denominator', 'denominatorInPort', true);
+      console.log('module-maybe.didCreate() requestSave()');
+      this.requestSave();
+    }
   },
 
 });

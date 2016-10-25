@@ -16,14 +16,16 @@ export default Module.extend({
     }
   },
 
-  didCreate() {
-    //create ports
-    this.addValueInPort('in0', 'in0Port', true);
-    this.addValueInPort('in1', 'in1Port', true);
-    this.addValueInPort('switch', 'switchInPort', true);
-    this.addValueOutPort('out', 'getValue', true);
-    console.log('module-switch.didCreate() requestSave()');
-    this.requestSave();
+  ready() {
+    if( this.get('isNew') ) {
+      //create ports
+      this.addValueInPort('in0', 'in0Port', true);
+      this.addValueInPort('in1', 'in1Port', true);
+      this.addValueInPort('switch', 'switchInPort', true);
+      this.addValueOutPort('out', 'getValue', true);
+      console.log('module-switch.didCreate() requestSave()');
+      this.requestSave();
+    }
   },
 
 });

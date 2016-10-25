@@ -81,18 +81,7 @@ export default Module.extend({
     }
   }),
 
-  requestSave() {
-    console.log('module-sequence requestSave');
-    Ember.run.once(this, this.save);
-  },
-
   save() {
-    if( !this.get('isDeleted') ) {
-      console.log('MODULE-SEQUENCE SAVE');
-    } else {
-      console.log('MODULE-SEQUENCE DELETE');
-    }
-
     this.get('steps').save();
     this._super();
   }

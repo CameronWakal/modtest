@@ -5,9 +5,9 @@ export default DS.Model.extend({
 
   save() {
     if( !this.get('isDeleted') ) {
-      console.log('PATCH SAVE');
+      console.log('patch save');
     } else {
-      console.log('PATCH DELETE');
+      console.log('patch delete');
     }
     this._super();
   }

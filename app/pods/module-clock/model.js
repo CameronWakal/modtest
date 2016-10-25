@@ -38,19 +38,26 @@ export default Module.extend({
     } else {
       console.log('error: tried to update source to', this.get('sourceSetting.value'));
     }
+
+    if( this.get('hasDirtyAttributes') ) {
+      this.requestSave();
+    }
+
   }),
 
-  didCreate() {
-    //create settings
-    this.addMenuSetting('Source', 'source', this, ['Internal', 'External']);
+  ready() {
+    if( this.get('isNew') ) {
+      //create settings
+      this.addMenuSetting('Source', 'source', this, ['Internal', 'External']);
 
-    //create ports
-    this.addValueInPort('tempo', 'tempoInPort', false);
-    this.addValueInPort('res', 'resInPort', false);
-    this.addEventOutPort('reset', 'resetOutPort', false);
-    this.addEventOutPort('trig', 'trigOutPort', true);
-    console.log('module-clock.didCreate() requestSave()');
-    this.requestSave();
+      //create ports
+      this.addValueInPort('tempo', 'tempoInPort', false);
+      this.addValueInPort('res', 'resInPort', false);
+      this.addEventOutPort('reset', 'resetOutPort', false);
+      this.addEventOutPort('trig', 'trigOutPort', true);
+      console.log('module-clock.didCreate() requestSave()');
+      this.requestSave();
+    }
   },
 
   start() {

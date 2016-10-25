@@ -63,13 +63,15 @@ export default Module.extend({
 
   },
 
-  didCreate() {
-    //create ports
-    this.addEventInPort('trig', 'sendEvent', true);
-    this.addValueInPort('note', 'noteInPort', true);
-    this.addValueInPort('vel', 'velInPort', true);
-    console.log('module-out.didCreate() requestSave()');
-    this.requestSave();
+  ready() {
+    if( this.get('isNew') ) {
+      //create ports
+      this.addEventInPort('trig', 'sendEvent', true);
+      this.addValueInPort('note', 'noteInPort', true);
+      this.addValueInPort('vel', 'velInPort', true);
+      console.log('module-out.didCreate() requestSave()');
+      this.requestSave();
+    }
   },
 
 });

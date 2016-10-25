@@ -99,6 +99,21 @@ export default DS.Model.extend({
     this.get('settings').pushObject(setting);
   },
 
+  requestSave() {
+    console.log('module requestSave');
+    Ember.run.once(this, this.save);
+  },
+
+  save() {
+    if( !this.get('isDeleted') ) {
+      console.log('module saved');
+    } else {
+      console.log('module deleted');
+    }
+
+    this._super();
+  },
+
   remove() {
     this.get('ports').toArray().forEach( port => {
       port.disconnect();
