@@ -13,10 +13,6 @@ export default DS.Model.extend({
   xPos: DS.attr('number', {defaultValue:0}),
   yPos: DS.attr('number', {defaultValue:0}),
 
-  // flag self for deferred removal if removal is requested
-  // while save is in progress
-  needsRemoval: false,
-
   eventOutPorts: Ember.computed.filterBy('ports', 'type', 'port-event-out'),
   eventInPorts: Ember.computed.filterBy('ports', 'type', 'port-event-in'),
   valueOutPorts: Ember.computed.filterBy('ports', 'type', 'port-value-out'),
@@ -37,6 +33,7 @@ export default DS.Model.extend({
     });
     this.get('ports').pushObject(port);
     this.set(portVar, port);
+    port.save();
   },
 
   //targetMethod on the module is called by the port when the event comes in
@@ -48,6 +45,7 @@ export default DS.Model.extend({
       module:this
     });
     this.get('ports').pushObject(port);
+    port.save();
   },
 
   //targetVar is checked by the port when a request for the value comes in
@@ -59,6 +57,7 @@ export default DS.Model.extend({
       module:this
     });
     this.get('ports').pushObject(port);
+    port.save();
   },
 
   //portVar is used to easily refer to this specific port from within the module
@@ -70,6 +69,7 @@ export default DS.Model.extend({
     });
     this.get('ports').pushObject(port);
     this.set(portVar, port);
+    port.save();
   },
 
   addNumberSetting(label, targetValue, module) {
@@ -99,41 +99,32 @@ export default DS.Model.extend({
     this.get('settings').pushObject(setting);
   },
 
-  remove() {
-    if(this.get('isSaving')) {
-      console.log('tried to remove while saving!');
-      this.set('needsRemoval', true);
+  requestSave() {
+    console.log('module requestSave');
+    Ember.run.once(this, this.save);
+  },
+
+  save() {
+    if( !this.get('isDeleted') ) {
+      console.log('module saved');
     } else {
-
-      this.get('ports').toArray().forEach( port => {
-        port.disconnect();
-        port.destroyRecord();
-      });
-
-      this.get('settings').toArray().forEach( setting => {
-        setting.remove();
-      });
-
-      this.destroyRecord();
+      console.log('module deleted');
     }
+
+    this._super();
   },
 
-  //when the state of isSaving changes, check if this model is flagged for needsRemoval
-  removeLater: Ember.observer('isSaving', function() {
-    if( !this.get('isSaving') && this.get('needsRemoval') ){
-      this.set('needsRemoval', false);
-      this.remove();
-    }
-  }),
+  remove() {
+    this.get('ports').toArray().forEach( port => {
+      port.disconnect();
+      port.destroyRecord();
+    });
 
-  saveLater() {
-    console.log('save later');
-    Ember.run.debounce(this, this.saveNow, 1000);
+    this.get('settings').toArray().forEach( setting => {
+      setting.remove();
+    });
+
+    this.destroyRecord();
   },
-
-  saveNow() {
-    console.log('saving module');
-    this.save();
-  }
 
 });

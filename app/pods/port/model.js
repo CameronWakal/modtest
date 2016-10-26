@@ -35,14 +35,23 @@ export default DS.Model.extend({
     let connections = this.get('connections').toArray();
     connections.forEach( connection => {
       connection.get('connections').removeObject(this);
-      connection.get('module').saveLater();
+      console.log('port.disconnect() requestSave()');
+      connection.get('module').requestSave();
     }, this);
   },
 
-  onEnabledChanged: Ember.observer('isEnabled', function(){
-    let module = this.get('module');
-    if(module) {
-      module.saveLater();
+  save() {
+    this._super({adapterOptions: {dontPersist: true}});
+  },
+
+  requestSave() {
+    this.get('module').requestSave();
+  },
+
+  onAttrChanged: Ember.observer('isEnabled', 'label', function(){
+    if( this.get('hasDirtyAttributes') && !this.get('isNew') ) {
+      console.log('port attrchanged');
+      this.requestSave();
     }
   })
 

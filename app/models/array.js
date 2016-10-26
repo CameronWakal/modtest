@@ -31,9 +31,25 @@ export default DS.Model.extend({
 
   }),
 
-  onValueChanged: Ember.observer('items.@each.value', function() {
-    this.get('module').saveLater();
+  onAttrChanged: Ember.observer('length', 'valueMin', 'valueMax', 'valueStep', function() {
+    if( this.get('hasDirtyAttributes') && !this.get('isNew') ) {
+      this.requestSave();
+    }
   }),
+
+  //mark myself as saved when requested by my managing module.
+  save() {
+    this._super({adapterOptions: {dontPersist: true}});
+    this.get('items').forEach(item => {
+      item.save();
+    });
+  },
+
+  //ask managing module to save me when my properties have changed.
+  requestSave() {
+    console.log('array requestSave');
+    this.get('module').requestSave();
+  },
 
   incrementAll() {
     this.get('items').forEach(item=>{

@@ -13,15 +13,18 @@ export default Module.extend({
     return this.get('value');
   },
 
-  didCreate() {
-    //create ports
-    this.addValueOutPort('value', 'getValue', true);
-
-    this.saveLater();
+  ready() {
+    if( this.get('isNew') ) {
+      //create ports
+      this.addValueOutPort('value', 'getValue', true);
+      console.log('module-value didCreate saveLater');
+      this.requestSave();
+    }
   },
 
   onValueChanged: Ember.observer('value', function(){
-    this.saveLater();
+    console.log('module-value.onValueChanged() requestSave()');
+    this.requestSave();
   })
 
 });

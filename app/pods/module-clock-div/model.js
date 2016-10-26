@@ -44,13 +44,16 @@ export default Module.extend({
     this.set('count', 0);
   },
 
-  didCreate() {
-    this.addEventInPort('clock', 'onClockIn', true);
-    this.addEventInPort('reset', 'onResetIn', false);
-    this.addValueInPort('div', 'divByPort', false);
-    this.addValueInPort('shift', 'shiftByPort', false);
-    this.addEventOutPort('trig', 'trigOutPort', true);
-    this.saveLater();
+  ready() {
+    if( this.get('isNew') ) {
+      this.addEventInPort('clock', 'onClockIn', true);
+      this.addEventInPort('reset', 'onResetIn', false);
+      this.addValueInPort('div', 'divByPort', false);
+      this.addValueInPort('shift', 'shiftByPort', false);
+      this.addEventOutPort('trig', 'trigOutPort', true);
+      console.log('module-clock-div.didCreate() requestSave()');
+      this.requestSave();
+    }
   },
 
   mod(num, mod) {

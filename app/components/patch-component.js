@@ -101,14 +101,15 @@ export default Ember.Component.extend({
       let module = this.store.createRecord('module-'+type, { patch: this.patch });
       this.patch.get('modules').pushObject(module);
       this.patch.save();
-      module.save();
     },
 
     removeConnection(sourcePort, destPort) {      
       sourcePort.get('connections').removeObject(destPort);
-      sourcePort.get('module').saveLater();
+      console.log('patch.removeConnection() requestSave()');
+      sourcePort.get('module').requestSave();
       destPort.get('connections').removeObject(sourcePort);
-      destPort.get('module').saveLater();
+      console.log('patch.removeConnection() requestSave()');
+      destPort.get('module').requestSave();
 
       this.set('diagramNeedsUpdate', true);
     },
@@ -117,10 +118,12 @@ export default Ember.Component.extend({
 
   addConnection(sourcePort, destPort) {
     destPort.get('connections').pushObject(sourcePort);
-    destPort.get('module').saveLater();
+    console.log('patch.addConnection() requestSave()');
+    destPort.get('module').requestSave();
 
     sourcePort.get('connections').pushObject(destPort);
-    sourcePort.get('module').saveLater();
+    console.log('patch.addConnection() requestSave()');
+    sourcePort.get('module').requestSave();
 
     this.set('diagramNeedsUpdate', true);
 

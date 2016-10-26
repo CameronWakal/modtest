@@ -31,9 +31,9 @@ export default Port.extend({
   },
 
   onDisabledValueChanged: Ember.observer('disabledValue', function(){
-    let module = this.get('module');
-    if(module) {
-      module.saveLater();
+    if( this.get('hasDirtyAttributes') && !this.get('isNew') ) {
+      console.log('port-value-in disabledValueChanged');
+      this.requestSave();
     }
   })
 
