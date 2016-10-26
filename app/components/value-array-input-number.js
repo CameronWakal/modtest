@@ -45,18 +45,21 @@ export default ValueInputNumber.extend({
     switch(event.keyCode) {
       case 37: //left arrow
         if(event.shiftKey) {
+          this.updateValue();
           this.get('item.array').shiftForward();
         }
         this.selectPrevious();
       break;
       case 39: //right arrow
         if(event.shiftKey) {
+          this.updateValue();
           this.get('item.array').shiftBackward();
         }
         this.selectNext();
       break;
       case 38: //up arrow
         if(event.shiftKey) {
+          this.updateValue();
           this.get('item.array').incrementAll();
         } else {
         this.incrementProperty('value');
@@ -65,6 +68,7 @@ export default ValueInputNumber.extend({
       break;
       case 40: //down arrow
         if(event.shiftKey) {
+          this.updateValue();
           this.get('item.array').decrementAll();
         } else {
           this.decrementProperty('value');

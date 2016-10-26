@@ -12,8 +12,7 @@
   width: 1.75rem;
 
   &.pending:focus {
-    color: $color-transparent;
-    text-shadow: 0 0 0 $color-text;
+    color: $color-neutral-dim;
   }
 
   &:focus {

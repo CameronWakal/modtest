@@ -24,7 +24,7 @@ export default DS.Model.extend({
 
   //ask managing module to save me when my properties have changed.
   requestSave() {
-    console.log('array-item requestSave')
+    console.log('array-item requestSave');
     this.get('array').requestSave();
   }
 
