@@ -7,7 +7,7 @@ export default Ember.TextField.extend({
 
   isPending: Ember.computed('value', 'boundValue', function(){
     let value = parseInt(this.get('value'));
-    if( isNaN(value) ) { value = null };
+    if( isNaN(value) ) { value = null; }
     return value !== this.get('boundValue');
   }),
 
