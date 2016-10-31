@@ -9,11 +9,53 @@ export default Module.extend({
 
   degrees: DS.belongsTo('array', {async: false}),
   inputType: 'Number',
+  mode: DS.attr('string', {defaultValue:'I'}),
 
   degreeInPort: DS.belongsTo('port-value-in', {async:false}),
   octaveInPort: DS.belongsTo('port-value-in', {async:false}),
   rootInPort: DS.belongsTo('port-value-in', {async:false}),
   shiftInPort: DS.belongsTo('port-value-in', {async:false}),
+
+  onModeChanged: Ember.observer('mode', function() {
+    let items = this.get('degrees.items');
+
+    if(items) {
+      let mode = this.get('mode');
+      let newValues;
+
+      switch(mode){
+        case 'I':
+          newValues = [0,2,4,5,7,9,11];
+        break;
+        case 'II':
+          newValues = [0,2,3,5,7,9,10];
+        break;
+        case 'III':
+          newValues = [0,1,3,5,7,8,10];
+        break;
+        case 'IV':
+          newValues = [0,2,4,6,7,9,11];
+        break;
+        case 'V':
+          newValues = [0,2,4,5,7,9,10];
+        break;
+        case 'VI':
+          newValues = [0,2,3,5,7,8,10];
+        break;
+        case 'VII':
+          newValues = [0,1,3,5,6,8,10];
+        break;
+        default:
+          console.log('module-scale: unknown mode requested:', mode);
+          return;
+      }
+
+      items.forEach(item => {
+        item.set('value', newValues[item.get('index')]);
+      });
+    }
+
+  }),
 
   getNote() {
 
@@ -58,6 +100,7 @@ export default Module.extend({
 
   ready() {
     if( this.get('isNew') ) {
+
       //create degrees
       let degrees = this.store.createRecord('array', {module:this, length:this.get('degreesInScale')});
       degrees.set('valueMax', 11);
@@ -69,6 +112,10 @@ export default Module.extend({
       this.addValueInPort('root', 'rootInPort', false);
       this.addValueInPort('shift', 'shiftInPort', false);
       this.addValueOutPort('note', 'getNote', true);
+
+      //create settings
+      this.addMenuSetting('Mode', 'mode', this, ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII']);
+
       console.log('module-scale.didCreate() requestSave()');
       this.requestSave();
     }
