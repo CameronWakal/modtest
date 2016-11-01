@@ -14,7 +14,6 @@ export default Module.extend({
   degreeInPort: DS.belongsTo('port-value-in', {async:false}),
   octaveInPort: DS.belongsTo('port-value-in', {async:false}),
   rootInPort: DS.belongsTo('port-value-in', {async:false}),
-  shiftInPort: DS.belongsTo('port-value-in', {async:false}),
 
   onModeChanged: Ember.observer('mode', function() {
     let items = this.get('degrees.items');
@@ -46,7 +45,7 @@ export default Module.extend({
           newValues = [0,1,3,5,6,8,10];
         break;
         default:
-          console.log('module-scale: unknown mode requested:', mode);
+          console.log('module-scale error – unknown mode requested:', mode);
           return;
       }
 
@@ -67,12 +66,10 @@ export default Module.extend({
     let degree = this.get('degreeInPort').getValue();
     let octave = this.get('octaveInPort').getValue();
     let root = this.get('rootInPort').getValue();
-    let shift = this.get('shiftInPort').getValue();
 
     if(degree == null) { degree = 0; }
     if(octave == null) { octave = 3; }
     if(root == null) { root = 0; }
-    if(shift == null) { shift = 0; }
 
     degree = parseInt(degree);
     octave = parseInt(octave);
@@ -110,7 +107,6 @@ export default Module.extend({
       this.addValueInPort('degree', 'degreeInPort', true);
       this.addValueInPort('octave', 'octaveInPort', false);
       this.addValueInPort('root', 'rootInPort', false);
-      this.addValueInPort('shift', 'shiftInPort', false);
       this.addValueOutPort('note', 'getNote', true);
 
       //create settings
