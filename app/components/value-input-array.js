@@ -13,6 +13,6 @@ export default Ember.Component.extend({
   isTypeButton: Ember.computed.equal('inputType', 'Button'),
 
   shouldIncludeNumber: Ember.computed.or('isTypeNumber', 'isTypeBoth'),
-  shouldIncludeSlider: Ember.computed.or('isTypeSlider', 'isTypeBoth'),
+  shouldIncludeSlider: Ember.computed.or('isTypeSlider', 'isTypeBoth')
 
 });

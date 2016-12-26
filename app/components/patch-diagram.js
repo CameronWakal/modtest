@@ -263,7 +263,7 @@ export default Ember.Component.extend({
 
   distToSegment(p, v, w) { 
       return Math.sqrt(this.distToSegmentSquared(p, v, w));
-  },
+  }
   
 
 });

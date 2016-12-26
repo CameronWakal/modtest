@@ -13,6 +13,6 @@ export default Port.extend({
     this.get('connections').forEach( port => {
       port.sendEvent(event);
     });
-  },
+  }
 
 });

@@ -59,6 +59,6 @@ export default Module.extend({
   mod(num, mod) {
     var remain = num % mod;
     return Math.floor(remain >= 0 ? remain : remain + mod);
-  },
+  }
 
 });

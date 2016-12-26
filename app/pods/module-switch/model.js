@@ -26,6 +26,6 @@ export default Module.extend({
       console.log('module-switch.didCreate() requestSave()');
       this.requestSave();
     }
-  },
+  }
 
 });

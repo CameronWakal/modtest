@@ -19,7 +19,7 @@ export default ModuleGenericComponent.extend({
 
     reset() {
       this.get('module').reset();
-    },
-  },
+    }
+  }
 
 });

@@ -14,6 +14,6 @@ export default Ember.Component.extend({
   hasValueOutPorts: Ember.computed.notEmpty('module.valueOutPorts'),
   hasEventInPorts: Ember.computed.notEmpty('module.eventInPorts'),
   hasEventOutPorts: Ember.computed.notEmpty('module.eventOutPorts'),
-  hasPorts: Ember.computed.notEmpty('module.ports'),
+  hasPorts: Ember.computed.notEmpty('module.ports')
 
 });

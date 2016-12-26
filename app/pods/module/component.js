@@ -101,6 +101,6 @@ export default Ember.Component.extend({
       this.sendAction('portDisconnected', port);
     }
 
-  },
+  }
   
 });

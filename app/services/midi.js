@@ -68,7 +68,7 @@ export default Ember.Service.extend({
   },
 
   onMIDIMessage(event){
-      let data = event.data;      
+      let data = event.data;
       /*
       let cmd = data[0] >> 4;
       let channel = data[0] & 0xf;
@@ -114,8 +114,7 @@ export default Ember.Service.extend({
           }
           break;
         default:
-          let type = data[0] & 0xf0; // channel agnostic message type.
-          switch(type){
+          switch(data[0] & 0xf0) { // channel agnostic message type.
             case 144: // noteOn message 
               console.log('note on');
               //this.listener.noteOn(note, velocity);

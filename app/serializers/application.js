@@ -142,6 +142,6 @@ export default LFSerializer.extend(DS.EmbeddedRecordsMixin, {
         json[payloadKey] = belongsTo.id;
       }
     }
-  },
+  }
 
 });

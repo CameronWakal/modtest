@@ -72,6 +72,6 @@ export default Module.extend({
       console.log('module-out.didCreate() requestSave()');
       this.requestSave();
     }
-  },
+  }
 
 });

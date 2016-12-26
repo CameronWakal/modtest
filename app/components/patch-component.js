@@ -112,7 +112,7 @@ export default Ember.Component.extend({
       destPort.get('module').requestSave();
 
       this.set('diagramNeedsUpdate', true);
-    },
+    }
 
   },
 
@@ -127,6 +127,6 @@ export default Ember.Component.extend({
 
     this.set('diagramNeedsUpdate', true);
 
-  },
+  }
 
 });

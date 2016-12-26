@@ -36,6 +36,6 @@ export default Module.extend({
       console.log('module-ccout.didCreate() requestSave()');
       this.requestSave();
     }
-  },
+  }
 
 });

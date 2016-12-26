@@ -76,7 +76,7 @@ export default DS.Model.extend({
     let setting = this.store.createRecord('module-setting', {
       label:label, 
       targetValue:targetValue,
-      module:module,
+      module:module
     });
     this.get('settings').pushObject(setting);
   },
@@ -93,7 +93,7 @@ export default DS.Model.extend({
       label:label,
       items:items,
       module:module,
-      targetValue:targetValue,
+      targetValue:targetValue
     });
 
     this.get('settings').pushObject(setting);
@@ -125,6 +125,6 @@ export default DS.Model.extend({
     });
 
     this.destroyRecord();
-  },
+  }
 
 });

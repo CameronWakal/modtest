@@ -36,6 +36,6 @@ export default Ember.Component.extend({
       self.sendAction('finishedConnecting');
       Ember.$(document).off('mouseup'); 
     });
-  },
+  }
 
 });

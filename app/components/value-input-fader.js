@@ -15,6 +15,6 @@ export default Ember.Component.extend({
     let steps = range / this.get('step');
     let height = steps * this.get('displayScale');
     return Ember.String.htmlSafe('height:'+height+'px');
-  }),
+  })
 
 });

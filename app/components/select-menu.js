@@ -11,6 +11,6 @@ export default Ember.Component.extend({
     const selectedItem = items[selectedIndex];
     this.set('setting.selectedItem', selectedItem);
     this.set('setting.value', selectedItem.get('value'));
-  },
+  }
 
 });

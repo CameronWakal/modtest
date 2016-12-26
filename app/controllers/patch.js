@@ -12,7 +12,7 @@ export default Ember.Controller.extend({
         module.remove();
       });
       this.transitionToRoute('index');
-    },
+    }
 
   }
 

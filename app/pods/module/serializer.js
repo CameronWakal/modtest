@@ -4,7 +4,7 @@ export default ApplicationSerializer.extend({
 
   attrs: {
     ports: { embedded: 'always' },
-    settings: { embedded: 'always' },
-  },
+    settings: { embedded: 'always' }
+  }
 
 });

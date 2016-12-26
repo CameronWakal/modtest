@@ -37,7 +37,7 @@ export default XRangeInputComponent.extend({
       horizontalClass: 'rangeslider-horizontal',
       verticalClass: 'rangeslider-vertical',
       fillClass: 'rangeslider-fill',
-      handleClass: 'rangeslider-handle',
+      handleClass: 'rangeslider-handle'
     });
   },
 
