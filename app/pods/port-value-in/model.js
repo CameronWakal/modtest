@@ -2,26 +2,35 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import Port from '../port/model';
 
+const {
+  observer
+} = Ember;
+
+const {
+  hasMany,
+  attr
+} = DS;
+
 export default Port.extend({
 
-  type: 'port-value-in', //modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  type: 'port-value-in', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
 
-  connections: DS.hasMany('port-value-out', {async: true}),
-  disabledValue: DS.attr('number'),
+  connections: hasMany('port-value-out', { async: true }),
+  disabledValue: attr('number'),
 
   getValue() {
 
-    if(!this.get('isEnabled')) {
+    if (!this.get('isEnabled')) {
       return this.get('disabledValue');
     }
 
-    //sum all input values but leave the result as null if all inputs are null
-    var value = null;
-    var totalValue = null;
-    this.get('connections').forEach( port => {
+    // sum all input values but leave the result as null if all inputs are null
+    let value = null;
+    let totalValue = null;
+    this.get('connections').forEach((port) => {
       value = parseInt(port.getValue());
-      if( !isNaN(value) ) {
-        if( totalValue == null ) {
+      if (!isNaN(value)) {
+        if (totalValue == null) {
           totalValue = 0;
         }
         totalValue += value;
@@ -30,8 +39,8 @@ export default Port.extend({
     return totalValue;
   },
 
-  onDisabledValueChanged: Ember.observer('disabledValue', function(){
-    if( this.get('hasDirtyAttributes') && !this.get('isNew') ) {
+  onDisabledValueChanged: observer('disabledValue', function() {
+    if (this.get('hasDirtyAttributes') && !this.get('isNew')) {
       console.log('port-value-in disabledValueChanged');
       this.requestSave();
     }

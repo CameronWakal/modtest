@@ -7,18 +7,24 @@ export default LFAdapter.extend({
   // to saved, without persisting to the api. This is useful for embedded record models that
   // need to be marked as saved, but should only be persisted as embedded records on the parent model.
 
-  updateRecord: function(store, type, snapshot) {
-    if (snapshot.adapterOptions && snapshot.adapterOptions.dontPersist) { return null; }
+  updateRecord(store, type, snapshot) {
+    if (snapshot.adapterOptions && snapshot.adapterOptions.dontPersist) {
+      return null;
+    }
     return this._super(store, type, snapshot);
   },
 
-  createRecord: function(store, type, snapshot) {
-    if (snapshot.adapterOptions && snapshot.adapterOptions.dontPersist) { return null; }
+  createRecord(store, type, snapshot) {
+    if (snapshot.adapterOptions && snapshot.adapterOptions.dontPersist) {
+      return null;
+    }
     return this._super(store, type, snapshot);
   },
 
-  deleteRecord: function(store, type, snapshot) {
-    if (snapshot.adapterOptions && snapshot.adapterOptions.dontPersist) { return null; }
+  deleteRecord(store, type, snapshot) {
+    if (snapshot.adapterOptions && snapshot.adapterOptions.dontPersist) {
+      return null;
+    }
     return this._super(store, type, snapshot);
   }
 

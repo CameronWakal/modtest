@@ -1,10 +1,15 @@
 import DS from 'ember-data';
 
-export default DS.Model.extend({
-  value: DS.attr('string'),
+const {
+  Model,
+  attr
+} = DS;
+
+export default Model.extend({
+  value: attr('string'),
 
   save() {
-    this._super({adapterOptions: {dontPersist: true}});
+    this._super({ adapterOptions: { dontPersist: true } });
   }
-  
+
 });

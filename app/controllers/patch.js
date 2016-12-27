@@ -1,6 +1,10 @@
 import Ember from 'ember';
 
-export default Ember.Controller.extend({
+const {
+  Controller
+} = Ember;
+
+export default Controller.extend({
 
   actions: {
 
@@ -8,11 +12,11 @@ export default Ember.Controller.extend({
       let modules = this.model.get('modules');
       let modulesList = modules.toArray();
       this.model.destroyRecord();
-      modulesList.forEach( (module) => {
+      modulesList.forEach((module) => {
         module.remove();
       });
       this.transitionToRoute('index');
-    },
+    }
 
   }
 

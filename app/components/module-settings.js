@@ -1,19 +1,24 @@
 import Ember from 'ember';
 
-export default Ember.Component.extend({
+const {
+  Component,
+  computed
+} = Ember;
+
+export default Component.extend({
 
   classNames: ['module-settings'],
   classNameBindings: ['isEmpty:empty'],
 
-  isEmpty: Ember.computed('module.settings', 'module.valueInPorts', function() {
+  isEmpty: computed('module.settings', 'module.valueInPorts', function() {
     return !this.get('hasSettings') && !this.get('hasPorts');
   }),
 
-  hasSettings: Ember.computed.notEmpty('module.settings'),
-  hasValueInPorts: Ember.computed.notEmpty('module.valueInPorts'),
-  hasValueOutPorts: Ember.computed.notEmpty('module.valueOutPorts'),
-  hasEventInPorts: Ember.computed.notEmpty('module.eventInPorts'),
-  hasEventOutPorts: Ember.computed.notEmpty('module.eventOutPorts'),
-  hasPorts: Ember.computed.notEmpty('module.ports'),
+  hasSettings: computed.notEmpty('module.settings'),
+  hasValueInPorts: computed.notEmpty('module.valueInPorts'),
+  hasValueOutPorts: computed.notEmpty('module.valueOutPorts'),
+  hasEventInPorts: computed.notEmpty('module.eventInPorts'),
+  hasEventOutPorts: computed.notEmpty('module.eventOutPorts'),
+  hasPorts: computed.notEmpty('module.ports')
 
 });

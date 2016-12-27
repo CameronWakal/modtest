@@ -4,6 +4,6 @@ export default ModuleSerializer.extend({
 
   attrs: {
     degrees: { embedded: 'always' }
-  },
-  
+  }
+
 });

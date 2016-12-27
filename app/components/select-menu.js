@@ -1,16 +1,20 @@
 import Ember from 'ember';
 
-export default Ember.Component.extend({
+const {
+  Component
+} = Ember;
+
+export default Component.extend({
 
   tagName: 'select',
   attributeBindings: ['name'],
 
   change() {
-    const selectedIndex = this.$('option:selected').index();
-    const items = this.get('setting.items').toArray();
-    const selectedItem = items[selectedIndex];
+    let selectedIndex = this.$('option:selected').index();
+    let items = this.get('setting.items').toArray();
+    let selectedItem = items[selectedIndex];
     this.set('setting.selectedItem', selectedItem);
     this.set('setting.value', selectedItem.get('value'));
-  },
+  }
 
 });

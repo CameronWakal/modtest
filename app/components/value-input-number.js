@@ -1,17 +1,25 @@
 import Ember from 'ember';
 
-export default Ember.TextField.extend({
+const {
+  TextField,
+  observer,
+  computed
+} = Ember;
+
+export default TextField.extend({
 
   classNames: ['value-input-number'],
-  classNameBindings:['isPending:pending'],
+  classNameBindings: ['isPending:pending'],
 
-  isPending: Ember.computed('value', 'boundValue', function(){
+  isPending: computed('value', 'boundValue', function() {
     let value = parseInt(this.get('value'));
-    if( isNaN(value) ) { value = null; }
+    if (isNaN(value)) {
+      value = null;
+    }
     return value !== this.get('boundValue');
   }),
 
-  onBoundValueChanged: Ember.observer('boundValue', function(){
+  onBoundValueChanged: observer('boundValue', function() {
     this.resetValue();
   }),
 
@@ -28,8 +36,8 @@ export default Ember.TextField.extend({
   },
 
   updateValue() {
-    let value = parseInt( this.get('value') );
-    if(isNaN(value)) {
+    let value = parseInt(this.get('value'));
+    if (isNaN(value)) {
       this.set('value', null);
       this.set('boundValue', null);
     } else {
@@ -44,17 +52,17 @@ export default Ember.TextField.extend({
 
   keyUp(event) {
 
-    switch(event.keyCode) {
-      case 13: //enter/return
+    switch (event.keyCode) {
+      case 13: // enter/return
         this.$().select();
       break;
-      case 27: //escape
+      case 27: // escape
         this.$().select();
       break;
-      case 38: //up arrow
+      case 38: // up arrow
         this.$().select();
       break;
-      case 40: //down arrow
+      case 40: // down arrow
         this.$().select();
 
     }
@@ -63,18 +71,18 @@ export default Ember.TextField.extend({
   keyDown(event) {
     console.log('keycode:', event.keyCode);
 
-    switch(event.keyCode) {
-      case 13: //enter/return
+    switch (event.keyCode) {
+      case 13: // enter/return
         this.updateValue();
       break;
-      case 27: //escape
+      case 27: // escape
         this.resetValue();
       break;
-      case 38: //up arrow
+      case 38: // up arrow
         this.incrementProperty('value');
         this.updateValue();
       break;
-      case 40: //down arrow
+      case 40: // down arrow
         this.decrementProperty('value');
         this.updateValue();
     }
