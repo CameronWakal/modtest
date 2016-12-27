@@ -1,6 +1,15 @@
 import Ember from 'ember';
 
-export default Ember.Component.extend({
+const {
+  Component,
+  computed,
+  observer,
+  String,
+  $,
+  run
+} = Ember;
+
+export default Component.extend({
   classNames: ['module'],
   classNameBindings: ['portIsConnectingFrom:port-connecting-from'],
   attributeBindings: ['inlineStyles:style', 'tabindex'],
@@ -10,36 +19,36 @@ export default Ember.Component.extend({
   didMove: false,
   moveOffsetX: null,
   moveOffsetY: null,
-  xPos: Ember.computed.alias('module.xPos'),
-  yPos: Ember.computed.alias('module.yPos'),
+  xPos: computed.alias('module.xPos'),
+  yPos: computed.alias('module.yPos'),
 
   portIsConnectingFrom: false,
 
-  inlineStyles: Ember.computed('xPos', 'yPos', function(){
-    let styleString = 'left:'+this.get('xPos')+'px;'+'top:'+this.get('yPos')+'px';
-    return new Ember.String.htmlSafe(styleString);
+  inlineStyles: computed('xPos', 'yPos', function() {
+    let styleString = `left:${this.get('xPos')}px; top:${this.get('yPos')}px`;
+    return new String.htmlSafe(styleString);
   }),
 
-  onPortsChanged: Ember.observer( 'module.ports.@each.isEnabled', function(){
+  onPortsChanged: observer('module.ports.@each.isEnabled', function() {
     this.sendAction('portsChanged');
   }),
-  
+
   mouseDown(event) {
-    if( Ember.$(event.target).hasClass('module') ||
-        Ember.$(event.target).hasClass('module-label')
+    if ($(event.target).hasClass('module') ||
+        $(event.target).hasClass('module-label')
       ) {
       this.set('isMoving', true);
-      this.set('moveOffsetX', event.pageX - this.get('xPos') );
-      this.set('moveOffsetY', event.pageY - this.get('yPos') );
-      Ember.$(document).on('mouseup', this.mouseUpBody.bind(this));
-      Ember.$(document).on('mousemove', this.mouseMoveBody.bind(this));
+      this.set('moveOffsetX', event.pageX - this.get('xPos'));
+      this.set('moveOffsetY', event.pageY - this.get('yPos'));
+      $(document).on('mouseup', this.mouseUpBody.bind(this));
+      $(document).on('mousemove', this.mouseMoveBody.bind(this));
       this.sendAction('selected');
       this.sendAction('startedMoving');
     }
   },
 
   keyDown(event) {
-    if( event.keyCode === 8 && this.$().is(':focus') ) {
+    if (event.keyCode === 8 && this.$().is(':focus')) {
       event.preventDefault();
       this.sendAction('remove');
     }
@@ -48,25 +57,25 @@ export default Ember.Component.extend({
   mouseMoveBody(event) {
     event.preventDefault();
     let self = this;
-    Ember.run(function(){
+    run(function() {
       self.set('didMove', true);
-      self.set('xPos', event.pageX - self.get('moveOffsetX') );
-      self.set('yPos', event.pageY - self.get('moveOffsetY') );
+      self.set('xPos', event.pageX - self.get('moveOffsetX'));
+      self.set('yPos', event.pageY - self.get('moveOffsetY'));
     });
   },
-  
+
   mouseUpBody(event) {
     event.preventDefault();
     let self = this;
-    Ember.run(function(){
+    run(function() {
       self.set('isMoving', false);
-      if(self.get('didMove')) {
+      if (self.get('didMove')) {
         self.get('module').requestSave();
         self.set('didMove', false);
       }
       self.sendAction('finishedMoving');
-      Ember.$(document).off('mouseup');
-      Ember.$(document).off('mousemove');
+      $(document).off('mouseup');
+      $(document).off('mousemove');
     });
   },
 
@@ -102,5 +111,5 @@ export default Ember.Component.extend({
     }
 
   }
-  
+
 });

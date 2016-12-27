@@ -6,6 +6,6 @@ moduleFor('route:patch', 'Unit | Route | patch', {
 });
 
 test('it exists', function(assert) {
-  var route = this.subject();
+  let route = this.subject();
   assert.ok(route);
 });

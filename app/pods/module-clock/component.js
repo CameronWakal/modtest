@@ -1,12 +1,16 @@
 import Ember from 'ember';
 import ModuleGenericComponent from '../module/component';
 
+const {
+  computed
+} = Ember;
+
 export default ModuleGenericComponent.extend({
 
   classNames: ['module-clock'],
   classNameBindings: ['isStarted:started'],
 
-  isStarted: Ember.computed.alias('module.isStarted'),
+  isStarted: computed.alias('module.isStarted'),
 
   actions: {
     start() {

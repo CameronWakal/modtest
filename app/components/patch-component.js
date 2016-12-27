@@ -1,16 +1,23 @@
 import Ember from 'ember';
 
-export default Ember.Component.extend({
+const {
+  Component,
+  observer,
+  computed,
+  run
+} = Ember;
+
+export default Component.extend({
   classNames: ['patch'],
 
   classNameBindings: ['newConnectionClass'],
 
   diagramNeedsUpdate: true,
-  //css class to tell ports which type can accept the current pending connection
-  newConnectionClass: Ember.computed('connectingFromPort', function(){
+  // css class to tell ports which type can accept the current pending connection
+  newConnectionClass: computed('connectingFromPort', function() {
     let port = this.get('connectingFromPort');
-    if(port) {
-      return 'new-connection new-connection-from-'+port.get('type');
+    if (port) {
+      return `new-connection new-connection-from-${port.get('type')}`;
     } else {
       return null;
     }
@@ -20,8 +27,8 @@ export default Ember.Component.extend({
   movingModule: null,
   connectingFromPort: null,
   connectingToPort: null,
-  
-  patchChanged: Ember.observer('patch', function() {
+
+  patchChanged: observer('patch', function() {
     this.set('diagramNeedsUpdate', true);
   }),
 
@@ -43,9 +50,9 @@ export default Ember.Component.extend({
       this.set('connectingFromPort', port);
     },
 
-    //if there is a toPort and fromPort when finished, make the connection!
+    // if there is a toPort and fromPort when finished, make the connection!
     portFinishedConnecting() {
-      if(this.get('connectingToPort')) {
+      if (this.get('connectingToPort')) {
         this.addConnection(this.get('connectingFromPort'), this.get('connectingToPort'));
       }
       this.set('connectingFromPort', null);
@@ -66,9 +73,9 @@ export default Ember.Component.extend({
 
     mouseEnterPort(toPort) {
       let fromPort = this.get('connectingFromPort');
-      if(fromPort) { //we're dragging to create a new connection
-        if(toPort.get('type') === fromPort.get('compatibleType')) { //we mouseEntered a compatible port type
-          if(!fromPort.get('connections').findBy('id', toPort.id)) { //the two ports aren't already connected
+      if (fromPort) { // we're dragging to create a new connection
+        if (toPort.get('type') === fromPort.get('compatibleType')) { // we mouseEntered a compatible port type
+          if (!fromPort.get('connections').findBy('id', toPort.id)) { // the two ports aren't already connected
             this.set('connectingToPort', toPort);
           }
         }
@@ -79,15 +86,15 @@ export default Ember.Component.extend({
       this.set('connectingToPort', null);
     },
 
-    //diagram shit
+    // diagram shit
 
-    diagramDidUpdate(){
-      Ember.run.scheduleOnce('afterRender', this, function() {
+    diagramDidUpdate() {
+      run.scheduleOnce('afterRender', this, function() {
         this.set('diagramNeedsUpdate', false);
       });
     },
 
-    //module management
+    // module management
 
     removeModule(module) {
       this.patch.get('modules').removeObject(module);
@@ -98,12 +105,12 @@ export default Ember.Component.extend({
     },
 
     addModule(type) {
-      let module = this.store.createRecord('module-'+type, { patch: this.patch });
+      let module = this.store.createRecord(`module-${type}`, { patch: this.patch });
       this.patch.get('modules').pushObject(module);
       this.patch.save();
     },
 
-    removeConnection(sourcePort, destPort) {      
+    removeConnection(sourcePort, destPort) {
       sourcePort.get('connections').removeObject(destPort);
       console.log('patch.removeConnection() requestSave()');
       sourcePort.get('module').requestSave();

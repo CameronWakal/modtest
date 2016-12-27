@@ -1,16 +1,21 @@
 import Ember from 'ember';
 
-export default Ember.Route.extend({
+const {
+  Route,
+  inject
+} = Ember;
+
+export default Route.extend({
   model() {
     return this.store.findAll('patch');
   },
-  
-  midi: Ember.inject.service(),
+
+  midi: inject.service(),
 
   init() {
-    //initialize midi service
+    // initialize midi service
     this.get('midi').setup();
-    this._super.apply(this, arguments);
+    this._super(...arguments);
   },
 
   actions: {
@@ -20,7 +25,7 @@ export default Ember.Route.extend({
       this.transitionTo('patch', patch);
     },
     removeCurrentPatch() {
-      //destroy current patch including modules and ports, leave route
+      // destroy current patch including modules and ports, leave route
       let currentPatchController = this.controllerFor('patch');
       currentPatchController.send('removeCurrentPatch');
     }

@@ -1,35 +1,40 @@
 import Ember from 'ember';
 import XRangeInputComponent from 'emberx-range-input/components/x-range-input';
 
-//emberx-range-input CLI addon for a range input component,
-//polyfilled by rangeslider.js so the slider can be both vertical AND have custom styles
+const {
+  observer,
+  run
+} = Ember;
+
+// emberx-range-input CLI addon for a range input component,
+// polyfilled by rangeslider.js so the slider can be both vertical AND have custom styles
 
 export default XRangeInputComponent.extend({
 
   attributeBindings: ['data-orientation'],
   'data-orientation': 'vertical',
 
-  onAttrsChanged: Ember.observer('min', 'max', 'step', function(){
+  onAttrsChanged: observer('min', 'max', 'step', function() {
     let self = this;
-    //seems that if you call rangeslider right away, ember hasn't yet updated the
-    //changed attributes in the DOM, so the update doesn't work.
-    Ember.run.next(function(){
+    // seems that if you call rangeslider right away, ember hasn't yet updated the
+    // changed attributes in the DOM, so the update doesn't work.
+    run.next(function() {
       self.$().rangeslider('update', true);
     });
   }),
 
-  onDisplayScaleChanged: Ember.observer('displayScale', function() {
-    //in the case of the new height, the update delay doesn't seem to be required.
+  onDisplayScaleChanged: observer('displayScale', function() {
+    // in the case of the new height, the update delay doesn't seem to be required.
     this.$().rangeslider('update', true);
   }),
 
-  onValueChanged: Ember.observer('value', function(){
+  onValueChanged: observer('value', function() {
     this.$().val(this.get('value')).change();
   }),
 
   didInsertElement() {
     this._super();
-    var self = this;
+    let self = this;
     self.$().rangeslider({
       polyfill: false,
       rangeClass: 'rangeslider',

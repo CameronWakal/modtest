@@ -1,5 +1,9 @@
-import Ember from "ember";
+import Ember from 'ember';
 
-export default Ember.Helper.helper(function([leftSide, rightSide]) {
+const {
+  Helper
+} = Ember;
+
+export default Helper.helper(function([leftSide, rightSide]) {
   return leftSide === rightSide;
 });

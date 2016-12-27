@@ -5,5 +5,5 @@ export default ModuleSerializer.extend({
   attrs: {
     steps: { embedded: 'always' }
   }
-  
+
 });

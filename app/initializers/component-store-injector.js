@@ -4,5 +4,5 @@ export function initialize(application) {
 
 export default {
   name: 'component-store-injector',
-  initialize: initialize
+  initialize
 };
