@@ -11,10 +11,12 @@ export default Route.extend({
   },
 
   midi: inject.service(),
+  scheduler: inject.service(),
 
   init() {
     // initialize midi service
     this.get('midi').setup();
+    this.get('scheduler').setup();
     this._super(...arguments);
   },
 
