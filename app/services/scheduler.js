@@ -1,4 +1,4 @@
-/**
+/*
   A service to queue timestamped callback events and call groups of events
   periodically. The goal is reasonably low-latency and reliable callback
   timing, without congesting the app with too many timers scheduled by
@@ -9,8 +9,7 @@ import Ember from 'ember';
 
 const {
   Service,
-  get,
-  set
+  get
 } = Ember;
 
 // for slo-mo debugging

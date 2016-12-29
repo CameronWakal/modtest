@@ -16,7 +16,7 @@ const {
 
 const defaultRes = 4; // ticks per beat
 const defaultTempo = 120;
-const latency = 0;
+const latency = 10;
 
 export default Module.extend({
 
@@ -37,7 +37,7 @@ export default Module.extend({
   tickDuration: null,
 
   source: attr('string', { defaultValue: 'Internal' }),
-  
+
   onSourceChanged: observer('source', function() {
     if (get(this, 'source') === 'Internal') {
       console.log('clock: use internal source');
