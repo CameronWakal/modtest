@@ -79,10 +79,12 @@ export default Module.extend({
     }
     set(this, 'isStarted', true);
     if (get(this, 'source') === 'Internal') {
-      get(this, 'scheduler').queueEvent({
-        callback: this.sendTrigger.bind(this),
-        time: performance.now()
-      });
+      get(this, 'scheduler').queueEvent(
+        { targetTime: performance.now(),
+          outputTime: performance.now() + latency
+        },
+        this.sendEvent.bind(this)
+      );
     }
   },
 
@@ -97,7 +99,7 @@ export default Module.extend({
     get(this, 'resetOutPort').sendEvent();
   },
 
-  sendTrigger(timestamp) {
+  sendEvent(event) {
     if (this.isStarted) {
       if (get(this, 'source') === 'Internal') {
         // internal events get accurate target times based on tempo, resolution, and start time
@@ -113,10 +115,12 @@ export default Module.extend({
 
         this.tickDuration = 60000 / (tempo * res); // milliseconds per tick
 
-        get(this, 'scheduler').queueEvent({
-          callback: this.sendTrigger.bind(this),
-          time: timestamp + this.tickDuration
-        });
+        get(this, 'scheduler').queueEvent(
+          { targetTime: event.targetTime + this.tickDuration,
+            outputTime: event.outputTime + this.tickDuration
+          },
+          this.sendEvent.bind(this)
+        );
 
       } else if (get(this, 'source') !== 'External') {
         console.log('error sending trigger, unrecognized source setting of', get(this, 'sourceSetting.value'));
@@ -125,9 +129,9 @@ export default Module.extend({
 
       // add some latency to the midi output time to allow room for callback inaccuracy and event execution
       get(this, 'trigOutPort').sendEvent({
-        targetTime: timestamp,
-        outputTime: timestamp + latency,
-        callbackTime: performance.now()
+        targetTime: event.targetTime,
+        outputTime: event.outputTime,
+        callbackTime: event.callbackTime
       });
     }
   }

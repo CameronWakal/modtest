@@ -21,15 +21,18 @@ const lookahead = 16.666;
 
 export default Service.extend({
 
-  events: [],
+  requests: [],
   frameCounter: 0, // for slo-mo debugging
 
   setup() {
     window.requestAnimationFrame(this._sendEvents.bind(this));
   },
 
-  queueEvent(event) {
-    this.events.pushObject(event);
+  queueEvent(event, callback) {
+    this.requests.pushObject({
+      callback,
+      event
+    });
   },
 
   _sendEvents() {
@@ -45,22 +48,25 @@ export default Service.extend({
     }
 
     // start by finding the event with the earliest timestamp
-    let sortedEvents = this.events.sortBy('time');
-    let event = get(sortedEvents, 'firstObject');
+    let sortedRequests = this.requests.sortBy('event.targetTime');
+    let event = get(sortedRequests, 'firstObject.event');
+    let callback = get(sortedRequests, 'firstObject.callback');
 
     // remove and call events until there are no events left
     // with timestamps earlier than the current time
-    while (event && event.time <= performance.now() + lookahead) {
+    while (event && event.targetTime <= performance.now() + lookahead) {
 
-      this.events = sortedEvents.slice(1);
-      event.callback(event.time);
+      this.requests = sortedRequests.slice(1);
+      event.callbackTime = performance.now();
+      callback(event);
 
-      // console.log('called:', event.time, 'queue:', this.events.mapBy('time'));
+      // console.log('called:', event.targetTime, 'queue:', this.requests.mapBy('event.targetTime'));
 
       // sort the queue each time, because the last event
       // callback might have added more items to the queue.
-      sortedEvents = this.events.sortBy('time');
-      event = get(sortedEvents, 'firstObject');
+      sortedRequests = this.requests.sortBy('event.targetTime');
+      event = get(sortedRequests, 'firstObject.event');
+      callback = get(sortedRequests, 'firstObject.callback');
 
     }
 

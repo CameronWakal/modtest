@@ -3,7 +3,8 @@ import Module from '../module/model';
 import DS from 'ember-data';
 
 const {
-  get
+  get,
+  inject
 } = Ember;
 
 const {
@@ -14,6 +15,8 @@ export default Module.extend({
 
   type: 'module-repeat', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   label: 'Repeat',
+
+  scheduler: inject.service(),
 
   tempoInPort: belongsTo('port-value-in', { async: false }),
   countInPort: belongsTo('port-value-in', { async: false }), // number of times to repeat
@@ -42,13 +45,18 @@ export default Module.extend({
     let msPerRepeat = 60000 / (tempo * repeatsPerBeat);
 
     for (let i = 0; i < count; i++) {
-      get(this, 'trigOutPort').sendEvent({
-        targetTime: event.targetTime + (msPerRepeat * (i + 1)),
-        outputTime: event.outputTime + (msPerRepeat * (i + 1)),
-        callbackTime: event.callbackTime + (msPerRepeat * (i + 1))
-      });
+      get(this, 'scheduler').queueEvent(
+        { targetTime: event.targetTime + (msPerRepeat * (i + 1)),
+          outputTime: event.outputTime + (msPerRepeat * (i + 1))
+        },
+        this.sendEvent.bind(this)
+      );
     }
 
+  },
+
+  sendEvent(event) {
+    get(this, 'trigOutPort').sendEvent(event);
   },
 
   ready() {

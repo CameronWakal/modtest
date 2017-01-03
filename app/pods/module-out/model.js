@@ -54,7 +54,7 @@ export default Module.extend({
       let callbackAverage = callbackTotal / callbackDeltas.length;
       let executionAverage = executionTotal / executionDeltas.length;
 
-      console.log(callbackAverage, executionAverage);
+      console.log('avg callback vs target time', callbackAverage, '\navg completion time from callback', executionAverage);
 
       this.set('events', []);
 
