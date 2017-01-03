@@ -44,18 +44,47 @@ export default Module.extend({
     let repeatsPerBeat = (count + 1) / duration;
     let msPerRepeat = 60000 / (tempo * repeatsPerBeat);
 
-    for (let i = 0; i < count; i++) {
+    get(this, 'scheduler').queueEvent(
+      { targetTime: event.targetTime + msPerRepeat,
+        outputTime: event.outputTime + msPerRepeat,
+        repeatCount: 1
+      },
+      this.sendEvent.bind(this)
+    );
+
+  },
+
+  sendEvent(event) {
+    let tempo = get(this, 'tempoInPort').getValue();
+    let count = this.get('countInPort').getValue();
+    let duration = this.get('durationInPort').getValue();
+    if (tempo == null) {
+      tempo = 120;
+    }
+    if (count == null) {
+      count = 0;
+    }
+    if (duration == null) {
+      duration = 1;
+    }
+
+    if (count <= 0 || duration <= 0) {
+      return;
+    }
+
+    let repeatsPerBeat = (count + 1) / duration;
+    let msPerRepeat = 60000 / (tempo * repeatsPerBeat);
+
+    if (event.repeatCount < count) {
       get(this, 'scheduler').queueEvent(
-        { targetTime: event.targetTime + (msPerRepeat * (i + 1)),
-          outputTime: event.outputTime + (msPerRepeat * (i + 1))
+        { targetTime: event.targetTime + msPerRepeat,
+          outputTime: event.outputTime + msPerRepeat,
+          repeatCount: event.repeatCount + 1
         },
         this.sendEvent.bind(this)
       );
     }
 
-  },
-
-  sendEvent(event) {
     get(this, 'trigOutPort').sendEvent(event);
   },
 
