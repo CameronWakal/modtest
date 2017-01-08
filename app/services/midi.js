@@ -92,39 +92,39 @@ export default Service.extend({
         if (this.timingListener) {
           this.timingListener.sendTrigger(event.receivedTime);
         }
-        break;
+      break;
       case 242:
         console.log('set song position', data[1], data[2]);
-        break;
+      break;
       case 250:
         console.log('start');
         if (this.timingListener) {
           this.timingListener.reset();
           this.timingListener.start();
         }
-        break;
+      break;
       case 251:
         console.log('continue');
         if (this.timingListener) {
           this.timingListener.start();
         }
-        break;
+      break;
       case 252:
         console.log('stop');
         if (this.timingListener) {
           this.timingListener.stop();
         }
-        break;
+      break;
       default:
         switch (data[0] & 0xf0) { // channel agnostic message type.
           case 144: // noteOn message
             console.log('note on');
             // this.listener.noteOn(note, velocity);
-            break;
+          break;
           case 128: // noteOff message
             console.log('note off');
             // this.listener.noteOff(note, velocity);
-            break;
+          break;
         }
     }
   },

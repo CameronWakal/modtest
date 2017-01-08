@@ -17,7 +17,6 @@ export default Module.extend({
   value: attr('number'),
 
   getValue() {
-    console.log('get value', this.get('value'));
     return this.get('value');
   },
 
@@ -31,8 +30,12 @@ export default Module.extend({
   },
 
   onValueChanged: observer('value', function() {
-    console.log('module-value.onValueChanged() requestSave()');
-    this.requestSave();
+
+    if (this.get('hasDirtyAttributes')) {
+      console.log('module-value.onValueChanged() requestSave()');
+      this.requestSave();
+    }
+
   })
 
 });
