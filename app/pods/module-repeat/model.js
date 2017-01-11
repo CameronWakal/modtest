@@ -4,7 +4,9 @@ import DS from 'ember-data';
 
 const {
   get,
-  inject
+  inject,
+  computed,
+  computed: { equal }
 } = Ember;
 
 const {
@@ -20,6 +22,15 @@ export default Module.extend({
   mode: attr('string', { defaultValue: 'count only' }),
   delayUnits: attr('string', { defaultValue: 'beats' }),
   gateUnits: attr('string', { defaultValue: 'beats' }),
+
+  gateIsOn: computed('mode', function() {
+    return get(this, 'mode') === 'gate only' || get(this, 'mode') === 'count+gate';
+  }),
+  countIsOn: computed('mode', function() {
+    return get(this, 'mode') === 'count only' || get(this, 'mode') === 'count+gate';
+  }),
+  gateIsInBeats: equal('gateUnits', 'beats'),
+  delayIsInBeats: equal('delayUnits', 'beats'),
 
   scheduler: inject.service(),
 
@@ -38,83 +49,39 @@ export default Module.extend({
   // in count+gate mode, an event repeats are limited by both count and gate.
   // gate and delay duration can be supplied in either beats or milliseconds.
   onEventIn(event) {
-    let gateIsOn, countIsOn, gateIsInBeats, delayIsInBeats,
-      tempo, msPerBeat,
-      count,
-      gateNumerator, gateDenominator, gate,
-      delayNumerator, delayDenominator, delay,
-      repeatEvent, eventRepeatCount, eventOriginalTargetTime,
-      eventShouldRepeat;
+    let tempo = get(this, 'tempo');
+    let msPerBeat = 60000 / tempo;
 
-    // send event
+    // gate is the maximum amount of time after the original event that repeats
+    // will continue to fire.
+    let gateIsOn = get(this, 'gateIsOn');
+    let gateNumerator = get(this, 'gateNumeratorInPort').getValue();
+    let gateDenominator = get(this, 'gateDenominatorInPort').getValue();
+    let gate = gateNumerator / gateDenominator;
+    if (get(this, 'delayIsInBeats')) {
+      gate *= msPerBeat;
+    }
+    
+    // count is the maximum number of repeats that will fire for one original event.
+    let countIsOn = get(this, 'countIsOn');
+    let count = get(this, 'countInPort').getValue();
+
+    // delay is the amount of time between each repeat of an original event.
+    let delayNumerator = get(this, 'delayNumeratorInPort').getValue();
+    let delayDenominator = get(this, 'delayDenominatorInPort').getValue();
+    let delay = delayNumerator / delayDenominator;
+    if (get(this, 'delayIsInBeats')) {
+      delay *= msPerBeat;
+    }
+
     // examine incoming event and send it through if it's a queued repeat event
     if (event.repeatCount != null && event.repeatOriginalTargetTime != null) {
-      console.log('sendEvent repeatCount', event.repeatCount);
+      // console.log('sendEvent repeatCount', event.repeatCount);
       get(this, 'trigOutPort').sendEvent(event);
     }
 
-    // prep settings
-    // check whether gate and count will be used, and in what units
-    gateIsOn = get(this, 'mode') === 'gate only' || get(this, 'mode') === 'count+gate';
-    countIsOn = get(this, 'mode') === 'count only' || get(this, 'mode') === 'count+gate';
-    gateIsInBeats = get(this, 'gateUnits') === 'beats';
-    delayIsInBeats = get(this, 'delayUnits') === 'beats';
-
-    // tempo setup
-    // if beats will be used, calculate msPerBeat based on tempo
-    if (gateIsInBeats || delayIsInBeats) {
-      tempo = get(this, 'tempo');
-      if (tempo <= 0 || tempo == null) {
-        tempo = 100;
-      }
-      msPerBeat = 60000 / tempo;
-      console.log('tempo', tempo, 'msPerBeat', msPerBeat);
-    }
-
-    // gate setup
-    // calculate gate duration if gate is on
-    if (gateIsOn) {
-      gateNumerator = get(this, 'gateNumeratorInPort').getValue();
-      gateDenominator = get(this, 'gateDenominatorInPort').getValue();
-      if (gateNumerator == null || gateNumerator <= 0) {
-        return;
-      }
-      if (gateDenominator == null || gateDenominator <= 0) {
-        gateDenominator = 1;
-      }
-      gate = gateNumerator / gateDenominator;
-      if (gateIsInBeats) {
-        gate *= msPerBeat;
-      }
-      console.log('gate', gate, 'isInBeats', gateIsInBeats);
-    }
-
-    // count setup
-    if (countIsOn) {
-      count = get(this, 'countInPort').getValue();
-      if (count == null || count <= 0) {
-        return;
-      }
-      console.log('count', count);
-    }
-
-    // delay setup
-    delayNumerator = get(this, 'delayNumeratorInPort').getValue();
-    delayDenominator = get(this, 'delayDenominatorInPort').getValue();
-    if (delayNumerator == null || delayNumerator <= 0) {
-      return;
-    }
-    if (delayDenominator == null || delayDenominator <= 0) {
-      delayDenominator = 1;
-    }
-    delay = delayNumerator / delayDenominator;
-    if (delayIsInBeats) {
-      delay *= msPerBeat;
-    }
-    console.log('delay', delay, 'isInBeats', delayIsInBeats);
-
-    // prep event
-    // add repeat properties to event if not already present
+    // create the next repeat event based on incoming event properties
+    let repeatEvent, eventRepeatCount, eventOriginalTargetTime;
     if (event.repeatCount == null) {
       eventRepeatCount = 1;
     } else {
@@ -132,9 +99,8 @@ export default Module.extend({
       repeatOriginalTargetTime: eventOriginalTargetTime
     };
 
-    // queue repeat event
-    // check if event meets the criteria to be repeated, if so, queue
-    eventShouldRepeat = true;
+    // if the new event should be repeated, send it to the queue
+    let eventShouldRepeat = true;
     if (countIsOn && repeatEvent.repeatCount > count) {
       eventShouldRepeat = false;
     }
@@ -151,13 +117,13 @@ export default Module.extend({
     if (this.get('isNew')) {
       this.addEventInPort('trig', 'onEventIn', true);
 
-      // label, portVar, isEnabled, canBeEmpty, defaultValue, minValue, maxValue
-      this.addValueInPort('tempo', 'tempoInPort', true, false, 100, 1, null);
-      this.addValueInPort('count', 'countInPort', true, false, 0, 0, null);
-      this.addValueInPort('gate', 'gateNumeratorInPort', true, false, 0, 0, null);
-      this.addValueInPort('gatedenom', 'gateDenominatorInPort', false, false, 1, 1, null);
-      this.addValueInPort('delay', 'delayNumeratorInPort', true, false, 1, 1, null);
-      this.addValueInPort('delaydenom', 'delayDenominatorInPort', false, false, 1, 1, null);
+      // create value-in ports
+      this.addValueInPort('tempo', 'tempoInPort', { defaultValue: 100, minValue: 1 });
+      this.addValueInPort('count', 'countInPort', { defaultValue: 0, minValue: 0 });
+      this.addValueInPort('gate', 'gateNumeratorInPort', { defaultValue: 0, minValue: 0 });
+      this.addValueInPort('gatedenom', 'gateDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
+      this.addValueInPort('delay', 'delayNumeratorInPort', { defaultValue: 1, minValue: 1 });
+      this.addValueInPort('delaydenom', 'delayDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
 
       this.addEventOutPort('trig', 'trigOutPort', true);
 
