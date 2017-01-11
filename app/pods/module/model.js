@@ -74,10 +74,15 @@ export default Model.extend({
   },
 
   // portVar is used to easily refer to this specific port from within the module
-  addValueInPort(label, portVar, isEnabled) {
+  // isEnabled, canBeEmpty, defaultValue, minValue, maxValue
+  addValueInPort(label, portVar, isEnabled, canBeEmpty, defaultValue, minValue, maxValue) {
     let port = this.store.createRecord('port-value-in', {
       label,
       isEnabled,
+      canBeEmpty,
+      defaultValue,
+      minValue,
+      maxValue,
       module: this
     });
     this.get('ports').pushObject(port);

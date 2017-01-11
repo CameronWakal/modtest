@@ -150,12 +150,15 @@ export default Module.extend({
   ready() {
     if (this.get('isNew')) {
       this.addEventInPort('trig', 'onEventIn', true);
-      this.addValueInPort('tempo', 'tempoInPort', true);
-      this.addValueInPort('count', 'countInPort', true);
-      this.addValueInPort('gate', 'gateNumeratorInPort', true);
-      this.addValueInPort('gatedenom', 'gateDenominatorInPort', false);
-      this.addValueInPort('delay', 'delayNumeratorInPort', true);
-      this.addValueInPort('delaydenom', 'delayDenominatorInPort', false);
+
+      // label, portVar, isEnabled, canBeEmpty, defaultValue, minValue, maxValue
+      this.addValueInPort('tempo', 'tempoInPort', true, false, 100, 1, null);
+      this.addValueInPort('count', 'countInPort', true, false, 0, 0, null);
+      this.addValueInPort('gate', 'gateNumeratorInPort', true, false, 0, 0, null);
+      this.addValueInPort('gatedenom', 'gateDenominatorInPort', false, false, 1, 1, null);
+      this.addValueInPort('delay', 'delayNumeratorInPort', true, false, 1, 1, null);
+      this.addValueInPort('delaydenom', 'delayDenominatorInPort', false, false, 1, 1, null);
+
       this.addEventOutPort('trig', 'trigOutPort', true);
 
       // create settings
