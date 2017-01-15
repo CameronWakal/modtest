@@ -28,21 +28,19 @@ export default Module.extend({
     let control = this.get('controlInPort').getValue();
     if (value != null && control != null) {
       let channel = this.get('channelInPort').getValue();
-      if (channel == null) {
-        channel = 0;
-      }
       this.get('midi').sendCC(control, value, channel);
     }
-
   },
 
   ready() {
     if (this.get('isNew')) {
       // create ports
       this.addEventInPort('trig', 'sendEvent', true);
-      this.addValueInPort('control', 'controlInPort', false);
-      this.addValueInPort('channel', 'channelInPort', false);
-      this.addValueInPort('value', 'valueInPort', true);
+
+      this.addValueInPort('control', 'controlInPort', { isEnabled: false, canBeEmpty: true, defaultValue: 0, minValue: 0, maxValue: 127 });
+      this.addValueInPort('channel', 'channelInPort', { isEnabled: false, defaultValue: 0, minValue: 0, maxValue: 15 });
+      this.addValueInPort('value', 'valueInPort', { canBeEmpty: true, minValue: 0, maxValue: 127 });
+
       console.log('module-ccout.didCreate() requestSave()');
       this.requestSave();
     }
