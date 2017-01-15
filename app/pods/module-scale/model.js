@@ -3,7 +3,9 @@ import DS from 'ember-data';
 import Module from '../module/model';
 
 const {
-  observer
+  observer,
+  get,
+  set
 } = Ember;
 
 const {
@@ -26,10 +28,10 @@ export default Module.extend({
   rootInPort: belongsTo('port-value-in', { async: false }),
 
   onModeChanged: observer('mode', function() {
-    let items = this.get('degrees.items');
+    let items = get(this, 'degrees.items');
 
     if (items) {
-      let mode = this.get('mode');
+      let mode = get(this, 'mode');
       let newValues;
 
       switch (mode) {
@@ -60,7 +62,7 @@ export default Module.extend({
       }
 
       items.forEach((item) => {
-        item.set('value', newValues[item.get('index')]);
+        set(item, 'value', newValues[item.get('index')]);
       });
     }
 
@@ -73,56 +75,38 @@ export default Module.extend({
     // 3. convert to integers
     // 4. do math
 
-    let degree = this.get('degreeInPort').getValue();
-    let octave = this.get('octaveInPort').getValue();
-    let root = this.get('rootInPort').getValue();
+    let degree = get(this, 'degreeInPort').getValue();
+    let octave = get(this, 'octaveInPort').getValue();
+    let root = get(this, 'rootInPort').getValue();
 
-    if (degree == null) {
-      degree = 0;
-    }
-    if (octave == null) {
-      octave = 3;
-    }
-    if (root == null) {
-      root = 0;
-    }
-
-    degree = parseInt(degree);
-    octave = parseInt(octave);
-    root = parseInt(root);
-
-    let degreeInOctave = this.mod(degree, this.get('degreesInScale'));
-    let degreeItem = this.get('degrees.items').findBy('index', degreeInOctave);
-    this.set('degrees.currentItem', degreeItem);
-    let intervalForDegree = degreeItem.get('value');
+    let degreeInOctave = this.mod(degree, get(this, 'degreesInScale'));
+    let degreeItem = get(this, 'degrees.items').findBy('index', degreeInOctave);
+    set(this, 'degrees.currentItem', degreeItem);
+    let intervalForDegree = get(degreeItem, 'value');
 
     if (intervalForDegree == null) {
       return null;
-    } else {
-      intervalForDegree = parseInt(intervalForDegree);
     }
 
-    octave = octave + 1 + this.div(degree, this.get('degreesInScale'));
-
+    octave = octave + 1 + this.div(degree, get(this, 'degreesInScale'));
     let note = (octave * 12) + root + intervalForDegree;
-
     // console.log('octave:'+octave+' root:'+root+' degree:'+degree+' interval:'+intervalForDegree+' note:'+note);
-
     return note;
   },
 
   ready() {
-    if (this.get('isNew')) {
+    if (get(this, 'isNew')) {
 
       // create degrees
-      let degrees = this.store.createRecord('array', { module: this, length: this.get('degreesInScale') });
-      degrees.set('valueMax', 11);
-      this.set('degrees', degrees);
+      let degrees = this.store.createRecord('array', { module: this, length: get(this, 'degreesInScale') });
+      set(degrees, 'valueMax', 11);
+      set(this, 'degrees', degrees);
 
       // create ports
-      this.addValueInPort('degree', 'degreeInPort', true);
-      this.addValueInPort('octave', 'octaveInPort', false);
-      this.addValueInPort('root', 'rootInPort', false);
+      this.addValueInPort('degree', 'degreeInPort', { defaultValue: 0 });
+      this.addValueInPort('octave', 'octaveInPort', { isEnabled: false, defaultValue: 3, minValue: -2, maxValue: 8 });
+      this.addValueInPort('root', 'rootInPort', { isEnabled: false, defaultValue: 0 });
+
       this.addValueOutPort('note', 'getNote', true);
 
       // create settings
@@ -134,12 +118,12 @@ export default Module.extend({
   },
 
   remove() {
-    this.get('degrees').remove();
+    get(this, 'degrees').remove();
     this._super();
   },
 
   save() {
-    this.get('degrees').save();
+    get(this, 'degrees').save();
     this._super();
   },
 

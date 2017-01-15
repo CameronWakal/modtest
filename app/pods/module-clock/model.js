@@ -64,8 +64,9 @@ export default Module.extend({
       this.addMenuSetting('Source', 'source', this, ['Internal', 'External']);
 
       // create ports
-      this.addValueInPort('tempo', 'tempoInPort', false);
-      this.addValueInPort('res', 'resInPort', false);
+      this.addValueInPort('tempo', 'tempoInPort', { isEnabled: false, defaultValue: defaultTempo, minValue: 1 });
+      this.addValueInPort('res', 'resInPort', { isEnabled: false, defaultValue: defaultRes, minValue: 1 });
+
       this.addEventOutPort('reset', 'resetOutPort', false);
       this.addEventOutPort('trig', 'trigOutPort', true);
       console.log('module-clock.didCreate() requestSave()');
@@ -104,15 +105,7 @@ export default Module.extend({
       if (get(this, 'source') === 'Internal') {
         // internal events get accurate target times based on tempo, resolution, and start time
         let tempo = get(this, 'tempoInPort').getValue();
-        if (tempo == null) {
-          tempo = defaultTempo;
-        }
-
         let res = get(this, 'resInPort').getValue();
-        if (res == null) {
-          res = defaultRes;
-        }
-
         this.tickDuration = 60000 / (tempo * res); // milliseconds per tick
 
         get(this, 'scheduler').queueEvent(

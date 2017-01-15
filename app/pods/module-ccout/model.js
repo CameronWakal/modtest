@@ -3,7 +3,8 @@ import Module from '../module/model';
 import DS from 'ember-data';
 
 const {
-  inject
+  inject,
+  get
 } = Ember;
 
 const {
@@ -24,16 +25,16 @@ export default Module.extend({
   sendEvent() {
     // check the connection of the 'note' port for the value of the note to play.
     // let notePort = this.get('ports').findBy('label', 'note');
-    let value = this.get('valueInPort').getValue();
-    let control = this.get('controlInPort').getValue();
+    let value = get(this, 'valueInPort').getValue();
+    let control = get(this, 'controlInPort').getValue();
     if (value != null && control != null) {
-      let channel = this.get('channelInPort').getValue();
-      this.get('midi').sendCC(control, value, channel);
+      let channel = get(this, 'channelInPort').getValue();
+      get(this, 'midi').sendCC(control, value, channel);
     }
   },
 
   ready() {
-    if (this.get('isNew')) {
+    if (get(this, 'isNew')) {
       // create ports
       this.addEventInPort('trig', 'sendEvent', true);
 

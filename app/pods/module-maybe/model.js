@@ -1,9 +1,14 @@
 import DS from 'ember-data';
+import Ember from 'ember';
 import Module from '../module/model';
 
 const {
   belongsTo
 } = DS;
+
+const {
+  get
+} = Ember;
 
 export default Module.extend({
 
@@ -16,28 +21,27 @@ export default Module.extend({
   denominatorInPort: belongsTo('port-value-in', { async: false }),
 
   onEventIn(event) {
-    let numerator = this.get('numeratorInPort').getValue();
-    let denominator = this.get('denominatorInPort').getValue();
-    if (numerator === null || denominator === null) {
-      return;
-    }
+    let numerator = get(this, 'numeratorInPort').getValue();
+    let denominator = get(this, 'denominatorInPort').getValue();
 
     let prob = numerator / denominator;
     let rand = Math.random();
 
     if (rand <= prob) {
-      this.get('eventOutPort').sendEvent(event);
+      get(this, 'eventOutPort').sendEvent(event);
     }
 
   },
 
   ready() {
-    if (this.get('isNew')) {
+    if (get(this, 'isNew')) {
       // create ports
       this.addEventInPort('in', 'onEventIn', true);
       this.addEventOutPort('out', 'eventOutPort', true);
-      this.addValueInPort('numerator', 'numeratorInPort', true);
-      this.addValueInPort('denominator', 'denominatorInPort', true);
+
+      this.addValueInPort('numerator', 'numeratorInPort', { defaultValue: 1, minValue: 0, isEnabled: false });
+      this.addValueInPort('denominator', 'denominatorInPort', { defaultValue: 2, minValue: 1, isEnabled: false });
+
       console.log('module-maybe.didCreate() requestSave()');
       this.requestSave();
     }

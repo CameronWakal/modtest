@@ -3,7 +3,9 @@ import Module from '../module/model';
 import DS from 'ember-data';
 
 const {
-  computed
+  computed,
+  get,
+  set
 } = Ember;
 
 const {
@@ -28,41 +30,37 @@ export default Module.extend({
   count: attr('number', { defaultValue: 0 }),
 
   isTriggering: computed('count', 'shiftBy', 'divBy', function() {
-    if (this.get('shiftByPort') && this.get('divByPort')) {
-      return this.get('count') - this.mod(this.get('shiftByPort').getValue(), this.get('divByPort').getValue()) === 1;
+    if (get(this, 'shiftByPort') && get(this, 'divByPort')) {
+      return get(this, 'count') - this.mod(get(this, 'shiftByPort').getValue(), get(this, 'divByPort').getValue()) === 1;
     } else {
       return false;
     }
   }),
 
   onClockIn(event) {
-    let count = this.get('count');
-    let divBy = this.get('divByPort').getValue();
-    let shiftBy = this.get('shiftByPort').getValue();
-    if (divBy == null) {
-      divBy = 6;
-    }
-    if (shiftBy == null) {
-      shiftBy = 0;
-    }
+    let count = get(this, 'count');
+    let divBy = get(this, 'divByPort').getValue();
+    let shiftBy = get(this, 'shiftByPort').getValue();
 
     if (count - this.mod(shiftBy, divBy) === 0) {
-      this.get('trigOutPort').sendEvent(event);
+      get(this, 'trigOutPort').sendEvent(event);
     }
 
-    this.set('count', this.mod(count + 1, divBy));
+    set(this, 'count', this.mod(count + 1, divBy));
   },
 
   onResetIn() {
-    this.set('count', 0);
+    set(this, 'count', 0);
   },
 
   ready() {
-    if (this.get('isNew')) {
+    if (get(this, 'isNew')) {
       this.addEventInPort('clock', 'onClockIn', true);
       this.addEventInPort('reset', 'onResetIn', false);
-      this.addValueInPort('div', 'divByPort', false);
-      this.addValueInPort('shift', 'shiftByPort', false);
+
+      this.addValueInPort('div', 'divByPort', { isEnabled: false, defaultValue: 6, minValue: 1 });
+      this.addValueInPort('shift', 'shiftByPort', { isEnabled: false, defaultValue: 0 });
+
       this.addEventOutPort('trig', 'trigOutPort', true);
       console.log('module-clock-div.didCreate() requestSave()');
       this.requestSave();
