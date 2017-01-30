@@ -33,9 +33,10 @@ export default Module.extend({
   ready() {
     if (get(this, 'isNew')) {
       // create ports
-      this.addValueInPort('in0', 'in0Port', true);
-      this.addValueInPort('in1', 'in1Port', true);
-      this.addValueInPort('switch', 'switchInPort', true);
+      this.addValueInPort('in0', 'in0Port', { canBeEmpty: true });
+      this.addValueInPort('in1', 'in1Port', { canBeEmpty: true });
+      this.addValueInPort('switch', 'switchInPort', { canBeEmpty: true });
+
       this.addValueOutPort('out', 'getValue', true);
       console.log('module-switch.didCreate() requestSave()');
       this.requestSave();

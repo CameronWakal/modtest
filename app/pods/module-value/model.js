@@ -3,7 +3,8 @@ import DS from 'ember-data';
 import Module from '../module/model';
 
 const {
-  observer
+  observer,
+  get
 } = Ember;
 
 const {
@@ -17,11 +18,11 @@ export default Module.extend({
   value: attr('number'),
 
   getValue() {
-    return this.get('value');
+    return get(this, 'value');
   },
 
   ready() {
-    if (this.get('isNew')) {
+    if (get(this, 'isNew')) {
       // create ports
       this.addValueOutPort('value', 'getValue', true);
       console.log('module-value didCreate saveLater');
@@ -31,7 +32,7 @@ export default Module.extend({
 
   onValueChanged: observer('value', function() {
 
-    if (this.get('hasDirtyAttributes')) {
+    if (get(this, 'hasDirtyAttributes')) {
       console.log('module-value.onValueChanged() requestSave()');
       this.requestSave();
     }

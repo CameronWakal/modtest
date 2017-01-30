@@ -3,7 +3,9 @@ import Module from '../module/model';
 import DS from 'ember-data';
 
 const {
-  inject
+  inject,
+  get,
+  set
 } = Ember;
 
 const {
@@ -34,13 +36,13 @@ export default Module.extend({
     // Calculate average callback delay and average time for event to traverse graph.
 
     event.completionTime = window.performance.now();
-    this.get('events').push(event);
-    if (this.get('events.length') >= 64) {
+    get(this, 'events').push(event);
+    if (get(this, 'events.length') >= 64) {
 
-      let callbackDeltas = this.get('events').map((item) => {
+      let callbackDeltas = get(this, 'events').map((item) => {
         return item.callbackTime - item.targetTime;
       });
-      let executionDeltas = this.get('events').map((item) => {
+      let executionDeltas = get(this, 'events').map((item) => {
         return item.completionTime - item.callbackTime;
       });
 
@@ -56,26 +58,28 @@ export default Module.extend({
 
       console.log('avg callback vs target time', callbackAverage, '\navg completion time from callback', executionAverage);
 
-      this.set('events', []);
+      set(this, 'events', []);
 
     }
 
     // check the connection of the 'note' port for the value of the note to play.
     // let notePort = this.get('ports').findBy('label', 'note');
-    let noteValue = this.get('noteInPort').getValue();
-    let velValue = this.get('velInPort').getValue();
+    let noteValue = get(this, 'noteInPort').getValue();
+    let velValue = get(this, 'velInPort').getValue();
     if (noteValue != null) {
-      this.get('midi').sendNote(noteValue, velValue, 20, event.outputTime);
+      get(this, 'midi').sendNote(noteValue, velValue, 20, event.outputTime);
     }
 
   },
 
   ready() {
-    if (this.get('isNew')) {
+    if (get(this, 'isNew')) {
       // create ports
       this.addEventInPort('trig', 'sendEvent', true);
-      this.addValueInPort('note', 'noteInPort', true);
-      this.addValueInPort('vel', 'velInPort', true);
+
+      this.addValueInPort('note', 'noteInPort', { canBeEmpty: true, minValue: 0, maxValue: 127 });
+      this.addValueInPort('vel', 'velInPort', { defaultValue: 127, minValue: 0, maxValue: 127, isEnabled: false });
+
       console.log('module-out.didCreate() requestSave()');
       this.requestSave();
     }

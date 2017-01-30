@@ -3,7 +3,9 @@ import DS from 'ember-data';
 import Module from '../module/model';
 
 const {
-  observer
+  observer,
+  get,
+  set
 } = Ember;
 
 const {
@@ -22,14 +24,14 @@ export default Module.extend({
   displayScale: attr('number', { defaultValue: 1 }),
 
   getValue() {
-    return this.get('steps.currentItem.value');
+    return get(this, 'steps.currentItem.value');
   },
 
   incrementStep(event) {
-    let step = this.get('steps.currentItem');
-    let index = this.get('steps.currentItem.index');
-    let length = this.get('steps.length');
-    let steps = this.get('steps.items');
+    let step = get(this, 'steps.currentItem');
+    let index = get(this, 'steps.currentItem.index');
+    let length = get(this, 'steps.length');
+    let steps = get(this, 'steps.items');
     let nextStep;
 
     // update step
@@ -40,24 +42,24 @@ export default Module.extend({
     } else {
       nextStep = steps.findBy('index', 0);
     }
-    this.set('steps.currentItem', nextStep);
+    set(this, 'steps.currentItem', nextStep);
 
     // output event if current step has a value
-    if (!isNaN(parseInt(this.get('steps.currentItem.value')))) {
-      this.get('trigOutPort').sendEvent(event);
+    if (!isNaN(parseInt(get(this, 'steps.currentItem.value')))) {
+      get(this, 'trigOutPort').sendEvent(event);
     }
   },
 
   reset() {
-    this.set('steps.currentItem', null);
+    set(this, 'steps.currentItem', null);
   },
 
   ready() {
-    if (this.get('isNew')) {
+    if (get(this, 'isNew')) {
       // create steps
       let steps = this.store.createRecord('array', { module: this });
-      this.set('steps', steps);
-      this.set('steps.length', 8);
+      set(this, 'steps', steps);
+      set(this, 'steps.length', 8);
 
       // create settings
       this.addMenuSetting('Input Type', 'inputType', this, ['Number', 'Slider', 'Both', 'Button']);
@@ -80,18 +82,18 @@ export default Module.extend({
   },
 
   remove() {
-    this.get('steps').remove();
+    get(this, 'steps').remove();
     this._super();
   },
 
   onAttrChanged: observer('inputType', 'displayScale', function() {
-    if (this.get('hasDirtyAttributes')) {
+    if (get(this, 'hasDirtyAttributes')) {
       this.requestSave();
     }
   }),
 
   save() {
-    this.get('steps').save();
+    get(this, 'steps').save();
     this._super();
   }
 

@@ -3,8 +3,17 @@ import Ember from 'ember';
 const {
   TextField,
   observer,
-  computed
+  computed,
+  get,
+  set
 } = Ember;
+
+// from template:
+// boundValue – external, persisted value, as opposed to current <input> value
+// defaultValue
+// canBeEmpty
+// minValue
+// maxValue
 
 export default TextField.extend({
 
@@ -12,11 +21,11 @@ export default TextField.extend({
   classNameBindings: ['isPending:pending'],
 
   isPending: computed('value', 'boundValue', function() {
-    let value = parseInt(this.get('value'));
+    let value = parseInt(get(this, 'value'));
     if (isNaN(value)) {
       value = null;
     }
-    return value !== this.get('boundValue');
+    return value !== get(this, 'boundValue');
   }),
 
   onBoundValueChanged: observer('boundValue', function() {
@@ -36,18 +45,35 @@ export default TextField.extend({
   },
 
   updateValue() {
-    let value = parseInt(this.get('value'));
+    let value = parseInt(get(this, 'value'));
+
     if (isNaN(value)) {
-      this.set('value', null);
-      this.set('boundValue', null);
+      // if new value is NaN, set boundValue to null or defaultValue,
+      // depending on canBeEmpty flag
+      if (get(this, 'canBeEmpty')) {
+        value = null;
+      } else {
+        value = get(this, 'defaultValue');
+      }
     } else {
-      this.set('value', value);
-      this.set('boundValue', value);
+      // if new value is a number, make sure it's within min/max
+      if (get(this, 'minValue') != null) {
+        value = Math.max(get(this, 'minValue'), value);
+      }
+      if (get(this, 'maxValue') != null) {
+        value = Math.min(get(this, 'maxValue'), value);
+      }
     }
+    set(this, 'value', value);
+    set(this, 'boundValue', value);
   },
 
   resetValue() {
-    this.set('value', this.get('boundValue'));
+    let value = get(this, 'boundValue');
+    if (!get(this, 'canBeEmpty') && value == null) {
+      value = get(this, 'defaultValue');
+    }
+    set(this, 'value', value);
   },
 
   keyUp(event) {

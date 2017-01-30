@@ -1,8 +1,10 @@
 import Ember from 'ember';
 
 const {
+  get,
   Component,
-  computed
+  computed,
+  computed: { equal }
 } = Ember;
 
 export default Component.extend({
@@ -14,11 +16,29 @@ export default Component.extend({
     'port.isValuePort:value-port-setting',
     'port.isEventPort:event-port-setting'
   ],
+  attributeBindings: ['title'],
+  title: computed('port.{minValue,maxValue,canBeEmpty,type}', function() {
+    let title = '';
+    if (get(this, 'port.type') == 'port-value-in') {
+      if (get(this, 'port.minValue') != null) {
+        title += `min:${get(this, 'port.minValue')} `;
+      }
+      if (get(this, 'port.maxValue') != null) {
+        title += `max:${get(this, 'port.maxValue')} `;
+      }
+      if (get(this, 'port.canBeEmpty')) {
+        title += 'canBeEmpty';
+      } else {
+        title += 'cantBeEmpty';
+      }
+    }
+    return title.trim();
+  }),
 
-  portIsValueIn: computed.equal('port.type', 'port-value-in'),
-  labelWithType: computed('port.label', 'port.type', function() {
-    let type = this.get('port.type');
-    let label = this.get('port.label');
+  portIsValueIn: equal('port.type', 'port-value-in'),
+  labelWithType: computed('port.{label,type}', function() {
+    let type = get(this, 'port.type');
+    let label = get(this, 'port.label');
     switch (type) {
       case 'port-value-in':
         return `>${label}`;
