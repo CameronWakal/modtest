@@ -20,11 +20,11 @@ html,
 input,
 button,
 select {
-  // font-family: 'Source Code Pro', monospace;
-  font-family: -apple-system, BlinkMacSystemFont,
+  font-family: 'Source Code Pro', monospace;
+  /*font-family: -apple-system, BlinkMacSystemFont,
       "Segoe UI", "Roboto", "Oxygen",
       "Ubuntu", "Cantarell", "Fira Sans",
-      "Droid Sans", "Helvetica Neue", sans-serif;
+      "Droid Sans", "Helvetica Neue", sans-serif;*/
   font-size: 11px;
   -webkit-font-smoothing: antialiased;
   font-weight: 400;
@@ -72,6 +72,17 @@ button {
   &:active {
     background: $color-neutral-bright;
     color: $color-neutral-dark;
+  }
+}
+
+.app-header {
+  background-color: $color-module-background;
+  color: $color-text;
+  padding: 1.5rem;
+
+  h1 {
+    line-height: 1.5rem;
+    margin: 0;
   }
 }
 
