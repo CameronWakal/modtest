@@ -7,9 +7,9 @@ const {
   run
 } = Ember;
 
-const eventLineColor = '#e8927d';
-const valueLineColor = '#61d193';
-const selectedLineColor = '#d4f0f7';
+const eventLineColor = '#ffd37b';
+const valueLineColor = '#ff917b';
+const selectedLineColor = '#fff';
 
 export default Component.extend({
   classNames: ['patch-diagram'],

@@ -1,5 +1,5 @@
 $module-borderradius: 5px;
-$input-borderradius: 3px;
+$input-borderradius: 4px;
 $button-borderradius: 3px;
 
 @import 'colors';
@@ -27,7 +27,7 @@ select {
       "Droid Sans", "Helvetica Neue", sans-serif;*/
   font-size: 11px;
   -webkit-font-smoothing: antialiased;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1rem;
   outline: none;
 }
@@ -76,7 +76,7 @@ button {
 }
 
 .app-header {
-  background-color: $color-module-background;
+  // background-color: $color-module-background;
   color: $color-text;
   padding: 1.5rem;
 

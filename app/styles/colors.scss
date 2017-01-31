@@ -4,8 +4,8 @@
 $color-neutral-dark: saturate(darken(#282C34, 4%), 1%);
 $color-neutral-dim: desaturate(lighten($color-neutral-dark, 25%), 50%);
 $color-neutral-bright: #fff;
-$color-cool-bright: complement(saturate(lighten($color-neutral-dark, 60%), 100%));
-$color-warm-bright: adjust-hue(lighten($color-neutral-dark, 50%), -45deg);
+$color-cool-bright: #ffd37b;
+$color-warm-bright: #ff917b;
 
 
 //ALPHA VARIANTS
@@ -21,7 +21,7 @@ $color-border-bright: rgba($color-neutral-bright, .30);
 $color-button: rgba($color-neutral-bright, .3);
 
 //default text color:
-$color-text: lighten($color-neutral-dark, 70%);
+$color-text: lighten($color-neutral-dark, 60%);
 
 //subtle background color for faders, etc.:
 $color-control: rgba($color-neutral-dim, .1);
@@ -33,4 +33,4 @@ $color-control-current: rgba($color-neutral-dim, .15);
 // $color-module-background: rgba(lighten($color-neutral-dark, 4%), 0.8);
 $color-module-background: rgba(desaturate(lighten($color-neutral-dark, 4%), 0%), 0.8);
 $color-selected-module-background: rgba(desaturate(lighten($color-neutral-dark, 12%), 0%), 0.8);
-$color-sidebar-background: rgba(desaturate(darken($color-neutral-dark, 2%), 0%), 0.8);
+$color-sidebar-background: rgba(desaturate(darken($color-neutral-dark, 1.5%), 0%), 0.8);
