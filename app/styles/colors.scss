@@ -17,11 +17,11 @@ $color-border-dim: rgba($color-neutral-bright, .30);
 //normal border around input fields, etc.
 $color-border-bright: rgba($color-neutral-bright, .30);
 
-//default button background:
-$color-button: rgba($color-neutral-bright, .3);
-
 //default text color:
-$color-text: lighten($color-neutral-dark, 60%);
+$color-text: lighten($color-neutral-dark, 50%);
+
+//default button background:
+$color-button: rgba(desaturate(lighten($color-neutral-dark, 30%), 0%), 0.8);
 
 //subtle background color for faders, etc.:
 $color-control: rgba($color-neutral-dim, .1);
@@ -30,7 +30,7 @@ $color-control: rgba($color-neutral-dim, .1);
 $color-control-current: rgba($color-neutral-dim, .15);
 
 //transparent module background:
-// $color-module-background: rgba(lighten($color-neutral-dark, 4%), 0.8);
 $color-module-background: rgba(desaturate(lighten($color-neutral-dark, 4%), 0%), 0.8);
 $color-selected-module-background: rgba(desaturate(lighten($color-neutral-dark, 12%), 0%), 0.8);
 $color-sidebar-background: rgba(desaturate(darken($color-neutral-dark, 1.5%), 0%), 0.8);
+$color-selected-input-background: rgba(desaturate(lighten($color-neutral-dark, 22%), 0%), 0.8);

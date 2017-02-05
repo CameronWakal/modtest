@@ -9,49 +9,20 @@
 
   &:last-child {
     border-bottom-right-radius: $input-borderradius;
-    // border-right: 1px solid $color-border-bright;
     border-top-right-radius: $input-borderradius;
     margin-right: 0;
   }
 
-  &:focus {
-    border-right: 0;
-
-    /*
-    &:last-child {
-      border-right: 1px solid $color-neutral-bright;
-    }
-
-    + .value-array-input-number {
-      border-left: 1px solid $color-neutral-bright;
-    }
-    */
-  }
-
   &.current {
-    // border: 1px solid $color-warm-bright;
-    // border-right: 0;
-    // color: $color-warm-bright;
-    background-color: rgba($color-warm-bright, 0.8);
-    color: rgba($color-sidebar-background, 1);
-
-    + .value-array-input-number {
-      // border-left: 1px solid $color-warm-bright;
-    }
-
-    &:last-child {
-      // border-right: 1px solid $color-warm-bright;
-    }
+    color: $color-neutral-bright;
+    background: linear-gradient(rgba($color-warm-bright, 0.5), rgba($color-warm-bright, 0.5)),
+    rgba($color-neutral-dark, 0.8);
 
     &:focus {
-      background: $color-border-bright;
-      // border: 1px solid $color-neutral-bright;
-      // border-right: 0;
+      background: linear-gradient(rgba($color-warm-bright, 0.5), rgba($color-warm-bright, 0.5)),
+      $color-selected-input-background;
     }
 
-    &:focus:last-child {
-      // border-right: 1px solid $color-neutral-bright;
-    }
   }
 
 }
