@@ -7,6 +7,7 @@ const {
 
 export default Model.extend({
   modules: hasMany('module', { polymorphic: true }),
+  title: 'a patch',
 
   save() {
     if (!this.get('isDeleted')) {

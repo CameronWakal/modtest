@@ -69,7 +69,10 @@ button {
 .app-header {
   // background-color: $color-module-background;
   color: $color-text;
-  padding: 1.5rem;
+  padding: 0;
+  margin: 1.5rem;
+  position: absolute;
+  z-index: 1000;
 
   h1 {
     line-height: 1.5rem;

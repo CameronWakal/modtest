@@ -28,9 +28,9 @@ export default Component.extend({
   connectingFromPort: null,
   connectingToPort: null,
 
-  patchChanged: observer('patch', function() {
+  didReceiveAttrs() {
     this.set('diagramNeedsUpdate', true);
-  }),
+  },
 
   actions: {
 
