@@ -8,7 +8,7 @@ export default Controller.extend({
 
   actions: {
 
-    removeCurrentPatch() {
+    removePatch() {
       let modules = this.model.get('modules');
       let modulesList = modules.toArray();
       this.model.destroyRecord();

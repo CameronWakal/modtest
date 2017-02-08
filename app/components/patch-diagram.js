@@ -4,7 +4,9 @@ const {
   Component,
   $,
   observer,
-  run
+  run,
+  get,
+  set
 } = Ember;
 
 const eventLineColor = '#ffd37b';
@@ -29,7 +31,7 @@ export default Component.extend({
   },
 
   onMovingModuleChanged: observer('movingModule', function() {
-    if (this.get('movingModule')) {
+    if (get(this, 'movingModule')) {
       this.addMouseListener();
     } else {
       this.removeMouseListener();
@@ -37,7 +39,7 @@ export default Component.extend({
   }),
 
   onConnectingFromPortChanged: observer('connectingFromPort', function() {
-    if (this.get('connectingFromPort')) {
+    if (get(this, 'connectingFromPort')) {
       run.scheduleOnce('afterRender', this, function() {
         // if this isn't scheduled, the ember classNameBindings don't get updated
         // in time to be used by this function.
@@ -50,7 +52,7 @@ export default Component.extend({
 
   // flag changes to true when controller wants diagram to update list of ports
   onPortsChanged: observer('needsUpdate', function() {
-    if (this.get('needsUpdate')) {
+    if (get(this, 'needsUpdate')) {
       run.scheduleOnce('afterRender', this, function() {
         this.updateConnections();
         this.drawConnections();
@@ -65,22 +67,22 @@ export default Component.extend({
     let outPorts, inPorts, outPortDom, inPortDom;
 
     let modulesDom = this.$().siblings('#modules').children();
-    let modules = this.get('patch.modules');
-    this.set('connections', []);
+    let modules = get(this, 'patch.modules');
+    set(this, 'connections', []);
     let self = this;
 
     modules.forEach((module) => {
 
-      outPorts = module.get('outPorts');
+      outPorts = get(module, 'outPorts');
       outPorts.forEach((outPort) => {
 
-        outPortDom = $(modulesDom).find(`.${outPort.get('uniqueCssIdentifier')}`);
+        outPortDom = $(modulesDom).find(`.${get(outPort, 'uniqueCssIdentifier')}`);
 
-        inPorts = outPort.get('connections');
+        inPorts = get(outPort, 'connections');
         inPorts.forEach((inPort) => {
 
-          inPortDom = $(modulesDom).find(`.${inPort.get('uniqueCssIdentifier')}`);
-          self.get('connections').addObject({
+          inPortDom = $(modulesDom).find(`.${get(inPort, 'uniqueCssIdentifier')}`);
+          get(self, 'connections').addObject({
             inPortDom,
             outPortDom,
             inPort,
@@ -96,34 +98,34 @@ export default Component.extend({
     let module = this.$().siblings('#modules').children('.port-connecting-from');
     let port = $(module).children('.module-ports').children('.connecting-from');
     this.addMouseListener();
-    this.set('newConnectionFrom', port);
+    set(this, 'newConnectionFrom', port);
     this.drawConnections();
   },
 
   // stop drawing from the new connection port to the cursor location
   removeNewConnection() {
-    this.set('newConnectionFrom', null);
+    set(this, 'newConnectionFrom', null);
     this.removeMouseListener();
     this.drawConnections();
   },
 
   // add a mouse listener if it isn't already set
   addMouseListener() {
-    let mouseListenerAdded = this.get('mouseListenerAdded');
+    let mouseListenerAdded = get(this, 'mouseListenerAdded');
     if (!mouseListenerAdded) {
       $(document).on('mousemove', this.mouseMoveBody.bind(this));
-      this.set('mouseListenerAdded', true);
+      set(this, 'mouseListenerAdded', true);
     }
   },
 
   // remove the mouse listener only if there is neither a moving module or a connecting port
   removeMouseListener() {
-    let mouseListenerAdded = this.get('mouseListenerAdded');
-    let movingModule = this.get('movingModule');
-    let connectingFromPort = this.get('connectingFromPort');
+    let mouseListenerAdded = get(this, 'mouseListenerAdded');
+    let movingModule = get(this, 'movingModule');
+    let connectingFromPort = get(this, 'connectingFromPort');
     if (mouseListenerAdded && !movingModule && !connectingFromPort) {
       $(document).off('mousemove');
-      this.set('mouseListenerAdded', false);
+      set(this, 'mouseListenerAdded', false);
     }
 
   },
@@ -131,7 +133,7 @@ export default Component.extend({
   // callback for mousemove on body
   mouseMoveBody(event) {
     event.preventDefault();
-    if (this.get('movingModule') || this.get('connectingFromPort')) {
+    if (get(this, 'movingModule') || get(this, 'connectingFromPort')) {
       this.drawConnections(event);
     }
   },
@@ -139,21 +141,21 @@ export default Component.extend({
   // if a connection is selected when the delete key is pressed, send disconnect action
   keyDown(event) {
     if (event.keyCode === 8) {
-      let i = this.get('selectedConnectionIndex');
+      let i = get(this, 'selectedConnectionIndex');
       if (i != null) {
         event.preventDefault();
-        let con = this.get('connections').toArray().objectAt(i);
+        let con = get(this, 'connections').toArray().objectAt(i);
         this.sendAction('removeConnection', con.inPort, con.outPort);
-        this.set('selectedConnectionIndex', null);
+        set(this, 'selectedConnectionIndex', null);
       }
     }
   },
 
   // deselect selected connection on blur
   focusOut() {
-    let selection = this.get('selectedConnectionIndex');
+    let selection = get(this, 'selectedConnectionIndex');
     if (selection != null) {
-      this.set('selectedConnectionIndex', null);
+      set(this, 'selectedConnectionIndex', null);
       this.drawConnections();
     }
   },
@@ -161,7 +163,7 @@ export default Component.extend({
   // draw connections between ports,
   // draw line from new connection port to cursor position
   drawConnections(event) {
-    let newPort = this.get('newConnectionFrom');
+    let newPort = get(this, 'newConnectionFrom');
 
     let c = this.$().get(0);
     let ctx = c.getContext('2d');
@@ -171,7 +173,7 @@ export default Component.extend({
 
     let startX, startY, endX, endY;
 
-    let connections = this.get('connections');
+    let connections = get(this, 'connections');
     connections.forEach((con, index) => {
 
       startX = $(con.outPortDom).offset().left + $(con.outPortDom).outerWidth() / 2;
@@ -188,7 +190,7 @@ export default Component.extend({
       } else {
         ctx.strokeStyle = valueLineColor;
       }
-      if (index === this.get('selectedConnectionIndex')) {
+      if (index === get(this, 'selectedConnectionIndex')) {
         // style for a selected connection
         ctx.strokeStyle = selectedLineColor;
       }
@@ -214,9 +216,10 @@ export default Component.extend({
   // http://jsfiddle.net/mmansion/9K5p9/
 
   mouseDown(event) {
-    this.set('selectedConnectionIndex', null);
+    this.sendAction('moduleDeselected');
+    set(this, 'selectedConnectionIndex', null);
     let startX, startY, endX, endY, point, lineStart, lineEnd, distance;
-    let cons = this.get('connections');
+    let cons = get(this, 'connections');
     cons.forEach((con, index) => {
 
       // todo: should cache this stuff instead of re-jquerying it
@@ -232,7 +235,7 @@ export default Component.extend({
       distance = this.distToSegment(point, lineStart, lineEnd);
 
       if (distance < 5) {
-        this.set('selectedConnectionIndex', index);
+        set(this, 'selectedConnectionIndex', index);
       }
 
     }, this);
