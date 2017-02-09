@@ -33,19 +33,28 @@ export default Route.extend({
       this.transitionTo('patch', patch);
       set(this.controllerFor('application'), 'currentPatch', patch);
     },
-    removeCurrentPatch() {
-      // TODO: when removing a patch the previous patch in the patches list should
-      // get selected. Really the remove button should be within the patch controller or component,
-      // the patch should remove itself, and then the application route/controller should be informed,
-      // and update the patches menu.
-      
-      // destroy current patch including modules and ports, leave route
-      let currentPatchController = this.controllerFor('patch');
-      currentPatchController.send('removeCurrentPatch');
-      set(this.controllerFor('application'), 'currentPatch', null);
-    },
-    patchControllerChanged(newPatch) {
+    patchChangedFromController(newPatch) {
       this.transitionTo('patch', newPatch);
+    },
+    // called before current patch is deleted, so app can decide where to navigate
+    transitionFromPatch(patch) {
+      let patches = this.modelFor('application');
+      let patchesList = patches.toArray();
+      let index = patchesList.indexOf(patch);
+
+      if (patchesList.length <= 1) {
+        // go to index if we're transitioning from the only patch
+        this.transitionTo('index');
+        set(this.controllerFor('application'), 'currentPatch', null);
+      } else if (index == 0) {
+        // if we're transitioning from the first patch, go to the next patch
+        this.transitionTo('patch', patchesList[1]);
+        set(this.controllerFor('application'), 'currentPatch', patchesList[1]);
+      } else {
+        // otherwise, go to the previous patch
+        this.transitionTo('patch', patchesList[index - 1]);
+        set(this.controllerFor('application'), 'currentPatch', patchesList[index - 1]);
+      }
     }
   }
 });

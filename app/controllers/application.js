@@ -6,7 +6,7 @@ export default Ember.Controller.extend({
 
   actions: {
     patchChanged(newPatch) {
-      this.send('patchControllerChanged', newPatch);
+      this.send('patchChangedFromController', newPatch);
     }
   }
 
