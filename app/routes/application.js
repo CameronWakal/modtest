@@ -4,7 +4,8 @@ const {
   Route,
   inject,
   get,
-  set
+  set,
+  isEmpty
 } = Ember;
 
 export default Route.extend({
@@ -22,16 +23,32 @@ export default Route.extend({
   },
 
   activate() {
+    if (this.modelFor('patch') == null) {
+      // if no patch is selected
+      if (isEmpty(this.modelFor('application'))) {
+        // add a patch to the list if there are none
+        this.newPatch();
+      } else {
+        // if there are patches in the list, transition to the first one
+        let patches = this.modelFor('application');
+        let patchesList = patches.toArray();
+        this.transitionTo('patch', patchesList[0]);
+      }
+    }
     // set currentPatch on app controller so it can init dropdown patch menu
     set(this.controllerFor('application'), 'currentPatch', this.modelFor('patch'));
   },
 
+  newPatch() {
+    let patch = this.store.createRecord('patch');
+    patch.save();
+    this.transitionTo('patch', patch);
+    set(this.controllerFor('application'), 'currentPatch', patch);
+  },
+
   actions: {
     newPatch() {
-      let patch = this.store.createRecord('patch');
-      patch.save();
-      this.transitionTo('patch', patch);
-      set(this.controllerFor('application'), 'currentPatch', patch);
+      this.newPatch();
     },
     patchChangedFromController(newPatch) {
       this.transitionTo('patch', newPatch);
@@ -43,9 +60,8 @@ export default Route.extend({
       let index = patchesList.indexOf(patch);
 
       if (patchesList.length <= 1) {
-        // go to index if we're transitioning from the only patch
-        this.transitionTo('index');
-        set(this.controllerFor('application'), 'currentPatch', null);
+        // make a new patch if we're transitioning from the only patch
+        this.newPatch();
       } else if (index == 0) {
         // if we're transitioning from the first patch, go to the next patch
         this.transitionTo('patch', patchesList[1]);
