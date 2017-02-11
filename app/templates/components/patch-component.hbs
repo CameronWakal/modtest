@@ -16,7 +16,11 @@
   {{#if selectedModule}}
     {{module-settings module=selectedModule}}
   {{else}}
-    {{patch-settings patch=patch removePatch=(action 'removePatch')}}
+    {{patch-settings
+      patch=patch
+      removePatch=(action 'removePatch')
+      patchTitleChanged=(action 'patchTitleChanged')
+    }}
   {{/if}}
 {{/ember-wormhole}}
 

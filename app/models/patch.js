@@ -2,12 +2,13 @@ import DS from 'ember-data';
 
 const {
   Model,
-  hasMany
+  hasMany,
+  attr
 } = DS;
 
 export default Model.extend({
   modules: hasMany('module', { polymorphic: true }),
-  title: 'a patch',
+  title: attr('string', { defaultValue: 'Untitled Patch' }),
 
   save() {
     if (!this.get('isDeleted')) {

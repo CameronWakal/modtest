@@ -40,6 +40,11 @@ export default Component.extend({
       this.sendAction('removePatch');
     },
 
+    patchTitleChanged() {
+      console.log('patchTitleChanged');
+      this.patch.save();
+    },
+
     moduleSelected(module) {
       set(this, 'selectedModule', module);
     },
