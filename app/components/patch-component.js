@@ -4,7 +4,9 @@ const {
   Component,
   observer,
   computed,
-  run
+  run,
+  get,
+  set
 } = Ember;
 
 export default Component.extend({
@@ -15,9 +17,9 @@ export default Component.extend({
   diagramNeedsUpdate: true,
   // css class to tell ports which type can accept the current pending connection
   newConnectionClass: computed('connectingFromPort', function() {
-    let port = this.get('connectingFromPort');
+    let port = get(this, 'connectingFromPort');
     if (port) {
-      return `new-connection new-connection-from-${port.get('type')}`;
+      return `new-connection new-connection-from-${get(port, 'type')}`;
     } else {
       return null;
     }
@@ -28,111 +30,124 @@ export default Component.extend({
   connectingFromPort: null,
   connectingToPort: null,
 
-  patchChanged: observer('patch', function() {
-    this.set('diagramNeedsUpdate', true);
-  }),
+  didReceiveAttrs() {
+    set(this, 'diagramNeedsUpdate', true);
+  },
 
   actions: {
 
+    removePatch() {
+      this.sendAction('removePatch');
+    },
+
+    patchTitleChanged() {
+      console.log('patchTitleChanged');
+      this.patch.save();
+    },
+
     moduleSelected(module) {
-      this.set('selectedModule', module);
+      set(this, 'selectedModule', module);
+    },
+
+    moduleDeselected() {
+      set(this, 'selectedModule', null);
     },
 
     moduleStartedMoving(module) {
-      this.set('movingModule', module);
+      set(this, 'movingModule', module);
     },
 
     moduleFinishedMoving() {
-      this.set('movingModule', null);
+      set(this, 'movingModule', null);
     },
 
     portStartedConnecting(module, port) {
-      this.set('connectingFromPort', port);
+      set(this, 'connectingFromPort', port);
     },
 
     // if there is a toPort and fromPort when finished, make the connection!
     portFinishedConnecting() {
-      if (this.get('connectingToPort')) {
-        this.addConnection(this.get('connectingFromPort'), this.get('connectingToPort'));
+      if (get(this, 'connectingToPort')) {
+        this.addConnection(get(this, 'connectingFromPort'), get(this, 'connectingToPort'));
       }
-      this.set('connectingFromPort', null);
-      this.set('connectingToPort', null);
+      set(this, 'connectingFromPort', null);
+      set(this, 'connectingToPort', null);
     },
 
     portDisconnected() {
-      this.set('diagramNeedsUpdate', true);
+      set(this, 'diagramNeedsUpdate', true);
     },
 
     modulePortsChanged() {
-      this.set('diagramNeedsUpdate', true);
+      set(this, 'diagramNeedsUpdate', true);
     },
 
     moduleLayoutChanged() {
-      this.set('diagramNeedsUpdate', true);
+      set(this, 'diagramNeedsUpdate', true);
     },
 
     mouseEnterPort(toPort) {
       let fromPort = this.get('connectingFromPort');
       if (fromPort) { // we're dragging to create a new connection
-        if (toPort.get('type') === fromPort.get('compatibleType')) { // we mouseEntered a compatible port type
-          if (!fromPort.get('connections').findBy('id', toPort.id)) { // the two ports aren't already connected
-            this.set('connectingToPort', toPort);
+        if (get(toPort, 'type') === get(fromPort, 'compatibleType')) { // we mouseEntered a compatible port type
+          if (!get(fromPort, 'connections').findBy('id', toPort.id)) { // the two ports aren't already connected
+            set(this, 'connectingToPort', toPort);
           }
         }
       }
     },
 
     mouseLeavePort() {
-      this.set('connectingToPort', null);
+      set(this, 'connectingToPort', null);
     },
 
     // diagram shit
 
     diagramDidUpdate() {
       run.scheduleOnce('afterRender', this, function() {
-        this.set('diagramNeedsUpdate', false);
+        set(this, 'diagramNeedsUpdate', false);
       });
     },
 
     // module management
 
     removeModule(module) {
-      this.patch.get('modules').removeObject(module);
+      get(this, 'patch.modules').removeObject(module);
       this.patch.save();
       module.remove();
-      this.set('diagramNeedsUpdate', true);
+      set(this, 'diagramNeedsUpdate', true);
 
     },
 
     addModule(type) {
       let module = this.store.createRecord(`module-${type}`, { patch: this.patch });
-      this.patch.get('modules').pushObject(module);
+      get(this, 'patch.modules').pushObject(module);
       this.patch.save();
     },
 
     removeConnection(sourcePort, destPort) {
-      sourcePort.get('connections').removeObject(destPort);
+      get(sourcePort, 'connections').removeObject(destPort);
       console.log('patch.removeConnection() requestSave()');
-      sourcePort.get('module').requestSave();
-      destPort.get('connections').removeObject(sourcePort);
+      get(sourcePort, 'module').requestSave();
+      get(destPort, 'connections').removeObject(sourcePort);
       console.log('patch.removeConnection() requestSave()');
-      destPort.get('module').requestSave();
+      get(destPort, 'module').requestSave();
 
-      this.set('diagramNeedsUpdate', true);
+      set(this, 'diagramNeedsUpdate', true);
     }
 
   },
 
   addConnection(sourcePort, destPort) {
-    destPort.get('connections').pushObject(sourcePort);
+    get(destPort, 'connections').pushObject(sourcePort);
     console.log('patch.addConnection() requestSave()');
-    destPort.get('module').requestSave();
+    get(destPort, 'module').requestSave();
 
-    sourcePort.get('connections').pushObject(destPort);
+    get(sourcePort, 'connections').pushObject(destPort);
     console.log('patch.addConnection() requestSave()');
-    sourcePort.get('module').requestSave();
+    get(sourcePort, 'module').requestSave();
 
-    this.set('diagramNeedsUpdate', true);
+    set(this, 'diagramNeedsUpdate', true);
 
   }
 

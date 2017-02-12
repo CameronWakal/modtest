@@ -1,13 +1,25 @@
-.module-settings {
-  color: $color-text;
+.app-sidebar {
+
+  background-color: $color-sidebar-background;
+  bottom: 0;
+  margin: 0;
+  padding: 2rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 16rem;
+  z-index: 1000;
 
   h4 {
-    color: $color-text;
-    font-weight: 500;
-    line-height: 2.25rem;
-    margin: 0;
-    padding: 0;
+    line-height: 2rem;
+    margin-bottom: 0.5rem;
   }
+
+  button {
+    margin: 1rem 0 0.5rem 0;
+  }
+
+  color: $color-text;
 
   ul {
     margin: 0;
@@ -16,7 +28,8 @@
 
   li {
     display: flex;
-    line-height: 2.25rem;
+    line-height: 2rem;
+    margin-bottom: 0.5rem;
     list-style-type: none;
   }
 
@@ -24,32 +37,19 @@
     margin: 0 .5rem 0 0;
   }
 
-  select {
-    background: none;
-    border: 0;
-    color: $color-text;
-    height: 1.75rem;
-    margin: 0;
-    padding: 0;
-    vertical-align: top;
-  }
-
   [type=text] {
     align-self: center;
-  }
-
-  .setting-menu-wrapper {
-    align-self: center;
-    border: 1px solid $color-border-bright;
-    border-radius: $input-borderradius;
-    display: inline-block;
-    flex: 0 0 auto;
-    height: 1.75rem;
   }
 
   .setting-label {
     align-self: center;
     flex: 1 0 auto;
+  }
+
+  .app-sidebar-section {
+    border-bottom: 1px solid $color-module-background;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
   }
 
 }

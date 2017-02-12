@@ -1,32 +1,32 @@
-{{#unless isEmpty}}
-  {{#if hasSettings}}
-    <div class="app-sidebar-section">
-      <h4>{{module.label}} Settings</h4>
-      <ul>
-        {{#each module.settings as |setting|}}
-          <li>
-            <span class="setting-label">{{setting.label}}</span>
-              {{#if setting.isNumber}}
-                {{value-input-number boundValue=setting.value}}
-              {{else}}
-                <div class="setting-menu-wrapper">{{select-menu setting=setting}}</div>
-              {{/if}}
-          </li>
-        {{/each}}
-      </ul>
-    </div>
-  {{/if}}
+<div class="app-sidebar-section">
+  <h4>{{module.label}} Module</h4>
+</div>
+{{#if hasSettings}}
+  <div class="app-sidebar-section">
+    <ul>
+      {{#each module.settings as |setting|}}
+        <li>
+          <span class="setting-label">{{setting.label}}</span>
+            {{#if setting.isNumber}}
+              {{value-input-number boundValue=setting.value}}
+            {{else}}
+              <div class="select-menu-wrapper">{{select-menu setting=setting}}</div>
+            {{/if}}
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+{{/if}}
 
-  {{#if hasPorts}}
-    <div class="app-sidebar-section">
-      <h4>{{module.label}} Ports</h4>
-      <ul>
-        {{#each module.ports as |port|}}
-          <li>
-            {{port-setting port=port}}
-          </li>
-        {{/each}}
-      </ul>
-    </div>
-  {{/if}}
-{{/unless}}
+{{#if hasPorts}}
+  <div class="app-sidebar-section">
+    <h4>Ports</h4>
+    <ul>
+      {{#each module.ports as |port|}}
+        <li>
+          {{port-setting port=port}}
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+{{/if}}

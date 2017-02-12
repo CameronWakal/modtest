@@ -1,16 +1,14 @@
-.value-input-number {
+.value-input-string {
   background: rgba($color-neutral-dark, 0.8);
-  // border: 1px solid $color-border-bright;
   border: none;
   border-radius: $input-borderradius;
   color: $color-text;
   display: inline-block;
-  height: 2rem;
+  line-height: 1.5rem;
   margin: 0;
-  padding: 0;
-  text-align: center;
+  padding: 0.25rem 0.5rem;
   vertical-align: bottom;
-  width: 2.5rem;
+  width: 100%;
 
   &.pending:focus {
     color: $color-neutral-dark;
@@ -21,16 +19,15 @@
     color: $color-neutral-bright;
     background: $color-selected-input-background;
     outline: none;
-    text-shadow: 0 0 0 $color-neutral-bright;
   }
 
   &::selection {
-    background-color: $color-transparent;
+    background-color: rgba($color-neutral-dark, 0.4);
   }
 
 }
 
-.app-sidebar .value-input-number {
+.app-sidebar .value-input-string {
   background-color: $color-module-background;
 
   &:focus {

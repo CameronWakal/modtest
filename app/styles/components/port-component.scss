@@ -36,10 +36,10 @@
   .port-value.connecting-from {
     color: $color-warm-bright;
   }
-} 
+}
 
 .port-component-label {
-  line-height: 1.75rem;
+  line-height: 1.5rem;
 }
 
 .new-connection-from-port-event-in .port-event-out,
@@ -50,10 +50,9 @@
     color: $color-warm-bright;
     cursor: pointer;
   }
-  
+
   &.port-event {
     color: $color-cool-bright;
     cursor: pointer;
   }
 }
-

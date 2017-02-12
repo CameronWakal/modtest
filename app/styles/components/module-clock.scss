@@ -1,26 +1,31 @@
 .module-clock {
 
-  .button-stop {
-    background: $color-cool-bright;
-
-    &:active {
-      background: $color-neutral-bright;
-    }
-  }
-
+  .button-start,
   &.started .button-stop {
     background: $color-button;
 
     &:active {
       background: $color-neutral-bright;
     }
+
+    &:focus {
+      background: linear-gradient(rgba($color-neutral-bright, 0.4), rgba($color-neutral-bright, 0.4)),
+      $color-button;
+    }
   }
 
+  .button-stop,
   &.started .button-start {
-    background: $color-cool-bright;
+    background: rgba($color-cool-bright, 0.8);
+    color: $color-neutral-dark;
 
     &:active {
       background: $color-neutral-bright;
+    }
+
+    &:focus {
+      background: linear-gradient(rgba($color-neutral-bright, 0.4), rgba($color-neutral-bright, 0.4)),
+      rgba($color-cool-bright, 0.8);
     }
   }
 }

@@ -2,30 +2,39 @@
   <button {{action 'addModule' 'clock'}}>+Clock</button><button {{action 'addModule' 'clock-div'}}>+Clock Div</button><button {{action 'addModule' 'out'}}>+Out</button><button {{action 'addModule' 'ccout'}}>+CC Out</button><button {{action 'addModule' 'sequence'}}>+Sequence</button><button {{action 'addModule' 'scale'}}>+Scale</button><button {{action 'addModule' 'switch'}}>+Switch</button><button {{action 'addModule' 'maybe'}}>+Maybe</button><button {{action 'addModule' 'value'}}>+Value</button><button {{action 'addModule' 'repeat'}}>+Repeat</button>
 </div>
 
-{{patch-diagram 
-  patch=patch 
-  needsUpdate=diagramNeedsUpdate 
+{{patch-diagram
+  patch=patch
+  needsUpdate=diagramNeedsUpdate
   didUpdate=(action 'diagramDidUpdate')
-  removeConnection=(action 'removeConnection') 
+  removeConnection=(action 'removeConnection')
+  moduleDeselected=(action 'moduleDeselected')
   movingModule=movingModule
   connectingFromPort=connectingFromPort
 }}
 
-{{#ember-wormhole to="module-settings-container"}}
-  {{module-settings module=selectedModule}}
+{{#ember-wormhole to="settings-container"}}
+  {{#if selectedModule}}
+    {{module-settings module=selectedModule}}
+  {{else}}
+    {{patch-settings
+      patch=patch
+      removePatch=(action 'removePatch')
+      patchTitleChanged=(action 'patchTitleChanged')
+    }}
+  {{/if}}
 {{/ember-wormhole}}
 
 <div class="modules" id="modules">
   {{#each patch.modules as |module|}}{{component  module.type
-                                                  module=module 
-                                                  remove=(action 'removeModule' module) 
+                                                  module=module
+                                                  remove=(action 'removeModule' module)
                                                   selected=(action 'moduleSelected' module)
                                                   portStartedConnecting=(action 'portStartedConnecting' module)
-                                                  portFinishedConnecting=(action 'portFinishedConnecting') 
-                                                  startedMoving=(action 'moduleStartedMoving' module) 
+                                                  portFinishedConnecting=(action 'portFinishedConnecting')
+                                                  startedMoving=(action 'moduleStartedMoving' module)
                                                   finishedMoving=(action 'moduleFinishedMoving')
                                                   mouseEnterPort=(action 'mouseEnterPort')
-                                                  mouseLeavePort=(action 'mouseLeavePort') 
+                                                  mouseLeavePort=(action 'mouseLeavePort')
                                                   portDisconnected=(action 'portDisconnected')
                                                   portsChanged=(action 'modulePortsChanged' module)
                                                   layoutChanged=(action 'moduleLayoutChanged' module)
