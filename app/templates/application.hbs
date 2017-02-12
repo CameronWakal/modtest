@@ -1,10 +1,7 @@
 <div class ="app-header">
-<h1>Cam/MSP</h1>
-{{patch-menu patches=model selectedPatch=currentPatch patchChanged=(action 'patchChanged')}}
-<button {{action 'newPatch'}}>New</button>
+  <div class="select-menu-wrapper">{{patch-menu patches=model selectedPatch=currentPatch patchChanged=(action 'patchChanged')}}</div>
+  <button {{action 'newPatch'}}>New</button>
 </div>
-<div class="app-sidebar">
-  <section id="module-settings-container">
-  </section>
+<div class="app-sidebar" id="settings-container">
 </div>
 {{outlet}}

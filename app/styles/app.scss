@@ -8,6 +8,7 @@ $button-borderradius: 4px;
 @import 'components/module-clock';
 @import 'components/module-settings';
 @import 'components/value-input-number';
+@import 'components/value-input-string';
 @import 'components/value-array-input-number';
 @import 'components/value-array-input-button';
 @import 'components/value-input-fader';
@@ -28,8 +29,8 @@ select {
   font-size: 11px;
   -webkit-font-smoothing: antialiased;
   font-weight: 500;
-  line-height: 1rem;
   outline: none;
+  box-sizing: border-box;
 }
 
 body {
@@ -58,10 +59,14 @@ button {
   height: 2rem;
   margin: 0 0 0 .5rem;
   outline: none;
-  padding: .25rem .5rem;
+  padding: .25rem 0.5rem;
 
   &:first-child {
     margin-left: 0;
+  }
+
+  &:hover {
+    cursor: pointer;
   }
 
 }
@@ -70,9 +75,10 @@ button {
   // background-color: $color-module-background;
   color: $color-text;
   padding: 0;
-  margin: 1.5rem;
+  margin: 2rem 0 0 2rem;
   position: absolute;
   z-index: 1000;
+  display: flex;
 
   h1 {
     line-height: 1.5rem;
@@ -100,12 +106,7 @@ button {
   }
 
   button {
-    float: right;
-    margin: .125rem 0 .125rem .5rem;
-
-    &:hover {
-      cursor: pointer;
-    }
+    margin: 1rem 0 0 0;
   }
 
   .app-sidebar-section {
@@ -116,35 +117,19 @@ button {
 
 }
 
-.patches-list {
-  display: inline-block;
-  list-style: none;
+select {
+  border: 0;
+  background: none;
+  color: $color-text;
+  height: 2rem;
   margin: 0;
-  padding: 0;
+  font-weight: 700;
+}
 
-  li {
-    display: inline;
-
-    &::after {
-      content: '/';
-    }
-
-    &:last-child::after {
-      content: none;
-    }
-  }
-
-  a {
-    color: $color-text;
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-
-    &.active {
-      color: $color-neutral-bright;
-      text-decoration: none;
-    }
-
-  }
-
+.select-menu-wrapper {
+  background: $color-module-background;
+  border-radius: $input-borderradius;
+  display: inline-block;
+  flex: 0 0 auto;
+  height: 2rem;
 }
