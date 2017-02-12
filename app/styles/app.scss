@@ -90,35 +90,6 @@ button {
   }
 }
 
-.app-sidebar {
-  background-color: $color-sidebar-background;
-  bottom: 0;
-  color: $color-text;
-  margin: 0;
-  padding: 2rem;
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 16rem;
-  z-index: 1000;
-
-  h4 {
-    line-height: 2rem;
-    margin-bottom: 0.5rem;
-  }
-
-  button {
-    margin: 1rem 0 0 0;
-  }
-
-  .app-sidebar-section {
-    border-bottom: 1px solid $color-border-dim;
-    margin-bottom: .5rem;
-    padding-bottom: .5rem;
-  }
-
-}
-
 select {
   border: 0;
   background: none;

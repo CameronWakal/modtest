@@ -1,4 +1,24 @@
-.module-settings {
+.app-sidebar {
+
+  background-color: $color-sidebar-background;
+  bottom: 0;
+  margin: 0;
+  padding: 2rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 16rem;
+  z-index: 1000;
+
+  h4 {
+    line-height: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  button {
+    margin: 1rem 0 0.5rem 0;
+  }
+
   color: $color-text;
 
   ul {
@@ -26,10 +46,10 @@
     flex: 1 0 auto;
   }
 
-  .module-settings-ports {
-    border-top: 1px solid $color-module-background;
-    margin-top: 1rem;
-    padding-top: 1rem;
+  .app-sidebar-section {
+    border-bottom: 1px solid $color-module-background;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
   }
 
 }
