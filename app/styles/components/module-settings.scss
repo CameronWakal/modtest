@@ -1,14 +1,6 @@
 .module-settings {
   color: $color-text;
 
-  h4 {
-    color: $color-text;
-    font-weight: 500;
-    line-height: 2.25rem;
-    margin: 0;
-    padding: 0;
-  }
-
   ul {
     margin: 0;
     padding: 0;
@@ -16,7 +8,8 @@
 
   li {
     display: flex;
-    line-height: 2.25rem;
+    line-height: 2rem;
+    margin-bottom: 0.5rem;
     list-style-type: none;
   }
 
@@ -31,6 +24,12 @@
   .setting-label {
     align-self: center;
     flex: 1 0 auto;
+  }
+
+  .module-settings-ports {
+    border-top: 1px solid $color-module-background;
+    margin-top: 1rem;
+    padding-top: 1rem;
   }
 
 }

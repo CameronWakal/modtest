@@ -29,3 +29,11 @@
   }
 
 }
+
+.app-sidebar .value-input-number {
+  background-color: $color-module-background;
+
+  &:focus {
+    background: $color-selected-input-background;
+  }
+}
