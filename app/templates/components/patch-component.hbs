@@ -1,7 +1,3 @@
-<div class="patch-connections">
-  <button {{action 'addModule' 'clock'}}>+Clock</button><button {{action 'addModule' 'clock-div'}}>+Clock Div</button><button {{action 'addModule' 'out'}}>+Out</button><button {{action 'addModule' 'ccout'}}>+CC Out</button><button {{action 'addModule' 'sequence'}}>+Sequence</button><button {{action 'addModule' 'scale'}}>+Scale</button><button {{action 'addModule' 'switch'}}>+Switch</button><button {{action 'addModule' 'maybe'}}>+Maybe</button><button {{action 'addModule' 'value'}}>+Value</button><button {{action 'addModule' 'repeat'}}>+Repeat</button>
-</div>
-
 {{patch-diagram
   patch=patch
   needsUpdate=diagramNeedsUpdate
@@ -21,6 +17,20 @@
       removePatch=(action 'removePatch')
       patchTitleChanged=(action 'patchTitleChanged')
     }}
+    <div class="app-sidebar-section modules-list"><h4>+ Module</h4>
+    <ul>
+      <li><a href="#" onclick={{action 'addModule' 'clock'}}>Clock</a></li>
+      <li><a href="#" {{action 'addModule' 'clock-div'}}>Clock Div</a></li>
+      <li><a href="#" {{action 'addModule' 'out'}}>Out</a></li>
+      <li><a href="#" {{action 'addModule' 'ccout'}}>CC Out</a></li>
+      <li><a href="#" {{action 'addModule' 'sequence'}}>Sequence</a></li>
+      <li><a href="#" {{action 'addModule' 'scale'}}>Scale</a></li>
+      <li><a href="#" {{action 'addModule' 'switch'}}>Switch</a></li>
+      <li><a href="#" {{action 'addModule' 'maybe'}}>Maybe</a></li>
+      <li><a href="#" {{action 'addModule' 'value'}}>Value</a></li>
+      <li><a href="#" {{action 'addModule' 'repeat'}}>Repeat</a></li>
+    </ul>
+    </div>
   {{/if}}
 {{/ember-wormhole}}
 

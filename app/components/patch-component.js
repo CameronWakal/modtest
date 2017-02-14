@@ -119,7 +119,8 @@ export default Component.extend({
 
     },
 
-    addModule(type) {
+    addModule(type, event) {
+      console.log('event:', event);
       let module = this.store.createRecord(`module-${type}`, { patch: this.patch });
       get(this, 'patch.modules').pushObject(module);
       this.patch.save();
