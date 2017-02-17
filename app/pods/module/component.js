@@ -6,7 +6,8 @@ const {
   observer,
   String,
   $,
-  run
+  run,
+  get
 } = Ember;
 
 export default Component.extend({
@@ -32,6 +33,16 @@ export default Component.extend({
   onPortsChanged: observer('module.ports.@each.isEnabled', function() {
     this.sendAction('portsChanged');
   }),
+
+  init() {
+    this._super(...arguments);
+
+    if (get(this, 'module.isNew')) {
+      this.set('isMoving', true);
+      $(document).on('mouseup', this.mouseUpBody.bind(this));
+      $(document).on('mousemove', this.mouseMoveBody.bind(this));
+    }
+  },
 
   mouseDown(event) {
     if ($(event.target).hasClass('module') ||
