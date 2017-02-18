@@ -2,6 +2,13 @@ $module-borderradius: 5px;
 $input-borderradius: 4px;
 $button-borderradius: 4px;
 
+$z-background: 0;
+$z-patch-diagram: 100;
+$z-module: 200;
+$z-selected-module: 300;
+$z-app-chrome: 400;
+$z-new-module: 500;
+
 @import 'colors';
 @import 'components/port-component';
 @import 'components/module';
@@ -77,7 +84,7 @@ button {
   padding: 0;
   margin: 2rem 0 0 2rem;
   position: absolute;
-  z-index: 1000;
+  z-index: $z-app-chrome;
   display: flex;
 
   h1 {
