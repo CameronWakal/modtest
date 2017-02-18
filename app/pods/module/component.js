@@ -47,12 +47,6 @@ export default Component.extend({
     }
   },
 
-  didInsertElement() {
-      if (get(this, 'module.isNew')) {
-        this.$().focus();
-      }
-  },
-
   mouseDown(event) {
     if ($(event.target).hasClass('module') ||
         $(event.target).hasClass('module-label')

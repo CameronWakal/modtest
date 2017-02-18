@@ -1,3 +1,10 @@
+@mixin cursor-grab {
+  cursor: move;
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+
 $module-borderradius: 5px;
 $input-borderradius: 4px;
 $button-borderradius: 4px;
