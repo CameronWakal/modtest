@@ -19,17 +19,16 @@
     }}
     <div class="app-sidebar-section modules-list"><h4>+ Module</h4>
     <ul>
-      <li>{{add-module-menu-item moduleType='clock' label='Clock Test' addModule=(action 'addModule')}}</li>
-      <li><a href="#" onclick={{action 'addModule' 'clock'}}>Clock</a></li>
-      <li><a href="#" {{action 'addModule' 'clock-div'}}>Clock Div</a></li>
-      <li><a href="#" {{action 'addModule' 'out'}}>Out</a></li>
-      <li><a href="#" {{action 'addModule' 'ccout'}}>CC Out</a></li>
-      <li><a href="#" {{action 'addModule' 'sequence'}}>Sequence</a></li>
-      <li><a href="#" {{action 'addModule' 'scale'}}>Scale</a></li>
-      <li><a href="#" {{action 'addModule' 'switch'}}>Switch</a></li>
-      <li><a href="#" {{action 'addModule' 'maybe'}}>Maybe</a></li>
-      <li><a href="#" {{action 'addModule' 'value'}}>Value</a></li>
-      <li><a href="#" {{action 'addModule' 'repeat'}}>Repeat</a></li>
+      <li>{{add-module-menu-item moduleType='clock' label='Clock' addModule=(action 'addModule')}}</li>
+      <li>{{add-module-menu-item moduleType='clock-div' label='Clock Div' addModule=(action 'addModule')}}</li>
+      <li>{{add-module-menu-item moduleType='out' label='Out' addModule=(action 'addModule')}}</li>
+      <li>{{add-module-menu-item moduleType='ccout' label='CCOut' addModule=(action 'addModule')}}</li>
+      <li>{{add-module-menu-item moduleType='sequence' label='Sequence' addModule=(action 'addModule')}}</li>
+      <li>{{add-module-menu-item moduleType='scale' label='Scale' addModule=(action 'addModule')}}</li>
+      <li>{{add-module-menu-item moduleType='switch' label='Switch' addModule=(action 'addModule')}}</li>
+      <li>{{add-module-menu-item moduleType='maybe' label='Maybe' addModule=(action 'addModule')}}</li>
+      <li>{{add-module-menu-item moduleType='value' label='Value' addModule=(action 'addModule')}}</li>
+      <li>{{add-module-menu-item moduleType='repeat' label='Repeat' addModule=(action 'addModule')}}</li>
     </ul>
     </div>
   {{/if}}
@@ -49,5 +48,6 @@
                                                   portDisconnected=(action 'portDisconnected')
                                                   portsChanged=(action 'modulePortsChanged' module)
                                                   layoutChanged=(action 'moduleLayoutChanged' module)
+                                                  savePatch=(action 'savePatch')
         }}{{/each}}
 </div>

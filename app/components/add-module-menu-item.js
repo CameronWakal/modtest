@@ -13,7 +13,6 @@ export default Ember.Component.extend({
   href: '#',
 
   mouseIsDown: false,
-  isDragging: false,
 
   mouseDown() {
     set(this, 'mouseIsDown', true);
@@ -22,14 +21,13 @@ export default Ember.Component.extend({
 
   mouseUp() {
     set(this, 'mouseIsDown', false);
-    set(this, 'isDragging', false);
   },
 
   mouseMove(event) {
-    if (get(this, 'mouseIsDown') && !get(this, 'isDragging')) {
+    if (get(this, 'mouseIsDown')) {
       this.sendAction('addModule', get(this, 'moduleType'), event);
-      set(this, 'isDragging', true);
+      set(this, 'mouseIsDown', false);
     }
-  },
+  }
 
 });

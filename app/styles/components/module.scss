@@ -18,6 +18,10 @@
     text-shadow: none;
   }
 
+  &.is-new {
+    border: 1px solid red;
+  }
+
   h3 {
     font-weight: 700;
     line-height: 1.5rem;

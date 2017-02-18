@@ -40,6 +40,10 @@ export default Component.extend({
       this.sendAction('removePatch');
     },
 
+    savePatch() {
+      this.patch.save();
+    },
+
     patchTitleChanged() {
       console.log('patchTitleChanged');
       this.patch.save();
@@ -122,7 +126,6 @@ export default Component.extend({
     addModule(type, event) {
       let module = this.store.createRecord(`module-${type}`, { patch: this.patch, xPos: event.pageX-event.offsetX, yPos: event.pageY-event.offsetY });
       get(this, 'patch.modules').pushObject(module);
-      this.patch.save();
     },
 
     removeConnection(sourcePort, destPort) {

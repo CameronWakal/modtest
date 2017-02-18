@@ -12,7 +12,10 @@ const {
 
 export default Component.extend({
   classNames: ['module'],
-  classNameBindings: ['portIsConnectingFrom:port-connecting-from'],
+  classNameBindings: [
+    'portIsConnectingFrom:port-connecting-from',
+    'module.isNew:is-new'
+  ],
   attributeBindings: ['inlineStyles:style', 'tabindex'],
   tabindex: -1,
 
@@ -70,6 +73,16 @@ export default Component.extend({
     let self = this;
     run(function() {
       self.set('didMove', true);
+
+      // moveOffsets will be null if this is a new module created by drag-and-drop,
+      // since the drag started with init() instead of mouseDown()
+      if (get(self, 'moveOffsetX') == null) {
+        self.set('moveOffsetX', event.pageX - self.get('xPos'));
+      }
+      if (get(self, 'moveOffsetY') == null) {
+        self.set('moveOffsetY', event.pageY - self.get('yPos'));
+      }
+
       self.set('xPos', event.pageX - self.get('moveOffsetX'));
       self.set('yPos', event.pageY - self.get('moveOffsetY'));
     });
@@ -81,6 +94,14 @@ export default Component.extend({
     run(function() {
       self.set('isMoving', false);
       if (self.get('didMove')) {
+
+        // saving of new modules is deferred until the end of the initial drag operation.
+        // enable future autosaves on the module and save the patch.
+        if (self.get('module.isNew')) {
+          self.set('module.shouldAutoSave', true);
+          self.sendAction('savePatch');
+        }
+
         self.get('module').requestSave();
         self.set('didMove', false);
       }
