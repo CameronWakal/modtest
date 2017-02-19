@@ -96,7 +96,7 @@ export default Route.extend({
         this.transitionTo('patch', patchesList[index - 1]);
         set(this.controllerFor('application'), 'currentPatch', patchesList[index - 1]);
       }
-    },
+    }
 
   }
 });

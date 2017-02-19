@@ -2,7 +2,6 @@ import Ember from 'ember';
 
 const {
   Component,
-  observer,
   computed,
   run,
   get,
@@ -124,7 +123,7 @@ export default Component.extend({
     },
 
     addModule(type, event) {
-      let module = this.store.createRecord(`module-${type}`, { patch: this.patch, xPos: event.pageX-event.offsetX, yPos: event.pageY-event.offsetY });
+      let module = this.store.createRecord(`module-${type}`, { patch: this.patch, xPos: event.pageX - event.offsetX, yPos: event.pageY - event.offsetY });
       get(this, 'patch.modules').pushObject(module);
     },
 

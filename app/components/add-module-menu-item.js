@@ -2,10 +2,11 @@ import Ember from 'ember';
 
 const {
   get,
-  set
+  set,
+  Component
 } = Ember;
 
-export default Ember.Component.extend({
+export default Component.extend({
 
   tagName: 'a',
   classNames: ['add-module-menu-item'],

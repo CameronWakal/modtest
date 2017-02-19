@@ -43,7 +43,7 @@ export default TextField.extend({
     let boundValue = get(this, 'boundValue');
 
     if (value !== boundValue) {
-      if (!get(this,'canBeEmpty') && isEmpty(value)) {
+      if (!get(this, 'canBeEmpty') && isEmpty(value)) {
         set(this, 'value', boundValue);
       } else {
         set(this, 'boundValue', value);
