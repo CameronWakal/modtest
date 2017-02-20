@@ -13,7 +13,7 @@ export default Route.extend({
 
   actions: {
     willTransition(transition) {
-      if(transition.targetName === 'index') {
+      if (transition.targetName === 'index') {
         this.replaceWith('patch', this.controller.model);
       }
     },

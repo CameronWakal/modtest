@@ -83,7 +83,10 @@ export default Route.extend({
 
       if (patchesList.length <= 1) {
         // make a new patch if we're transitioning from the only patch
-        this.newPatch();
+        let patch = this.store.createRecord('patch');
+        patch.save();
+        this.transitionTo('patch', patch);
+        set(this.controllerFor('application'), 'currentPatch', patch);
       } else if (index == 0) {
         // if we're transitioning from the first patch, go to the next patch
         this.transitionTo('patch', patchesList[1]);
@@ -93,7 +96,7 @@ export default Route.extend({
         this.transitionTo('patch', patchesList[index - 1]);
         set(this.controllerFor('application'), 'currentPatch', patchesList[index - 1]);
       }
-    },
+    }
 
   }
 });

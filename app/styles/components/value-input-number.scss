@@ -1,7 +1,6 @@
 .value-input-number {
-  background: rgba($color-neutral-dark, 0.8);
-  // border: 1px solid $color-border-bright;
-  border: none;
+  background: $color-input-background;
+  border: 0;
   border-radius: $input-borderradius;
   color: $color-text;
   display: inline-block;
@@ -18,8 +17,8 @@
   }
 
   &:focus {
-    color: $color-neutral-bright;
     background: $color-selected-input-background;
+    color: $color-neutral-bright;
     outline: none;
     text-shadow: 0 0 0 $color-neutral-bright;
   }

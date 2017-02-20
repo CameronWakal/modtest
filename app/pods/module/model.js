@@ -4,7 +4,9 @@ import Ember from 'ember';
 const {
   computed,
   run,
-  A
+  A,
+  set,
+  get
 } = Ember;
 
 const {
@@ -26,6 +28,8 @@ export default Model.extend({
   xPos: attr('number', { defaultValue: 0 }),
   yPos: attr('number', { defaultValue: 0 }),
 
+  shouldAutoSave: false,
+
   eventOutPorts: computed.filterBy('ports', 'type', 'port-event-out'),
   eventInPorts: computed.filterBy('ports', 'type', 'port-event-in'),
   valueOutPorts: computed.filterBy('ports', 'type', 'port-value-out'),
@@ -36,6 +40,14 @@ export default Model.extend({
     });
   }),
   enabledPorts: computed.filterBy('ports', 'isEnabled', true),
+
+  didCreate() {
+    set(this, 'shouldAutoSave', true);
+  },
+
+  didLoad() {
+    set(this, 'shouldAutoSave', true);
+  },
 
   // portVar is used to easily refer to this specific port from within the module
   addEventOutPort(label, portVar, isEnabled) {
@@ -129,13 +141,14 @@ export default Model.extend({
   },
 
   save() {
-    if (!this.get('isDeleted')) {
-      console.log('module saved');
-    } else {
-      console.log('module deleted');
+    if (get(this, 'shouldAutoSave')) {
+      if (!this.get('isDeleted')) {
+        console.log('module saved');
+      } else {
+        console.log('module deleted');
+      }
+      this._super();
     }
-
-    this._super();
   },
 
   remove() {

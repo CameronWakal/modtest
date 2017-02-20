@@ -2,7 +2,6 @@ import Ember from 'ember';
 
 const {
   Component,
-  observer,
   computed,
   run,
   get,
@@ -38,6 +37,10 @@ export default Component.extend({
 
     removePatch() {
       this.sendAction('removePatch');
+    },
+
+    savePatch() {
+      this.patch.save();
     },
 
     patchTitleChanged() {
@@ -119,10 +122,9 @@ export default Component.extend({
 
     },
 
-    addModule(type) {
-      let module = this.store.createRecord(`module-${type}`, { patch: this.patch });
+    addModule(type, event) {
+      let module = this.store.createRecord(`module-${type}`, { patch: this.patch, xPos: event.pageX - event.offsetX, yPos: event.pageY - event.offsetY });
       get(this, 'patch.modules').pushObject(module);
-      this.patch.save();
     },
 
     removeConnection(sourcePort, destPort) {

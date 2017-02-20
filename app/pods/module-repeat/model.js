@@ -61,7 +61,7 @@ export default Module.extend({
     if (get(this, 'delayIsInBeats')) {
       gate *= msPerBeat;
     }
-    
+
     // count is the maximum number of repeats that will fire for one original event.
     let countIsOn = get(this, 'countIsOn');
     let count = get(this, 'countInPort').getValue();

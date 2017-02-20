@@ -1,36 +1,45 @@
 .module {
   background-color: $color-module-background;
-  // border: 1px solid rgba($color-border-dim, 0.04);
   border-radius: $module-borderradius;
   color: $color-text;
   display: inline-block;
   overflow: hidden;
   padding: .3rem .15rem .36rem;
   position: absolute;
-  // box-shadow: 0px 0px 10px 10px $color-module-background;
-  // text-shadow: 0 0 1px $color-neutral-dark;
+  z-index: $z-module;
 
   &:focus {
-    // border: 1px solid $color-neutral-bright;
     background-color: $color-selected-module-background;
     color: $color-neutral-bright;
+    cursor: grab;
     outline: none;
     text-shadow: none;
+    z-index: $z-selected-module;
+
+    h3 {
+      cursor: grab;
+    }
+  }
+
+  &.is-new {
+    cursor: grab;
+    z-index: $z-new-module;
+
+    h3 {
+      cursor: grab;
+    }
   }
 
   h3 {
+    cursor: pointer;
     font-weight: 700;
     line-height: 1.5rem;
     margin: 0 .5rem;
-
-    &:hover {
-      cursor: pointer;
-    }
   }
 
   .module-content {
     display: inline-block;
-    margin: 0.25rem .5rem;
+    margin: .25rem .5rem;
   }
 
   .module-ports {
