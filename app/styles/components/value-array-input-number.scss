@@ -1,3 +1,5 @@
+$color-current-input-highlight: rgba($color-warm-bright, .5);
+
 .value-array-input-number {
   border-radius: 0;
   margin-right: 1px;
@@ -14,13 +16,13 @@
   }
 
   &.current {
+    background: linear-gradient($color-current-input-highlight, $color-current-input-highlight),
+    $color-input-background;
     color: $color-neutral-bright;
-    background: linear-gradient(rgba($color-warm-bright, 0.5), rgba($color-warm-bright, 0.5)),
-    rgba($color-neutral-dark, 0.8);
 
     &:focus {
-      background: linear-gradient(rgba($color-warm-bright, 0.5), rgba($color-warm-bright, 0.5)),
-      $color-selected-input-background;
+      background: linear-gradient($color-current-input-highlight, $color-current-input-highlight),
+      $color-input-background;
     }
 
   }

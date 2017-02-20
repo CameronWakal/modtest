@@ -11,35 +11,35 @@
   &:focus {
     background-color: $color-selected-module-background;
     color: $color-neutral-bright;
+    cursor: grab;
     outline: none;
     text-shadow: none;
     z-index: $z-selected-module;
-    @include cursor-grab;
 
     h3 {
-      @include cursor-grab;
+      cursor: grab;
     }
   }
 
   &.is-new {
+    cursor: grab;
     z-index: $z-new-module;
-    @include cursor-grab;
 
     h3 {
-      @include cursor-grab;
+      cursor: grab;
     }
   }
 
   h3 {
+    cursor: pointer;
     font-weight: 700;
     line-height: 1.5rem;
     margin: 0 .5rem;
-    cursor: pointer;
   }
 
   .module-content {
     display: inline-block;
-    margin: 0.25rem .5rem;
+    margin: .25rem .5rem;
   }
 
   .module-ports {

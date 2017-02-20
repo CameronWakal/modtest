@@ -1,7 +1,7 @@
 
 
 //BASE PALETTE
-$color-neutral-dark: saturate(darken(#282C34, 4%), 1%);
+$color-neutral-dark: saturate(darken(#282c34, 4%), 1%);
 $color-neutral-dim: desaturate(lighten($color-neutral-dark, 25%), 50%);
 $color-neutral-bright: #fff;
 $color-cool-bright: #ffd37b;
@@ -12,16 +12,16 @@ $color-warm-bright: #ff917b;
 $color-transparent: rgba(0, 0, 0, 0);
 
 //dim border on modules, etc.
-$color-border-dim: rgba($color-neutral-bright, .30);
+$color-border-dim: rgba($color-neutral-bright, .3);
 
 //normal border around input fields, etc.
-$color-border-bright: rgba($color-neutral-bright, .30);
+$color-border-bright: rgba($color-neutral-bright, .3);
 
 //default text color:
 $color-text: lighten($color-neutral-dark, 60%);
 
 //default button background:
-$color-button: rgba(desaturate(lighten($color-neutral-dark, 40%), 0%), 0.8);
+$color-button: rgba(desaturate(lighten($color-neutral-dark, 40%), 0%), .8);
 
 //subtle background color for faders, etc.:
 $color-control: rgba($color-neutral-dim, .1);
@@ -30,8 +30,10 @@ $color-control: rgba($color-neutral-dim, .1);
 $color-control-current: rgba($color-neutral-dim, .15);
 
 //transparent module background:
-$color-module-background: rgba(desaturate(lighten($color-neutral-dark, 6%), 0%), 0.8);
-$color-selected-module-background: rgba(desaturate(lighten($color-neutral-dark, 20%), 0%), 0.8);
-$color-sidebar-background: rgba(desaturate(darken($color-neutral-dark, 1%), 0%), 0.8);
+$color-module-background: rgba(desaturate(lighten($color-neutral-dark, 6%), 0%), .8);
+$color-selected-module-background: rgba(desaturate(lighten($color-neutral-dark, 20%), 0%), .8);
+$color-sidebar-background: rgba(desaturate(darken($color-neutral-dark, 1%), 0%), .8);
 //$color-sidebar-background: rgba($color-neutral-dark, 0.8);
-$color-selected-input-background: rgba(desaturate(lighten($color-neutral-dark, 40%), 0%), 0.8);
+$color-selected-input-background: rgba(desaturate(lighten($color-neutral-dark, 40%), 0%), .8);
+
+$color-input-background: rgba($color-neutral-dark, .8);

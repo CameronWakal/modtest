@@ -29,7 +29,7 @@ $toggle-accent-inset: 3px;
     border-top-right-radius: $input-borderradius;
   }
 
-  &.on::before { 
+  &.on::before {
     background: $color-button;
     border-radius: $toggle-borderradius;
     bottom: $toggle-inset;

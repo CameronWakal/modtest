@@ -2,6 +2,7 @@
 
   background-color: $color-sidebar-background;
   bottom: 0;
+  color: $color-text;
   margin: 0;
   padding: 2rem;
   position: absolute;
@@ -12,14 +13,12 @@
 
   h4 {
     line-height: 2rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: .5rem;
   }
 
   button {
     margin: 0;
   }
-
-  color: $color-text;
 
   ul {
     margin: 0;
@@ -29,15 +28,15 @@
   li {
     display: flex;
     line-height: 2rem;
-    margin-bottom: 0.5rem;
     list-style-type: none;
+    margin-bottom: .5rem;
   }
 
-  [type=checkbox] {
+  [type='checkbox'] {
     margin: 0 .5rem 0 0;
   }
 
-  [type=text] {
+  [type='text'] {
     align-self: center;
   }
 
@@ -49,20 +48,19 @@
   .app-sidebar-section {
     border-bottom: 1px solid $color-module-background;
     margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
+    padding-bottom: .5rem;
   }
 
   .modules-list {
     a {
-      box-shadow: inset 0 0 0 1px $color-module-background;
       border-radius: $button-borderradius;
+      box-shadow: inset 0 0 0 1px $color-module-background;
       color: $color-text;
+      cursor: grab;
       display: inline-block;
       line-height: 2rem;
-      padding: 0 0.5rem 0;
+      padding: 0 .5rem;
       text-decoration: none;
-      @include cursor-grab;
-
     }
   }
 

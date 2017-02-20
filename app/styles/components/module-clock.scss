@@ -1,3 +1,6 @@
+$color-focused-button: rgba($color-neutral-bright, .4);
+$color-active-button: rgba($color-cool-bright, .8);
+
 .module-clock {
 
   .button-start,
@@ -9,14 +12,14 @@
     }
 
     &:focus {
-      background: linear-gradient(rgba($color-neutral-bright, 0.4), rgba($color-neutral-bright, 0.4)),
+      background: linear-gradient($color-focused-button, $color-focused-button),
       $color-button;
     }
   }
 
   .button-stop,
   &.started .button-start {
-    background: rgba($color-cool-bright, 0.8);
+    background: $color-active-button;
     color: $color-neutral-dark;
 
     &:active {
@@ -24,8 +27,8 @@
     }
 
     &:focus {
-      background: linear-gradient(rgba($color-neutral-bright, 0.4), rgba($color-neutral-bright, 0.4)),
-      rgba($color-cool-bright, 0.8);
+      background: linear-gradient($color-focused-button, $color-focused-button),
+      $color-active-button;
     }
   }
 }
