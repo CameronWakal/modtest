@@ -7,7 +7,8 @@ const {
   String,
   $,
   run,
-  get
+  get,
+  set
 } = Ember;
 
 export default Component.extend({
@@ -29,7 +30,7 @@ export default Component.extend({
   portIsConnectingFrom: false,
 
   inlineStyles: computed('xPos', 'yPos', function() {
-    let styleString = `left:${this.get('xPos')}px; top:${this.get('yPos')}px`;
+    let styleString = `left:${get(this, 'xPos')}px; top:${get(this, 'yPos')}px`;
     return new String.htmlSafe(styleString);
   }),
 
@@ -41,7 +42,7 @@ export default Component.extend({
     this._super(...arguments);
 
     if (get(this, 'module.isNew')) {
-      this.set('isMoving', true);
+      set(this, 'isMoving', true);
       $(document).on('mouseup', this.mouseUpBody.bind(this));
       $(document).on('mousemove', this.mouseMoveBody.bind(this));
     }
@@ -51,9 +52,9 @@ export default Component.extend({
     if ($(event.target).hasClass('module') ||
         $(event.target).hasClass('module-label')
       ) {
-      this.set('isMoving', true);
-      this.set('moveOffsetX', event.pageX - this.get('xPos'));
-      this.set('moveOffsetY', event.pageY - this.get('yPos'));
+      set(this, 'isMoving', true);
+      set(this, 'moveOffsetX', event.pageX - get(this, 'xPos'));
+      set(this, 'moveOffsetY', event.pageY - get(this, 'yPos'));
       $(document).on('mouseup', this.mouseUpBody.bind(this));
       $(document).on('mousemove', this.mouseMoveBody.bind(this));
       this.sendAction('selected');
@@ -72,19 +73,19 @@ export default Component.extend({
     event.preventDefault();
     let self = this;
     run(function() {
-      self.set('didMove', true);
+      set(self, 'didMove', true);
 
       // moveOffsets will be null if this is a new module created by drag-and-drop,
       // since the drag started with init() instead of mouseDown()
       if (get(self, 'moveOffsetX') == null) {
-        self.set('moveOffsetX', event.pageX - self.get('xPos'));
+        set(self, 'moveOffsetX', event.pageX - get(self, 'xPos'));
       }
       if (get(self, 'moveOffsetY') == null) {
-        self.set('moveOffsetY', event.pageY - self.get('yPos'));
+        set(self, 'moveOffsetY', event.pageY - get(self, 'yPos'));
       }
 
-      self.set('xPos', event.pageX - self.get('moveOffsetX'));
-      self.set('yPos', event.pageY - self.get('moveOffsetY'));
+      set(self, 'xPos', event.pageX - get(self, 'moveOffsetX'));
+      set(self, 'yPos', event.pageY - get(self, 'moveOffsetY'));
     });
   },
 
@@ -92,18 +93,18 @@ export default Component.extend({
     event.preventDefault();
     let self = this;
     run(function() {
-      self.set('isMoving', false);
-      if (self.get('didMove')) {
+      set(self, 'isMoving', false);
+      if (get(self, 'didMove')) {
 
         // saving of new modules is deferred until the end of the initial drag operation.
         // enable future autosaves on the module and save the patch.
-        if (self.get('module.isNew')) {
-          self.set('module.shouldAutoSave', true);
+        if (get(self, 'module.isNew')) {
+          set(self, 'module.shouldAutoSave', true);
           self.sendAction('savePatch');
         }
 
-        self.get('module').requestSave();
-        self.set('didMove', false);
+        get(self, 'module').requestSave();
+        set(self, 'didMove', false);
       }
       self.sendAction('finishedMoving');
       $(document).off('mouseup');
@@ -120,12 +121,12 @@ export default Component.extend({
     },
 
     portStartedConnecting(port) {
-      this.set('portIsConnectingFrom', true);
+      set(this, 'portIsConnectingFrom', true);
       this.sendAction('portStartedConnecting', port);
     },
 
     portFinishedConnecting() {
-      this.set('portIsConnectingFrom', false);
+      set(this, 'portIsConnectingFrom', false);
       this.sendAction('portFinishedConnecting');
     },
 

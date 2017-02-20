@@ -3,7 +3,8 @@ import DS from 'ember-data';
 
 const {
   computed,
-  defineProperty
+  defineProperty,
+  get
 } = Ember;
 
 const {
@@ -24,7 +25,7 @@ export default Model.extend({
 
   ready() {
     // make an alias from this.value to module.targetValue at runtime
-    let targetPath = `module.${this.get('targetValue')}`;
+    let targetPath = `module.${get(this, 'targetValue')}`;
     defineProperty(this, 'value', computed.alias(targetPath));
   },
 

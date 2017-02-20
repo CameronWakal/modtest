@@ -2,7 +2,9 @@ import DS from 'ember-data';
 import Ember from 'ember';
 
 const {
-  observer
+  observer,
+  get,
+  set
 } = Ember;
 
 const {
@@ -25,8 +27,8 @@ export default Model.extend({
   module: belongsTo('module', { async: false, polymorphic: true }),
 
   onLengthChanged: observer('length', function() {
-    let length = this.get('items.length');
-    let newLength = this.get('length');
+    let length = get(this, 'items.length');
+    let newLength = get(this, 'length');
 
     if (newLength > length) {
       for (let i = length; i < newLength; i++) {
@@ -34,7 +36,7 @@ export default Model.extend({
       }
     } else if (newLength < length) {
       for (let i = length; i > newLength; i--) {
-        this.get('items').popObject();
+        get(this, 'items').popObject();
       }
     } else {
       return;
@@ -43,7 +45,7 @@ export default Model.extend({
   }),
 
   onAttrChanged: observer('length', 'valueMin', 'valueMax', 'valueStep', function() {
-    if (this.get('hasDirtyAttributes') && !this.get('isNew')) {
+    if (get(this, 'hasDirtyAttributes') && !get(this, 'isNew')) {
       this.requestSave();
     }
   }),
@@ -51,7 +53,7 @@ export default Model.extend({
   // mark myself as saved when requested by my managing module.
   save() {
     this._super({ adapterOptions: { dontPersist: true } });
-    this.get('items').forEach((item) => {
+    get(this, 'items').forEach((item) => {
       item.save();
     });
   },
@@ -59,49 +61,49 @@ export default Model.extend({
   // ask managing module to save me when my properties have changed.
   requestSave() {
     console.log('array requestSave');
-    this.get('module').requestSave();
+    get(this, 'module').requestSave();
   },
 
   incrementAll() {
-    this.get('items').forEach((item) => {
-      if (item.get('value') != null) {
-        item.set('value', item.get('value') + 1);
+    get(this, 'items').forEach((item) => {
+      if (get(item, 'value') != null) {
+        set(item, 'value', get(item, 'value') + 1);
       }
     });
   },
 
   decrementAll() {
-    this.get('items').forEach((item) => {
-      if (item.get('value') != null) {
-        item.set('value', item.get('value') - 1);
+    get(this, 'items').forEach((item) => {
+      if (get(item, 'value') != null) {
+        set(item, 'value', get(item, 'value') - 1);
       }
     });
   },
 
   shiftForward() {
-    let oldValues = this.get('items').mapBy('value');
-    this.get('items').forEach((item,index) => {
+    let oldValues = get(this, 'items').mapBy('value');
+    get(this, 'items').forEach((item,index) => {
       if (index < oldValues.length - 1) {
-        item.set('value', oldValues[index + 1]);
+        set(item, 'value', oldValues[index + 1]);
       } else {
-        item.set('value', oldValues[0]);
+        set(item, 'value', oldValues[0]);
       }
     });
   },
 
   shiftBackward() {
-    let oldValues = this.get('items').mapBy('value');
-    this.get('items').forEach((item,index) => {
+    let oldValues = get(this, 'items').mapBy('value');
+    get(this, 'items').forEach((item,index) => {
       if (index > 0) {
-        item.set('value', oldValues[index - 1]);
+        set(item, 'value', oldValues[index - 1]);
       } else {
-        item.set('value', oldValues[oldValues.length - 1]);
+        set(item, 'value', oldValues[oldValues.length - 1]);
       }
     });
   },
 
   remove() {
-    this.get('items').toArray().forEach((item) => {
+    get(this, 'items').toArray().forEach((item) => {
       item.destroyRecord();
     });
     this.destroyRecord();

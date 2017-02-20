@@ -3,7 +3,8 @@ import XRangeInputComponent from 'emberx-range-input/components/x-range-input';
 
 const {
   observer,
-  run
+  run,
+  get
 } = Ember;
 
 // emberx-range-input CLI addon for a range input component,
@@ -29,7 +30,7 @@ export default XRangeInputComponent.extend({
   }),
 
   onValueChanged: observer('value', function() {
-    this.$().val(this.get('value')).change();
+    this.$().val(get(this, 'value')).change();
   }),
 
   didInsertElement() {

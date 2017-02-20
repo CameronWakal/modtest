@@ -1,10 +1,15 @@
 import DS from 'ember-data';
 import Port from '../port/model';
+import Ember from 'ember';
 
 const {
   hasMany,
   attr
 } = DS;
+
+const {
+  get
+} = Ember;
 
 export default Port.extend({
 
@@ -16,7 +21,7 @@ export default Port.extend({
   targetMethod: attr('string'),
 
   getValue() {
-    return this.get('module')[this.get('targetMethod')]();
+    return get(this, 'module')[get(this, 'targetMethod')]();
   }
 
 });

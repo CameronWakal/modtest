@@ -90,7 +90,7 @@ export default Component.extend({
     },
 
     mouseEnterPort(toPort) {
-      let fromPort = this.get('connectingFromPort');
+      let fromPort = get(this, 'connectingFromPort');
       if (fromPort) { // we're dragging to create a new connection
         if (get(toPort, 'type') === get(fromPort, 'compatibleType')) { // we mouseEntered a compatible port type
           if (!get(fromPort, 'connections').findBy('id', toPort.id)) { // the two ports aren't already connected

@@ -2,7 +2,9 @@ import Ember from 'ember';
 
 const {
   Component,
-  computed
+  computed,
+  get,
+  set
 } = Ember;
 
 export default Component.extend({
@@ -17,25 +19,25 @@ export default Component.extend({
 
   isOn: computed.notEmpty('item.value'),
   isAccented: computed('item.value', 'max', function() {
-    return this.get('item.value') === this.get('max');
+    return get(this, 'item.value') === get(this, 'max');
   }),
 
   click(event) {
-    let value = this.get('item.value');
-    let max = this.get('max');
-    let min = this.get('min');
+    let value = get(this, 'item.value');
+    let max = get(this, 'max');
+    let min = get(this, 'min');
 
     if (event.shiftKey) {
       if (value === max) {
-        this.set('item.value', null);
+        set(this, 'item.value', null);
       } else {
-        this.set('item.value', max);
+        set(this, 'item.value', max);
       }
     } else {
       if (value === null) {
-        this.set('item.value', min);
+        set(this, 'item.value', min);
       } else {
-        this.set('item.value', null);
+        set(this, 'item.value', null);
       }
     }
   }

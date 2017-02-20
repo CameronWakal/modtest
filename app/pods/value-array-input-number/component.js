@@ -1,4 +1,9 @@
 import ValueInputNumber from '../value-input-number/component';
+import Ember from 'ember';
+
+const {
+  get
+} = Ember;
 
 // like ValueInputNumber, but meant to be used as one of many inputs in an array:
 // - can be styled based on whether it's the currently active item in the series
@@ -46,21 +51,21 @@ export default ValueInputNumber.extend({
       case 37: // left arrow
         if (event.shiftKey) {
           this.updateValue();
-          this.get('item.array').shiftForward();
+          get(this, 'item.array').shiftForward();
         }
         this.selectPrevious();
       break;
       case 39: // right arrow
         if (event.shiftKey) {
           this.updateValue();
-          this.get('item.array').shiftBackward();
+          get(this, 'item.array').shiftBackward();
         }
         this.selectNext();
       break;
       case 38: // up arrow
         if (event.shiftKey) {
           this.updateValue();
-          this.get('item.array').incrementAll();
+          get(this, 'item.array').incrementAll();
         } else {
           this.incrementProperty('value');
           this.updateValue();
@@ -69,7 +74,7 @@ export default ValueInputNumber.extend({
       case 40: // down arrow
         if (event.shiftKey) {
           this.updateValue();
-          this.get('item.array').decrementAll();
+          get(this, 'item.array').decrementAll();
         } else {
           this.decrementProperty('value');
           this.updateValue();

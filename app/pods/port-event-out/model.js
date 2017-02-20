@@ -1,9 +1,14 @@
 import DS from 'ember-data';
 import Port from '../port/model';
+import Ember from 'ember';
 
 const {
   hasMany
 } = DS;
+
+const {
+  get
+} = Ember;
 
 export default Port.extend({
 
@@ -14,7 +19,7 @@ export default Port.extend({
 
   // pass the event to connected ports
   sendEvent(event) {
-    this.get('connections').forEach((port) => {
+    get(this, 'connections').forEach((port) => {
       port.sendEvent(event);
     });
   }

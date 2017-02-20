@@ -1,7 +1,9 @@
 import Ember from 'ember';
 
 const {
-  Component
+  Component,
+  get,
+  set
 } = Ember;
 
 export default Component.extend({
@@ -11,9 +13,9 @@ export default Component.extend({
 
   change() {
     let selectedIndex = this.$('option:selected').index();
-    let patches = this.get('patches').toArray();
+    let patches = get(this, 'patches').toArray();
     let selectedPatch = patches[selectedIndex];
-    this.set('selectedPatch', selectedPatch);
+    set(this, 'selectedPatch', selectedPatch);
     this.sendAction('patchChanged', selectedPatch);
   }
 

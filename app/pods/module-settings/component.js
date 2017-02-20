@@ -2,7 +2,8 @@ import Ember from 'ember';
 
 const {
   Component,
-  computed
+  computed,
+  get
 } = Ember;
 
 export default Component.extend({
@@ -11,7 +12,7 @@ export default Component.extend({
   classNameBindings: ['isEmpty:empty'],
 
   isEmpty: computed('module.settings', 'module.valueInPorts', function() {
-    return !this.get('hasSettings') && !this.get('hasPorts');
+    return !get(this, 'hasSettings') && !get(this, 'hasPorts');
   }),
 
   hasSettings: computed.notEmpty('module.settings'),

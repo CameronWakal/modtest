@@ -3,7 +3,8 @@ import Ember from 'ember';
 
 const {
   computed,
-  observer
+  observer,
+  get
 } = Ember;
 
 const {
@@ -24,7 +25,7 @@ export default Model.extend({
   type: 'port', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
 
   compatibleType: computed(function() {
-    switch (this.get('type')) {
+    switch (get(this, 'type')) {
       case 'port-value-in': return 'port-value-out';
       case 'port-value-out': return 'port-value-in';
       case 'port-event-out': return 'port-event-in';
@@ -33,21 +34,21 @@ export default Model.extend({
   }),
 
   isValuePort: computed('type', function() {
-    return this.get('type') === 'port-value-in' || this.get('type') === 'port-value-out';
+    return get(this, 'type') === 'port-value-in' || get(this, 'type') === 'port-value-out';
   }),
   isEventPort: computed('type', function() {
-    return this.get('type') === 'port-event-in' || this.get('type') === 'port-event-out';
+    return get(this, 'type') === 'port-event-in' || get(this, 'type') === 'port-event-out';
   }),
 
   isConnected: computed.bool('connections.length'),
 
   // remove all connections
   disconnect() {
-    let connections = this.get('connections').toArray();
+    let connections = get(this, 'connections').toArray();
     connections.forEach((connection) => {
-      connection.get('connections').removeObject(this);
+      get(connection, 'connections').removeObject(this);
       console.log('port.disconnect() requestSave()');
-      connection.get('module').requestSave();
+      get(connection, 'module').requestSave();
     }, this);
   },
 
@@ -56,11 +57,11 @@ export default Model.extend({
   },
 
   requestSave() {
-    this.get('module').requestSave();
+    get(this, 'module').requestSave();
   },
 
   onAttrChanged: observer('isEnabled', 'label', function() {
-    if (this.get('hasDirtyAttributes') && !this.get('isNew')) {
+    if (get(this, 'hasDirtyAttributes') && !get(this, 'isNew')) {
       console.log('port attrchanged');
       this.requestSave();
     }

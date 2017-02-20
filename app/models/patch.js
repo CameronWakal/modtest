@@ -1,4 +1,9 @@
 import DS from 'ember-data';
+import Ember from 'ember';
+
+const {
+  get
+} = Ember;
 
 const {
   Model,
@@ -11,7 +16,7 @@ export default Model.extend({
   title: attr('string', { defaultValue: 'Untitled Patch' }),
 
   save() {
-    if (!this.get('isDeleted')) {
+    if (!get(this, 'isDeleted')) {
       console.log('patch save');
     } else {
       console.log('patch delete');

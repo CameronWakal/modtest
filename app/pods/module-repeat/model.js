@@ -114,7 +114,7 @@ export default Module.extend({
   },
 
   ready() {
-    if (this.get('isNew')) {
+    if (get(this, 'isNew')) {
       this.addEventInPort('trig', 'onEventIn', true);
 
       // create value-in ports

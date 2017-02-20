@@ -3,7 +3,8 @@ import Ember from 'ember';
 const {
   Component,
   String,
-  computed
+  computed,
+  get
 } = Ember;
 
 export default Component.extend({
@@ -17,9 +18,9 @@ export default Component.extend({
 
   noValue: computed.empty('item.value'),
   inlineStyles: computed('displayScale', 'min', 'max', 'step', function() {
-    let range = this.get('max') - this.get('min');
-    let steps = range / this.get('step');
-    let height = steps * this.get('displayScale');
+    let range = get(this, 'max') - get(this, 'min');
+    let steps = range / get(this, 'step');
+    let height = steps * get(this, 'displayScale');
     return String.htmlSafe(`height:${height}px`);
   })
 

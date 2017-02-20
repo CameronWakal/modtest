@@ -1,7 +1,9 @@
 import Ember from 'ember';
 
 const {
-  Component
+  Component,
+  get,
+  set
 } = Ember;
 
 export default Component.extend({
@@ -11,10 +13,10 @@ export default Component.extend({
 
   change() {
     let selectedIndex = this.$('option:selected').index();
-    let items = this.get('setting.items').toArray();
+    let items = get(this, 'setting.items').toArray();
     let selectedItem = items[selectedIndex];
-    this.set('setting.selectedItem', selectedItem);
-    this.set('setting.value', selectedItem.get('value'));
+    set(this, 'setting.selectedItem', selectedItem);
+    set(this, 'setting.value', get(selectedItem, 'value'));
   }
 
 });

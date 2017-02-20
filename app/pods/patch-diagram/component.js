@@ -185,7 +185,7 @@ export default Component.extend({
       ctx.moveTo(startX, startY);
       ctx.lineTo(endX, endY);
       ctx.lineWidth = 1;
-      if (con.inPort.get('type') === 'port-event-in' || con.inPort.get('type') === 'port-event-out') {
+      if (get(con.inPort, 'type') === 'port-event-in' || get(con.inPort, 'type') === 'port-event-out') {
         ctx.strokeStyle = eventLineColor;
       } else {
         ctx.strokeStyle = valueLineColor;

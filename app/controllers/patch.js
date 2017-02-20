@@ -1,7 +1,8 @@
 import Ember from 'ember';
 
 const {
-  Controller
+  Controller,
+  get
 } = Ember;
 
 export default Controller.extend({
@@ -11,7 +12,7 @@ export default Controller.extend({
       // first, give application route a chance to navigate away from the current patch
       this.send('transitionFromPatch', this.model);
 
-      let modules = this.model.get('modules');
+      let modules = get(this, 'model.modules');
       let modulesList = modules.toArray();
       this.model.destroyRecord();
       modulesList.forEach((module) => {

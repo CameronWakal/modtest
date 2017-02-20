@@ -35,8 +35,8 @@ export default Model.extend({
   valueOutPorts: computed.filterBy('ports', 'type', 'port-value-out'),
   valueInPorts: computed.filterBy('ports', 'type', 'port-value-in'),
   outPorts: computed('ports.@each.type', function() {
-    return this.get('ports').filter((item) => {
-      return item.get('type') === 'port-value-out' || item.get('type') === 'port-event-out';
+    return get(this, 'ports').filter((item) => {
+      return get(item, 'type') === 'port-value-out' || get(item, 'type') === 'port-event-out';
     });
   }),
   enabledPorts: computed.filterBy('ports', 'isEnabled', true),
@@ -56,8 +56,8 @@ export default Model.extend({
       isEnabled,
       module: this
     });
-    this.get('ports').pushObject(port);
-    this.set(portVar, port);
+    get(this, 'ports').pushObject(port);
+    set(this, portVar, port);
     port.save();
   },
 
@@ -69,7 +69,7 @@ export default Model.extend({
       isEnabled,
       module: this
     });
-    this.get('ports').pushObject(port);
+    get(this, 'ports').pushObject(port);
     port.save();
   },
 
@@ -81,7 +81,7 @@ export default Model.extend({
       isEnabled,
       module: this
     });
-    this.get('ports').pushObject(port);
+    get(this, 'ports').pushObject(port);
     port.save();
   },
 
@@ -103,8 +103,8 @@ export default Model.extend({
       maxValue: options.maxValue,
       module: this
     });
-    this.get('ports').pushObject(port);
-    this.set(portVar, port);
+    get(this, 'ports').pushObject(port);
+    set(this, portVar, port);
     port.save();
   },
 
@@ -114,7 +114,7 @@ export default Model.extend({
       targetValue,
       module
     });
-    this.get('settings').pushObject(setting);
+    get(this, 'settings').pushObject(setting);
   },
 
   addMenuSetting(label, targetValue, module, values) {
@@ -132,7 +132,7 @@ export default Model.extend({
       targetValue
     });
 
-    this.get('settings').pushObject(setting);
+    get(this, 'settings').pushObject(setting);
   },
 
   requestSave() {
@@ -142,7 +142,7 @@ export default Model.extend({
 
   save() {
     if (get(this, 'shouldAutoSave')) {
-      if (!this.get('isDeleted')) {
+      if (!get(this, 'isDeleted')) {
         console.log('module saved');
       } else {
         console.log('module deleted');
@@ -152,12 +152,12 @@ export default Model.extend({
   },
 
   remove() {
-    this.get('ports').toArray().forEach((port) => {
+    get(this, 'ports').toArray().forEach((port) => {
       port.disconnect();
       port.destroyRecord();
     });
 
-    this.get('settings').toArray().forEach((setting) => {
+    get(this, 'settings').toArray().forEach((setting) => {
       setting.remove();
     });
 

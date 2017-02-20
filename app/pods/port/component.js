@@ -5,7 +5,9 @@ const {
   $,
   observer,
   run,
-  isEmpty
+  isEmpty,
+  get,
+  set
 } = Ember;
 
 export default Component.extend({
@@ -21,7 +23,7 @@ export default Component.extend({
   isConnectingFrom: false,
 
   onDisable: observer('port.isEnabled', function() {
-    if (!this.get('port.isEnabled') && !isEmpty(this.get('port.connections'))) {
+    if (!get(this, 'port.isEnabled') && !isEmpty(get(this, 'port.connections'))) {
       this.sendAction('disconnect');
     }
   }),
@@ -29,7 +31,7 @@ export default Component.extend({
   mouseDown(event) {
     event.preventDefault();
     this.$().focus();
-    this.set('isConnectingFrom', true);
+    set(this, 'isConnectingFrom', true);
     $(document).on('mouseup', this.mouseUpBody.bind(this));
     this.sendAction('startedConnecting', event);
     return false;
@@ -40,7 +42,7 @@ export default Component.extend({
     this.$().blur();
     let self = this;
     run(function() {
-      self.set('isConnectingFrom', false);
+      set(self, 'isConnectingFrom', false);
       self.sendAction('finishedConnecting');
       $(document).off('mouseup');
     });

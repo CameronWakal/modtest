@@ -62,7 +62,7 @@ export default Module.extend({
       }
 
       items.forEach((item) => {
-        set(item, 'value', newValues[item.get('index')]);
+        set(item, 'value', newValues[get(item, 'index')]);
       });
     }
 

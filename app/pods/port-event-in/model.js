@@ -1,10 +1,15 @@
 import DS from 'ember-data';
 import Port from '../port/model';
+import Ember from 'ember';
 
 const {
   hasMany,
   attr
 } = DS;
+
+const {
+  get
+} = Ember;
 
 export default Port.extend({
 
@@ -16,9 +21,9 @@ export default Port.extend({
 
   // pass the event to the targetMethod of the module
   sendEvent(event) {
-    let module = this.get('module');
-    let targetMethodName = this.get('targetMethod');
-    let targetMethod = module.get(targetMethodName).bind(module);
+    let module = get(this, 'module');
+    let targetMethodName = get(this, 'targetMethod');
+    let targetMethod = get(module, targetMethodName).bind(module);
 
     targetMethod(event);
   }

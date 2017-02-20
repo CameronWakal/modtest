@@ -2,13 +2,14 @@ import Ember from 'ember';
 
 const {
   Route,
-  set
+  set,
+  get
 } = Ember;
 
 export default Route.extend({
 
   afterModel(patch) {
-    return patch.get('modules');
+    return get(patch, 'modules');
   },
 
   actions: {

@@ -3,7 +3,8 @@ import Ember from 'ember';
 import ModuleSetting from './module-setting';
 
 const {
-  computed
+  computed,
+  get
 } = Ember;
 
 const {
@@ -15,11 +16,11 @@ export default ModuleSetting.extend({
   type: 'module-setting-menu', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   items: hasMany('item-string', { async: false }),
   selectedItem: computed('value', function() {
-    return this.get('items').findBy('value', this.get('value'));
+    return get(this, 'items').findBy('value', get(this, 'value'));
   }),
 
   remove() {
-    this.get('items').toArray().forEach((item) => {
+    get(this, 'items').toArray().forEach((item) => {
       item.destroyRecord();
     });
     this._super();

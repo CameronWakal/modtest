@@ -24,7 +24,6 @@ export default Module.extend({
 
   sendEvent() {
     // check the connection of the 'note' port for the value of the note to play.
-    // let notePort = this.get('ports').findBy('label', 'note');
     let value = get(this, 'valueInPort').getValue();
     let control = get(this, 'controlInPort').getValue();
     if (value != null && control != null) {

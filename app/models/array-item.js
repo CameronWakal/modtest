@@ -3,7 +3,8 @@ import Ember from 'ember';
 
 const {
   computed,
-  observer
+  observer,
+  get
 } = Ember;
 
 const {
@@ -19,11 +20,11 @@ export default Model.extend({
   array: belongsTo('array', { async: false, inverse: 'items' }),
 
   isCurrentItem: computed('array.currentItem', function() {
-    return this === this.get('array.currentItem');
+    return this === get(this, 'array.currentItem');
   }),
 
   onValueChanged: observer('value', function() {
-    if (this.get('hasDirtyAttributes')) {
+    if (get(this, 'hasDirtyAttributes')) {
       this.requestSave();
     }
   }),
@@ -36,7 +37,7 @@ export default Model.extend({
   // ask managing module to save me when my properties have changed.
   requestSave() {
     console.log('array-item requestSave');
-    this.get('array').requestSave();
+    get(this, 'array').requestSave();
   }
 
 });

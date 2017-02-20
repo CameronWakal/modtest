@@ -63,7 +63,6 @@ export default Module.extend({
     }
 
     // check the connection of the 'note' port for the value of the note to play.
-    // let notePort = this.get('ports').findBy('label', 'note');
     let noteValue = get(this, 'noteInPort').getValue();
     let velValue = get(this, 'velInPort').getValue();
     if (noteValue != null) {

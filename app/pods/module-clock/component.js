@@ -2,7 +2,8 @@ import Ember from 'ember';
 import ModuleGenericComponent from '../module/component';
 
 const {
-  computed
+  computed,
+  get
 } = Ember;
 
 export default ModuleGenericComponent.extend({
@@ -14,15 +15,15 @@ export default ModuleGenericComponent.extend({
 
   actions: {
     start() {
-      this.get('module').start();
+      get(this, 'module').start();
     },
 
     stop() {
-      this.get('module').stop();
+      get(this, 'module').stop();
     },
 
     reset() {
-      this.get('module').reset();
+      get(this, 'module').reset();
     }
   }
 
