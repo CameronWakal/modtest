@@ -1,4 +1,4 @@
-import ValueInputNumber from './value-input-number';
+import ValueInputNumber from '../value-input-number/component';
 
 // like ValueInputNumber, but meant to be used as one of many inputs in an array:
 // - can be styled based on whether it's the currently active item in the series
