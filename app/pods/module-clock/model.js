@@ -33,10 +33,12 @@ export default Module.extend({
   resetOutPort: belongsTo('port-event-out', { async: false }),
   trigOutPort: belongsTo('port-event-out', { async: false }),
 
-  // internal property: no need to get/set
   tickDuration: null,
 
   source: attr('string', { defaultValue: 'Internal' }),
+
+  // component can observe this to know when an event fired
+  latestTargetTime: null,
 
   onSourceChanged: observer('source', function() {
     if (get(this, 'source') === 'Internal') {
@@ -106,11 +108,11 @@ export default Module.extend({
         // internal events get accurate target times based on tempo, resolution, and start time
         let tempo = get(this, 'tempoInPort').getValue();
         let res = get(this, 'resInPort').getValue();
-        this.tickDuration = 60000 / (tempo * res); // milliseconds per tick
+        set(this, 'tickDuration', 60000 / (tempo * res)); // milliseconds per tick
 
         get(this, 'scheduler').queueEvent(
-          { targetTime: event.targetTime + this.tickDuration,
-            outputTime: event.outputTime + this.tickDuration
+          { targetTime: event.targetTime + get(this, 'tickDuration'),
+            outputTime: event.outputTime + get(this, 'tickDuration')
           },
           this.sendEvent.bind(this)
         );
@@ -126,6 +128,7 @@ export default Module.extend({
         outputTime: event.outputTime,
         callbackTime: event.callbackTime
       });
+      set(this, 'latestTargetTime', event.targetTime);
     }
   }
 
