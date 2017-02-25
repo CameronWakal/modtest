@@ -2,10 +2,7 @@ import Ember from 'ember';
 
 const {
   Component,
-  computed,
   get,
-  set,
-  String,
   observer,
   run
 } = Ember;
@@ -25,12 +22,12 @@ export default Component.extend({
 
   didInsertElement() {
     this.lamps = this.$().find('.lamp');
-    this.evenLamp = this.$().find('.evenLamp');
-    this.oddLamp = this.$().find('.oddLamp');
+    this.evenLamp = this.$().find('.even-lamp');
+    this.oddLamp = this.$().find('.odd-lamp');
   },
 
   onTickDurationChanged: observer('tickDuration', function() {
-    this.lamps.css('animation-duration', get(this, 'tickDuration') + 'ms');
+    this.lamps.css('animation-duration', `${get(this, 'tickDuration')}ms`);
   }),
 
   onLatestTargetTimeChanged: observer('latestTargetTime', function() {

@@ -1,26 +1,25 @@
 .module-clock-indicator {
-  position: relative;
   flex: 0 0 .75rem;
   margin-top: .33rem;
+  position: relative;
 
-  .evenLamp,
-  .oddLamp {
-    width: .75rem;
+  .even-lamp,
+  .odd-lamp {
+    border-radius: 1rem;
     height: .75rem;
+    left: 0;
     position: absolute;
     top: 0;
-    left: 0;
-    border-radius: 1rem;
+    width: .75rem;
   }
 
   .on {
     animation-name: flash-animation;
-
   }
 
   @keyframes flash-animation {
-      from { background: $color-cool-bright; }
-      to   { background: default; }
+    from { background: $color-cool-bright; }
+    to   { background: default; }
   }
 
 }
