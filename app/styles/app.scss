@@ -10,20 +10,20 @@ $z-app-chrome: 400;
 $z-new-module: 500;
 
 @import 'colors';
-@import 'pods/port/styles';
-@import 'pods/module/styles';
-@import 'pods/module-clock/styles';
-@import 'pods/module-clock-indicator/styles';
-@import 'pods/module-settings/styles';
-@import 'pods/value-input-number/styles';
-@import 'pods/value-input-string/styles';
-@import 'pods/value-array-input-number/styles';
-@import 'pods/value-array-input-button/styles';
-@import 'pods/value-input-fader/styles';
-@import 'pods/value-input-array/styles';
-@import 'pods/patch-diagram/styles';
-@import 'pods/patch-component/styles';
-@import 'pods/port-setting/styles';
+@import 'components/port/styles';
+@import 'components/module/styles';
+@import 'components/module-clock/styles';
+@import 'components/module-clock-indicator/styles';
+@import 'components/module-settings/styles';
+@import 'components/value-input-number/styles';
+@import 'components/value-input-string/styles';
+@import 'components/value-array-input-number/styles';
+@import 'components/value-array-input-button/styles';
+@import 'components/value-input-fader/styles';
+@import 'components/value-input-array/styles';
+@import 'components/patch-diagram/styles';
+@import 'components/patch-component/styles';
+@import 'components/port-setting/styles';
 
 html,
 input,

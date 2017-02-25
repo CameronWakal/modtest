@@ -3,7 +3,7 @@
 module.exports = function(environment) {
   var ENV = {
     modulePrefix: 'modtest',
-    podModulePrefix: 'modtest/pods',
+    podModulePrefix: 'modtest/components',
     environment: environment,
     rootURL: '/',
     locationType: 'auto',
