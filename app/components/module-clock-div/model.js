@@ -3,14 +3,12 @@ import Module from '../module/model';
 import DS from 'ember-data';
 
 const {
-  computed,
   get,
   set
 } = Ember;
 
 const {
-  belongsTo,
-  attr
+  belongsTo
 } = DS;
 
 export default Module.extend({
