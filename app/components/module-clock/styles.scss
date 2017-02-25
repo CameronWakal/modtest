@@ -3,10 +3,6 @@ $color-active-button: rgba($color-cool-bright, .8);
 
 .module-clock {
 
-  .module-header {
-    display: flex;
-  }
-
   .button-start,
   &.started .button-stop {
     background: $color-button;

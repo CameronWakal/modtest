@@ -38,7 +38,7 @@ export default Module.extend({
   source: attr('string', { defaultValue: 'Internal' }),
 
   // component can observe this to know when an event fired
-  latestTargetTime: null,
+  latestTriggerTime: null,
 
   onSourceChanged: observer('source', function() {
     if (get(this, 'source') === 'Internal') {
@@ -126,9 +126,10 @@ export default Module.extend({
       get(this, 'trigOutPort').sendEvent({
         targetTime: event.targetTime,
         outputTime: event.outputTime,
-        callbackTime: event.callbackTime
+        callbackTime: event.callbackTime,
+        duration: get(this, 'tickDuration')
       });
-      set(this, 'latestTargetTime', event.targetTime);
+      set(this, 'latestTriggerTime', event.targetTime);
     }
   }
 

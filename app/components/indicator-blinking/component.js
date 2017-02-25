@@ -24,11 +24,17 @@ export default Component.extend({
     this.lamps = this.$().find('.lamp');
     this.evenLamp = this.$().find('.even-lamp');
     this.oddLamp = this.$().find('.odd-lamp');
+    this.updateTriggerDuration();
   },
 
   onblinkDurationChanged: observer('blinkDuration', function() {
-    this.lamps.css('animation-duration', `${get(this, 'blinkDuration')}ms`);
+    this.updateTriggerDuration();
   }),
+
+  updateTriggerDuration() {
+    let duration = get(this, 'blinkDuration') ? get(this, 'blinkDuration') : 200;
+    this.lamps.css('animation-duration', `${duration}ms`);
+  },
 
   onblinkTriggerChanged: observer('blinkTrigger', function() {
     run.once(this, function() {
