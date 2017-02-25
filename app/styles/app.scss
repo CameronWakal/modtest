@@ -10,19 +10,20 @@ $z-app-chrome: 400;
 $z-new-module: 500;
 
 @import 'colors';
-@import 'components/port-component';
-@import 'components/module';
-@import 'components/module-clock';
-@import 'components/module-settings';
-@import 'components/value-input-number';
-@import 'components/value-input-string';
-@import 'components/value-array-input-number';
-@import 'components/value-array-input-button';
-@import 'components/value-input-fader';
-@import 'components/value-input-numberfader';
-@import 'components/patch-diagram';
-@import 'components/patch-component';
-@import 'components/port-setting';
+@import 'components/port/styles';
+@import 'components/module/styles';
+@import 'components/module-clock/styles';
+@import 'components/indicator-blinking/styles';
+@import 'components/module-settings/styles';
+@import 'components/value-input-number/styles';
+@import 'components/value-input-string/styles';
+@import 'components/value-array-input-number/styles';
+@import 'components/value-array-input-button/styles';
+@import 'components/value-input-fader/styles';
+@import 'components/value-input-array/styles';
+@import 'components/patch-diagram/styles';
+@import 'components/patch-component/styles';
+@import 'components/port-setting/styles';
 
 html,
 input,

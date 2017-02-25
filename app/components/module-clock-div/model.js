@@ -3,14 +3,12 @@ import Module from '../module/model';
 import DS from 'ember-data';
 
 const {
-  computed,
   get,
   set
 } = Ember;
 
 const {
-  belongsTo,
-  attr
+  belongsTo
 } = DS;
 
 export default Module.extend({
@@ -27,15 +25,9 @@ export default Module.extend({
   shiftByPort: belongsTo('port-value-in', { async: false }),
   trigOutPort: belongsTo('port-event-out', { async: false }),
 
-  count: attr('number', { defaultValue: 0 }),
-
-  isTriggering: computed('count', 'shiftBy', 'divBy', function() {
-    if (get(this, 'shiftByPort') && get(this, 'divByPort')) {
-      return get(this, 'count') - this.mod(get(this, 'shiftByPort').getValue(), get(this, 'divByPort').getValue()) === 1;
-    } else {
-      return false;
-    }
-  }),
+  count: 0,
+  latestTriggerTime: null,
+  triggerDuration: null,
 
   onClockIn(event) {
     let count = get(this, 'count');
@@ -43,7 +35,10 @@ export default Module.extend({
     let shiftBy = get(this, 'shiftByPort').getValue();
 
     if (count - this.mod(shiftBy, divBy) === 0) {
+      event.duration *= divBy;
       get(this, 'trigOutPort').sendEvent(event);
+      set(this, 'latestTriggerTime', event.targetTime);
+      set(this, 'triggerDuration', event.duration);
     }
 
     set(this, 'count', this.mod(count + 1, divBy));

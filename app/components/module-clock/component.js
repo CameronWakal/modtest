@@ -12,6 +12,8 @@ export default ModuleGenericComponent.extend({
   classNameBindings: ['isStarted:started'],
 
   isStarted: computed.alias('module.isStarted'),
+  latestTriggerTime: computed.alias('module.latestTriggerTime'),
+  tickDuration: computed.alias('module.tickDuration'),
 
   actions: {
     start() {

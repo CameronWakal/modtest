@@ -1,0 +1,5 @@
+<div class="module-header">{{partial 'module-label'}}{{indicator-blinking blinkDuration=tickDuration blinkTrigger=latestTriggerTime}}</div>
+<div class="module-content">
+  <button class="button-start" {{action 'start'}}>Start</button><button class="button-stop" {{action 'stop'}}>Stop</button>
+</div>
+{{partial 'module-ports'}}
