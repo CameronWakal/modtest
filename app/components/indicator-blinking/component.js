@@ -9,10 +9,10 @@ const {
 
 export default Component.extend({
 
-  classNames: ['module-clock-indicator'],
+  classNames: ['indicator-blinking'],
 
-  tickDuration: 0,
-  latestTargetTime: null,
+  blinkDuration: 0,
+  blinkTrigger: null,
   countIsEven: true,
 
   // dom child elements
@@ -26,11 +26,11 @@ export default Component.extend({
     this.oddLamp = this.$().find('.odd-lamp');
   },
 
-  onTickDurationChanged: observer('tickDuration', function() {
-    this.lamps.css('animation-duration', `${get(this, 'tickDuration')}ms`);
+  onblinkDurationChanged: observer('blinkDuration', function() {
+    this.lamps.css('animation-duration', `${get(this, 'blinkDuration')}ms`);
   }),
 
-  onLatestTargetTimeChanged: observer('latestTargetTime', function() {
+  onblinkTriggerChanged: observer('blinkTrigger', function() {
     run.once(this, function() {
       if (this.countIsEven) {
         this.evenLamp.addClass('on');
