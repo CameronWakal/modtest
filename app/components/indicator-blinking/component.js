@@ -3,51 +3,29 @@ import Ember from 'ember';
 const {
   Component,
   get,
-  observer,
-  run
+  computed,
+  String
 } = Ember;
 
 export default Component.extend({
 
   classNames: ['indicator-blinking'],
+  classNameBindings: ['animationClass'],
+  attributeBindings: ['styleAttribute:style'],
 
-  blinkDuration: 0,
-  blinkTrigger: null,
-  countIsEven: true,
-
-  // dom child elements
-  evenLamp: null,
-  oddLamp: null,
-  lamps: null,
-
-  didInsertElement() {
-    this.lamps = this.$().find('.lamp');
-    this.evenLamp = this.$().find('.even-lamp');
-    this.oddLamp = this.$().find('.odd-lamp');
-    this.updateTriggerDuration();
-  },
-
-  onblinkDurationChanged: observer('blinkDuration', function() {
-    this.updateTriggerDuration();
+  animationClass: computed('blinkTrigger', function(){
+    if (get(this, 'blinkTrigger')) {
+      this.countIsEven = !this.countIsEven;
+      return this.countIsEven ? 'on-even' : 'on-odd';
+    }
   }),
 
-  updateTriggerDuration() {
-    let duration = get(this, 'blinkDuration') ? get(this, 'blinkDuration') : 200;
-    this.lamps.css('animation-duration', `${duration}ms`);
-  },
+  styleAttribute: computed('blinkDuration', function() {
+    return new String.htmlSafe(`animation-duration: ${get(this, 'blinkDuration')}ms;`);
+  }),
 
-  onblinkTriggerChanged: observer('blinkTrigger', function() {
-    run.once(this, function() {
-      if (this.countIsEven) {
-        this.evenLamp.addClass('on');
-        this.oddLamp.removeClass('on');
-        this.countIsEven = false;
-      } else {
-        this.evenLamp.removeClass('on');
-        this.oddLamp.addClass('on');
-        this.countIsEven = true;
-      }
-    });
-  })
+  blinkDuration: 200,
+  blinkTrigger: null,
+  countIsEven: true
 
 });

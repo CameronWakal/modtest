@@ -122,14 +122,16 @@ export default Module.extend({
         return;
       }
 
-      // add some latency to the midi output time to allow room for callback inaccuracy and event execution
-      get(this, 'trigOutPort').sendEvent({
-        targetTime: event.targetTime,
-        outputTime: event.outputTime,
-        callbackTime: event.callbackTime,
-        duration: get(this, 'tickDuration')
-      });
-      set(this, 'latestTriggerTime', event.targetTime);
+      if (get(this, 'trigOutPort.isConnected')) {
+        // add some latency to the midi output time to allow room for callback inaccuracy and event execution
+        get(this, 'trigOutPort').sendEvent({
+          targetTime: event.targetTime,
+          outputTime: event.outputTime,
+          callbackTime: event.callbackTime,
+          duration: get(this, 'tickDuration')
+        });
+        set(this, 'latestTriggerTime', event.targetTime);
+      }
     }
   }
 

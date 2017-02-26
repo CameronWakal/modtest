@@ -35,10 +35,12 @@ export default Module.extend({
     let shiftBy = get(this, 'shiftByPort').getValue();
 
     if (count - this.mod(shiftBy, divBy) === 0) {
-      event.duration *= divBy;
-      get(this, 'trigOutPort').sendEvent(event);
-      set(this, 'latestTriggerTime', event.targetTime);
-      set(this, 'triggerDuration', event.duration);
+      if (get(this, 'trigOutPort.isConnected')) {
+        event.duration *= divBy;
+        get(this, 'trigOutPort').sendEvent(event);
+        set(this, 'latestTriggerTime', event.targetTime);
+        set(this, 'triggerDuration', event.duration);
+      }
     }
 
     set(this, 'count', this.mod(count + 1, divBy));

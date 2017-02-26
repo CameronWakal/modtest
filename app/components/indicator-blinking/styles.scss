@@ -1,23 +1,23 @@
 .indicator-blinking {
+  border-radius: 1rem;
   flex: 0 0 .75rem;
+  height: .75rem;
   margin-top: .33rem;
-  position: relative;
 
-  .even-lamp,
-  .odd-lamp {
-    border-radius: 1rem;
-    height: .75rem;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: .75rem;
+  &.on-even {
+    animation-name: flash-animation-even;
   }
 
-  .on {
-    animation-name: flash-animation;
+  &.on-odd {
+    animation-name: flash-animation-odd;
   }
 
-  @keyframes flash-animation {
+  @keyframes flash-animation-even {
+    from { background: $color-cool-bright; }
+    to   { background: default; }
+  }
+
+  @keyframes flash-animation-odd {
     from { background: $color-cool-bright; }
     to   { background: default; }
   }
