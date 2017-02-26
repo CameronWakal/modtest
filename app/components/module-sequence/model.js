@@ -23,6 +23,9 @@ export default Module.extend({
   inputType: attr('string', { defaultValue: 'Number' }),
   displayScale: attr('number', { defaultValue: 1 }),
 
+  latestTriggerTime: null,
+  triggerDuration: null,
+
   getValue() {
     return get(this, 'steps.currentItem.value');
   },
@@ -46,7 +49,11 @@ export default Module.extend({
 
     // output event if current step has a value
     if (!isNaN(parseInt(get(this, 'steps.currentItem.value')))) {
-      get(this, 'trigOutPort').sendEvent(event);
+      if (get(this, 'trigOutPort.isConnected')) {
+        get(this, 'trigOutPort').sendEvent(event);
+        set(this, 'triggerDuration', event.duration);
+        set(this, 'latestTriggerTime', event.targetTime);
+      }
     }
   },
 

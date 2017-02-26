@@ -23,6 +23,8 @@ export default Module.extend({
   velInPort: belongsTo('port-value-in', { async: false }),
 
   events: [],
+  latestTriggerTime: null,
+  triggerDuration: null,
 
   sendEvent(event) {
     // the clock adds some padding ms to the event timestamps to allow for callback latency.
@@ -67,6 +69,8 @@ export default Module.extend({
     let velValue = get(this, 'velInPort').getValue();
     if (noteValue != null) {
       get(this, 'midi').sendNote(noteValue, velValue, 20, event.outputTime);
+      set(this, 'triggerDuration', event.duration);
+      set(this, 'latestTriggerTime', event.targetTime);
     }
 
   },

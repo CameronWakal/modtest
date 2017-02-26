@@ -38,8 +38,8 @@ export default Module.extend({
       if (get(this, 'trigOutPort.isConnected')) {
         event.duration *= divBy;
         get(this, 'trigOutPort').sendEvent(event);
-        set(this, 'latestTriggerTime', event.targetTime);
         set(this, 'triggerDuration', event.duration);
+        set(this, 'latestTriggerTime', event.targetTime);
       }
     }
 
