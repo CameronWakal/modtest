@@ -4,6 +4,7 @@ import DS from 'ember-data';
 
 const {
   get,
+  set,
   inject,
   computed,
   computed: { equal }
@@ -42,6 +43,9 @@ export default Module.extend({
   delayDenominatorInPort: belongsTo('port-value-in', { async: false }), // delay between repeats
   trigOutPort: belongsTo('port-event-out', { async: false }),
 
+  latestTriggerTime: null,
+  triggerDuration: null,
+
   // when an event comes in, repeat the event after a delay.
   // multiple repeats can be generated from a single original event.
   // in count mode, an event repeats until a set number of repeats have been triggered.
@@ -49,7 +53,7 @@ export default Module.extend({
   // in count+gate mode, an event repeats are limited by both count and gate.
   // gate and delay duration can be supplied in either beats or milliseconds.
   onEventIn(event) {
-    let tempo = get(this, 'tempo');
+    let tempo = get(this, 'tempoInPort').getValue();
     let msPerBeat = 60000 / tempo;
 
     // gate is the maximum amount of time after the original event that repeats
@@ -76,8 +80,9 @@ export default Module.extend({
 
     // examine incoming event and send it through if it's a queued repeat event
     if (event.repeatCount != null && event.repeatOriginalTargetTime != null) {
-      // console.log('sendEvent repeatCount', event.repeatCount);
       get(this, 'trigOutPort').sendEvent(event);
+      set(this, 'triggerDuration', event.duration);
+      set(this, 'latestTriggerTime', event.targetTime);
     }
 
     // create the next repeat event based on incoming event properties
@@ -92,9 +97,11 @@ export default Module.extend({
     } else {
       eventOriginalTargetTime = event.repeatOriginalTargetTime;
     }
+
     repeatEvent = {
       targetTime: event.targetTime + delay,
       outputTime: event.outputTime + delay,
+      duration: delay,
       repeatCount: eventRepeatCount,
       repeatOriginalTargetTime: eventOriginalTargetTime
     };
