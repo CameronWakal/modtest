@@ -44,6 +44,7 @@ export default Module.extend({
   // for converting from midi timing events to clock-resolution events in onMidiTimingClock()
   midiEventCount: 0,
   latestTickSentAt: null,
+  latestMidiEventTimestamp: null,
 
   onSourceChanged: observer('source', function() {
     if (get(this, 'source') === 'Internal') {
@@ -112,7 +113,6 @@ export default Module.extend({
   },
 
   onMidiTimingClock(event) {
-
     /* Receive 24-events-per-beat midi time signals and send out internal
      * clock signals of arbitrary ticks-per-beat resolution. If the resolution
      * is equally divisible by 24, this is simple. If it's not (e.g. 5, 7, 9 ticks per beat)
@@ -120,7 +120,6 @@ export default Module.extend({
      */
 
      // todo:
-     // - actually fire clock events
      // - calculate ms offsets for fractional events and adjust target timestamps for outgoing events
 
     if (this.isStarted) {
@@ -128,16 +127,53 @@ export default Module.extend({
       let midiEventsPerTick = midiTimingEventsPerBeat / ticksPerBeat;
 
       if (this.latestTickSentAt == null) {
-        console.log(this.midiEventCount, 'send 0');
+        // fire an event for the first midi timing event in a series
+
+        if (get(this, 'trigOutPort.isConnected')) {
+
+          // if we don't know the tick duration, make something up.
+          let tickDuration = get(this, 'tickDuration') ? get(this, 'tickDuration') : 500 / ticksPerBeat;
+
+          get(this, 'trigOutPort').sendEvent({
+            targetTime: event.timeStamp,
+            outputTime: event.timeStamp + latency,
+            callbackTime: event.timeStamp,
+            duration: tickDuration
+          });
+          set(this, 'latestTriggerTime', event.timeStamp);
+          set(this, 'tickDuration', tickDuration);
+        }
+
         this.latestTickSentAt = 0;
         this.midiEventCount = 1;
+
       } else if (this.latestTickSentAt + midiEventsPerTick <= this.midiEventCount) {
-        console.log(this.midiEventCount, 'send', this.latestTickSentAt + midiEventsPerTick);
+        // fire an event for a subsequent midi timing event in a series
+
+        // calculate the tick duration
+        let tickDuration = (event.timeStamp - this.latestMidiEventTimestamp) * 24 / ticksPerBeat;
+
+        if (get(this, 'trigOutPort.isConnected')) {
+          get(this, 'trigOutPort').sendEvent({
+            targetTime: event.timeStamp,
+            outputTime: event.timeStamp + latency,
+            callbackTime: event.timeStamp,
+            duration: tickDuration
+          });
+          set(this, 'latestTriggerTime', event.timeStamp);
+          set(this, 'tickDuration', tickDuration);
+        }
+
         this.latestTickSentAt = this.latestTickSentAt + midiEventsPerTick - this.midiEventCount;
         this.midiEventCount = 1;
+
+
       } else {
+        // no event scheduled to fire
         this.midiEventCount++;
       }
+
+      this.latestMidiEventTimestamp = event.timeStamp;
 
     }
 
@@ -160,32 +196,16 @@ export default Module.extend({
 
         event.duration = get(this, 'tickDuration');
 
-      } else if (get(this, 'source') === 'External') {
-        event.outputTime = event.targetTime + latency;
-        event.callbackTime = event.targetTime; // no callback right now, we're passing the external event straight through
-        event.duration = 20; // a guess: 1/24 of a beat at 120 bpm. Todo: calculate based on previous event timestamp
-
-      } else {
+      } else if (get(this, 'source') !== 'External') {
         console.log('error sending trigger, unrecognized source setting of', get(this, 'sourceSetting.value'));
         return;
       }
 
       if (get(this, 'trigOutPort.isConnected')) {
-        // add some latency to the midi output time to allow room for callback inaccuracy and event execution
-        get(this, 'trigOutPort').sendEvent({
-          targetTime: event.targetTime,
-          outputTime: event.outputTime,
-          callbackTime: event.callbackTime,
-          duration: event.duration
-        });
+        get(this, 'trigOutPort').sendEvent(event);
         set(this, 'latestTriggerTime', event.targetTime);
       }
     }
-  },
-
-  mod(num, mod) {
-    let remain = num % mod;
-    return Math.floor(remain >= 0 ? remain : remain + mod);
   }
 
 });
