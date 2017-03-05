@@ -27,58 +27,49 @@ export default Module.extend({
   midi: inject.service(),
   scheduler: inject.service(),
 
-  // external properties, use Ember getters and setters
-  isStarted: false,
   tempoInPort: belongsTo('port-value-in', { async: false }),
   resInPort: belongsTo('port-value-in', { async: false }),
   resetOutPort: belongsTo('port-event-out', { async: false }),
   trigOutPort: belongsTo('port-event-out', { async: false }),
-
   source: attr('string', { defaultValue: 'Internal' }),
 
-  // component can observe this to know when an event fired
+  isStarted: false,
+  // last time an internal event was sent out.
   latestTriggerTime: null,
-  // ms between events based current tempo and resolution
+  // milliseconds between events. This is either:
+  // calculated based on tempo and resolution (internal mode)
+  // estimated based on frequency of incoming events (external mode)
   tickDuration: null,
-
-  // for converting from midi timing events to clock-resolution events in onMidiTimingClock()
+  // number of midi events received since latest internal event was sent (external mode)
   midiEventCount: 0,
+  // number of midi events ago that the latest internal event was sent (external mode)
+  // can be a decimal number if resolution is not divisible by midi-events-per-beat
   latestTickSentAt: null,
+  // timestamp of latest midi event so we can infer the external tempo between two events (external mode)
   latestMidiEventTimestamp: null,
 
   onSourceChanged: observer('source', function() {
     if (get(this, 'source') === 'Internal') {
-      console.log('clock: use internal source');
       get(this, 'midi').timingListener = null;
       if (this.isStarted) { // reset the internal clock
         this.start();
       }
     } else if (get(this, 'source') === 'External') {
-      console.log('clock: use external source');
       get(this, 'midi').timingListener = this;
-      this.latestTickSentAt = null; // reset timing for external events
-    } else {
-      console.log('error: tried to update source to', get(this, 'sourceSetting.value'));
+      this.resetExternalTimer();
     }
-
     if (get(this, 'hasDirtyAttributes')) {
       this.requestSave();
     }
-
   }),
 
   ready() {
     if (get(this, 'isNew')) {
-      // create settings
       this.addMenuSetting('Source', 'source', this, ['Internal', 'External']);
-
-      // create ports
       this.addValueInPort('tempo', 'tempoInPort', { isEnabled: false, defaultValue: defaultTempo, minValue: 1 });
       this.addValueInPort('res', 'resInPort', { isEnabled: false, defaultValue: defaultRes, minValue: 1, maxValue: 24 });
-
       this.addEventOutPort('reset', 'resetOutPort', false);
       this.addEventOutPort('trig', 'trigOutPort', true);
-      console.log('module-clock.didCreate() requestSave()');
       this.requestSave();
     }
   },
@@ -89,14 +80,12 @@ export default Module.extend({
     }
     set(this, 'isStarted', true);
     if (get(this, 'source') === 'Internal') {
-      get(this, 'scheduler').queueEvent(
-        { targetTime: performance.now(),
-          outputTime: performance.now() + latency
-        },
-        this.sendEvent.bind(this)
-      );
+      this.queueEvent({
+        targetTime: performance.now(),
+        outputTime: performance.now() + latency
+      });
     } else {
-      this.latestTickSentAt = null; // reset timing for external events
+      this.resetExternalTimer();
     }
   },
 
@@ -109,102 +98,97 @@ export default Module.extend({
 
   reset() {
     get(this, 'resetOutPort').sendEvent();
-    this.latestTickSentAt = null; // reset timing for external events
   },
 
   onMidiTimingClock(event) {
-    /* Receive 24-events-per-beat midi time signals and send out internal
-     * clock signals of arbitrary ticks-per-beat resolution. If the resolution
-     * is equally divisible by 24, this is simple. If it's not (e.g. 5, 7, 9 ticks per beat)
-     * then we have to do some work to try to fire them accurately.
-     */
-
-     // todo:
-     // - calculate ms offsets for fractional events and adjust target timestamps for outgoing events
+    // todo: calculate ms offsets for fractional events and adjust target timestamps for outgoing events
 
     if (this.isStarted) {
       let ticksPerBeat = get(this, 'resInPort').getValue();
       let midiEventsPerTick = midiTimingEventsPerBeat / ticksPerBeat;
+      let tickDuration, outputEvent;
 
+      // this is the first event in a continuous series. Use the tickDuration from the
+      // previous continuous series, or if there is no previous tickDuration, make one up.
+      // Reset the internal state.
       if (this.latestTickSentAt == null) {
-        // fire an event for the first midi timing event in a series
-
-        if (get(this, 'trigOutPort.isConnected')) {
-
-          // if we don't know the tick duration, make something up.
-          let tickDuration = get(this, 'tickDuration') ? get(this, 'tickDuration') : 500 / ticksPerBeat;
-
-          get(this, 'trigOutPort').sendEvent({
-            targetTime: event.timeStamp,
-            outputTime: event.timeStamp + latency,
-            callbackTime: event.timeStamp,
-            duration: tickDuration
-          });
-          set(this, 'latestTriggerTime', event.timeStamp);
-          set(this, 'tickDuration', tickDuration);
-        }
-
+        tickDuration = get(this, 'tickDuration') ? get(this, 'tickDuration') : 500 / ticksPerBeat;
         this.latestTickSentAt = 0;
-        this.midiEventCount = 1;
+        this.midiEventCount = 0;
 
+        // form and send the output event
+        outputEvent = {
+          targetTime: event.timeStamp,
+          outputTime: event.timeStamp + latency,
+          callbackTime: event.timeStamp,
+          duration: tickDuration
+        };
+        this.sendEvent(outputEvent);
+
+        // enough 24-events-per-beat midi events have come through since the last internal tick
+        // event was sent that it's time to send another internal tick event. calculate the duration
+        // based on the time elapsed between the current and previous midi events.
+        // Subtract the past batch of midi events from the internal state.
       } else if (this.latestTickSentAt + midiEventsPerTick <= this.midiEventCount) {
-        // fire an event for a subsequent midi timing event in a series
-
-        // calculate the tick duration
-        let tickDuration = (event.timeStamp - this.latestMidiEventTimestamp) * 24 / ticksPerBeat;
-
-        if (get(this, 'trigOutPort.isConnected')) {
-          get(this, 'trigOutPort').sendEvent({
-            targetTime: event.timeStamp,
-            outputTime: event.timeStamp + latency,
-            callbackTime: event.timeStamp,
-            duration: tickDuration
-          });
-          set(this, 'latestTriggerTime', event.timeStamp);
-          set(this, 'tickDuration', tickDuration);
-        }
-
+        tickDuration = (event.timeStamp - this.latestMidiEventTimestamp) * 24 / ticksPerBeat;
         this.latestTickSentAt = this.latestTickSentAt + midiEventsPerTick - this.midiEventCount;
-        this.midiEventCount = 1;
+        this.midiEventCount = 0;
 
-
-      } else {
-        // no event scheduled to fire
-        this.midiEventCount++;
+        // form and send the output event
+        outputEvent = {
+          targetTime: event.timeStamp,
+          outputTime: event.timeStamp + latency,
+          callbackTime: event.timeStamp,
+          duration: tickDuration
+        };
+        this.sendEvent(outputEvent);
       }
 
+      // increment the internal state.
+      this.midiEventCount++;
       this.latestMidiEventTimestamp = event.timeStamp;
 
     }
 
   },
 
+  // the series of continuous external events has been interrupted.
+  // reset latestTickSentAt, so onMidiTimingClock knows it can't infer
+  // the external tempo on the next event.
+  resetExternalTimer() {
+    this.latestTickSentAt = null;
+  },
+
+  onSchedulerCallback(event) {
+    if (this.isStarted && get(this, 'source') === 'Internal') {
+
+      // calculate the tickDuration to use for the duration of the current event,
+      // and to schedule the next event.
+      let tempo = get(this, 'tempoInPort').getValue();
+      let res = get(this, 'resInPort').getValue();
+      let tickDuration = 60000 / (tempo * res);// milliseconds per tick
+
+      // schedule the next event
+      this.queueEvent({
+        targetTime: event.targetTime + tickDuration,
+        outputTime: event.outputTime + tickDuration
+      });
+
+      // prepare and send the current event
+      event.duration = tickDuration;
+      this.sendEvent(event);
+    }
+  },
+
+  queueEvent(event) {
+    get(this, 'scheduler').queueEvent(event, this.onSchedulerCallback.bind(this));
+  },
+
   sendEvent(event) {
-    if (this.isStarted) {
-      if (get(this, 'source') === 'Internal') {
-        // internal events get accurate target times based on tempo, resolution, and start time
-        let tempo = get(this, 'tempoInPort').getValue();
-        let res = get(this, 'resInPort').getValue();
-        set(this, 'tickDuration', 60000 / (tempo * res)); // milliseconds per tick
-
-        get(this, 'scheduler').queueEvent(
-          { targetTime: event.targetTime + get(this, 'tickDuration'),
-            outputTime: event.outputTime + get(this, 'tickDuration')
-          },
-          this.sendEvent.bind(this)
-        );
-
-        event.duration = get(this, 'tickDuration');
-
-      } else if (get(this, 'source') !== 'External') {
-        console.log('error sending trigger, unrecognized source setting of', get(this, 'sourceSetting.value'));
-        return;
-      }
-
-      if (get(this, 'trigOutPort.isConnected')) {
-        get(this, 'trigOutPort').sendEvent(event);
-        set(this, 'latestTriggerTime', event.targetTime);
-      }
+    if (get(this, 'trigOutPort.isConnected')) {
+      get(this, 'trigOutPort').sendEvent(event);
+      set(this, 'latestTriggerTime', event.targetTime);
+      set(this, 'tickDuration', event.duration);
     }
   }
 
