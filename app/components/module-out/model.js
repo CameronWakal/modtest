@@ -5,11 +5,14 @@ import DS from 'ember-data';
 const {
   inject,
   get,
-  set
+  set,
+  computed,
+  observer
 } = Ember;
 
 const {
-  belongsTo
+  belongsTo,
+  attr
 } = DS;
 
 const noteDuration = 20;
@@ -20,6 +23,7 @@ export default Module.extend({
   label: 'Out',
 
   midi: inject.service(),
+  outputDeviceName: attr('string', { defaultValue: 'All' }),
 
   noteInPort: belongsTo('port-value-in', { async: false }),
   velInPort: belongsTo('port-value-in', { async: false }),
@@ -28,6 +32,10 @@ export default Module.extend({
   events: [],
   latestTriggerTime: null,
   triggerDuration: null,
+
+  onOutputDeviceNameChanged: observer('outputDeviceName', function() {
+    this.requestSave();
+  }),
 
   sendEvent(event) {
     // the clock adds some padding ms to the event timestamps to allow for callback latency.
@@ -91,6 +99,12 @@ export default Module.extend({
       this.addValueInPort('note', 'noteInPort', { canBeEmpty: true, minValue: 0, maxValue: 127 });
       this.addValueInPort('vel', 'velInPort', { defaultValue: 127, minValue: 0, maxValue: 127, isEnabled: false });
       this.addValueInPort('channel', 'channelInPort', { defaultValue: 1, minValue: 1, maxValue: 16, isEnabled: false });
+
+      // create settings
+      // todo: update setting menu when device list changes
+      // output to selected device or all devices
+      let deviceMenuOptions = ['All', ...get(this, 'midi.outputDevices').mapBy('name')];
+      this.addMenuSetting('Output', 'outputDeviceName', this, deviceMenuOptions);
 
       console.log('module-out.didCreate() requestSave()');
       this.requestSave();

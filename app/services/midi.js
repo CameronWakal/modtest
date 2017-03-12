@@ -1,13 +1,16 @@
 import Ember from 'ember';
 
 const {
-  Service
+  Service,
+  set,
+  get
 } = Ember;
 
 export default Service.extend({
 
   midi: null,
   timingListener: null,
+  outputDevices: null,
 
   setup() {
     // request MIDI access
@@ -16,6 +19,15 @@ export default Service.extend({
     } else {
       alert('No MIDI support in your browser.');
     }
+  },
+
+  updateOutputDevices() {
+    let outputs = this.midi.outputs.values();
+    let outputsArray = [];
+    for (let output = outputs.next(); output && !output.done; output = outputs.next()) {
+      outputsArray.push(output.value);
+    }
+    set(this, 'outputDevices', outputsArray);
   },
 
   sendNote(note) {
@@ -66,6 +78,7 @@ export default Service.extend({
     this.midi.midiManager = this;
     this.midi.onstatechange = this.onStateChange.bind(this);
     this.showMIDIPorts();
+    this.updateOutputDevices();
 
   },
 
@@ -141,6 +154,7 @@ export default Service.extend({
     console.log(state, ': ', name, ', port:', port, ' type:', type);
 
     this.showMIDIPorts();
+    this.updateOutputDevices();
   },
 
   onMIDIFailure(e) {
