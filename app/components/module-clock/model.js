@@ -40,13 +40,10 @@ export default Module.extend({
   // calculated based on tempo and resolution (internal mode)
   // estimated based on frequency of incoming events (external mode)
   tickDuration: null,
-  // number of midi events received since latest internal event was sent (external mode)
-  midiEventCount: 0,
-  // number of midi events ago that the latest internal event was sent (external mode)
-  // can be a decimal number if resolution is not divisible by midi-events-per-beat
-  latestTickSentAt: null,
   // timestamp of latest midi event so we can infer the external tempo between two events (external mode)
   latestMidiEventTimestamp: null,
+  // number of midi timing events that have been received since the beginning of the current beat (external mode)
+  midiEventCount: null,
 
   onSourceChanged: observer('source', function() {
     if (get(this, 'source') === 'Internal') {
@@ -108,20 +105,25 @@ export default Module.extend({
       let midiEventsPerTick = midiTimingEventsPerBeat / ticksPerBeat;
       let midiEventDuration, tickDuration, outputEvent;
 
+      // to decide whether to fire an internal event, we compare the number of events expected to
+      // have fired as of the previous midi event, versus the number expected to have fired after
+      // the current event, then compare the two.
+      let previousEventCount = Math.floor(this.midiEventCount / midiEventsPerTick);
+      let currentEventCount = Math.floor((this.midiEventCount + 1) / midiEventsPerTick);
+
       // this is the first event in a continuous series. Use the tickDuration from the
       // previous continuous series, or if there is no previous tickDuration, make one up.
       // Reset the internal state.
-      if (this.latestTickSentAt == null) {
+      if (this.midiEventCount == null) {
         // guess a tickDuration based on 120bpm if there isn't an existing tickDuration
         tickDuration = get(this, 'tickDuration') ? get(this, 'tickDuration') : 500 / ticksPerBeat;
-        this.latestTickSentAt = 0;
         this.midiEventCount = 0;
 
         // form and send the output event
         outputEvent = {
           targetTime: event.timeStamp,
           outputTime: event.timeStamp + latency,
-          callbackTime: event.timeStamp,
+          callbackTime: performance.now(),
           duration: tickDuration
         };
         this.sendEvent(outputEvent);
@@ -129,31 +131,28 @@ export default Module.extend({
         // enough 24-events-per-beat midi events have come through since the last internal tick
         // event was sent that it's time to send another internal tick event. calculate the duration
         // based on the time elapsed between the current and previous midi events.
-        // Subtract the past batch of midi events from the internal state.
-      } else if (this.latestTickSentAt + midiEventsPerTick < this.midiEventCount + 1) {
+      } else if (previousEventCount != currentEventCount) {
         midiEventDuration = event.timeStamp - this.latestMidiEventTimestamp;
         tickDuration = midiEventDuration * 24 / ticksPerBeat;
-        this.latestTickSentAt = this.latestTickSentAt + midiEventsPerTick - this.midiEventCount;
-        this.midiEventCount = 0;
 
-        // if midiEventsPerTick is not a whole number, latestTickSentAt will work out to a number
-        // between 0 and 1, i.e. the event is supposed to fire sometime between the current
-        // midi event and the next one. So, adjust the target timestamp for the event
-        // based on the latest tickDuration and the latestTickSent value.
-        let adjustedTargetTimestamp = event.timeStamp + (this.latestTickSentAt * midiEventDuration);
+        // for when ticksPerBeat is not evenly divisible by the 24-events-per-beat midi clock signal,
+        // we calculate the fraction of a midi event that the tick is supposed to fire on, and adjust
+        // the target timestamp of the trigger event by that amount.
+        let fractionOfMidiEventCount = currentEventCount * midiEventsPerTick - this.midiEventCount;
+        let adjustedTargetTimestamp = event.timeStamp + (fractionOfMidiEventCount * midiEventDuration);
 
         // form and send the output event
         outputEvent = {
           targetTime: adjustedTargetTimestamp,
           outputTime: adjustedTargetTimestamp + latency,
-          callbackTime: event.timeStamp,
+          callbackTime: performance.now(),
           duration: tickDuration
         };
         this.sendEvent(outputEvent);
       }
 
       // increment the internal state.
-      this.midiEventCount++;
+      this.midiEventCount = (this.midiEventCount + 1) % 24;
       this.latestMidiEventTimestamp = event.timeStamp;
 
     }
@@ -164,7 +163,7 @@ export default Module.extend({
   // reset latestTickSentAt, so onMidiTimingClock knows it can't infer
   // the external tempo on the next event.
   resetExternalTimer() {
-    this.latestTickSentAt = null;
+    this.midiEventCount = null;
   },
 
   onSchedulerCallback(event) {
