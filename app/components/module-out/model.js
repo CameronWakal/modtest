@@ -12,6 +12,8 @@ const {
   belongsTo
 } = DS;
 
+const noteDuration = 20;
+
 export default Module.extend({
 
   type: 'module-out', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
@@ -21,6 +23,7 @@ export default Module.extend({
 
   noteInPort: belongsTo('port-value-in', { async: false }),
   velInPort: belongsTo('port-value-in', { async: false }),
+  channelInPort: belongsTo('port-value-in', { async: false }),
 
   events: [],
   latestTriggerTime: null,
@@ -65,10 +68,15 @@ export default Module.extend({
     }
 
     // check the connection of the 'note' port for the value of the note to play.
-    let noteValue = get(this, 'noteInPort').getValue();
-    let velValue = get(this, 'velInPort').getValue();
-    if (noteValue != null) {
-      get(this, 'midi').sendNote(noteValue, velValue, 20, event.outputTime);
+    let note = {
+      value: get(this, 'noteInPort').getValue(),
+      velocity: get(this, 'velInPort').getValue(),
+      duration: noteDuration,
+      timestamp: event.outputTime,
+      channel: get(this, 'channelInPort').getValue() - 1
+    };
+    if (note.value != null) {
+      get(this, 'midi').sendNote(note);
       set(this, 'triggerDuration', event.duration);
       set(this, 'latestTriggerTime', event.targetTime);
     }
@@ -82,6 +90,7 @@ export default Module.extend({
 
       this.addValueInPort('note', 'noteInPort', { canBeEmpty: true, minValue: 0, maxValue: 127 });
       this.addValueInPort('vel', 'velInPort', { defaultValue: 127, minValue: 0, maxValue: 127, isEnabled: false });
+      this.addValueInPort('channel', 'channelInPort', { defaultValue: 1, minValue: 1, maxValue: 16, isEnabled: false });
 
       console.log('module-out.didCreate() requestSave()');
       this.requestSave();
