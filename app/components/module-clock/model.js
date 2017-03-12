@@ -106,12 +106,13 @@ export default Module.extend({
     if (this.isStarted) {
       let ticksPerBeat = get(this, 'resInPort').getValue();
       let midiEventsPerTick = midiTimingEventsPerBeat / ticksPerBeat;
-      let tickDuration, outputEvent;
+      let midiEventDuration, tickDuration, outputEvent;
 
       // this is the first event in a continuous series. Use the tickDuration from the
       // previous continuous series, or if there is no previous tickDuration, make one up.
       // Reset the internal state.
       if (this.latestTickSentAt == null) {
+        // guess a tickDuration based on 120bpm if there isn't an existing tickDuration
         tickDuration = get(this, 'tickDuration') ? get(this, 'tickDuration') : 500 / ticksPerBeat;
         this.latestTickSentAt = 0;
         this.midiEventCount = 0;
@@ -129,15 +130,22 @@ export default Module.extend({
         // event was sent that it's time to send another internal tick event. calculate the duration
         // based on the time elapsed between the current and previous midi events.
         // Subtract the past batch of midi events from the internal state.
-      } else if (this.latestTickSentAt + midiEventsPerTick <= this.midiEventCount) {
-        tickDuration = (event.timeStamp - this.latestMidiEventTimestamp) * 24 / ticksPerBeat;
+      } else if (this.latestTickSentAt + midiEventsPerTick < this.midiEventCount + 1) {
+        midiEventDuration = event.timeStamp - this.latestMidiEventTimestamp;
+        tickDuration = midiEventDuration * 24 / ticksPerBeat;
         this.latestTickSentAt = this.latestTickSentAt + midiEventsPerTick - this.midiEventCount;
         this.midiEventCount = 0;
 
+        // if midiEventsPerTick is not a whole number, latestTickSentAt will work out to a number
+        // between 0 and 1, i.e. the event is supposed to fire sometime between the current
+        // midi event and the next one. So, adjust the target timestamp for the event
+        // based on the latest tickDuration and the latestTickSent value.
+        let adjustedTargetTimestamp = event.timeStamp + (this.latestTickSentAt * midiEventDuration);
+
         // form and send the output event
         outputEvent = {
-          targetTime: event.timeStamp,
-          outputTime: event.timeStamp + latency,
+          targetTime: adjustedTargetTimestamp,
+          outputTime: adjustedTargetTimestamp + latency,
           callbackTime: event.timeStamp,
           duration: tickDuration
         };
