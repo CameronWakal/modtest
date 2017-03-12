@@ -13,7 +13,7 @@ export default Component.extend({
   classNameBindings: ['animationClass'],
   attributeBindings: ['styleAttribute:style'],
 
-  animationClass: computed('blinkTrigger', function(){
+  animationClass: computed('blinkTrigger', function() {
     if (get(this, 'blinkTrigger')) {
       this.countIsEven = !this.countIsEven;
       return this.countIsEven ? 'on-even' : 'on-odd';

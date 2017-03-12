@@ -90,7 +90,7 @@ export default Service.extend({
       case 248:
         // timing clock, 24 times per quarter note
         if (this.timingListener) {
-          this.timingListener.sendTrigger(event.receivedTime);
+          this.timingListener.onMidiTimingClock(event);
         }
       break;
       case 242:
