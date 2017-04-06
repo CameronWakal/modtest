@@ -2,8 +2,7 @@ import Ember from 'ember';
 
 const {
   Service,
-  set,
-  get
+  set
 } = Ember;
 
 export default Service.extend({

@@ -4,26 +4,25 @@ import ModuleSetting from './module-setting';
 
 const {
   computed,
-  get
+  get,
+  defineProperty
 } = Ember;
 
 const {
-  hasMany
+  hasMany,
+  attr
 } = DS;
 
 export default ModuleSetting.extend({
 
   type: 'module-setting-menu', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  items: hasMany('item-string', { async: false }),
-  selectedItem: computed('value', function() {
-    return get(this, 'items').findBy('value', get(this, 'value'));
-  }),
+  itemsProperty: attr('string'), // a property on the module defining the available menu items
 
-  remove() {
-    get(this, 'items').toArray().forEach((item) => {
-      item.destroyRecord();
-    });
+  ready() {
     this._super();
+    // make an alias from this.items to module.itemsProperty at runtime
+    let targetPath = `module.${get(this, 'itemsProperty')}`;
+    defineProperty(this, 'items', computed.alias(targetPath));
   },
 
   save() {

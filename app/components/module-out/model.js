@@ -33,6 +33,10 @@ export default Module.extend({
   latestTriggerTime: null,
   triggerDuration: null,
 
+  deviceMenuOptions: computed('midi.outputDevices', function() {
+    return ['All', ...get(this, 'midi.outputDevices').mapBy('name')];
+  }),
+
   onOutputDeviceNameChanged: observer('outputDeviceName', function() {
     this.requestSave();
   }),
@@ -102,9 +106,10 @@ export default Module.extend({
 
       // create settings
       // todo: update setting menu when device list changes
+      // make new type of 'dynamic' menu setting that doesn't store its own
+      // hard-coded list of items, rather references a property of the parent module
       // output to selected device or all devices
-      let deviceMenuOptions = ['All', ...get(this, 'midi.outputDevices').mapBy('name')];
-      this.addMenuSetting('Output', 'outputDeviceName', this, deviceMenuOptions);
+      this.addMenuSetting('Output', 'outputDeviceName', this, get(this, 'deviceMenuOptions'));
 
       console.log('module-out.didCreate() requestSave()');
       this.requestSave();
