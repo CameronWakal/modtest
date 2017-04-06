@@ -9,7 +9,6 @@ const {
 } = Ember;
 
 const {
-  hasMany,
   attr
 } = DS;
 

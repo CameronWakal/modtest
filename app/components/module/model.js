@@ -121,7 +121,7 @@ export default Model.extend({
       label,
       targetValue,
       itemsProperty,
-      module,
+      module
     });
 
     get(this, 'settings').pushObject(setting);
