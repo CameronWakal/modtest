@@ -23,7 +23,16 @@ export default Module.extend({
   label: 'Out',
 
   midi: inject.service(),
+
   outputDeviceName: attr('string', { defaultValue: 'All' }),
+  deviceMenuOptions: computed('midi.outputDevices', 'outputDeviceName', function() {
+    let devices = get(this, 'midi.outputDevices').mapBy('name');
+    let currentDevice = get(this, 'outputDeviceName');
+    if (!devices.includes(currentDevice) && currentDevice !== 'All') {
+      devices = [currentDevice, ...devices];
+    }
+    return ['All', ...devices];
+  }),
 
   noteInPort: belongsTo('port-value-in', { async: false }),
   velInPort: belongsTo('port-value-in', { async: false }),
@@ -33,12 +42,10 @@ export default Module.extend({
   latestTriggerTime: null,
   triggerDuration: null,
 
-  deviceMenuOptions: computed('midi.outputDevices', function() {
-    return ['All', ...get(this, 'midi.outputDevices').mapBy('name')];
-  }),
-
-  onOutputDeviceNameChanged: observer('outputDeviceName', function() {
-    this.requestSave();
+  onOutputDeviceNameChanged: observer('outputDeviceName', function(){
+    if (get(this, 'hasDirtyAttributes')) {
+      this.requestSave();
+    }
   }),
 
   sendEvent(event) {
@@ -105,11 +112,7 @@ export default Module.extend({
       this.addValueInPort('channel', 'channelInPort', { defaultValue: 1, minValue: 1, maxValue: 16, isEnabled: false });
 
       // create settings
-      // todo: update setting menu when device list changes
-      // make new type of 'dynamic' menu setting that doesn't store its own
-      // hard-coded list of items, rather references a property of the parent module
-      // output to selected device or all devices
-      this.addMenuSetting('Output', 'outputDeviceName', this, get(this, 'deviceMenuOptions'));
+      this.addMenuSetting('Output', 'outputDeviceName', 'deviceMenuOptions', this);
 
       console.log('module-out.didCreate() requestSave()');
       this.requestSave();
