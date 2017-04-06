@@ -95,7 +95,7 @@ export default Module.extend({
       channel: get(this, 'channelInPort').getValue() - 1
     };
     if (note.value != null) {
-      get(this, 'midi').sendNote(note);
+      get(this, 'midi').sendNote(note, get(this, 'outputDeviceName'));
       set(this, 'triggerDuration', event.duration);
       set(this, 'latestTriggerTime', event.targetTime);
     }

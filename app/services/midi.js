@@ -29,17 +29,19 @@ export default Service.extend({
     set(this, 'outputDevices', outputsArray);
   },
 
-  sendNote(note) {
+  sendNote(note, outputDeviceName) {
 
     if (this.midi) {
       let noteOnMessage = [0x90 + note.channel, note.value, note.velocity];    // note on, middle C, full velocity (0x7f == 127)
 
       this.outputs = this.midi.outputs.values();
       for (let output = this.outputs.next(); output && !output.done; output = this.outputs.next()) {
-        output.value.send(noteOnMessage, note.timestamp); // omitting the timestamp means send immediately.
-        // Inlined array creation- note off, middle C,
-        // release velocity = 64, timestamp = now + 1000ms.
-        output.value.send([0x80 + note.channel, note.value, 0x40], note.timestamp + note.duration);
+        if (outputDeviceName === 'All' || output.value.name === outputDeviceName) {
+          output.value.send(noteOnMessage, note.timestamp); // omitting the timestamp means send immediately.
+          // Inlined array creation- note off, middle C,
+          // release velocity = 64, timestamp = now + 1000ms.
+          output.value.send([0x80 + note.channel, note.value, 0x40], note.timestamp + note.duration);
+        }
       }
 
     } else {
