@@ -6,6 +6,7 @@ const {
   set
 } = Ember;
 
+// todo: generalize patch-menu and select-menu to be a single component
 export default Component.extend({
 
   tagName: 'select',
