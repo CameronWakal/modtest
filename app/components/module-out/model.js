@@ -106,7 +106,6 @@ export default Module.extend({
     if (get(this, 'isNew')) {
       // create ports
       this.addEventInPort('trig', 'sendEvent', true);
-
       this.addValueInPort('note', 'noteInPort', { canBeEmpty: true, minValue: 0, maxValue: 127 });
       this.addValueInPort('vel', 'velInPort', { defaultValue: 127, minValue: 0, maxValue: 127, isEnabled: false });
       this.addValueInPort('channel', 'channelInPort', { defaultValue: 1, minValue: 1, maxValue: 16, isEnabled: false });
