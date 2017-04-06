@@ -13,8 +13,8 @@ export default Component.extend({
 
   change() {
     let selectedIndex = this.$('option:selected').index();
-    let items = get(this, 'setting.items');
-    set(this, 'setting.value', items[selectedIndex]);
+    let items = get(this, 'items');
+    set(this, 'selectedItem', items[selectedIndex]);
   }
 
 });

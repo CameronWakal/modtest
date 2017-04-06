@@ -26,7 +26,6 @@
   }
 
   li {
-    display: flex;
     line-height: 2rem;
     list-style-type: none;
     margin-bottom: .5rem;
@@ -38,11 +37,6 @@
 
   [type='text'] {
     align-self: center;
-  }
-
-  .setting-label {
-    align-self: center;
-    flex: 1 0 auto;
   }
 
   .app-sidebar-section {

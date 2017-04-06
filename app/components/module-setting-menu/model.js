@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 import Ember from 'ember';
-import ModuleSetting from './module-setting';
+import ModuleSetting from '../module-setting/model';
 
 const {
   computed,

@@ -6,12 +6,7 @@
     <ul>
       {{#each module.settings as |setting|}}
         <li>
-          <span class="setting-label">{{setting.label}}</span>
-            {{#if setting.isNumber}}
-              {{value-input-number boundValue=setting.value}}
-            {{else}}
-              <div class="select-menu-wrapper">{{select-menu setting=setting}}</div>
-            {{/if}}
+          {{component setting.type setting=setting}}
         </li>
       {{/each}}
     </ul>

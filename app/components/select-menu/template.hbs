@@ -1,1 +1,5 @@
-{{#each setting.items as |item|}}<option value="{{item}}" selected={{is-equal item setting.value}}>{{item}}</option>{{/each}}
+{{#each items as |item|}}
+  <option value="{{item}}" selected={{is-equal item selectedItem}}>
+    {{item}}
+  </option>
+{{/each}}
