@@ -18,7 +18,6 @@ export default Model.extend({
   label: attr('string'),
   type: 'module-setting', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   module: belongsTo('module', { async: false, polymorphic: true }),
-  isNumber: computed.equal('type', 'module-setting'),
 
   // a property name on the parent module to read/write
   targetValue: attr('string'),

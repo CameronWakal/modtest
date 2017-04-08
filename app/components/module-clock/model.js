@@ -32,6 +32,7 @@ export default Module.extend({
   resetOutPort: belongsTo('port-event-out', { async: false }),
   trigOutPort: belongsTo('port-event-out', { async: false }),
   source: attr('string', { defaultValue: 'Internal' }),
+  sourceMenuValues: ['Internal', 'External'],
 
   isStarted: false,
   // last time an internal event was sent out.
@@ -62,7 +63,7 @@ export default Module.extend({
 
   ready() {
     if (get(this, 'isNew')) {
-      this.addMenuSetting('Source', 'source', this, ['Internal', 'External']);
+      this.addMenuSetting('Source', 'source', 'sourceMenuValues', this);
       this.addValueInPort('tempo', 'tempoInPort', { isEnabled: false, defaultValue: defaultTempo, minValue: 1 });
       this.addValueInPort('res', 'resInPort', { isEnabled: false, defaultValue: defaultRes, minValue: 1, maxValue: 24 });
       this.addEventOutPort('reset', 'resetOutPort', false);

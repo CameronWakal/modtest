@@ -1,13 +1,15 @@
 import Ember from 'ember';
 
 const {
-  Service
+  Service,
+  set
 } = Ember;
 
 export default Service.extend({
 
   midi: null,
   timingListener: null,
+  outputDevices: null,
 
   setup() {
     // request MIDI access
@@ -18,17 +20,28 @@ export default Service.extend({
     }
   },
 
-  sendNote(note) {
+  updateOutputDevices() {
+    let outputs = this.midi.outputs.values();
+    let outputsArray = [];
+    for (let output = outputs.next(); output && !output.done; output = outputs.next()) {
+      outputsArray.push(output.value);
+    }
+    set(this, 'outputDevices', outputsArray);
+  },
+
+  sendNote(note, outputDeviceName) {
 
     if (this.midi) {
       let noteOnMessage = [0x90 + note.channel, note.value, note.velocity];    // note on, middle C, full velocity (0x7f == 127)
 
       this.outputs = this.midi.outputs.values();
       for (let output = this.outputs.next(); output && !output.done; output = this.outputs.next()) {
-        output.value.send(noteOnMessage, note.timestamp); // omitting the timestamp means send immediately.
-        // Inlined array creation- note off, middle C,
-        // release velocity = 64, timestamp = now + 1000ms.
-        output.value.send([0x80 + note.channel, note.value, 0x40], note.timestamp + note.duration);
+        if (outputDeviceName === 'All' || output.value.name === outputDeviceName) {
+          output.value.send(noteOnMessage, note.timestamp); // omitting the timestamp means send immediately.
+          // Inlined array creation- note off, middle C,
+          // release velocity = 64, timestamp = now + 1000ms.
+          output.value.send([0x80 + note.channel, note.value, 0x40], note.timestamp + note.duration);
+        }
       }
 
     } else {
@@ -66,6 +79,7 @@ export default Service.extend({
     this.midi.midiManager = this;
     this.midi.onstatechange = this.onStateChange.bind(this);
     this.showMIDIPorts();
+    this.updateOutputDevices();
 
   },
 
@@ -141,6 +155,7 @@ export default Service.extend({
     console.log(state, ': ', name, ', port:', port, ' type:', type);
 
     this.showMIDIPorts();
+    this.updateOutputDevices();
   },
 
   onMIDIFailure(e) {

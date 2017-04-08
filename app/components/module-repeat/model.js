@@ -7,7 +7,8 @@ const {
   set,
   inject,
   computed,
-  computed: { equal }
+  computed: { equal },
+  observer
 } = Ember;
 
 const {
@@ -21,8 +22,10 @@ export default Module.extend({
   label: 'Repeat',
 
   mode: attr('string', { defaultValue: 'count only' }),
+  modeMenuOptions: ['count only', 'gate only', 'count+gate'],
   delayUnits: attr('string', { defaultValue: 'beats' }),
   gateUnits: attr('string', { defaultValue: 'beats' }),
+  unitsMenuOptions: ['beats', 'ms'],
 
   gateIsOn: computed('mode', function() {
     return get(this, 'mode') === 'gate only' || get(this, 'mode') === 'count+gate';
@@ -45,6 +48,12 @@ export default Module.extend({
 
   latestTriggerTime: null,
   triggerDuration: null,
+
+  onSettingChanged: observer('mode', 'delayUnits', 'gateUnits', function() {
+    if (get(this, 'hasDirtyAttributes')) {
+      this.requestSave();
+    }
+  }),
 
   // when an event comes in, repeat the event after a delay.
   // multiple repeats can be generated from a single original event.
@@ -131,13 +140,12 @@ export default Module.extend({
       this.addValueInPort('gatedenom', 'gateDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
       this.addValueInPort('delay', 'delayNumeratorInPort', { defaultValue: 1, minValue: 1 });
       this.addValueInPort('delaydenom', 'delayDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
-
       this.addEventOutPort('trig', 'trigOutPort', true);
 
       // create settings
-      this.addMenuSetting('Mode', 'mode', this, ['count only', 'gate only', 'count+gate']);
-      this.addMenuSetting('Delay Units', 'delayUnits', this, ['beats', 'ms']);
-      this.addMenuSetting('Gate Units', 'durationUnits', this, ['beats', 'ms']);
+      this.addMenuSetting('Mode', 'mode', 'modeMenuOptions', this);
+      this.addMenuSetting('Delay Units', 'delayUnits', 'unitsMenuOptions', this);
+      this.addMenuSetting('Gate Units', 'durationUnits', 'unitsMenuOptions', this);
 
       console.log('module-repeat.didCreate() requestSave()');
       this.requestSave();

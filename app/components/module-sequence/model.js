@@ -21,6 +21,7 @@ export default Module.extend({
   steps: belongsTo('array', { async: false }),
   trigOutPort: belongsTo('port-event-out', { async: false }),
   inputType: attr('string', { defaultValue: 'Number' }),
+  inputTypeMenuOptions: ['Number', 'Slider', 'Both', 'Button'],
   displayScale: attr('number', { defaultValue: 1 }),
 
   latestTriggerTime: null,
@@ -69,7 +70,7 @@ export default Module.extend({
       set(this, 'steps.length', 8);
 
       // create settings
-      this.addMenuSetting('Input Type', 'inputType', this, ['Number', 'Slider', 'Both', 'Button']);
+      this.addMenuSetting('Input Type', 'inputType', 'inputTypeMenuOptions', this);
 
       // todo: make config option for settings that must have a non-null numeric value
       this.addNumberSetting('Length', 'steps.length', this);

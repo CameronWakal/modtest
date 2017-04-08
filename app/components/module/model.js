@@ -4,7 +4,6 @@ import Ember from 'ember';
 const {
   computed,
   run,
-  A,
   set,
   get
 } = Ember;
@@ -117,19 +116,12 @@ export default Model.extend({
     get(this, 'settings').pushObject(setting);
   },
 
-  addMenuSetting(label, targetValue, module, values) {
-
-    let items = A();
-    values.forEach((value) => {
-      let item = this.store.createRecord('item-string', { value });
-      items.pushObject(item);
-    });
-
+  addMenuSetting(label, targetValue, itemsProperty, module) {
     let setting = this.store.createRecord('module-setting-menu', {
       label,
-      items,
-      module,
-      targetValue
+      targetValue,
+      itemsProperty,
+      module
     });
 
     get(this, 'settings').pushObject(setting);

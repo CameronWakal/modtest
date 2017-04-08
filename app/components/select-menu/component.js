@@ -6,6 +6,7 @@ const {
   set
 } = Ember;
 
+// todo: generalize patch-menu and select-menu to be a single component
 export default Component.extend({
 
   tagName: 'select',
@@ -13,10 +14,8 @@ export default Component.extend({
 
   change() {
     let selectedIndex = this.$('option:selected').index();
-    let items = get(this, 'setting.items').toArray();
-    let selectedItem = items[selectedIndex];
-    set(this, 'setting.selectedItem', selectedItem);
-    set(this, 'setting.value', get(selectedItem, 'value'));
+    let items = get(this, 'items');
+    set(this, 'selectedItem', items[selectedIndex]);
   }
 
 });

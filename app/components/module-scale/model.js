@@ -21,7 +21,9 @@ export default Module.extend({
 
   degrees: belongsTo('array', { async: false }),
   inputType: 'Number',
+
   mode: attr('string', { defaultValue: 'I' }),
+  modeMenuOptions: ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'],
 
   degreeInPort: belongsTo('port-value-in', { async: false }),
   octaveInPort: belongsTo('port-value-in', { async: false }),
@@ -106,11 +108,10 @@ export default Module.extend({
       this.addValueInPort('degree', 'degreeInPort', { defaultValue: 0 });
       this.addValueInPort('octave', 'octaveInPort', { isEnabled: false, defaultValue: 3, minValue: -2, maxValue: 8 });
       this.addValueInPort('root', 'rootInPort', { isEnabled: false, defaultValue: 0 });
-
       this.addValueOutPort('note', 'getNote', true);
 
       // create settings
-      this.addMenuSetting('Mode', 'mode', this, ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII']);
+      this.addMenuSetting('Mode', 'mode', 'modeMenuOptions', this);
 
       console.log('module-scale.didCreate() requestSave()');
       this.requestSave();
