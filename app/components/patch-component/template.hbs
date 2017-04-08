@@ -9,29 +9,31 @@
 }}
 
 {{#ember-wormhole to="settings-container"}}
-  {{#if selectedModule}}
-    {{module-settings module=selectedModule}}
-  {{else}}
-    {{patch-settings
-      patch=patch
-      removePatch=(action 'removePatch')
-      patchTitleChanged=(action 'patchTitleChanged')
-    }}
-    <div class="app-sidebar-section modules-list"><h4>+ Module</h4>
-    <ul>
-      <li>{{add-module-menu-item moduleType='clock' label='Clock' addModule=(action 'addModule')}}</li>
-      <li>{{add-module-menu-item moduleType='clock-div' label='Clock Div' addModule=(action 'addModule')}}</li>
-      <li>{{add-module-menu-item moduleType='out' label='Out' addModule=(action 'addModule')}}</li>
-      <li>{{add-module-menu-item moduleType='ccout' label='CC Out' addModule=(action 'addModule')}}</li>
-      <li>{{add-module-menu-item moduleType='sequence' label='Sequence' addModule=(action 'addModule')}}</li>
-      <li>{{add-module-menu-item moduleType='scale' label='Scale' addModule=(action 'addModule')}}</li>
-      <li>{{add-module-menu-item moduleType='switch' label='Switch' addModule=(action 'addModule')}}</li>
-      <li>{{add-module-menu-item moduleType='maybe' label='Maybe' addModule=(action 'addModule')}}</li>
-      <li>{{add-module-menu-item moduleType='value' label='Value' addModule=(action 'addModule')}}</li>
-      <li>{{add-module-menu-item moduleType='repeat' label='Repeat' addModule=(action 'addModule')}}</li>
-    </ul>
-    </div>
-  {{/if}}
+  <div>
+    {{#if selectedModule}}
+      {{module-settings module=selectedModule}}
+    {{else}}
+      {{patch-settings
+        patch=patch
+        removePatch=(action 'removePatch')
+        patchTitleChanged=(action 'patchTitleChanged')
+      }}
+      <div class="app-sidebar-section modules-list"><h4>+ Module</h4>
+      <ul>
+        <li>{{add-module-menu-item moduleType='clock' label='Clock' addModule=(action 'addModule')}}</li>
+        <li>{{add-module-menu-item moduleType='clock-div' label='Clock Div' addModule=(action 'addModule')}}</li>
+        <li>{{add-module-menu-item moduleType='out' label='Out' addModule=(action 'addModule')}}</li>
+        <li>{{add-module-menu-item moduleType='ccout' label='CC Out' addModule=(action 'addModule')}}</li>
+        <li>{{add-module-menu-item moduleType='sequence' label='Sequence' addModule=(action 'addModule')}}</li>
+        <li>{{add-module-menu-item moduleType='scale' label='Scale' addModule=(action 'addModule')}}</li>
+        <li>{{add-module-menu-item moduleType='switch' label='Switch' addModule=(action 'addModule')}}</li>
+        <li>{{add-module-menu-item moduleType='maybe' label='Maybe' addModule=(action 'addModule')}}</li>
+        <li>{{add-module-menu-item moduleType='value' label='Value' addModule=(action 'addModule')}}</li>
+        <li>{{add-module-menu-item moduleType='repeat' label='Repeat' addModule=(action 'addModule')}}</li>
+      </ul>
+      </div>
+    {{/if}}
+  </div>
 {{/ember-wormhole}}
 
 <div class="modules" id="modules">
