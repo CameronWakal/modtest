@@ -42,7 +42,7 @@ export default Module.extend({
   latestTriggerTime: null,
   triggerDuration: null,
 
-  onOutputDeviceNameChanged: observer('outputDeviceName', function(){
+  onOutputDeviceNameChanged: observer('outputDeviceName', function() {
     if (get(this, 'hasDirtyAttributes')) {
       this.requestSave();
     }
