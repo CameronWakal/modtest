@@ -6,8 +6,8 @@ const {
   inject,
   get,
   set,
-  computed,
-  observer
+  observer,
+  computed
 } = Ember;
 
 const {
@@ -15,10 +15,15 @@ const {
   attr
 } = DS;
 
+const latency = 10;
+
 export default Module.extend({
 
   type: 'module-in', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   label: 'In',
+
+  note: null,
+  velocity: null,
 
   midi: inject.service(),
 
@@ -42,11 +47,39 @@ export default Module.extend({
   }),
 
   getNote() {
-    return 60;
+    return get(this, 'note');
   },
 
   getVel() {
-    return 127;
+    return get(this, 'velocity');
+  },
+
+  noteOn(note, velocity, timestamp) {
+    set(this, 'note', note);
+    set(this, 'velocity', velocity);
+
+    if (get(this, 'noteOnPort.isConnected')) {
+      let event = {
+        targetTime: timestamp,
+        outputTime: timestamp + latency,
+        callbackTime: performance.now()
+      };
+      get(this, 'noteOnPort').sendEvent(event);
+    }
+  },
+
+  noteOff(note, velocity, timestamp) {
+    set(this, 'note', note);
+    set(this, 'velocity', velocity);
+
+    if (get(this, 'noteOnPort.isConnected')) {
+      let event = {
+        targetTime: timestamp,
+        outputTime: timestamp + latency,
+        callbackTime: performance.now()
+      };
+      get(this, 'noteOffPort').sendEvent(event);
+    }
   },
 
   ready() {
@@ -69,6 +102,6 @@ export default Module.extend({
 
   didDelete() {
     get(this, 'midi').noteListener = null;
-  },
+  }
 
 });

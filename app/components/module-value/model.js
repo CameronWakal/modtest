@@ -23,8 +23,16 @@ export default Module.extend({
   value: attr('number'),
   changeOutPort: belongsTo('port-event-out', { async: false }),
 
+  valueInPort: belongsTo('port-value-in', { async: false }),
+
   getValue() {
     return get(this, 'value');
+  },
+
+  setValue() {
+    let value = get(this, 'valueInPort').getValue();
+    set(this, 'value', value);
+    this.requestSave();
   },
 
   ready() {
