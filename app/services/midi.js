@@ -144,12 +144,10 @@ export default Service.extend({
       default:
         switch (data[0] & 0xf0) { // channel agnostic message type.
           case 144: // noteOn message
-            console.log('note on');
-            // this.listener.noteOn(note, velocity);
+            this.noteListener.noteOn(data[1], data[2], event.timeStamp);
           break;
           case 128: // noteOff message
-            console.log('note off');
-            // this.listener.noteOff(note, velocity);
+            this.noteListener.noteOff(data[1], data[2], event.timeStamp);
           break;
         }
     }
