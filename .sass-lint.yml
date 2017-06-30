@@ -1,0 +1,3 @@
+rules:
+  force-element-nesting: 0
+  force-pseudo-nesting: 0
