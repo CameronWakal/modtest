@@ -167,9 +167,9 @@ export default Component.extend({
 
     let c = this.$().get(0);
     let ctx = c.getContext('2d');
-    ctx.canvas.width  = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
-    ctx.lineWidth = 1;
+    let pxRatio = window.devicePixelRatio;
+    ctx.canvas.width  = window.innerWidth * pxRatio;
+    ctx.canvas.height = window.innerHeight * pxRatio;
 
     let startX, startY, endX, endY;
 
@@ -182,9 +182,9 @@ export default Component.extend({
       endY = $(con.inPortDom).offset().top + $(con.inPortDom).outerHeight() / 2;
 
       ctx.beginPath();
-      ctx.moveTo(startX, startY);
-      ctx.lineTo(endX, endY);
-      ctx.lineWidth = 1;
+      ctx.moveTo(startX * pxRatio, startY * pxRatio);
+      ctx.lineTo(endX * pxRatio, endY * pxRatio);
+      ctx.lineWidth = 1 * pxRatio;
       if (get(con.inPort, 'type') === 'port-event-in' || get(con.inPort, 'type') === 'port-event-out') {
         ctx.strokeStyle = eventLineColor;
       } else {
@@ -204,8 +204,8 @@ export default Component.extend({
       startY = $(newPort).offset().top + $(newPort).outerHeight() / 2;
 
       ctx.beginPath();
-      ctx.moveTo(startX, startY);
-      ctx.lineTo(event.pageX, event.pageY);
+      ctx.moveTo(startX * pxRatio, startY * pxRatio);
+      ctx.lineTo(event.pageX * pxRatio, event.pageY * pxRatio);
       ctx.strokeStyle = selectedLineColor;
       ctx.stroke();
     }
