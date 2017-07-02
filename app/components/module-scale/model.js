@@ -100,9 +100,10 @@ export default Module.extend({
     if (get(this, 'isNew')) {
 
       // create degrees
-      let degrees = this.store.createRecord('array', { module: this, length: get(this, 'degreesInScale') });
-      set(degrees, 'valueMax', 11);
+      let degrees = this.store.createRecord('array', { module: this });
       set(this, 'degrees', degrees);
+      set(this, 'degrees.valueMax', 11);
+      set(this, 'degrees.length', get(this, 'degreesInScale'));
 
       // create ports
       this.addValueInPort('degree', 'degreeInPort', { defaultValue: 0 });
