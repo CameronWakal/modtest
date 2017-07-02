@@ -1,7 +1,9 @@
 .indicator-blinking {
-  border-radius: 1rem;
-  flex: 0 0 .75rem;
-  height: .75rem;
+  // rem dimensions caused the width and height to be inconsistent due to
+  // rounding, so used px instead of rems here.
+  border-radius: 4px;
+  flex: 0 0 8px;
+  height: 8px;
   margin-top: .33rem;
 
   &.on-even {
