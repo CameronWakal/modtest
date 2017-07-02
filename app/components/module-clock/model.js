@@ -194,9 +194,9 @@ export default Module.extend({
 
   sendEvent(event) {
     if (get(this, 'trigOutPort.isConnected')) {
-      get(this, 'trigOutPort').sendEvent(event);
       set(this, 'latestTriggerTime', event.targetTime);
       set(this, 'tickDuration', event.duration);
+      get(this, 'trigOutPort').sendEvent(event);
     }
   }
 
