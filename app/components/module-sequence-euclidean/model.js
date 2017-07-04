@@ -34,32 +34,39 @@ export default ModuleSequence.extend({
       });
 
       // add a sequence length port instead
-      this.addValueInPort('steps', 'stepsInPort', { defaultValue: 12, minValue: 0, maxValue: 128, isEnabled: false });
-      this.addValueInPort('pulses', 'pulsesInPort', { defaultValue: 7, minValue: 0, maxValue: 128, isEnabled: false });
+      this.addValueInPort('steps', 'stepsInPort', { defaultValue: 8, minValue: 0, maxValue: 128, isEnabled: false });
+      this.addValueInPort('pulses', 'pulsesInPort', { defaultValue: 0, minValue: 0, maxValue: 128, isEnabled: false });
 
       // event to trigger euclid calculation
       this.addEventInPort('reset', 'resetSequence', true);
-
-      // set the sequence input to buttons by default
-      set(this, 'inputType', 'Button');
 
       this.requestSave();
     }
   },
 
   resetSequence() {
-    let steps = get(this, 'stepsInPort').getValue();
-    let pulses = get(this, 'pulsesInPort').getValue();
-    set(this, 'steps.length', steps);
+    let stepCount = get(this, 'stepsInPort').getValue();
+    let pulseCount = get(this, 'pulsesInPort').getValue();
 
-    console.log('pattern', this.getPattern(pulses, steps));
+    // calculate euclidean pattern
+    let pattern = this.getPattern(pulseCount, stepCount);
+
+    // update the sequence length
+    set(this, 'steps.length', stepCount);
+
+    // for each sequence step, update the value to match the calculated pattern
+    get(this, 'steps.items').forEach(function(item){
+      let i = get(item, 'index');
+      let value = pattern[i] == 0 ? null : 1;
+      set(item, 'value', value);
+    });
   },
 
-  // based on https://github.com/mkontogiannis/euclidean-rhythms/blob/master/src/index.js
+  // from https://github.com/mkontogiannis/euclidean-rhythms/blob/master/src/index.js
   getPattern(pulses, steps) {
     pulses = Math.min(pulses, steps);
 
-    // Create two arrays
+    // Create the two arrays
     let first = new Array(pulses).fill([1]);
     let second = new Array(steps - pulses).fill([0]);
 
@@ -84,7 +91,7 @@ export default ModuleSequence.extend({
       	second = Array.prototype.slice.call(second, minLength);
       }
       // Otherwise update the second (smallest array) with the remainders of the first
-      // and update the first array to include onlt the extended sub-arrays
+      // and update the first array to include only the extended sub-arrays
       else {
         second = Array.prototype.slice.call(first, minLength);
         first = Array.prototype.slice.call(first, 0, minLength);
