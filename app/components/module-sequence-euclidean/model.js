@@ -38,13 +38,13 @@ export default ModuleSequence.extend({
       this.addValueInPort('pulses', 'pulsesInPort', { defaultValue: 0, minValue: 0, maxValue: 128, isEnabled: false });
 
       // event to trigger euclid calculation
-      this.addEventInPort('reset', 'resetSequence', true);
+      this.addEventInPort('update', 'updateSequence', true);
 
       this.requestSave();
     }
   },
 
-  resetSequence() {
+  updateSequence() {
     let stepCount = get(this, 'stepsInPort').getValue();
     let pulseCount = get(this, 'pulsesInPort').getValue();
 
