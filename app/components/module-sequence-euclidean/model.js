@@ -14,7 +14,7 @@ const {
 export default ModuleSequence.extend({
 
   type: 'module-sequence-euclidean', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  label: 'Euclidean Sequence',
+  label: 'Euclidean',
 
   stepsInPort: belongsTo('port-value-in', { async: false }),
   pulsesInPort: belongsTo('port-value-in', { async: false }),
@@ -37,6 +37,8 @@ export default ModuleSequence.extend({
 
       // event to trigger euclid calculation
       this.addEventInPort('update', 'updateSequence', true);
+
+      set(this, 'inputType', 'Button');
 
       this.requestSave();
     }
