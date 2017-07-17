@@ -15,7 +15,7 @@ const {
 
 export default Model.extend({
 
-  value: attr('number'),
+  value: attr('number', { defaultValue: null}),
   index: attr('number'),
   array: belongsTo('array', { async: false, inverse: 'items' }),
 
