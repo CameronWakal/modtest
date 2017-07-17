@@ -10,8 +10,8 @@ $toggle-accent-borderradius: $toggle-accent-size / 2;
   margin-left: 1px;
   padding: 0;
   position: relative;
-  width: 2.5rem;
   vertical-align: bottom;
+  width: 2.5rem;
 
   &.current {
     background: linear-gradient($color-current-input-highlight, $color-current-input-highlight),
@@ -39,11 +39,11 @@ $toggle-accent-borderradius: $toggle-accent-size / 2;
 
   &::before {
     content: '-';
-    width: $toggle-size;
     height: $toggle-size;
+    left: 12px;
     position: absolute;
     top: 9px;
-    left: 12px;
+    width: $toggle-size;
   }
 
   &.on::before {
@@ -53,10 +53,10 @@ $toggle-accent-borderradius: $toggle-accent-size / 2;
   }
 
   &.accent::before {
-    width: $toggle-accent-size;
-    height: $toggle-accent-size;
     border-radius: $toggle-accent-borderradius;
-    top: 7px;
+    height: $toggle-accent-size;
     left: 10px;
+    top: 7px;
+    width: $toggle-accent-size;
   }
 }
