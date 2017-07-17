@@ -38,6 +38,7 @@ $toggle-accent-borderradius: $toggle-accent-size / 2;
   }
 
   &::before {
+    color: $color-transparent;
     content: '-';
     height: $toggle-size;
     left: 12px;
