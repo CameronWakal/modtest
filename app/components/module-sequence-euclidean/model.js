@@ -27,8 +27,8 @@ export default ModuleSequence.extend({
       this.removeSetting('Length');
 
       // add a sequence length port instead
-      this.addValueInPort('steps', 'stepsInPort', { defaultValue: 8, minValue: 0, maxValue: 128, isEnabled: false });
-      this.addValueInPort('pulses', 'pulsesInPort', { defaultValue: 0, minValue: 0, maxValue: 128, isEnabled: false });
+      this.addValueInPort('steps', 'stepsInPort', { defaultValue: 8, minValue: 0, maxValue: 128, isEnabled: true });
+      this.addValueInPort('pulses', 'pulsesInPort', { defaultValue: 0, minValue: 0, maxValue: 128, isEnabled: true });
 
       // event to trigger euclid calculation
       this.addEventInPort('update', 'updateSequence', true);
