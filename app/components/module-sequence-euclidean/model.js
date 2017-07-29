@@ -23,13 +23,8 @@ export default ModuleSequence.extend({
     this._super();
     if (get(this, 'isNew')) {
 
-      // remove the sequence length setting from the super component
-      let settings  = get(this, 'settings');
-      let lengthSetting = settings.findBy('label', 'Length');
-      settings.removeObject(lengthSetting);
-      this.store.findRecord('module-setting', lengthSetting.id, { backgroundReload: false }).then(function(lengthSetting) {
-        lengthSetting.destroyRecord();
-      });
+      // unlike the parent, we want length to be a port instead of a setting
+      this.removeSetting('Length');
 
       // add a sequence length port instead
       this.addValueInPort('steps', 'stepsInPort', { defaultValue: 8, minValue: 0, maxValue: 128, isEnabled: false });
