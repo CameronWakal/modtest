@@ -4,7 +4,8 @@ import DS from 'ember-data';
 
 const {
   inject,
-  get
+  get,
+  set
 } = Ember;
 
 const {
@@ -14,7 +15,6 @@ const {
 export default Module.extend({
 
   type: 'module-ccout', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  label: 'CC Out',
 
   midi: inject.service(),
 
@@ -34,6 +34,8 @@ export default Module.extend({
 
   ready() {
     if (get(this, 'isNew')) {
+      set(this, 'title', 'CC Out');
+
       // create ports
       this.addEventInPort('trig', 'sendEvent', true);
 

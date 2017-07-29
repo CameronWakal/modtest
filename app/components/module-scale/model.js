@@ -16,7 +16,6 @@ const {
 export default Module.extend({
 
   type: 'module-scale', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  label: 'Scale',
   degreesInScale: 7,
 
   degrees: belongsTo('array', { async: false }),
@@ -98,6 +97,7 @@ export default Module.extend({
 
   ready() {
     if (get(this, 'isNew')) {
+      set(this, 'title', 'Scale');
 
       // create degrees
       let degrees = this.store.createRecord('array', { module: this });

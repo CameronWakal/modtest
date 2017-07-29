@@ -7,13 +7,13 @@ const {
 } = DS;
 
 const {
-  get
+  get,
+  set
 } = Ember;
 
 export default Module.extend({
 
   type: 'module-maybe', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  label: 'Maybe',
 
   eventInPort: belongsTo('port-event-in', { async: false }),
   eventOutPort: belongsTo('port-event-out', { async: false }),
@@ -35,6 +35,8 @@ export default Module.extend({
 
   ready() {
     if (get(this, 'isNew')) {
+      set(this, 'title', 'Maybe');
+
       // create ports
       this.addEventInPort('in', 'onEventIn', true);
       this.addEventOutPort('out', 'eventOutPort', true);

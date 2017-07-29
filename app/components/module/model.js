@@ -18,8 +18,8 @@ const {
 export default Model.extend({
 
   type: 'module', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  label: null,
   settings: hasMany('module-setting', { polymorphic: true }),
+  title: attr('string'),
 
   patch: belongsTo('patch', { async: false }),
   ports: hasMany('port', { polymorphic: true, async: false }),

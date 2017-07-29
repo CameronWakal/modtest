@@ -16,7 +16,6 @@ const {
 export default Module.extend({
 
   type: 'module-sequence', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  label: 'Sequence',
 
   steps: belongsTo('array', { async: false }),
   trigOutPort: belongsTo('port-event-out', { async: false }),
@@ -64,6 +63,8 @@ export default Module.extend({
 
   ready() {
     if (get(this, 'isNew')) {
+      set(this, 'title', 'Sequence');
+
       // create steps
       let steps = this.store.createRecord('array', { module: this });
       set(this, 'steps', steps);

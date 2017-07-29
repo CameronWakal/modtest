@@ -19,7 +19,6 @@ const {
 export default Module.extend({
 
   type: 'module-repeat', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  label: 'Repeat',
 
   mode: attr('string', { defaultValue: 'count only' }),
   modeMenuOptions: ['count only', 'gate only', 'count+gate'],
@@ -131,6 +130,8 @@ export default Module.extend({
 
   ready() {
     if (get(this, 'isNew')) {
+      set(this, 'title', 'Repeat');
+
       this.addEventInPort('trig', 'onEventIn', true);
 
       // create value-in ports

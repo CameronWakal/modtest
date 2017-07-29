@@ -4,7 +4,8 @@ import Module from '../module/model';
 
 const {
   observer,
-  get
+  get,
+  set
 } = Ember;
 
 const {
@@ -17,7 +18,6 @@ const latency = 10;
 export default Module.extend({
 
   type: 'module-value', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  label: 'Value',
   value: attr('number'),
 
   changeOutPort: belongsTo('port-event-out', { async: false }),
@@ -28,6 +28,7 @@ export default Module.extend({
 
   ready() {
     if (get(this, 'isNew')) {
+      set(this, 'title', 'Value');
       // create ports
       this.addValueOutPort('value', 'getValue', true);
       this.addEventOutPort('changed', 'changeOutPort', false);
