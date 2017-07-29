@@ -33,6 +33,10 @@ export default Component.extend({
     set(this, 'diagramNeedsUpdate', true);
   },
 
+  didUpdateAttrs() {
+    this.send('moduleDeselected');
+  },
+
   actions: {
 
     removePatch() {
@@ -115,6 +119,7 @@ export default Component.extend({
     // module management
 
     removeModule(module) {
+      this.send('moduleDeselected');
       get(this, 'patch.modules').removeObject(module);
       this.patch.save();
       module.remove();

@@ -1,21 +1,29 @@
-$toggle-borderradius: 2px;
-$toggle-inset: 6px;
-$toggle-accent-inset: 3px;
+$toggle-size: 4px;
+$toggle-borderradius: $toggle-size / 2;
+$toggle-accent-size: 8px;
+$toggle-accent-borderradius: $toggle-accent-size / 2;
 
 .value-array-input-button {
 
-  background: $color-control;
+  background: $color-input-background;
   border-radius: 0;
   margin-left: 1px;
   padding: 0;
   position: relative;
-  width: 1.75rem;
+  vertical-align: bottom;
+  width: 2.5rem;
 
   &.current {
-    background: $color-control-current;
+    background: linear-gradient($color-current-input-highlight, $color-current-input-highlight),
+    $color-input-background;
+    color: $color-neutral-bright;
+
+    &::before {
+      color: $color-transparent;
+    }
 
     &.on::before {
-      background: $color-warm-bright;
+      background: $color-neutral-bright;
     }
   }
 
@@ -29,22 +37,27 @@ $toggle-accent-inset: 3px;
     border-top-right-radius: $input-borderradius;
   }
 
-  &.on::before {
-    background: $color-button;
-    border-radius: $toggle-borderradius;
-    bottom: $toggle-inset;
+  &::before {
     color: $color-transparent;
     content: '-';
-    left: $toggle-inset;
+    height: $toggle-size;
+    left: 12px;
     position: absolute;
-    right: $toggle-inset;
-    top: $toggle-inset;
+    top: 9px;
+    width: $toggle-size;
+  }
+
+  &.on::before {
+    background: $color-text;
+    border-radius: $toggle-borderradius;
+    color: $color-transparent;
   }
 
   &.accent::before {
-    bottom: $toggle-accent-inset;
-    left: $toggle-accent-inset;
-    right: $toggle-accent-inset;
-    top: $toggle-accent-inset;
+    border-radius: $toggle-accent-borderradius;
+    height: $toggle-accent-size;
+    left: 10px;
+    top: 7px;
+    width: $toggle-accent-size;
   }
 }

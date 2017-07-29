@@ -50,7 +50,9 @@ export default Component.extend({
 
   mouseDown(event) {
     if ($(event.target).hasClass('module') ||
-        $(event.target).hasClass('module-label')
+        $(event.target).hasClass('module-label') ||
+        $(event.target).hasClass('module-ports') ||
+        $(event.target).hasClass('indicator-blinking')
       ) {
       set(this, 'isMoving', true);
       set(this, 'moveOffsetX', event.pageX - get(this, 'xPos'));

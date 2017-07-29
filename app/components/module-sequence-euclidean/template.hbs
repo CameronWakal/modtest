@@ -1,0 +1,10 @@
+<div class="module-header">{{partial 'module-label'}}{{indicator-blinking blinkDuration=triggerDuration blinkTrigger=latestTriggerTime}}</div>
+<div class="module-content">
+{{value-input-array
+  array=module.steps
+  inputType=module.inputType
+  displayScale=module.displayScale
+}}
+</div>
+
+{{partial 'module-ports'}}
