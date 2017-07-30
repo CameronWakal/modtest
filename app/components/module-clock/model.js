@@ -22,6 +22,7 @@ const midiTimingEventsPerBeat = 24; // always the case AFAIK
 export default Module.extend({
 
   type: 'module-clock', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name: 'Clock',
 
   midi: inject.service(),
   scheduler: inject.service(),
@@ -62,7 +63,7 @@ export default Module.extend({
 
   ready() {
     if (get(this, 'isNew')) {
-      set(this, 'title', 'Clock');
+      set(this, 'title', this.name);
 
       this.addMenuSetting('Source', 'source', 'sourceMenuValues', this);
       this.addValueInPort('tempo', 'tempoInPort', { isEnabled: false, defaultValue: defaultTempo, minValue: 1 });

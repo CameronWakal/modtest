@@ -14,6 +14,7 @@ const {
 export default ModuleSequence.extend({
 
   type: 'module-sequence-euclidean', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name: 'Euclidean',
 
   stepsInPort: belongsTo('port-value-in', { async: false }),
   pulsesInPort: belongsTo('port-value-in', { async: false }),
@@ -21,7 +22,7 @@ export default ModuleSequence.extend({
   ready() {
     this._super();
     if (get(this, 'isNew')) {
-      set(this, 'title', 'Euclidean');
+      set(this, 'title', this.name);
 
       // unlike the parent, we want length to be a port instead of a setting
       this.removeSetting('Length');

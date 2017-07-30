@@ -14,6 +14,7 @@ const {
 export default Module.extend({
 
   type: 'module-clock-div', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name: 'Clock Div',
 
   // receives input events and sends an output on the first event, and then every nth event after,
   // n being divBy. If a shiftBy value is provided, the output event will be shifted later by that
@@ -53,7 +54,7 @@ export default Module.extend({
 
   ready() {
     if (get(this, 'isNew')) {
-      set(this, 'title', 'Clock Div');
+      set(this, 'title', this.name);
 
       this.addEventInPort('clock', 'onClockIn', true);
       this.addEventInPort('reset', 'onResetIn', false);

@@ -15,6 +15,7 @@ const {
 export default Module.extend({
 
   type: 'module-ccout', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name: 'CC Out',
 
   midi: inject.service(),
 
@@ -34,7 +35,7 @@ export default Module.extend({
 
   ready() {
     if (get(this, 'isNew')) {
-      set(this, 'title', 'CC Out');
+      set(this, 'title', this.name);
 
       // create ports
       this.addEventInPort('trig', 'sendEvent', true);

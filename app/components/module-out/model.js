@@ -20,6 +20,7 @@ const noteDuration = 20;
 export default Module.extend({
 
   type: 'module-out', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name: 'Out',
 
   midi: inject.service(),
 
@@ -103,7 +104,7 @@ export default Module.extend({
 
   ready() {
     if (get(this, 'isNew')) {
-      set(this, 'title', 'Out');
+      set(this, 'title', this.name);
 
       // create ports
       this.addEventInPort('trig', 'sendEvent', true);
