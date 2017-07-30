@@ -1,6 +1,13 @@
 <div class="app-sidebar-section">
   <h4>{{module.name}} Module</h4>
 </div>
+<div class="app-sidebar-section">
+  <ul>
+    <li>
+      {{value-input-string boundValue=module.title canBeEmpty=false valueUpdated=(action 'titleChanged')}}
+    </li>
+  </ul>
+</div>
 {{#if hasSettings}}
   <div class="app-sidebar-section">
     <ul>

@@ -20,6 +20,12 @@ export default Component.extend({
   hasValueOutPorts: computed.notEmpty('module.valueOutPorts'),
   hasEventInPorts: computed.notEmpty('module.eventInPorts'),
   hasEventOutPorts: computed.notEmpty('module.eventOutPorts'),
-  hasPorts: computed.notEmpty('module.ports')
+  hasPorts: computed.notEmpty('module.ports'),
+
+  actions: {
+    titleChanged() {
+      this.module.requestSave();
+    }
+  }
 
 });
