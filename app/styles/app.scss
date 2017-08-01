@@ -12,7 +12,6 @@ $z-new-module: 500;
 @import 'colors';
 @import 'components/port/styles';
 @import 'components/module/styles';
-@import 'components/module-clock/styles';
 @import 'components/indicator-blinking/styles';
 @import 'components/module-settings/styles';
 @import 'components/module-setting/styles';
@@ -25,6 +24,7 @@ $z-new-module: 500;
 @import 'components/patch-diagram/styles';
 @import 'components/patch-component/styles';
 @import 'components/port-setting/styles';
+@import 'components/toggle-button/styles';
 
 html,
 input,
