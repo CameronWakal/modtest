@@ -1,6 +1,5 @@
 {{partial 'module-label'}}
 <div class="module-content">
-<button class="button-mute" {{action 'mute'}}>Mute</button>
-{{module.isMuted}}
+  {{toggle-button label='Mute' isOn=module.isMuted click=(action 'mute')}}
 </div>
 {{partial 'module-ports'}}
