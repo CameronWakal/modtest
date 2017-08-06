@@ -25,8 +25,6 @@ export default Module.extend({
 
   valueInPort: belongsTo('port-value-in', { async: false }),
 
-  valueInPort: belongsTo('port-value-in', { async: false }),
-
   getValue() {
     return get(this, 'value');
   },
