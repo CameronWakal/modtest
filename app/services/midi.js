@@ -9,7 +9,9 @@ export default Service.extend({
 
   midi: null,
   timingListener: null,
+  noteListener: null,
   outputDevices: null,
+  inputDevices: null,
 
   setup() {
     // request MIDI access
@@ -27,6 +29,15 @@ export default Service.extend({
       outputsArray.push(output.value);
     }
     set(this, 'outputDevices', outputsArray);
+  },
+
+  updateInputDevices() {
+    let inputs = this.midi.inputs.values();
+    let inputsArray = [];
+    for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
+      inputsArray.push(input.value);
+    }
+    set(this, 'inputDevices', inputsArray);
   },
 
   sendNote(note, outputDeviceName) {
@@ -80,6 +91,7 @@ export default Service.extend({
     this.midi.onstatechange = this.onStateChange.bind(this);
     this.showMIDIPorts();
     this.updateOutputDevices();
+    this.updateInputDevices();
 
   },
 
@@ -132,12 +144,10 @@ export default Service.extend({
       default:
         switch (data[0] & 0xf0) { // channel agnostic message type.
           case 144: // noteOn message
-            console.log('note on');
-            // this.listener.noteOn(note, velocity);
+            this.noteListener.noteOn(data[1], data[2], event.timeStamp);
           break;
           case 128: // noteOff message
-            console.log('note off');
-            // this.listener.noteOff(note, velocity);
+            this.noteListener.noteOff(data[1], data[2], event.timeStamp);
           break;
         }
     }
@@ -156,6 +166,7 @@ export default Service.extend({
 
     this.showMIDIPorts();
     this.updateOutputDevices();
+    this.updateInputDevices();
   },
 
   onMIDIFailure(e) {

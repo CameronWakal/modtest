@@ -23,14 +23,24 @@ export default Module.extend({
   value: attr('number'),
   changeOutPort: belongsTo('port-event-out', { async: false }),
 
+  valueInPort: belongsTo('port-value-in', { async: false }),
+
   getValue() {
     return get(this, 'value');
+  },
+
+  setValue() {
+    let value = get(this, 'valueInPort').getValue();
+    set(this, 'value', value);
+    this.requestSave();
   },
 
   ready() {
     if (get(this, 'isNew')) {
       set(this, 'title', this.name);
       // create ports
+      this.addEventInPort('set', 'setValue', false);
+      this.addValueInPort('value', 'valueInPort', { isEnabled: false });
       this.addValueOutPort('value', 'getValue', true);
       this.addEventOutPort('changed', 'changeOutPort', false);
       console.log('module-value didCreate saveLater');
