@@ -1,4 +1,9 @@
-import ModuleSerializer from '../module/serializer';
+import ApplicationSerializer from '../../serializers/application';
 
-export default ModuleSerializer.extend({
+export default ApplicationSerializer.extend({
+
+  attrs: {
+    ports: { embedded: 'always' }
+  }
+
 });
