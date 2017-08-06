@@ -20,7 +20,7 @@ const latency = 10;
 export default Module.extend({
 
   type: 'module-in', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  label: 'In',
+  name: 'In',
 
   note: null,
   velocity: null,
@@ -86,6 +86,8 @@ export default Module.extend({
     get(this, 'midi').noteListener = this;
 
     if (get(this, 'isNew')) {
+      set(this, 'title', this.name);
+
       // create ports
       this.addEventOutPort('on', 'noteOnPort', true);
       this.addEventOutPort('off', 'noteOffPort', false);
