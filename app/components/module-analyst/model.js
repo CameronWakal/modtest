@@ -62,16 +62,18 @@ export default Module.extend({
   type: 'module-value', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Analyst',
 
-  pitchRepresentations: [],
+  pitchReps: [],
 
-  pitchRepresentationsForIndexes(indexes) {
+  pitchRepsForIndexes(indexes) {
+    let pitches = [];
     indexes.forEach(function(index) {
-      this.pitchRepresentations.push(this.pitchRepresentationForIndex(index));
+      pitches.push(this.pitchRepForIndex(index));
     }, this);
+    return pitches;
   },
 
   // generate the 3d coordinate representing a pitch at the given index
-  pitchRepresentationForIndex(i) {
+  pitchRepForIndex(i) {
     let x = Math.round(Math.sin((i * Math.PI) / 2));
     let y = Math.round(Math.cos((i * Math.PI) / 2));
     let z = i * h;
@@ -102,8 +104,8 @@ export default Module.extend({
       this.requestSave();
     }
 
-    this.pitchRepresentationsForIndexes(pitchIndexes);
-    console.log(this.pitchRepresentations);
+    this.pitchReps = this.pitchRepsForIndexes(pitchIndexes);
+    console.log(this.pitchReps);
   }
 
 });
