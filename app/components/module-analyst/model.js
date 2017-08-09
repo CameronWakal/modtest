@@ -62,22 +62,38 @@ export default Module.extend({
   type: 'module-value', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Analyst',
 
-  pitchReps: [],
-
-  pitchRepsForIndexes(indexes) {
-    let pitches = [];
-    indexes.forEach(function(index) {
-      pitches.push(this.pitchRepForIndex(index));
-    }, this);
-    return pitches;
-  },
-
-  // generate the 3d coordinate representing a pitch at the given index
+  // generate the 3d coordinate representing a pitch at the given index. p.58
   pitchRepForIndex(i) {
     let x = Math.round(Math.sin((i * Math.PI) / 2));
     let y = Math.round(Math.cos((i * Math.PI) / 2));
     let z = i * h;
-    return { x, y, z };
+    return { 'x': x, 'y': y, 'z': z };
+  },
+
+  // generate 3d coordinate representing a major chord based on the index of the tonic pitch. p.58
+  majorChordRepForIndex(i) {
+    let p1 = this.pitchRepForIndex(i);
+    let p2 = this.pitchRepForIndex(i + 1);
+    let p3 = this.pitchRepForIndex(i + 4);
+
+    let cx = p1.x * w1 + p2.x * w2 + p3.x * w3;
+    let cy = p1.y * w1 + p2.y * w2 + p3.y * w3;
+    let cz = p1.z * w1 + p2.z * w2 + p3.z * w3;
+
+    return { 'x': cx, 'y': cy, 'z': cz };
+  },
+
+  // generate 3d coordinate representing a major chord based on the index of the tonic pitch. p.58
+  minorChordRepForIndex(i) {
+    let p1 = this.pitchRepForIndex(i);
+    let p2 = this.pitchRepForIndex(i + 1);
+    let p3 = this.pitchRepForIndex(i - 3);
+
+    let cx = p1.x * u1 + p2.x * u2 + p3.x * u3;
+    let cy = p1.y * u1 + p2.y * u2 + p3.y * u3;
+    let cz = p1.z * u1 + p2.z * u2 + p3.z * u3;
+
+    return { 'x': cx, 'y': cy, 'z': cz };
   },
 
   valueInPort: belongsTo('port-value-in', { async: false }),
@@ -104,8 +120,12 @@ export default Module.extend({
       this.requestSave();
     }
 
-    this.pitchReps = this.pitchRepsForIndexes(pitchIndexes);
-    console.log(this.pitchReps);
+    console.log('pitch 0', this.pitchRepForIndex(0));
+    console.log('pitch 1', this.pitchRepForIndex(1));
+    console.log('pitch 4', this.pitchRepForIndex(4));
+    console.log('pitch -3', this.pitchRepForIndex(-3));
+    console.log('major chord 0', this.majorChordRepForIndex(0));
+    console.log('minor chord 0', this.minorChordRepForIndex(0));
   }
 
 });
