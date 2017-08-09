@@ -83,7 +83,7 @@ export default Module.extend({
     return { 'x': cx, 'y': cy, 'z': cz };
   },
 
-  // generate 3d coordinate representing a major chord based on the index of the tonic pitch. p.58
+  // generate 3d coordinate representing CE of a minor chord based on the index of the tonic pitch. p.58
   minorChordRepForIndex(i) {
     let p1 = this.pitchRepForIndex(i);
     let p2 = this.pitchRepForIndex(i + 1);
@@ -94,6 +94,42 @@ export default Module.extend({
     let cz = p1.z * u1 + p2.z * u2 + p3.z * u3;
 
     return { 'x': cx, 'y': cy, 'z': cz };
+  },
+
+  // generate 3d coordinate representing CE for major key based on the index of the root pitch. p.58
+  majorKeyRepForIndex(i) {
+    let c1 = this.majorChordRepForIndex(i);
+    let c2 = this.majorChordRepForIndex(i+1);
+    let c3 = this.majorChordRepForIndex(i-1);
+
+    let kx = c1.x * wc1 + c2.x * wc2 + c3.x * wc3;
+    let ky = c1.y * wc1 + c2.y * wc2 + c3.y * wc3;
+    let kz = c1.z * wc1 + c2.z * wc2 + c3.z * wc3;
+
+    return { 'x': kx, 'y': ky, 'z': kz };
+  },
+
+  // generate 3d coordinate representing CE for minor key based on the index of the root pitch. p.58
+  minorKeyRepForIndex(i) {
+    let c1 = this.minorChordRepForIndex(i);
+    let c2maj = this.majorChordRepForIndex(i+1);
+    let c2min = this.minorChordRepForIndex(i+1);
+    let c3min = this.minorChordRepForIndex(i-1);
+    let c3maj = this.majorChordRepForIndex(i-1);
+
+    let c2x = c2maj.x * a + c2min.x * (1 - a);
+    let c3x = c3min.x * b + c3maj.x * (1 - b);
+    let kx = c1.x * uc1 + c2x * uc2 + c3x * uc3;
+
+    let c2y = c2maj.y * a + c2min.y * (1 - a);
+    let c3y = c3min.y * b + c3maj.y * (1 - b);
+    let ky = c1.y * uc1 + c2y * uc2 + c3y * uc3;
+
+    let c2z = c2maj.z * a + c2min.z * (1 - a);
+    let c3z = c3min.z * b + c3maj.z * (1 - b);
+    let kz = c1.z * uc1 + c2z * uc2 + c3z * uc3;
+
+    return { 'x': kx, 'y': ky, 'z': kz };
   },
 
   valueInPort: belongsTo('port-value-in', { async: false }),
@@ -123,9 +159,24 @@ export default Module.extend({
     console.log('pitch 0', this.pitchRepForIndex(0));
     console.log('pitch 1', this.pitchRepForIndex(1));
     console.log('pitch 4', this.pitchRepForIndex(4));
-    console.log('pitch -3', this.pitchRepForIndex(-3));
     console.log('major chord 0', this.majorChordRepForIndex(0));
+    console.log('---');
+    console.log('pitch 0', this.pitchRepForIndex(0));
+    console.log('pitch 1', this.pitchRepForIndex(1));
+    console.log('pitch -3', this.pitchRepForIndex(-3));
     console.log('minor chord 0', this.minorChordRepForIndex(0));
+    console.log('---');
+    console.log('major chord 0', this.majorChordRepForIndex(0));
+    console.log('major chord 1', this.majorChordRepForIndex(1));
+    console.log('major chord -1', this.majorChordRepForIndex(-1));
+    console.log('major key 0', this.majorKeyRepForIndex(0));
+    console.log('---');
+    console.log('minor chord 0', this.minorChordRepForIndex(0));
+    console.log('major chord 1', this.majorChordRepForIndex(1));
+    console.log('minor chord 1', this.minorChordRepForIndex(1));
+    console.log('minor chord -1', this.minorChordRepForIndex(-1));
+    console.log('major chord -1', this.majorChordRepForIndex(-1));
+    console.log('minor key 0', this.minorKeyRepForIndex(0));
   }
 
 });
