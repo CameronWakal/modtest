@@ -76,8 +76,8 @@ export default Module.extend({
 
   // generate the 3d coordinate representing a pitch at the given index. p.58
   pitchRepForIndex(i) {
-    let x = Math.round(Math.sin((i * Math.PI) / 2));
-    let y = Math.round(Math.cos((i * Math.PI) / 2));
+    let x = Math.round(r * Math.sin((i * Math.PI) / 2));
+    let y = Math.round(r * Math.cos((i * Math.PI) / 2));
     let z = i * h;
     return { 'x': x, 'y': y, 'z': z };
   },
@@ -221,8 +221,11 @@ export default Module.extend({
     }
 
     this.addPitchToSet(0, 1);
+    console.log('pitch 0', this.pitchRepForIndex(0));
     this.addPitchToSet(4, 1);
+    console.log('pitch 4', this.pitchRepForIndex(4));
     this.addPitchToSet(1, 1);
+    console.log('pitch 1', this.pitchRepForIndex(1));
     console.log('pitchSetRep', this.pitchSetRep);
   }
 
