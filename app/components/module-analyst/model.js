@@ -73,6 +73,7 @@ export default Module.extend({
   pitchReps: [],
   // calculated center of effect for the set of notes
   pitchSetRep: null,
+  pitchSetDuration: 0,
 
   // generate the 3d coordinate representing a pitch at the given index. p.58
   pitchRepForIndex(i) {
@@ -146,16 +147,15 @@ export default Module.extend({
 
   // add a pitch representation to the set of reps being analysed
   // update the center of effect, which is the average position of all pitches
-  addPitchToSet(index) {
+  addPitchToSet(index, duration) {
     let pitchRep = this.pitchRepForIndex(index);
     let center = this.pitchSetRep;
 
     if (center == null) {
       center = pitchRep;
     } else {
-      let length = this.pitchReps.length;
-      let weightA = length / (length + 1);
-      let weightB = 1 / (length + 1);
+      let weightA = this.pitchSetDuration / (this.pitchSetDuration + duration);
+      let weightB = duration / (this.pitchSetDuration + duration);
 
       center.x = center.x * weightA + pitchRep.x * weightB;
       center.y = center.y * weightA + pitchRep.y * weightB;
@@ -163,6 +163,7 @@ export default Module.extend({
     }
 
     this.pitchReps.pushObject(pitchRep);
+    this.pitchSetDuration += duration;
     this.pitchSetRep = center;
   },
 
@@ -224,9 +225,9 @@ export default Module.extend({
     console.log('pitch 0', this.pitchRepForIndex(0));
     this.addPitchToSet(4, 1);
     console.log('pitch 4', this.pitchRepForIndex(4));
-    this.addPitchToSet(1, 1);
+    this.addPitchToSet(1, 0.5);
     console.log('pitch 1', this.pitchRepForIndex(1));
-    console.log('pitchSetRep', this.pitchSetRep);
+    console.log('pitchSetRep', this.pitchSetRep, 'duration', this.pitchSetDuration);
   }
 
 });
