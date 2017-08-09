@@ -25,8 +25,8 @@ const sampleDurations = [0.25, 0.25, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125];
 
 // notes are indexed by number of perfect fifths (seven half-steps) starting from C
 // e.g. C->G is 7 half steps, G->D is another 7 half-steps
-const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'G', 'G#', 'A', 'A#', 'B'];
-const noteIndexes = [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5];
+const pitchNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'G', 'G#', 'A', 'A#', 'B'];
+const pitchIndexes = [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5];
 
 // variables summarized on p. 62
 // optimal values described on p. 95
@@ -62,6 +62,22 @@ export default Module.extend({
   type: 'module-value', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Analyst',
 
+  pitchRepresentations: [],
+
+  pitchRepresentationsForIndexes(indexes) {
+    indexes.forEach(function(index) {
+      this.pitchRepresentations.push(this.pitchRepresentationForIndex(index));
+    }, this);
+  },
+
+  // generate the 3d coordinate representing a pitch at the given index
+  pitchRepresentationForIndex(i) {
+    let x = Math.round(Math.sin((i * Math.PI) / 2));
+    let y = Math.round(Math.cos((i * Math.PI) / 2));
+    let z = i * h;
+    return { x, y, z };
+  },
+
   valueInPort: belongsTo('port-value-in', { async: false }),
   values: [],
 
@@ -85,6 +101,9 @@ export default Module.extend({
       console.log('module-value didCreate saveLater');
       this.requestSave();
     }
+
+    this.pitchRepresentationsForIndexes(pitchIndexes);
+    console.log(this.pitchRepresentations);
   }
 
 });
