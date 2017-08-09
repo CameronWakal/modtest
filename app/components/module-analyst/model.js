@@ -197,6 +197,58 @@ export default Module.extend({
     return Math.sqrt(dx * dx + dy * dy + dz * dz);
   },
 
+  nearestKeysToRep(rep) {
+    let nearestKeys = [];
+    let index = 0;
+    let distance = this.distanceBetweenReps(rep, this.majorKeyReps[0]);
+    nearestKeys.pushObject({ 'index': index, 'scale': 'major', 'distance': distance });
+    console.log('added key 0 at 0');
+
+    // iterate all major key reps
+    for(let i = 1; i < this.majorKeyReps.length; i++) {
+      distance = this.distanceBetweenReps(rep, this.majorKeyReps[i]);
+      // iterate our collection of nearestKeys
+      for(let j = 0; j <= 2; j++) {
+        // if the distance of key i is better than the distance of key j, splice it in
+        // and keep the nearestKeys list to max 3 keys.
+        if (nearestKeys[j]) {
+          if (nearestKeys[j].distance > distance) {
+            nearestKeys.splice(j, 0, { 'index': i, 'scale': 'major', 'distance': distance });
+            nearestKeys = nearestKeys.slice(0, 3);
+            console.log('inserted better key', i, 'at position', j);
+            break;
+          }
+        } else {
+          // still room for more keys in the nearestKeys list, toss ours in.
+          nearestKeys.splice(j, 0, { 'index': i, 'scale': 'major', 'distance': distance });
+          console.log('added key', i, 'at', j);
+          break;
+        }
+      }
+    }
+
+    // repeat for minor keys
+    for(let i = 1; i < this.minorKeyReps.length; i++) {
+      distance = this.distanceBetweenReps(rep, this.minorKeyReps[i]);
+      for(let j = 0; j <= 2; j++) {
+        if (nearestKeys[j]) {
+          if (nearestKeys[j].distance > distance) {
+            nearestKeys.splice(j, 0, { 'index': i, 'scale': 'minor', 'distance': distance });
+            nearestKeys = nearestKeys.slice(0, 3);
+            console.log('inserted better key', i, 'at position', j);
+            break;
+          }
+        } else {
+          nearestKeys.splice(j, 0, { 'index': i, 'scale': 'minor', 'distance': distance });
+          console.log('added key', i, 'at', j);
+          break;
+        }
+      }
+    }
+
+    return nearestKeys;
+  },
+
   valueInPort: belongsTo('port-value-in', { async: false }),
   values: [],
 
@@ -228,6 +280,13 @@ export default Module.extend({
       this.minorKeyReps.pushObject(this.minorKeyRepForIndex(i));
     }
 
+    this.addPitchToSet(this.indexForPitchName('C'), 0.25);
+    this.addPitchToSet(this.indexForPitchName('F'), 0.25);
+    let topKeys = this.nearestKeysToRep(this.pitchSetRep);
+
+    topKeys.forEach(function(key) {
+      console.log(indexedPitchNames[key.index], key.scale);
+    });
   }
 
 });
