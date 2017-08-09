@@ -190,6 +190,13 @@ export default Module.extend({
     Console.log('error: indexForPitchName did not recognize', name);
   },
 
+  distanceBetweenReps(a, b) {
+    let dx = a.x - b.x;
+    let dy = a.y - b.y;
+    let dz = a.z - b.z;
+    return Math.sqrt(dx * dx + dy * dy + dz * dz);
+  },
+
   valueInPort: belongsTo('port-value-in', { async: false }),
   values: [],
 
@@ -221,13 +228,6 @@ export default Module.extend({
       this.minorKeyReps.pushObject(this.minorKeyRepForIndex(i));
     }
 
-    this.addPitchToSet(0, 1);
-    console.log('pitch 0', this.pitchRepForIndex(0));
-    this.addPitchToSet(4, 1);
-    console.log('pitch 4', this.pitchRepForIndex(4));
-    this.addPitchToSet(1, 0.5);
-    console.log('pitch 1', this.pitchRepForIndex(1));
-    console.log('pitchSetRep', this.pitchSetRep, 'duration', this.pitchSetDuration);
   }
 
 });
