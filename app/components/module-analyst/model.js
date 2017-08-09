@@ -25,8 +25,11 @@ const sampleDurations = [0.25, 0.25, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125];
 
 // notes are indexed by number of perfect fifths (seven half-steps) starting from C
 // e.g. C->G is 7 half steps, G->D is another 7 half-steps
-const pitchNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'G', 'G#', 'A', 'A#', 'B'];
-const pitchIndexes = [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5];
+
+// use the spiral order index to look up the note name:
+const indexedPitchNames = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'G#', 'D#', 'A#', 'F'];
+// use the half-step from the octave to look up the spiral index:
+const indexedHalfSteps = [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5];
 
 // variables summarized on p. 62
 // optimal values described on p. 95
@@ -61,6 +64,15 @@ export default Module.extend({
 
   type: 'module-value', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Analyst',
+
+  // precalculated CE coordinates for all major/minor keys
+  majorKeyReps: [],
+  minorKeyReps: [],
+
+  // coordinates of each pitch in the set
+  pitchReps: [],
+  // calculated center of effect for the set of notes
+  pitchSetRep: null,
 
   // generate the 3d coordinate representing a pitch at the given index. p.58
   pitchRepForIndex(i) {
@@ -132,6 +144,51 @@ export default Module.extend({
     return { 'x': kx, 'y': ky, 'z': kz };
   },
 
+  // add a pitch representation to the set of reps being analysed
+  // update the center of effect, which is the average position of all pitches
+  addPitchToSet(index) {
+    let pitchRep = this.pitchRepForIndex(index);
+    let center = this.pitchSetRep;
+
+    if (center == null) {
+      center = pitchRep;
+    } else {
+      let length = this.pitchReps.length;
+      let weightA = length / (length + 1);
+      let weightB = 1 / (length + 1);
+
+      center.x = center.x * weightA + pitchRep.x * weightB;
+      center.y = center.y * weightA + pitchRep.y * weightB;
+      center.z = center.z * weightA + pitchRep.z * weightB;
+    }
+
+    this.pitchReps.pushObject(pitchRep);
+    this.pitchSetRep = center;
+  },
+
+  indexForPitchName(name) {
+    switch(name) {
+      case 'C': return 0;
+      case 'C#':
+      case 'Db': return 7;
+      case 'D': return 2;
+      case 'D#':
+      case 'Eb': return 9;
+      case 'E': return 4;
+      case 'F': return 11;
+      case 'F#':
+      case 'Gb': return 6;
+      case 'G': return 1;
+      case 'G#':
+      case 'Ab': return 8;
+      case 'A': return 3;
+      case 'A#':
+      case 'Bb': return 10;
+      case 'B': return 5;
+    }
+    Console.log('error: indexForPitchName did not recognize', name);
+  },
+
   valueInPort: belongsTo('port-value-in', { async: false }),
   values: [],
 
@@ -156,27 +213,17 @@ export default Module.extend({
       this.requestSave();
     }
 
-    console.log('pitch 0', this.pitchRepForIndex(0));
-    console.log('pitch 1', this.pitchRepForIndex(1));
-    console.log('pitch 4', this.pitchRepForIndex(4));
-    console.log('major chord 0', this.majorChordRepForIndex(0));
-    console.log('---');
-    console.log('pitch 0', this.pitchRepForIndex(0));
-    console.log('pitch 1', this.pitchRepForIndex(1));
-    console.log('pitch -3', this.pitchRepForIndex(-3));
-    console.log('minor chord 0', this.minorChordRepForIndex(0));
-    console.log('---');
-    console.log('major chord 0', this.majorChordRepForIndex(0));
-    console.log('major chord 1', this.majorChordRepForIndex(1));
-    console.log('major chord -1', this.majorChordRepForIndex(-1));
-    console.log('major key 0', this.majorKeyRepForIndex(0));
-    console.log('---');
-    console.log('minor chord 0', this.minorChordRepForIndex(0));
-    console.log('major chord 1', this.majorChordRepForIndex(1));
-    console.log('minor chord 1', this.minorChordRepForIndex(1));
-    console.log('minor chord -1', this.minorChordRepForIndex(-1));
-    console.log('major chord -1', this.majorChordRepForIndex(-1));
-    console.log('minor key 0', this.minorKeyRepForIndex(0));
+    for(let i = 0; i <= 11; i++) {
+      this.majorKeyReps.pushObject(this.majorKeyRepForIndex(i));
+    }
+    for(let i = 0; i <= 11; i++) {
+      this.minorKeyReps.pushObject(this.minorKeyRepForIndex(i));
+    }
+
+    this.addPitchToSet(0, 1);
+    this.addPitchToSet(4, 1);
+    this.addPitchToSet(1, 1);
+    console.log('pitchSetRep', this.pitchSetRep);
   }
 
 });
