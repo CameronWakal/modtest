@@ -201,12 +201,14 @@ export default Module.extend({
     let nearestKeys = [];
     let index = 0;
     let distance = this.distanceBetweenReps(rep, this.majorKeyReps[0]);
+    console.log('a distance', distance);
     nearestKeys.pushObject({ 'index': index, 'scale': 'major', 'distance': distance });
     console.log('added key 0 at 0');
 
     // iterate all major key reps
     for(let i = 1; i < this.majorKeyReps.length; i++) {
       distance = this.distanceBetweenReps(rep, this.majorKeyReps[i]);
+      console.log('a distance', distance);
       // iterate our collection of nearestKeys
       for(let j = 0; j <= 2; j++) {
         // if the distance of key i is better than the distance of key j, splice it in
@@ -230,6 +232,7 @@ export default Module.extend({
     // repeat for minor keys
     for(let i = 1; i < this.minorKeyReps.length; i++) {
       distance = this.distanceBetweenReps(rep, this.minorKeyReps[i]);
+      console.log('a distance', distance);
       for(let j = 0; j <= 2; j++) {
         if (nearestKeys[j]) {
           if (nearestKeys[j].distance > distance) {
@@ -282,24 +285,37 @@ export default Module.extend({
 
     this.printKeyReps();
 
-    // this.addPitchToSet(this.indexForPitchName('C'), 0.25);
+    this.addPitchToSet(this.indexForPitchName('C'), 0.25);
     // this.addPitchToSet(this.indexForPitchName('F'), 0.25);
-    // let topKeys = this.nearestKeysToRep(this.pitchSetRep);
+    let topKeys = this.nearestKeysToRep(this.pitchSetRep);
+    this.printNearestKeys(topKeys);
 
-    // topKeys.forEach(function(key) {
-    //   console.log(indexedPitchNames[key.index], key.scale);
-    // });
+    // verification of correct CMaj position given correct parameters
+    console.log('CM', this.majorChordRepForIndex(0));
+    console.log('x', r * w2, 'y', (w1+w3)*r, 'z', (w2 + 4*w3) * h);
+
+    // verification of correct Cmin position given correct parameters
+    console.log('CM', this.minorChordRepForIndex(0));
+    console.log('x', (u2+u3)*r, 'y', u1*r, 'z', (u2-3*u3)*h);
+
   },
 
   printKeyReps() {
     console.log('Major Keys:');
     for(let i = 0; i < this.majorKeyReps.length; i++) {
-      console.log(i + ':' + indexedPitchNames[i] + 'M', this.trunc(this.majorKeyReps[i].x, 6), this.trunc(this.majorKeyReps[i].y, 6), this.trunc(this.majorKeyReps[i].z, 6));
+      console.log(i + ':' + indexedPitchNames[i] + 'M', this.trunc(this.majorKeyReps[i].x, 4), this.trunc(this.majorKeyReps[i].y, 4), this.trunc(this.majorKeyReps[i].z, 4));
     }
     console.log('Minor Keys:');
     for(let i = 0; i < this.minorKeyReps.length; i++) {
-      console.log(i + ':' + indexedPitchNames[i] + 'm', this.trunc(this.minorKeyReps[i].x, 6), this.trunc(this.minorKeyReps[i].y, 6), this.trunc(this.minorKeyReps[i].z, 6));
+      console.log(i + ':' + indexedPitchNames[i] + 'm', this.trunc(this.minorKeyReps[i].x, 4), this.trunc(this.minorKeyReps[i].y, 4), this.trunc(this.minorKeyReps[i].z, 4));
     }
+  },
+
+  printNearestKeys(nearestKeys) {
+    let name1 = indexedPitchNames[nearestKeys[0].index];
+    let name2 = indexedPitchNames[nearestKeys[1].index];
+    let name3 = indexedPitchNames[nearestKeys[2].index];
+    console.log(name1+nearestKeys[0].scale, this.trunc(nearestKeys[0].distance, 4), name2+nearestKeys[1].scale, this.trunc(nearestKeys[1].distance, 4), name3+nearestKeys[2].scale, this.trunc(nearestKeys[2].distance, 4));
   },
 
   // https://stackoverflow.com/questions/4912788/truncate-not-round-off-decimal-numbers-in-javascript
