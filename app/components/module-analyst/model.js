@@ -280,13 +280,33 @@ export default Module.extend({
       this.minorKeyReps.pushObject(this.minorKeyRepForIndex(i));
     }
 
-    this.addPitchToSet(this.indexForPitchName('C'), 0.25);
-    this.addPitchToSet(this.indexForPitchName('F'), 0.25);
-    let topKeys = this.nearestKeysToRep(this.pitchSetRep);
+    this.printKeyReps();
 
-    topKeys.forEach(function(key) {
-      console.log(indexedPitchNames[key.index], key.scale);
-    });
+    // this.addPitchToSet(this.indexForPitchName('C'), 0.25);
+    // this.addPitchToSet(this.indexForPitchName('F'), 0.25);
+    // let topKeys = this.nearestKeysToRep(this.pitchSetRep);
+
+    // topKeys.forEach(function(key) {
+    //   console.log(indexedPitchNames[key.index], key.scale);
+    // });
+  },
+
+  printKeyReps() {
+    console.log('Major Keys:');
+    for(let i = 0; i < this.majorKeyReps.length; i++) {
+      console.log(i + ':' + indexedPitchNames[i] + 'M', this.trunc(this.majorKeyReps[i].x, 6), this.trunc(this.majorKeyReps[i].y, 6), this.trunc(this.majorKeyReps[i].z, 6));
+    }
+    console.log('Minor Keys:');
+    for(let i = 0; i < this.minorKeyReps.length; i++) {
+      console.log(i + ':' + indexedPitchNames[i] + 'm', this.trunc(this.minorKeyReps[i].x, 6), this.trunc(this.minorKeyReps[i].y, 6), this.trunc(this.minorKeyReps[i].z, 6));
+    }
+  },
+
+  // https://stackoverflow.com/questions/4912788/truncate-not-round-off-decimal-numbers-in-javascript
+  trunc(number, digits) {
+    var re = new RegExp("(\\d+\\.\\d{" + digits + "})(\\d)"),
+        m = number.toString().match(re);
+    return m ? parseFloat(m[1]) : number.valueOf();
   }
 
 });
