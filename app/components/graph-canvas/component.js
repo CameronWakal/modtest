@@ -38,28 +38,40 @@ export default Component.extend({
     let pxRatio = window.devicePixelRatio;
     ctx.canvas.width  = width * pxRatio;
     ctx.canvas.height = height * pxRatio;
+    ctx.lineWidth = 1 * pxRatio;
+    ctx.strokeStyle = 'rgba(127, 127, 127, 0.3)';
+    ctx.beginPath();
 
-    let x, y;
     let rangeX = maxX - minX;
     let rangeY = maxY - minY;
+
+    let axis = ((0 - minX) / rangeX) * width;
+    ctx.moveTo(axis * pxRatio, 0);
+    ctx.lineTo(axis * pxRatio, height * pxRatio);
+
+    axis = height - ((0 - minY) / rangeY) * height;
+    ctx.moveTo(0, axis * pxRatio);
+    ctx.lineTo(height * pxRatio, axis * pxRatio);
+
+    ctx.stroke()
+    ctx.strokeStyle = '#fff';
+    ctx.beginPath();
+
+    let x, y;
 
     let values = get(this, 'values');
     values.forEach((value) => {
 
       x = ((value.x - minX) / rangeX) * width;
-      y = ((value.y - minY) / rangeY) * height;
+      y = height - ((value.y - minY) / rangeY) * height;
 
-      ctx.beginPath();
       ctx.moveTo(x * pxRatio - 4, y * pxRatio - 4);
       ctx.lineTo(x * pxRatio + 4, y * pxRatio + 4);
       ctx.moveTo(x * pxRatio - 4, y * pxRatio + 4);
       ctx.lineTo(x * pxRatio + 4, y * pxRatio - 4);
-      ctx.lineWidth = 1 * pxRatio;
-      ctx.strokeStyle = '#fff';
-
-      ctx.stroke();
-
     }, this);
+
+    ctx.stroke();
 
   },
 
