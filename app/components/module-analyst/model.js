@@ -62,7 +62,7 @@ const b = 0.75; // preference for iv vs. IV chord in minor key
 
 export default Module.extend({
 
-  type: 'module-value', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  type: 'module-analyst', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Analyst',
 
   // precalculated CE coordinates for all major/minor keys
@@ -258,11 +258,12 @@ export default Module.extend({
   // debug stuff
   spiralX: null,
   spiralY: null,
+  spiralZ: null,
   spiralDebugOut: belongsTo('port-event-out', { async: false }),
 
   drawSpiralDebug() {
     // plot spiral values for debugging graph
-    let res = 20;
+    let res = 50;
 
     for(let i = 0; i < 11 * res; i++) {
       let x = r * Math.sin(((i / res) * Math.PI) / 2);
@@ -270,7 +271,8 @@ export default Module.extend({
       let z = (i / res) * h;
       // send values *1000 for precision over int value ports
       this.spiralX = x*1000;
-      this.spiralY = z*1000;
+      this.spiralY = y*1000;
+      this.spiralZ = z*1000;
       get(this, 'spiralDebugOut').sendEvent({});
     }
   },
@@ -280,6 +282,9 @@ export default Module.extend({
   },
   getSpiralY() {
     return this.spiralY;
+  },
+  getSpiralZ() {
+    return this.spiralZ;
   },
   //---
 
@@ -304,6 +309,7 @@ export default Module.extend({
       // debug stuff
       this.addValueOutPort('spiralDebugX', 'getSpiralX', true);
       this.addValueOutPort('spiralDebugY', 'getSpiralY', true);
+      this.addValueOutPort('spiralDebugZ', 'getSpiralZ', true);
       this.addEventOutPort('spiralDebug', 'spiralDebugOut', true);
       this.addEventInPort('drawSpiral', 'drawSpiralDebug', false);
       //---

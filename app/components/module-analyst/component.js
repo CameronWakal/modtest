@@ -2,6 +2,6 @@ import ModuleGenericComponent from '../module/component';
 
 export default ModuleGenericComponent.extend({
 
-  classNames: ['module-value']
+  classNames: ['module-analyst']
 
 });

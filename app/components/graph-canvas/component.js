@@ -9,12 +9,12 @@ const {
   set
 } = Ember;
 
-const minX = -2000;
-const minY = -20;
-const maxX = 2000;
-const maxY = 5000;
+const minX = -1500;
+const minY = -1500;
+const maxX = 1500;
+const maxY = 4500;
 const width = 200;
-const height = 300;
+const height = 400;
 
 export default Component.extend({
   classNames: ['graph-canvas'],

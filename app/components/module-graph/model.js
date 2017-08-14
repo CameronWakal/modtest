@@ -23,7 +23,7 @@ export default Module.extend({
   xValueInPort: belongsTo('port-value-in', { async: false }),
   yValueInPort: belongsTo('port-value-in', { async: false }),
 
-  values: [],
+  values: null,
 
   writeValue() {
     let xValue = get(this, 'xValueInPort').getValue();
@@ -47,6 +47,8 @@ export default Module.extend({
       console.log('module-value didCreate saveLater');
       this.requestSave();
     }
+
+    set(this, 'values', []);
   }
 
 });
