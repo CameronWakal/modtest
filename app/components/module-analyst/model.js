@@ -255,6 +255,34 @@ export default Module.extend({
   valueInPort: belongsTo('port-value-in', { async: false }),
   values: [],
 
+  // debug stuff
+  spiralX: null,
+  spiralY: null,
+  spiralDebugOut: belongsTo('port-event-out', { async: false }),
+
+  drawSpiralDebug() {
+    // plot spiral values for debugging graph
+    let res = 20;
+
+    for(let i = 0; i < 11 * res; i++) {
+      let x = r * Math.sin(((i / res) * Math.PI) / 2);
+      let y = r * Math.cos(((i / res) * Math.PI) / 2);
+      let z = (i / res) * h;
+      // send values *1000 for precision over int value ports
+      this.spiralX = x*1000;
+      this.spiralY = z*1000;
+      get(this, 'spiralDebugOut').sendEvent({});
+    }
+  },
+
+  getSpiralX() {
+    return this.spiralX;
+  },
+  getSpiralY() {
+    return this.spiralY;
+  },
+  //---
+
   addValue() {
     let newValue = get(this, 'valueInPort').getValue();
     if (newValue != null) {
@@ -272,6 +300,14 @@ export default Module.extend({
       // create ports
       this.addEventInPort('in', 'addValue', false);
       this.addValueInPort('value', 'valueInPort', { isEnabled: false });
+
+      // debug stuff
+      this.addValueOutPort('spiralDebugX', 'getSpiralX', true);
+      this.addValueOutPort('spiralDebugY', 'getSpiralY', true);
+      this.addEventOutPort('spiralDebug', 'spiralDebugOut', true);
+      this.addEventInPort('drawSpiral', 'drawSpiralDebug', false);
+      //---
+
       console.log('module-value didCreate saveLater');
       this.requestSave();
     }

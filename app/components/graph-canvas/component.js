@@ -9,12 +9,12 @@ const {
   set
 } = Ember;
 
-const minX = -10;
-const minY = -10;
-const maxX = 10;
-const maxY = 10;
+const minX = -2000;
+const minY = -20;
+const maxX = 2000;
+const maxY = 5000;
 const width = 200;
-const height = 200;
+const height = 300;
 
 export default Component.extend({
   classNames: ['graph-canvas'],
@@ -54,8 +54,7 @@ export default Component.extend({
     ctx.lineTo(height * pxRatio, axis * pxRatio);
 
     ctx.stroke()
-    ctx.strokeStyle = '#fff';
-    ctx.beginPath();
+    ctx.fillStyle = '#fff';
 
     let x, y;
 
@@ -65,13 +64,9 @@ export default Component.extend({
       x = ((value.x - minX) / rangeX) * width;
       y = height - ((value.y - minY) / rangeY) * height;
 
-      ctx.moveTo(x * pxRatio - 4, y * pxRatio - 4);
-      ctx.lineTo(x * pxRatio + 4, y * pxRatio + 4);
-      ctx.moveTo(x * pxRatio - 4, y * pxRatio + 4);
-      ctx.lineTo(x * pxRatio + 4, y * pxRatio - 4);
-    }, this);
+      ctx.fillRect(x * pxRatio, y * pxRatio, 1 * pxRatio, 1 * pxRatio);
 
-    ctx.stroke();
+    }, this);
 
   },
 
