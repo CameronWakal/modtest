@@ -46,27 +46,34 @@ export default Component.extend({
     let rangeY = maxY - minY;
 
     let axis = ((0 - minX) / rangeX) * width;
-    ctx.moveTo(axis * pxRatio, 0);
-    ctx.lineTo(axis * pxRatio, height * pxRatio);
+    ctx.moveTo(Math.round(axis * pxRatio), 0);
+    ctx.lineTo(Math.round(axis * pxRatio), height * pxRatio);
 
     axis = height - ((0 - minY) / rangeY) * height;
-    ctx.moveTo(0, axis * pxRatio);
-    ctx.lineTo(height * pxRatio, axis * pxRatio);
+    ctx.moveTo(0, Math.round(axis * pxRatio));
+    ctx.lineTo(height * pxRatio, Math.round(axis * pxRatio));
 
-    ctx.stroke()
-    ctx.fillStyle = '#fff';
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.lineWidth = 1 * pxRatio;
+    ctx.strokeStyle = '#fff';
 
-    let x, y;
-
+    let xStart, yStart, xEnd, yEnd;
     let values = get(this, 'values');
-    values.forEach((value) => {
 
-      x = ((value.x - minX) / rangeX) * width;
-      y = height - ((value.y - minY) / rangeY) * height;
+    xStart = ((values[0].x - minX) / rangeX) * width;
+    yStart = height - ((values[0].y - minY) / rangeY) * height;
 
-      ctx.fillRect(x * pxRatio, y * pxRatio, 1 * pxRatio, 1 * pxRatio);
+    ctx.moveTo(xStart * pxRatio, yStart * pxRatio);
 
-    }, this);
+    for(let i = 1; i < values.length; i++) {
+      xEnd = ((values[i].x - minX) / rangeX) * width;
+      yEnd = height - ((values[i].y - minY) / rangeY) * height;
+
+      ctx.lineTo(xEnd * pxRatio, yEnd * pxRatio);
+    }
+
+    ctx.stroke();
 
   },
 

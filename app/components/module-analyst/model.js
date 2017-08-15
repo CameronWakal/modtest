@@ -4,7 +4,8 @@ import Module from '../module/model';
 
 const {
   get,
-  set
+  set,
+  run
 } = Ember;
 
 const {
@@ -263,9 +264,9 @@ export default Module.extend({
 
   drawSpiralDebug() {
     // plot spiral values for debugging graph
-    let res = 50;
+    let res = 20;
 
-    for(let i = 0; i < 11 * res; i++) {
+    for(let i = 0; i <= 11 * res; i++) {
       let x = r * Math.sin(((i / res) * Math.PI) / 2);
       let y = r * Math.cos(((i / res) * Math.PI) / 2);
       let z = (i / res) * h;
@@ -307,11 +308,10 @@ export default Module.extend({
       this.addValueInPort('value', 'valueInPort', { isEnabled: false });
 
       // debug stuff
-      this.addValueOutPort('spiralDebugX', 'getSpiralX', true);
-      this.addValueOutPort('spiralDebugY', 'getSpiralY', true);
-      this.addValueOutPort('spiralDebugZ', 'getSpiralZ', true);
-      this.addEventOutPort('spiralDebug', 'spiralDebugOut', true);
-      this.addEventInPort('drawSpiral', 'drawSpiralDebug', false);
+      this.addValueOutPort('spX', 'getSpiralX', true);
+      this.addValueOutPort('spY', 'getSpiralY', true);
+      this.addValueOutPort('spZ', 'getSpiralZ', true);
+      this.addEventOutPort('spSend', 'spiralDebugOut', true);
       //---
 
       console.log('module-value didCreate saveLater');
@@ -339,6 +339,10 @@ export default Module.extend({
     // verification of correct Cmin position given correct parameters
     console.log('CM', this.minorChordRepForIndex(0));
     console.log('x', (u2+u3)*r, 'y', u1*r, 'z', (u2-3*u3)*h);
+
+    run.scheduleOnce('afterRender', this, function() {
+      this.drawSpiralDebug();
+    });
 
   },
 
