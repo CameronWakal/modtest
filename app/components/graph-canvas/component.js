@@ -6,27 +6,43 @@ const {
   observer,
   run,
   get,
-  set
+  set,
+  computed,
+  String
 } = Ember;
-
-const minX = -1500;
-const minY = -1500;
-const maxX = 1500;
-const maxY = 4500;
-const width = 200;
-const height = 400;
 
 export default Component.extend({
   classNames: ['graph-canvas'],
   tagName: 'canvas',
+  attributeBindings: ['inlineStyles:style'],
+
+  width: computed('xMin', 'xMax', 'xScale', function() {
+    return (get(this, 'xMax') - get(this, 'xMin')) * get(this, 'xScale');
+  }),
+  height: computed('yMin', 'yMax', 'yScale', function() {
+    return (get(this, 'yMax') - get(this, 'yMin')) * get(this, 'yScale');
+  }),
+
+  inlineStyles: computed('width', 'height', function() {
+    let styleString = `width:${get(this, 'width')}px; height:${get(this, 'height')}px`;
+    return new String.htmlSafe(styleString);
+  }),
 
   didInsertElement() {
     // bind redraw on window resize
     // $(window).on('resize', run.bind(this, this.drawConnections));
   },
 
-  onValuesChanged: observer('values.@each', function() {
-    this.draw();
+  onValuesChanged: observer(
+    'lineValues.@each',
+    'xMin',
+    'xMax',
+    'yMin',
+    'yMax',
+    'xScale',
+    'yScale',
+    function() {
+      this.draw();
   }),
 
   // draw connections between ports,
@@ -36,10 +52,16 @@ export default Component.extend({
     let c = this.$().get(0);
     let ctx = c.getContext('2d');
     let pxRatio = window.devicePixelRatio;
+    let width = get(this, 'width');
+    let height = get(this, 'height');
+    let minX = get(this, 'xMin') * 1000;
+    let maxX = get(this, 'xMax') * 1000;
+    let minY = get(this, 'yMin') * 1000;
+    let maxY = get(this, 'yMax') * 1000;
     ctx.canvas.width  = width * pxRatio;
     ctx.canvas.height = height * pxRatio;
     ctx.lineWidth = 1 * pxRatio;
-    ctx.strokeStyle = 'rgba(127, 127, 127, 0.3)';
+    ctx.strokeStyle = 'rgba(44, 49, 58, 0.8)';
     ctx.beginPath();
 
     let rangeX = maxX - minX;
@@ -59,7 +81,7 @@ export default Component.extend({
     ctx.strokeStyle = '#fff';
 
     let xStart, yStart, xEnd, yEnd;
-    let values = get(this, 'values');
+    let values = get(this, 'lineValues');
 
     xStart = ((values[0].x - minX) / rangeX) * width;
     yStart = height - ((values[0].y - minY) / rangeY) * height;

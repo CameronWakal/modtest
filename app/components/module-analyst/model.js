@@ -308,10 +308,10 @@ export default Module.extend({
       this.addValueInPort('value', 'valueInPort', { isEnabled: false });
 
       // debug stuff
-      this.addValueOutPort('spX', 'getSpiralX', true);
-      this.addValueOutPort('spY', 'getSpiralY', true);
-      this.addValueOutPort('spZ', 'getSpiralZ', true);
-      this.addEventOutPort('spSend', 'spiralDebugOut', true);
+      this.addValueOutPort('sx', 'getSpiralX', true);
+      this.addValueOutPort('sy', 'getSpiralY', true);
+      this.addValueOutPort('sz', 'getSpiralZ', true);
+      this.addEventOutPort('s', 'spiralDebugOut', true);
       //---
 
       console.log('module-value didCreate saveLater');

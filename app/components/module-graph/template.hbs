@@ -1,5 +1,13 @@
 {{partial 'module-label'}}
 <div class="module-content">
-{{graph-canvas values=module.values}}
+{{graph-canvas
+  lineValues=module.lineValues
+  xMin=module.xMin
+  xMax=module.xMax
+  yMin=module.yMin
+  yMax=module.yMax
+  xScale=module.xScale
+  yScale=module.yScale
+}}
 </div>
 {{partial 'module-ports'}}
