@@ -35,6 +35,7 @@ export default Component.extend({
 
   onValuesChanged: observer(
     'lineValues.@each',
+    'triangesValues.@each',
     'xMin',
     'xMax',
     'yMin',
@@ -42,7 +43,7 @@ export default Component.extend({
     'xScale',
     'yScale',
     function() {
-      this.draw();
+      run.once(this, 'draw');
   }),
 
   // draw connections between ports,
@@ -67,6 +68,7 @@ export default Component.extend({
     let rangeX = maxX - minX;
     let rangeY = maxY - minY;
 
+    // draw axis
     let axis = ((0 - minX) / rangeX) * width;
     ctx.moveTo(Math.round(axis * pxRatio), 0);
     ctx.lineTo(Math.round(axis * pxRatio), height * pxRatio);
@@ -75,6 +77,7 @@ export default Component.extend({
     ctx.moveTo(0, Math.round(axis * pxRatio));
     ctx.lineTo(height * pxRatio, Math.round(axis * pxRatio));
 
+    // draw white spiral line
     ctx.stroke();
     ctx.beginPath();
     ctx.lineWidth = 1 * pxRatio;
@@ -96,6 +99,34 @@ export default Component.extend({
     }
 
     ctx.stroke();
+
+    // draw triangles
+    ctx.lineWidth = 1 * pxRatio;
+    ctx.strokeStyle = 'rgba(127,127,127,0.5)';
+    values = get(this, 'trianglesValues');
+    console.log('values length', values.length);
+    // loop draws one triangle with CE dot
+    for(let i = 0; i < values.length / 4; i++ ) {
+        ctx.beginPath();
+        xStart = ((values[i * 4].x - minX) / rangeX) * width;
+        yStart = height - ((values[i * 4].y - minY) / rangeY) * height;
+        ctx.moveTo(xStart * pxRatio, yStart * pxRatio);
+        xEnd = ((values[i * 4 + 1].x - minX) / rangeX) * width;
+        yEnd = height - ((values[i * 4 + 1].y - minY) / rangeY) * height;
+        ctx.lineTo(xEnd * pxRatio, yEnd * pxRatio);
+        xEnd = ((values[i * 4 + 2].x - minX) / rangeX) * width;
+        yEnd = height - ((values[i * 4 + 2].y - minY) / rangeY) * height;
+        ctx.lineTo(xEnd * pxRatio, yEnd * pxRatio);
+        ctx.lineTo(xStart * pxRatio, yStart * pxRatio);
+        xStart = ((values[i * 4 + 3].x - minX) / rangeX) * width;
+        yStart = height - ((values[i * 4 + 3].y - minY) / rangeY) * height;
+        ctx.fillStyle = 'rgba(127, 127, 127, 0.3)';
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(127, 127, 127, 1)';
+        ctx.fillRect((xStart - 1) * pxRatio, (yStart - 1) * pxRatio, pxRatio * 3, pxRatio * 3);
+    }
+
 
   },
 

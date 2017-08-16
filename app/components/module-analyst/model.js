@@ -260,13 +260,29 @@ export default Module.extend({
   spiralX: null,
   spiralY: null,
   spiralZ: null,
+  trianglesX: null,
+  trianglesY: null,
+  trianglesZ: null,
   spiralDebugOut: belongsTo('port-event-out', { async: false }),
+  trianglesDebugOut: belongsTo('port-event-out', { async: false }),
+  drawIndexInPort: belongsTo('port-value-in', { async: false }),
+  drawScaleInPort: belongsTo('port-value-in', { async: false }),
+  resetOut: belongsTo('port-event-out', { async: false }),
+
+  draw() {
+    let index = get(this, 'drawIndexInPort').getValue();
+    let scale = get(this, 'drawScaleInPort').getValue() ? 'major' : 'minor';
+
+    get(this, 'resetOut').sendEvent({});
+    this.drawSpiralDebug();
+    this.drawTrianglesDebug(index, scale);
+  },
 
   drawSpiralDebug() {
     // plot spiral values for debugging graph
     let res = 20;
 
-    for(let i = 0; i <= 11 * res; i++) {
+    for(let i = -2 * res; i <= 11 * res; i++) {
       let x = r * Math.sin(((i / res) * Math.PI) / 2);
       let y = r * Math.cos(((i / res) * Math.PI) / 2);
       let z = (i / res) * h;
@@ -278,6 +294,77 @@ export default Module.extend({
     }
   },
 
+  // draw visual representation of a major or minor key
+  drawTrianglesDebug(i, scale) {
+    if(scale == 'major') {
+
+      this.drawMajorChordRep(i);
+      this.drawMajorChordRep(i+1);
+      this.drawMajorChordRep(i-1);
+
+      let p = this.majorChordRepForIndex(i);
+      this.trianglesX = p.x * 1000;
+      this.trianglesY = p.y * 1000;
+      this.trianglesZ = p.z * 1000;
+      get(this, 'trianglesDebugOut').sendEvent({});
+
+      p = this.majorChordRepForIndex(i+1);
+      this.trianglesX = p.x * 1000;
+      this.trianglesY = p.y * 1000;
+      this.trianglesZ = p.z * 1000;
+      get(this, 'trianglesDebugOut').sendEvent({});
+
+      p = this.majorChordRepForIndex(i-1);
+      this.trianglesX = p.x * 1000;
+      this.trianglesY = p.y * 1000;
+      this.trianglesZ = p.z * 1000;
+      get(this, 'trianglesDebugOut').sendEvent({});
+
+      p = this.majorKeyRepForIndex(i);
+      this.trianglesX = p.x * 1000;
+      this.trianglesY = p.y * 1000;
+      this.trianglesZ = p.z * 1000;
+      get(this, 'trianglesDebugOut').sendEvent({});
+
+    } else if(scale == 'minor') {
+      console.log('drawTrianglesDebug minor key not implemented');
+    } else {
+      console.log('drawTrianglesDebug unrecognized scale');
+    }
+  },
+
+  drawMajorChordRep(i) {
+    let p = this.pitchRepForIndex(i);
+    this.trianglesX = p.x * 1000;
+    this.trianglesY = p.y * 1000;
+    this.trianglesZ = p.z * 1000;
+    get(this, 'trianglesDebugOut').sendEvent({});
+
+
+    p = this.pitchRepForIndex(i + 1);
+    this.trianglesX = p.x * 1000;
+    this.trianglesY = p.y * 1000;
+    this.trianglesZ = p.z * 1000;
+    get(this, 'trianglesDebugOut').sendEvent({});
+
+    p = this.pitchRepForIndex(i + 4);
+    this.trianglesX = p.x * 1000;
+    this.trianglesY = p.y * 1000;
+    this.trianglesZ = p.z * 1000;
+    get(this, 'trianglesDebugOut').sendEvent({});
+
+    p = this.majorChordRepForIndex(i);
+    this.trianglesX = p.x * 1000;
+    this.trianglesY = p.y * 1000;
+    this.trianglesZ = p.z * 1000;
+    get(this, 'trianglesDebugOut').sendEvent({});
+
+  },
+
+  drawMinorChordRep(i) {
+
+  },
+
   getSpiralX() {
     return this.spiralX;
   },
@@ -286,6 +373,15 @@ export default Module.extend({
   },
   getSpiralZ() {
     return this.spiralZ;
+  },
+  getTrianglesX() {
+    return this.trianglesX;
+  },
+  getTrianglesY() {
+    return this.trianglesY;
+  },
+  getTrianglesZ() {
+    return this.trianglesZ;
   },
   //---
 
@@ -312,6 +408,15 @@ export default Module.extend({
       this.addValueOutPort('sy', 'getSpiralY', true);
       this.addValueOutPort('sz', 'getSpiralZ', true);
       this.addEventOutPort('s', 'spiralDebugOut', true);
+      this.addValueOutPort('tx', 'getTrianglesX', true);
+      this.addValueOutPort('ty', 'getTrianglesY', true);
+      this.addValueOutPort('tz', 'getTrianglesZ', true);
+      this.addEventOutPort('t', 'trianglesDebugOut', true);
+
+      this.addEventInPort('draw', 'draw', true);
+      this.addEventOutPort('reset', 'resetOut', true);
+      this.addValueInPort('index', 'drawIndexInPort', { 'isEnabled': true });
+      this.addValueInPort('scale', 'drawScaleInPort', { 'maxValue': 1, 'minValue': 0, 'isEnabled': true });
       //---
 
       console.log('module-value didCreate saveLater');
@@ -325,6 +430,8 @@ export default Module.extend({
       this.minorKeyReps.pushObject(this.minorKeyRepForIndex(i));
     }
 
+    /*
+    // console debug tests
     this.printKeyReps();
 
     this.addPitchToSet(this.indexForPitchName('C'), 0.25);
@@ -339,9 +446,11 @@ export default Module.extend({
     // verification of correct Cmin position given correct parameters
     console.log('CM', this.minorChordRepForIndex(0));
     console.log('x', (u2+u3)*r, 'y', u1*r, 'z', (u2-3*u3)*h);
+    */
 
     run.scheduleOnce('afterRender', this, function() {
       this.drawSpiralDebug();
+      this.drawTrianglesDebug(0, 'major');
     });
 
   },
