@@ -104,7 +104,6 @@ export default Component.extend({
     ctx.lineWidth = 1 * pxRatio;
     ctx.strokeStyle = 'rgba(127,127,127,0.5)';
     values = get(this, 'trianglesValues');
-    console.log('values length', values.length);
     // loop draws one triangle with CE dot
     for(let i = 0; i < values.length / 4; i++ ) {
         ctx.beginPath();

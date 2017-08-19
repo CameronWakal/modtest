@@ -327,7 +327,51 @@ export default Module.extend({
       get(this, 'trianglesDebugOut').sendEvent({});
 
     } else if(scale == 'minor') {
-      console.log('drawTrianglesDebug minor key not implemented');
+
+      this.drawMinorChordRep(i);
+      this.drawMajorChordRep(i+1);
+      this.drawMinorChordRep(i+1);
+      this.drawMinorChordRep(i-1);
+      this.drawMajorChordRep(i-1);
+
+
+      let c1 = this.minorChordRepForIndex(i);
+      let c2maj = this.majorChordRepForIndex(i+1);
+      let c2min = this.minorChordRepForIndex(i+1);
+      let c3min = this.minorChordRepForIndex(i-1);
+      let c3maj = this.majorChordRepForIndex(i-1);
+
+      let c2x = c2maj.x * a + c2min.x * (1 - a);
+      let c3x = c3min.x * b + c3maj.x * (1 - b);
+
+      let c2y = c2maj.y * a + c2min.y * (1 - a);
+      let c3y = c3min.y * b + c3maj.y * (1 - b);
+
+      let c2z = c2maj.z * a + c2min.z * (1 - a);
+      let c3z = c3min.z * b + c3maj.z * (1 - b);
+
+      this.trianglesX = c1.x * 1000;
+      this.trianglesY = c1.y * 1000;
+      this.trianglesZ = c1.z * 1000;
+      get(this, 'trianglesDebugOut').sendEvent({});
+
+      this.trianglesX = c2x * 1000;
+      this.trianglesY = c2y * 1000;
+      this.trianglesZ = c2z * 1000;
+      get(this, 'trianglesDebugOut').sendEvent({});
+
+      this.trianglesX = c3x * 1000;
+      this.trianglesY = c3y * 1000;
+      this.trianglesZ = c3z * 1000;
+      get(this, 'trianglesDebugOut').sendEvent({});
+
+      let p = this.minorKeyRepForIndex(i);
+      this.trianglesX = p.x * 1000;
+      this.trianglesY = p.y * 1000;
+      this.trianglesZ = p.z * 1000;
+      get(this, 'trianglesDebugOut').sendEvent({});
+
+
     } else {
       console.log('drawTrianglesDebug unrecognized scale');
     }
@@ -362,7 +406,30 @@ export default Module.extend({
   },
 
   drawMinorChordRep(i) {
+    let p = this.pitchRepForIndex(i);
+    this.trianglesX = p.x * 1000;
+    this.trianglesY = p.y * 1000;
+    this.trianglesZ = p.z * 1000;
+    get(this, 'trianglesDebugOut').sendEvent({});
 
+
+    p = this.pitchRepForIndex(i + 1);
+    this.trianglesX = p.x * 1000;
+    this.trianglesY = p.y * 1000;
+    this.trianglesZ = p.z * 1000;
+    get(this, 'trianglesDebugOut').sendEvent({});
+
+    p = this.pitchRepForIndex(i - 3);
+    this.trianglesX = p.x * 1000;
+    this.trianglesY = p.y * 1000;
+    this.trianglesZ = p.z * 1000;
+    get(this, 'trianglesDebugOut').sendEvent({});
+
+    p = this.minorChordRepForIndex(i);
+    this.trianglesX = p.x * 1000;
+    this.trianglesY = p.y * 1000;
+    this.trianglesZ = p.z * 1000;
+    get(this, 'trianglesDebugOut').sendEvent({});
   },
 
   getSpiralX() {
