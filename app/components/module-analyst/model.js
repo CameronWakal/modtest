@@ -198,18 +198,33 @@ export default Module.extend({
     return Math.sqrt(dx * dx + dy * dy + dz * dz);
   },
 
-  nearestKeysToRep(rep) {
+  // distance between reps considering the repeating spiral: each pair of
+  // points has a distance in two directions, take the smallest.
+  minimumDistanceBetweenReps(a, b) {
+    let spiralHeight = h * 12;
+    let dx = a.x - b.x;
+    let dy = a.y - b.y;
+    let dz = a.z - b.z;
+    let distance1 = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+    if (a.z > b.z) {
+      dz = (a.z - spiralHeight) - b.z;
+    } else {
+      dz = (a.z + spiralHeight) - b.z;
+    }
+    let distance2 = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    return Math.min(distance1, distance2);
+  },
+
+  nearestKeysToRep(rep, keyCount) {
     let nearestKeys = [];
     let index = 0;
-    let distance = this.distanceBetweenReps(rep, this.majorKeyReps[0]);
-    console.log('a distance', distance);
+    let distance = this.minimumDistanceBetweenReps(rep, this.majorKeyReps[0]);
     nearestKeys.pushObject({ 'index': index, 'scale': 'major', 'distance': distance });
-    console.log('added key 0 at 0');
 
     // iterate all major key reps
     for(let i = 1; i < this.majorKeyReps.length; i++) {
-      distance = this.distanceBetweenReps(rep, this.majorKeyReps[i]);
-      console.log('a distance', distance);
+      distance = this.minimumDistanceBetweenReps(rep, this.majorKeyReps[i]);
       // iterate our collection of nearestKeys
       for(let j = 0; j <= 2; j++) {
         // if the distance of key i is better than the distance of key j, splice it in
@@ -218,13 +233,11 @@ export default Module.extend({
           if (nearestKeys[j].distance > distance) {
             nearestKeys.splice(j, 0, { 'index': i, 'scale': 'major', 'distance': distance });
             nearestKeys = nearestKeys.slice(0, 3);
-            console.log('inserted better key', i, 'at position', j);
             break;
           }
         } else {
           // still room for more keys in the nearestKeys list, toss ours in.
           nearestKeys.splice(j, 0, { 'index': i, 'scale': 'major', 'distance': distance });
-          console.log('added key', i, 'at', j);
           break;
         }
       }
@@ -232,19 +245,16 @@ export default Module.extend({
 
     // repeat for minor keys
     for(let i = 1; i < this.minorKeyReps.length; i++) {
-      distance = this.distanceBetweenReps(rep, this.minorKeyReps[i]);
-      console.log('a distance', distance);
+      distance = this.minimumDistanceBetweenReps(rep, this.minorKeyReps[i]);
       for(let j = 0; j <= 2; j++) {
         if (nearestKeys[j]) {
           if (nearestKeys[j].distance > distance) {
             nearestKeys.splice(j, 0, { 'index': i, 'scale': 'minor', 'distance': distance });
             nearestKeys = nearestKeys.slice(0, 3);
-            console.log('inserted better key', i, 'at position', j);
             break;
           }
         } else {
           nearestKeys.splice(j, 0, { 'index': i, 'scale': 'minor', 'distance': distance });
-          console.log('added key', i, 'at', j);
           break;
         }
       }
@@ -497,15 +507,19 @@ export default Module.extend({
       this.minorKeyReps.pushObject(this.minorKeyRepForIndex(i));
     }
 
-    /*
     // console debug tests
-    this.printKeyReps();
 
+
+    this.printKeyReps();
     this.addPitchToSet(this.indexForPitchName('C'), 0.25);
+    this.printRepForIndex(this.indexForPitchName('C'));
     // this.addPitchToSet(this.indexForPitchName('F'), 0.25);
+    //this.printRepForIndex(this.indexForPitchName('F'));
+
     let topKeys = this.nearestKeysToRep(this.pitchSetRep);
     this.printNearestKeys(topKeys);
 
+    /*
     // verification of correct CMaj position given correct parameters
     console.log('CM', this.majorChordRepForIndex(0));
     console.log('x', r * w2, 'y', (w1+w3)*r, 'z', (w2 + 4*w3) * h);
@@ -513,38 +527,37 @@ export default Module.extend({
     // verification of correct Cmin position given correct parameters
     console.log('CM', this.minorChordRepForIndex(0));
     console.log('x', (u2+u3)*r, 'y', u1*r, 'z', (u2-3*u3)*h);
-    */
 
     run.scheduleOnce('afterRender', this, function() {
       this.drawSpiralDebug();
       this.drawTrianglesDebug(0, 'major');
     });
+    */
 
   },
 
   printKeyReps() {
     console.log('Major Keys:');
     for(let i = 0; i < this.majorKeyReps.length; i++) {
-      console.log(i + ':' + indexedPitchNames[i] + 'M', this.trunc(this.majorKeyReps[i].x, 4), this.trunc(this.majorKeyReps[i].y, 4), this.trunc(this.majorKeyReps[i].z, 4));
+      console.log(i + ':' + indexedPitchNames[i] + 'M', this.majorKeyReps[i].x, this.majorKeyReps[i].y, this.majorKeyReps[i].z);
     }
     console.log('Minor Keys:');
     for(let i = 0; i < this.minorKeyReps.length; i++) {
-      console.log(i + ':' + indexedPitchNames[i] + 'm', this.trunc(this.minorKeyReps[i].x, 4), this.trunc(this.minorKeyReps[i].y, 4), this.trunc(this.minorKeyReps[i].z, 4));
+      console.log(i + ':' + indexedPitchNames[i] + 'm', this.minorKeyReps[i].x, this.minorKeyReps[i].y, this.minorKeyReps[i].z);
     }
+  },
+
+  printRepForIndex(i) {
+    let name = indexedPitchNames[i];
+    let rep = this.pitchRepForIndex(i);
+    console.log(i, name, rep.x, rep.y, rep.z);
   },
 
   printNearestKeys(nearestKeys) {
     let name1 = indexedPitchNames[nearestKeys[0].index];
     let name2 = indexedPitchNames[nearestKeys[1].index];
     let name3 = indexedPitchNames[nearestKeys[2].index];
-    console.log(name1+nearestKeys[0].scale, this.trunc(nearestKeys[0].distance, 4), name2+nearestKeys[1].scale, this.trunc(nearestKeys[1].distance, 4), name3+nearestKeys[2].scale, this.trunc(nearestKeys[2].distance, 4));
-  },
-
-  // https://stackoverflow.com/questions/4912788/truncate-not-round-off-decimal-numbers-in-javascript
-  trunc(number, digits) {
-    var re = new RegExp("(\\d+\\.\\d{" + digits + "})(\\d)"),
-        m = number.toString().match(re);
-    return m ? parseFloat(m[1]) : number.valueOf();
+    console.log(name1+nearestKeys[0].scale, nearestKeys[0].distance, name2+nearestKeys[1].scale, nearestKeys[1].distance, name3+nearestKeys[2].scale, nearestKeys[2].distance);
   }
 
 });
