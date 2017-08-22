@@ -36,7 +36,9 @@ const indexedHalfSteps = [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5];
 // optimal values described on p. 95
 
 const r = 1; // radius of the spiral
-const h = 0.365148371670111; // height gain per quarter turn of the spiral (sqrt 2/15)
+const h = 0.3651; // height gain per quarter turn of the spiral (sqrt 2/15)
+
+// from the pitch-finding example:
 
 // weights on major chord pitches
 const w1 = 0.6025;
@@ -58,6 +60,28 @@ const uc1 = w1;
 const uc2 = w2;
 const uc3 = w3;
 
+/*
+// from the validation section (p. 109):
+// weights on major chord pitches
+const w1 = 0.516;
+const w2 = 0.315;
+const w3 = 0.168;
+
+// weights on minor chord pitches
+const u1 = w1;
+const u2 = w2;
+const u3 = w3;
+
+// weights on major key chords
+const wc1 = w1;
+const wc2 = w2;
+const wc3 = w3;
+
+// weights on minor key chords
+const uc1 = w1;
+const uc2 = w2;
+const uc3 = w3;
+*/
 const a = 0.75; // preference for V vs. v chord in minor key
 const b = 0.75; // preference for iv vs. IV chord in minor key
 
@@ -151,12 +175,26 @@ export default Module.extend({
   addPitchToSet(index, duration) {
     let pitchRep = this.pitchRepForIndex(index);
     let center = this.pitchSetRep;
+    let spiralHeight = h * 12;
 
     if (center == null) {
       center = pitchRep;
     } else {
       let weightA = this.pitchSetDuration / (this.pitchSetDuration + duration);
       let weightB = duration / (this.pitchSetDuration + duration);
+
+      // find an alternate z value on the opposite side of the center,
+      // one spiral-length away from the original z value
+      let otherZ;
+      if (pitchRep.z > center.z) {
+        otherZ = pitchRep.z - spiralHeight;
+      } else {
+        otherZ = pitchRep.z + spiralHeight;
+      }
+      // use whichever of the two z values is closer to the current center
+      if (Math.abs(otherZ - center.z) < Math.abs(pitchRep.z - center.z)) {
+          pitchRep.z = otherZ;
+      }
 
       center.x = center.x * weightA + pitchRep.x * weightB;
       center.y = center.y * weightA + pitchRep.y * weightB;
@@ -511,12 +549,53 @@ export default Module.extend({
 
 
     this.printKeyReps();
+
     this.addPitchToSet(this.indexForPitchName('C'), 0.25);
     this.printRepForIndex(this.indexForPitchName('C'));
-    // this.addPitchToSet(this.indexForPitchName('F'), 0.25);
-    //this.printRepForIndex(this.indexForPitchName('F'));
-
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
     let topKeys = this.nearestKeysToRep(this.pitchSetRep);
+    this.printNearestKeys(topKeys);
+
+    this.addPitchToSet(this.indexForPitchName('F'), 0.25);
+    this.printRepForIndex(this.indexForPitchName('F'));
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
+    topKeys = this.nearestKeysToRep(this.pitchSetRep);
+    this.printNearestKeys(topKeys);
+
+    this.addPitchToSet(this.indexForPitchName('F'), 0.125);
+    this.printRepForIndex(this.indexForPitchName('F'));
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
+    topKeys = this.nearestKeysToRep(this.pitchSetRep);
+    this.printNearestKeys(topKeys);
+
+    this.addPitchToSet(this.indexForPitchName('G'), 0.125);
+    this.printRepForIndex(this.indexForPitchName('G'));
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
+    topKeys = this.nearestKeysToRep(this.pitchSetRep);
+    this.printNearestKeys(topKeys);
+
+    this.addPitchToSet(this.indexForPitchName('A'), 0.125);
+    this.printRepForIndex(this.indexForPitchName('A'));
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
+    topKeys = this.nearestKeysToRep(this.pitchSetRep);
+    this.printNearestKeys(topKeys);
+
+    this.addPitchToSet(this.indexForPitchName('F'), 0.125);
+    this.printRepForIndex(this.indexForPitchName('F'));
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
+    topKeys = this.nearestKeysToRep(this.pitchSetRep);
+    this.printNearestKeys(topKeys);
+
+    this.addPitchToSet(this.indexForPitchName('A'), 0.125);
+    this.printRepForIndex(this.indexForPitchName('A'));
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
+    topKeys = this.nearestKeysToRep(this.pitchSetRep);
+    this.printNearestKeys(topKeys);
+
+    this.addPitchToSet(this.indexForPitchName('Bb'), 0.125);
+    this.printRepForIndex(this.indexForPitchName('Bb'));
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
+    topKeys = this.nearestKeysToRep(this.pitchSetRep);
     this.printNearestKeys(topKeys);
 
     /*
