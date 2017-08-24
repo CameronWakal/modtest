@@ -178,7 +178,7 @@ export default Module.extend({
     let spiralHeight = h * 12;
 
     if (center == null) {
-      center = pitchRep;
+      center = { 'x': pitchRep.x, 'y': pitchRep.y, 'z': pitchRep.z };
     } else {
       let weightA = this.pitchSetDuration / (this.pitchSetDuration + duration);
       let weightB = duration / (this.pitchSetDuration + duration);
@@ -226,7 +226,7 @@ export default Module.extend({
       case 'Bb': return 10;
       case 'B': return 5;
     }
-    Console.log('error: indexForPitchName did not recognize', name);
+    console.log('error: indexForPitchName did not recognize', name);
   },
 
   distanceBetweenReps(a, b) {
@@ -552,49 +552,49 @@ export default Module.extend({
 
     this.addPitchToSet(this.indexForPitchName('C'), 0.25);
     this.printRepForIndex(this.indexForPitchName('C'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
     let topKeys = this.nearestKeysToRep(this.pitchSetRep);
     this.printNearestKeys(topKeys);
 
     this.addPitchToSet(this.indexForPitchName('F'), 0.25);
     this.printRepForIndex(this.indexForPitchName('F'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
     topKeys = this.nearestKeysToRep(this.pitchSetRep);
     this.printNearestKeys(topKeys);
 
     this.addPitchToSet(this.indexForPitchName('F'), 0.125);
     this.printRepForIndex(this.indexForPitchName('F'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
     topKeys = this.nearestKeysToRep(this.pitchSetRep);
     this.printNearestKeys(topKeys);
 
     this.addPitchToSet(this.indexForPitchName('G'), 0.125);
     this.printRepForIndex(this.indexForPitchName('G'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
     topKeys = this.nearestKeysToRep(this.pitchSetRep);
     this.printNearestKeys(topKeys);
 
     this.addPitchToSet(this.indexForPitchName('A'), 0.125);
     this.printRepForIndex(this.indexForPitchName('A'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
     topKeys = this.nearestKeysToRep(this.pitchSetRep);
     this.printNearestKeys(topKeys);
 
     this.addPitchToSet(this.indexForPitchName('F'), 0.125);
     this.printRepForIndex(this.indexForPitchName('F'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
     topKeys = this.nearestKeysToRep(this.pitchSetRep);
     this.printNearestKeys(topKeys);
 
     this.addPitchToSet(this.indexForPitchName('A'), 0.125);
     this.printRepForIndex(this.indexForPitchName('A'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
     topKeys = this.nearestKeysToRep(this.pitchSetRep);
     this.printNearestKeys(topKeys);
 
     this.addPitchToSet(this.indexForPitchName('Bb'), 0.125);
     this.printRepForIndex(this.indexForPitchName('Bb'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z)
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
     topKeys = this.nearestKeysToRep(this.pitchSetRep);
     this.printNearestKeys(topKeys);
 
