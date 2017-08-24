@@ -3,7 +3,6 @@ import DS from 'ember-data';
 import Module from '../module/model';
 
 const {
-  observer,
   get,
   set
 } = Ember;
@@ -12,8 +11,6 @@ const {
   attr,
   belongsTo
 } = DS;
-
-const latency = 10;
 
 export default Module.extend({
 
@@ -38,7 +35,7 @@ export default Module.extend({
   writeLineValue() {
     let xLineValue = get(this, 'xLineValueInPort').getValue();
     let yLineValue = get(this, 'yLineValueInPort').getValue();
-    get(this, 'lineValues').pushObject({ 'x': xLineValue, 'y': yLineValue });
+    get(this, 'lineValues').pushObject({ x: xLineValue, y: yLineValue });
   },
 
   // three values in a row draw a triangle, every fourth value will be
@@ -46,7 +43,7 @@ export default Module.extend({
   writeTrianglesValue() {
     let x = get(this, 'xTrianglesValueInPort').getValue();
     let y = get(this, 'yTrianglesValueInPort').getValue();
-    get(this, 'trianglesValues').pushObject({ 'x': x, 'y': y });
+    get(this, 'trianglesValues').pushObject({ x, y });
   },
 
   reset() {
@@ -65,12 +62,12 @@ export default Module.extend({
       this.addNumberSetting('xScale', 'xScale', this);
       this.addNumberSetting('yScale', 'yScale', this);
       // create ports
-      this.addValueInPort('lx', 'xLineValueInPort', {'isEnabled': true });
-      this.addValueInPort('ly', 'yLineValueInPort', {'isEnabled': true });
+      this.addValueInPort('lx', 'xLineValueInPort', { isEnabled: true });
+      this.addValueInPort('ly', 'yLineValueInPort', { isEnabled: true });
       this.addEventInPort('l', 'writeLineValue', true);
 
-      this.addValueInPort('tx', 'xTrianglesValueInPort', {'isEnabled': true });
-      this.addValueInPort('ty', 'yTrianglesValueInPort', {'isEnabled': true });
+      this.addValueInPort('tx', 'xTrianglesValueInPort', { isEnabled: true });
+      this.addValueInPort('ty', 'yTrianglesValueInPort', { isEnabled: true });
       this.addEventInPort('t', 'writeTrianglesValue', true);
 
       this.addEventInPort('reset', 'reset', true);

@@ -31,7 +31,7 @@ html,
 input,
 button,
 select {
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased; // sass-lint:disable-line no-vendor-prefixes
   box-sizing: border-box;
   // font-family: 'Source Code Pro', monospace;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;

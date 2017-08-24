@@ -2,11 +2,9 @@ import Ember from 'ember';
 
 const {
   Component,
-  $,
   observer,
   run,
   get,
-  set,
   computed,
   String
 } = Ember;
@@ -34,8 +32,8 @@ export default Component.extend({
   },
 
   onValuesChanged: observer(
-    'lineValues.@each',
-    'triangesValues.@each',
+    'lineValues.[]',
+    'triangesValues.[]',
     'xMin',
     'xMax',
     'yMin',
@@ -44,7 +42,7 @@ export default Component.extend({
     'yScale',
     function() {
       run.once(this, 'draw');
-  }),
+    }),
 
   // draw connections between ports,
   // draw line from new connection port to cursor position
@@ -91,7 +89,7 @@ export default Component.extend({
 
     ctx.moveTo(xStart * pxRatio, yStart * pxRatio);
 
-    for(let i = 1; i < values.length; i++) {
+    for (let i = 1; i < values.length; i++) {
       xEnd = ((values[i].x - minX) / rangeX) * width;
       yEnd = height - ((values[i].y - minY) / rangeY) * height;
 
@@ -105,28 +103,25 @@ export default Component.extend({
     ctx.strokeStyle = 'rgba(127,127,127,0.5)';
     values = get(this, 'trianglesValues');
     // loop draws one triangle with CE dot
-    for(let i = 0; i < values.length / 4; i++ ) {
-        ctx.beginPath();
-        xStart = ((values[i * 4].x - minX) / rangeX) * width;
-        yStart = height - ((values[i * 4].y - minY) / rangeY) * height;
-        ctx.moveTo(xStart * pxRatio, yStart * pxRatio);
-        xEnd = ((values[i * 4 + 1].x - minX) / rangeX) * width;
-        yEnd = height - ((values[i * 4 + 1].y - minY) / rangeY) * height;
-        ctx.lineTo(xEnd * pxRatio, yEnd * pxRatio);
-        xEnd = ((values[i * 4 + 2].x - minX) / rangeX) * width;
-        yEnd = height - ((values[i * 4 + 2].y - minY) / rangeY) * height;
-        ctx.lineTo(xEnd * pxRatio, yEnd * pxRatio);
-        ctx.lineTo(xStart * pxRatio, yStart * pxRatio);
-        xStart = ((values[i * 4 + 3].x - minX) / rangeX) * width;
-        yStart = height - ((values[i * 4 + 3].y - minY) / rangeY) * height;
-        ctx.fillStyle = 'rgba(127, 127, 127, 0.3)';
-        ctx.fill();
-        ctx.stroke();
-        ctx.fillStyle = 'rgba(127, 127, 127, 1)';
-        ctx.fillRect((xStart - 1) * pxRatio, (yStart - 1) * pxRatio, pxRatio * 3, pxRatio * 3);
+    for (let i = 0; i < values.length / 4; i++) {
+      ctx.beginPath();
+      xStart = ((values[i * 4].x - minX) / rangeX) * width;
+      yStart = height - ((values[i * 4].y - minY) / rangeY) * height;
+      ctx.moveTo(xStart * pxRatio, yStart * pxRatio);
+      xEnd = ((values[i * 4 + 1].x - minX) / rangeX) * width;
+      yEnd = height - ((values[i * 4 + 1].y - minY) / rangeY) * height;
+      ctx.lineTo(xEnd * pxRatio, yEnd * pxRatio);
+      xEnd = ((values[i * 4 + 2].x - minX) / rangeX) * width;
+      yEnd = height - ((values[i * 4 + 2].y - minY) / rangeY) * height;
+      ctx.lineTo(xEnd * pxRatio, yEnd * pxRatio);
+      ctx.lineTo(xStart * pxRatio, yStart * pxRatio);
+      xStart = ((values[i * 4 + 3].x - minX) / rangeX) * width;
+      yStart = height - ((values[i * 4 + 3].y - minY) / rangeY) * height;
+      ctx.fillStyle = 'rgba(127, 127, 127, 0.3)';
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(127, 127, 127, 1)';
+      ctx.fillRect((xStart - 1) * pxRatio, (yStart - 1) * pxRatio, pxRatio * 3, pxRatio * 3);
     }
-
-
-  },
-
+  }
 });
