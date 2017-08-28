@@ -96,8 +96,8 @@ export default Module.extend({
     if (get(this, 'isNew')) {
       set(this, 'title', this.name);
       // create ports
-      this.addEventInPort('in', 'addValue', false);
-      this.addValueInPort('value', 'valueInPort', { isEnabled: false });
+      this.addEventInPort('in', 'addValue', true);
+      this.addValueInPort('value', 'valueInPort', { isEnabled: true });
 
       console.log('module-value didCreate saveLater');
       this.requestSave();
@@ -111,7 +111,7 @@ export default Module.extend({
     }
 
     // console debug tests
-
+    /*
     this.printKeyReps();
 
     this.addPitchToSet(this.indexForPitchName('C'), 0.25);
@@ -161,7 +161,7 @@ export default Module.extend({
     console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
     topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
     this.printNearestKeys(topKeys);
-
+    */
   },
 
   // generate the 3d coordinate representing a pitch at the given index. p.58
