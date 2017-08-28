@@ -69,6 +69,101 @@ export default Module.extend({
   pitchSetRep: null,
   pitchSetDuration: 0,
 
+  valueInPort: belongsTo('port-value-in', { async: false }),
+  values: null,
+
+  // so the graphable child module can inherit it
+  spiralRadius: r,
+  spiralHeight: h,
+  weightA: a,
+  weightB: b,
+
+  addValue() {
+    let newValue = get(this, 'valueInPort').getValue();
+    if (newValue != null) {
+      if (this.values == null) {
+        this.values = [];
+      }
+      this.values.push(newValue);
+      if (this.values.length > maxValues) {
+        this.values.shift();
+      }
+    }
+    console.log('values', this.values);
+  },
+
+  ready() {
+    if (get(this, 'isNew')) {
+      set(this, 'title', this.name);
+      // create ports
+      this.addEventInPort('in', 'addValue', false);
+      this.addValueInPort('value', 'valueInPort', { isEnabled: false });
+
+      console.log('module-value didCreate saveLater');
+      this.requestSave();
+    }
+
+    for (let i = 0; i <= 11; i++) {
+      this.majorKeyReps.pushObject(this.majorKeyRepForIndex(i));
+    }
+    for (let i = 0; i <= 11; i++) {
+      this.minorKeyReps.pushObject(this.minorKeyRepForIndex(i));
+    }
+
+    // console debug tests
+
+    this.printKeyReps();
+
+    this.addPitchToSet(this.indexForPitchName('C'), 0.25);
+    this.printRepForIndex(this.indexForPitchName('C'));
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
+    let topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
+    this.printNearestKeys(topKeys);
+
+    this.addPitchToSet(this.indexForPitchName('F'), 0.25);
+    this.printRepForIndex(this.indexForPitchName('F'));
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
+    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
+    this.printNearestKeys(topKeys);
+
+    this.addPitchToSet(this.indexForPitchName('F'), 0.125);
+    this.printRepForIndex(this.indexForPitchName('F'));
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
+    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
+    this.printNearestKeys(topKeys);
+
+    this.addPitchToSet(this.indexForPitchName('G'), 0.125);
+    this.printRepForIndex(this.indexForPitchName('G'));
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
+    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
+    this.printNearestKeys(topKeys);
+
+    this.addPitchToSet(this.indexForPitchName('A'), 0.125);
+    this.printRepForIndex(this.indexForPitchName('A'));
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
+    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
+    this.printNearestKeys(topKeys);
+
+    this.addPitchToSet(this.indexForPitchName('F'), 0.125);
+    this.printRepForIndex(this.indexForPitchName('F'));
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
+    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
+    this.printNearestKeys(topKeys);
+
+    this.addPitchToSet(this.indexForPitchName('A'), 0.125);
+    this.printRepForIndex(this.indexForPitchName('A'));
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
+    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
+    this.printNearestKeys(topKeys);
+
+    this.addPitchToSet(this.indexForPitchName('Bb'), 0.125);
+    this.printRepForIndex(this.indexForPitchName('Bb'));
+    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
+    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
+    this.printNearestKeys(topKeys);
+
+  },
+
   // generate the 3d coordinate representing a pitch at the given index. p.58
   pitchRepForIndex(i) {
     let x = Math.round(r * Math.sin((i * Math.PI) / 2));
@@ -198,13 +293,6 @@ export default Module.extend({
     console.log('error: indexForPitchName did not recognize', name);
   },
 
-  distanceBetweenReps(a, b) {
-    let dx = a.x - b.x;
-    let dy = a.y - b.y;
-    let dz = a.z - b.z;
-    return Math.sqrt(dx * dx + dy * dy + dz * dz);
-  },
-
   // distance between reps considering the repeating spiral: each pair of
   // points has a distance in two directions, take the smallest.
   minimumDistanceBetweenReps(a, b) {
@@ -268,300 +356,6 @@ export default Module.extend({
     }
 
     return nearestKeys;
-  },
-
-  valueInPort: belongsTo('port-value-in', { async: false }),
-  values: [],
-
-  // debug stuff
-  spiralX: null,
-  spiralY: null,
-  spiralZ: null,
-  trianglesX: null,
-  trianglesY: null,
-  trianglesZ: null,
-  spiralDebugOut: belongsTo('port-event-out', { async: false }),
-  trianglesDebugOut: belongsTo('port-event-out', { async: false }),
-  drawIndexInPort: belongsTo('port-value-in', { async: false }),
-  drawScaleInPort: belongsTo('port-value-in', { async: false }),
-  resetOut: belongsTo('port-event-out', { async: false }),
-
-  draw() {
-    let index = get(this, 'drawIndexInPort').getValue();
-    let scale = get(this, 'drawScaleInPort').getValue() ? 'major' : 'minor';
-
-    get(this, 'resetOut').sendEvent({});
-    this.drawSpiralDebug();
-    this.drawTrianglesDebug(index, scale);
-  },
-
-  drawSpiralDebug() {
-    // plot spiral values for debugging graph
-    let res = 20;
-
-    for (let i = -2 * res; i <= 11 * res; i++) {
-      let x = r * Math.sin(((i / res) * Math.PI) / 2);
-      let y = r * Math.cos(((i / res) * Math.PI) / 2);
-      let z = (i / res) * h;
-      // send values *1000 for precision over int value ports
-      this.spiralX = x * 1000;
-      this.spiralY = y * 1000;
-      this.spiralZ = z * 1000;
-      get(this, 'spiralDebugOut').sendEvent({});
-    }
-  },
-
-  // draw visual representation of a major or minor key
-  drawTrianglesDebug(i, scale) {
-    if (scale == 'major') {
-
-      this.drawMajorChordRep(i);
-      this.drawMajorChordRep(i + 1);
-      this.drawMajorChordRep(i - 1);
-
-      let p = this.majorChordRepForIndex(i);
-      this.trianglesX = p.x * 1000;
-      this.trianglesY = p.y * 1000;
-      this.trianglesZ = p.z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
-
-      p = this.majorChordRepForIndex(i + 1);
-      this.trianglesX = p.x * 1000;
-      this.trianglesY = p.y * 1000;
-      this.trianglesZ = p.z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
-
-      p = this.majorChordRepForIndex(i - 1);
-      this.trianglesX = p.x * 1000;
-      this.trianglesY = p.y * 1000;
-      this.trianglesZ = p.z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
-
-      p = this.majorKeyRepForIndex(i);
-      this.trianglesX = p.x * 1000;
-      this.trianglesY = p.y * 1000;
-      this.trianglesZ = p.z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
-
-    } else if (scale == 'minor') {
-
-      this.drawMinorChordRep(i);
-      this.drawMajorChordRep(i + 1);
-      this.drawMinorChordRep(i + 1);
-      this.drawMinorChordRep(i - 1);
-      this.drawMajorChordRep(i - 1);
-
-      let c1 = this.minorChordRepForIndex(i);
-      let c2maj = this.majorChordRepForIndex(i + 1);
-      let c2min = this.minorChordRepForIndex(i + 1);
-      let c3min = this.minorChordRepForIndex(i - 1);
-      let c3maj = this.majorChordRepForIndex(i - 1);
-
-      let c2x = c2maj.x * a + c2min.x * (1 - a);
-      let c3x = c3min.x * b + c3maj.x * (1 - b);
-
-      let c2y = c2maj.y * a + c2min.y * (1 - a);
-      let c3y = c3min.y * b + c3maj.y * (1 - b);
-
-      let c2z = c2maj.z * a + c2min.z * (1 - a);
-      let c3z = c3min.z * b + c3maj.z * (1 - b);
-
-      this.trianglesX = c1.x * 1000;
-      this.trianglesY = c1.y * 1000;
-      this.trianglesZ = c1.z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
-
-      this.trianglesX = c2x * 1000;
-      this.trianglesY = c2y * 1000;
-      this.trianglesZ = c2z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
-
-      this.trianglesX = c3x * 1000;
-      this.trianglesY = c3y * 1000;
-      this.trianglesZ = c3z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
-
-      let p = this.minorKeyRepForIndex(i);
-      this.trianglesX = p.x * 1000;
-      this.trianglesY = p.y * 1000;
-      this.trianglesZ = p.z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
-
-    } else {
-      console.log('drawTrianglesDebug unrecognized scale');
-    }
-  },
-
-  drawMajorChordRep(i) {
-    let p = this.pitchRepForIndex(i);
-    this.trianglesX = p.x * 1000;
-    this.trianglesY = p.y * 1000;
-    this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
-
-    p = this.pitchRepForIndex(i + 1);
-    this.trianglesX = p.x * 1000;
-    this.trianglesY = p.y * 1000;
-    this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
-
-    p = this.pitchRepForIndex(i + 4);
-    this.trianglesX = p.x * 1000;
-    this.trianglesY = p.y * 1000;
-    this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
-
-    p = this.majorChordRepForIndex(i);
-    this.trianglesX = p.x * 1000;
-    this.trianglesY = p.y * 1000;
-    this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
-
-  },
-
-  drawMinorChordRep(i) {
-    let p = this.pitchRepForIndex(i);
-    this.trianglesX = p.x * 1000;
-    this.trianglesY = p.y * 1000;
-    this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
-
-    p = this.pitchRepForIndex(i + 1);
-    this.trianglesX = p.x * 1000;
-    this.trianglesY = p.y * 1000;
-    this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
-
-    p = this.pitchRepForIndex(i - 3);
-    this.trianglesX = p.x * 1000;
-    this.trianglesY = p.y * 1000;
-    this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
-
-    p = this.minorChordRepForIndex(i);
-    this.trianglesX = p.x * 1000;
-    this.trianglesY = p.y * 1000;
-    this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
-  },
-
-  getSpiralX() {
-    return this.spiralX;
-  },
-  getSpiralY() {
-    return this.spiralY;
-  },
-  getSpiralZ() {
-    return this.spiralZ;
-  },
-  getTrianglesX() {
-    return this.trianglesX;
-  },
-  getTrianglesY() {
-    return this.trianglesY;
-  },
-  getTrianglesZ() {
-    return this.trianglesZ;
-  },
-  // ---
-
-  addValue() {
-    let newValue = get(this, 'valueInPort').getValue();
-    if (newValue != null) {
-      this.values.push(newValue);
-      if (this.values.length > maxValues) {
-        this.values.shift();
-      }
-    }
-    console.log('values', this.values);
-  },
-
-  ready() {
-    if (get(this, 'isNew')) {
-      set(this, 'title', this.name);
-      // create ports
-      this.addEventInPort('in', 'addValue', false);
-      this.addValueInPort('value', 'valueInPort', { isEnabled: false });
-
-      // debug stuff
-      this.addValueOutPort('sx', 'getSpiralX', true);
-      this.addValueOutPort('sy', 'getSpiralY', true);
-      this.addValueOutPort('sz', 'getSpiralZ', true);
-      this.addEventOutPort('s', 'spiralDebugOut', true);
-      this.addValueOutPort('tx', 'getTrianglesX', true);
-      this.addValueOutPort('ty', 'getTrianglesY', true);
-      this.addValueOutPort('tz', 'getTrianglesZ', true);
-      this.addEventOutPort('t', 'trianglesDebugOut', true);
-
-      this.addEventInPort('draw', 'draw', true);
-      this.addEventOutPort('reset', 'resetOut', true);
-      this.addValueInPort('index', 'drawIndexInPort', { 'isEnabled': true });
-      this.addValueInPort('scale', 'drawScaleInPort', { 'maxValue': 1, 'minValue': 0, 'isEnabled': true });
-      // ---
-
-      console.log('module-value didCreate saveLater');
-      this.requestSave();
-    }
-
-    for (let i = 0; i <= 11; i++) {
-      this.majorKeyReps.pushObject(this.majorKeyRepForIndex(i));
-    }
-    for (let i = 0; i <= 11; i++) {
-      this.minorKeyReps.pushObject(this.minorKeyRepForIndex(i));
-    }
-
-    // console debug tests
-
-    this.printKeyReps();
-
-    this.addPitchToSet(this.indexForPitchName('C'), 0.25);
-    this.printRepForIndex(this.indexForPitchName('C'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    let topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-
-    this.addPitchToSet(this.indexForPitchName('F'), 0.25);
-    this.printRepForIndex(this.indexForPitchName('F'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-
-    this.addPitchToSet(this.indexForPitchName('F'), 0.125);
-    this.printRepForIndex(this.indexForPitchName('F'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-
-    this.addPitchToSet(this.indexForPitchName('G'), 0.125);
-    this.printRepForIndex(this.indexForPitchName('G'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-
-    this.addPitchToSet(this.indexForPitchName('A'), 0.125);
-    this.printRepForIndex(this.indexForPitchName('A'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-
-    this.addPitchToSet(this.indexForPitchName('F'), 0.125);
-    this.printRepForIndex(this.indexForPitchName('F'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-
-    this.addPitchToSet(this.indexForPitchName('A'), 0.125);
-    this.printRepForIndex(this.indexForPitchName('A'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-
-    this.addPitchToSet(this.indexForPitchName('Bb'), 0.125);
-    this.printRepForIndex(this.indexForPitchName('Bb'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-
   },
 
   printKeyReps() {
