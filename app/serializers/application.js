@@ -30,7 +30,7 @@ export default LFSerializer.extend(EmbeddedRecordsMixin, {
     let hasMany = snapshot.hasMany(relationship.key);
     let manyArray = A(hasMany);
     let ret = new Array(manyArray.length);
-    let polymorphic = relationship.options.polymorphic;
+    let { options: polymorphic } = relationship;
 
     for (let i = 0; i < manyArray.length; i++) {
       let embeddedSnapshot = manyArray[i];

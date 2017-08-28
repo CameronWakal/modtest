@@ -25,9 +25,9 @@ export default Route.extend({
     // upon changing patches seems to have stopped working. Haven't found the fix yet,
     // this hack-around is to load ALL MODULES for all patches during the application
     // model hook. Pretty crappy solution...
-    return this.store.findAll('patch').then(function(patches){
-      patches.forEach(function(patch){
-        get(patch, 'modules')
+    return this.store.findAll('patch').then(function(patches) {
+      patches.forEach(function(patch) {
+        get(patch, 'modules');
       });
       return patches;
     });

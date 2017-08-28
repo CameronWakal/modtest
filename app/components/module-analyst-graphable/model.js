@@ -3,8 +3,7 @@ import DS from 'ember-data';
 import ModuleAnalyst from '../module-analyst/model';
 
 const {
-  get,
-  set
+  get
 } = Ember;
 
 const {
@@ -227,6 +226,6 @@ export default ModuleAnalyst.extend({
     this.trianglesY = p.y * 1000;
     this.trianglesZ = p.z * 1000;
     get(this, 'trianglesDebugOut').sendEvent({});
-  },
+  }
 
 });
