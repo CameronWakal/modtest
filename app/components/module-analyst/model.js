@@ -54,19 +54,51 @@ const uc3 = w3;
 const a = 0.75; // preference for V vs. v chord in minor key
 const b = 0.75; // preference for iv vs. IV chord in minor key
 
+// pre-calculated reps from this.majorKeyRepForIndex, this.minorKeyRepForIndex
+const majorKeyPrecalcReps = [
+  { x: 0.304517, y: 0.379692, z: 0.3427540545 },
+  { x: 0.379692, y: -0.304517, z: 0.7151925645 },
+  { x: -0.304517, y: -0.379692, z: 1.0876310745 },
+  { x: -0.379692, y: 0.304517, z: 1.4600695845 },
+  { x: 0.304517, y: 0.379692, z: 1.8325080945 },
+  { x: 0.379692, y: -0.304517, z: 2.2049466045 },
+  { x: -0.304517, y: -0.379692, z: 2.5773851145 },
+  { x: -0.379692, y: 0.304517, z: 2.9498236245 },
+  { x: 0.304517, y: 0.379692, z: 3.3222621345 },
+  { x: 0.379692, y: -0.304517, z: 3.6947006445 },
+  { x: -0.304517, y: -0.379692, z: 4.06713915445 },
+  { x: -0.379692, y: 0.304517, z: 4.4395776645 }
+];
+
+const minorKeyPrecalcReps = [
+  { x: 0.3697849875, y: 0.3111992375, z: 0.03711858062625 },
+  { x: 0.3111992375, y: -0.3697849875, z: 0.40677639775125 },
+  { x: -0.3697849875, y: -0.3111992375, z: 0.7764342148762498 },
+  { x: -0.3111992375, y: 0.3697849875, z: 1.14609203200125 },
+  { x: 0.3697849875, y: 0.3111992375, z: 1.51574984912625 },
+  { x: 0.3111992375, y: -0.3697849875, z: 1.88540766625125 },
+  { x: -0.3697849875, y: -0.3111992375, z: 2.2550654833762502 },
+  { x: -0.3111992375, y: 0.3697849875, z: 2.6247233005012505 },
+  { x: 0.3697849875, y: 0.3111992375, z: 2.99438111762625 },
+  { x: 0.3111992375, y: -0.3697849875, z: 3.3640389347512496 },
+  { x: -0.3697849875, y: -0.3111992375, z: 3.73369675187625 },
+  { x: -0.3111992375, y: 0.3697849875, z: 4.10335456900125 }
+];
+
 export default Module.extend({
 
   type: 'module-analyst', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Analyst',
 
   // precalculated CE coordinates for all major/minor keys
-  majorKeyReps: [],
-  minorKeyReps: [],
+  majorKeyReps: majorKeyPrecalcReps,
+  minorKeyReps: minorKeyPrecalcReps,
 
   // coordinates of each pitch in the set
-  pitchReps: [],
+  pitchReps: null,
   // calculated center of effect for the set of notes
   pitchSetRep: null,
+  // accumulated total of pitch durations added to the set
   pitchSetDuration: 0,
 
   valueInPort: belongsTo('port-value-in', { async: false }),
@@ -102,66 +134,18 @@ export default Module.extend({
       console.log('module-value didCreate saveLater');
       this.requestSave();
     }
+    this.pitchReps = [];
+  },
 
+  // use the algorithm to overwrite the precalculated key representations
+  // in case you want to experiment with different constants, etc.
+  generateKeyReps() {
     for (let i = 0; i <= 11; i++) {
       this.majorKeyReps.pushObject(this.majorKeyRepForIndex(i));
     }
     for (let i = 0; i <= 11; i++) {
       this.minorKeyReps.pushObject(this.minorKeyRepForIndex(i));
     }
-
-    // console debug tests
-    /*
-    this.printKeyReps();
-
-    this.addPitchToSet(this.indexForPitchName('C'), 0.25);
-    this.printRepForIndex(this.indexForPitchName('C'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    let topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-
-    this.addPitchToSet(this.indexForPitchName('F'), 0.25);
-    this.printRepForIndex(this.indexForPitchName('F'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-
-    this.addPitchToSet(this.indexForPitchName('F'), 0.125);
-    this.printRepForIndex(this.indexForPitchName('F'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-
-    this.addPitchToSet(this.indexForPitchName('G'), 0.125);
-    this.printRepForIndex(this.indexForPitchName('G'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-
-    this.addPitchToSet(this.indexForPitchName('A'), 0.125);
-    this.printRepForIndex(this.indexForPitchName('A'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-
-    this.addPitchToSet(this.indexForPitchName('F'), 0.125);
-    this.printRepForIndex(this.indexForPitchName('F'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-
-    this.addPitchToSet(this.indexForPitchName('A'), 0.125);
-    this.printRepForIndex(this.indexForPitchName('A'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-
-    this.addPitchToSet(this.indexForPitchName('Bb'), 0.125);
-    this.printRepForIndex(this.indexForPitchName('Bb'));
-    console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
-    topKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
-    this.printNearestKeys(topKeys);
-    */
   },
 
   // generate the 3d coordinate representing a pitch at the given index. p.58
@@ -311,6 +295,8 @@ export default Module.extend({
     return Math.min(distance1, distance2);
   },
 
+  // check distance between a rep and all major and minor key reps,
+  // return a ranked array of `keyCount` nearest keys.
   nearestKeysToRep(rep, keyCount) {
     let nearestKeys = [];
     let index = 0;
@@ -337,7 +323,6 @@ export default Module.extend({
         }
       }
     }
-
     // repeat for minor keys
     for (let i = 1; i < this.minorKeyReps.length; i++) {
       distance = this.minimumDistanceBetweenReps(rep, this.minorKeyReps[i]);
@@ -354,8 +339,23 @@ export default Module.extend({
         }
       }
     }
-
     return nearestKeys;
+  },
+
+  // console log functions for debugging/experimenting
+
+  printTestSequence() {
+    let testPitches = ['C', 'F', 'F', 'G', 'A', 'F', 'A', 'Bb'];
+    let testDurations = [0.25, 0.25, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125];
+    let nearestKeys;
+
+    for (let i = 0; i < testPitches.length; i++) {
+      this.addPitchToSet(this.indexForPitchName(testPitches[i]), testDurations[i]);
+      this.printRepForIndex(this.indexForPitchName(testPitches[i]));
+      console.log('center', this.pitchSetRep.x, this.pitchSetRep.y, this.pitchSetRep.z);
+      nearestKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
+      this.printNearestKeys(nearestKeys);
+    }
   },
 
   printKeyReps() {

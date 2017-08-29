@@ -9,7 +9,12 @@ const {
 export default Route.extend({
 
   afterModel(patch) {
-    return get(patch, 'modules');
+    // TODO as of Ember Data 2.14, seems the patch hasMany modules relationship resolves
+    // 'successfully' as an empty array when changing routes. I haven't figured out the
+    // cause yet. For now I'm reloading the new patch when the route changes :(
+    return patch.reload().then(function(patch) {
+      return get(patch, 'modules');
+    });
   },
 
   actions: {

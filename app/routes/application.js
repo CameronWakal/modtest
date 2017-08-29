@@ -20,17 +20,7 @@ const {
 
 export default Route.extend({
   model() {
-
-    // TODO as of Ember Data 2.14, attempting to load modules in the aftermodel hook
-    // upon changing patches seems to have stopped working. Haven't found the fix yet,
-    // this hack-around is to load ALL MODULES for all patches during the application
-    // model hook. Pretty crappy solution...
-    return this.store.findAll('patch').then(function(patches) {
-      patches.forEach(function(patch) {
-        get(patch, 'modules');
-      });
-      return patches;
-    });
+    return this.store.findAll('patch');
   },
 
   midi: inject.service(),
