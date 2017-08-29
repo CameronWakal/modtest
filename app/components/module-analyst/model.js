@@ -4,7 +4,8 @@ import Module from '../module/model';
 
 const {
   get,
-  set
+  set,
+  computed
 } = Ember;
 
 const {
@@ -24,6 +25,8 @@ const maxValues = 8;
 
 // use the spiral order index to look up the note name:
 const indexedPitchNames = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'G#', 'D#', 'A#', 'F'];
+// look up a spiral index from C at the number of half-steps above C
+const semitoneIndexes = [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5];
 
 // variables summarized on p. 62
 // optimal values described on p. 95
@@ -94,15 +97,24 @@ export default Module.extend({
   majorKeyReps: majorKeyPrecalcReps,
   minorKeyReps: minorKeyPrecalcReps,
 
-  // coordinates of each pitch in the set
-  pitchReps: null,
   // calculated center of effect for the set of notes
   pitchSetRep: null,
   // accumulated total of pitch durations added to the set
   pitchSetDuration: 0,
+  nearestKeys: null,
+
+  nearestKeyNames: computed('nearestKeys', function() {
+    let nearestKeys = get(this, 'nearestKeys');
+    if (nearestKeys) {
+      let names = '';
+      nearestKeys.forEach(function(key) {
+        names += `${indexedPitchNames[key.index]}${key.scale} `;
+      });
+      return names;
+    }
+  }),
 
   valueInPort: belongsTo('port-value-in', { async: false }),
-  values: null,
 
   // so the graphable child module can inherit it
   spiralRadius: r,
@@ -113,15 +125,19 @@ export default Module.extend({
   addValue() {
     let newValue = get(this, 'valueInPort').getValue();
     if (newValue != null) {
-      if (this.values == null) {
-        this.values = [];
-      }
-      this.values.push(newValue);
-      if (this.values.length > maxValues) {
-        this.values.shift();
-      }
+      newValue = newValue % 12;
+      newValue = semitoneIndexes[newValue];
+      this.addPitchToSet(newValue, 1);
+
+      let nearestKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
+      set(this, 'nearestKeys', nearestKeys);
     }
-    console.log('values', this.values);
+  },
+
+  reset() {
+    this.pitchSetRep = [];
+    this.pitchSetDuration = 0;
+    set(this, 'nearestKeys', null);
   },
 
   ready() {
@@ -130,6 +146,7 @@ export default Module.extend({
       // create ports
       this.addEventInPort('in', 'addValue', true);
       this.addValueInPort('value', 'valueInPort', { isEnabled: true });
+      this.addEventInPort('reset', 'reset', true);
 
       console.log('module-value didCreate saveLater');
       this.requestSave();
@@ -249,7 +266,6 @@ export default Module.extend({
       center.z = center.z * weightA + pitchRep.z * weightB;
     }
 
-    this.pitchReps.pushObject(pitchRep);
     this.pitchSetDuration += duration;
     this.pitchSetRep = center;
   },
