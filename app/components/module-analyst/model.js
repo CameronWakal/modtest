@@ -317,7 +317,7 @@ export default Module.extend({
     let nearestKeys = [];
     let index = 0;
     let distance = this.minimumDistanceBetweenReps(rep, this.majorKeyReps[0]);
-    nearestKeys.pushObject({ index, scale: 'major', distance });
+    nearestKeys.pushObject({ index, scale: 'M', distance });
 
     // iterate all major key reps
     for (let i = 1; i < this.majorKeyReps.length; i++) {
@@ -328,13 +328,13 @@ export default Module.extend({
         // and keep the nearestKeys list to max 3 keys.
         if (nearestKeys[j]) {
           if (nearestKeys[j].distance > distance) {
-            nearestKeys.splice(j, 0, { index: i, scale: 'major', distance });
+            nearestKeys.splice(j, 0, { index: i, scale: 'M', distance });
             nearestKeys = nearestKeys.slice(0, keyCount);
             break;
           }
         } else {
           // still room for more keys in the nearestKeys list, toss ours in.
-          nearestKeys.splice(j, 0, { index: i, scale: 'major', distance });
+          nearestKeys.splice(j, 0, { index: i, scale: 'M', distance });
           break;
         }
       }
@@ -345,12 +345,12 @@ export default Module.extend({
       for (let j = 0; j <= keyCount - 1; j++) {
         if (nearestKeys[j]) {
           if (nearestKeys[j].distance > distance) {
-            nearestKeys.splice(j, 0, { index: i, scale: 'minor', distance });
+            nearestKeys.splice(j, 0, { index: i, scale: 'm', distance });
             nearestKeys = nearestKeys.slice(0, keyCount);
             break;
           }
         } else {
-          nearestKeys.splice(j, 0, { index: i, scale: 'minor', distance });
+          nearestKeys.splice(j, 0, { index: i, scale: 'm', distance });
           break;
         }
       }
