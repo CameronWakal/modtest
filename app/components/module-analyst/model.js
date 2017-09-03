@@ -58,7 +58,7 @@ const a = 0.75; // preference for V vs. v chord in minor key
 const b = 0.75; // preference for iv vs. IV chord in minor key
 
 // pre-calculated reps from this.majorKeyRepForIndex, this.minorKeyRepForIndex
-const majorKeyPrecalcReps = [
+const majorKeyReps = [
   { x: 0.304517, y: 0.379692, z: 0.3427540545 },
   { x: 0.379692, y: -0.304517, z: 0.7151925645 },
   { x: -0.304517, y: -0.379692, z: 1.0876310745 },
@@ -73,7 +73,7 @@ const majorKeyPrecalcReps = [
   { x: -0.379692, y: 0.304517, z: 4.4395776645 }
 ];
 
-const minorKeyPrecalcReps = [
+const minorKeyReps = [
   { x: 0.3697849875, y: 0.3111992375, z: 0.03711858062625 },
   { x: 0.3111992375, y: -0.3697849875, z: 0.40677639775125 },
   { x: -0.3697849875, y: -0.3111992375, z: 0.7764342148762498 },
@@ -91,11 +91,11 @@ const minorKeyPrecalcReps = [
 export default Module.extend({
 
   type: 'module-analyst', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'Analyst',
+  name: 'Guess Key',
 
   // precalculated CE coordinates for all major/minor keys
-  majorKeyReps: majorKeyPrecalcReps,
-  minorKeyReps: minorKeyPrecalcReps,
+  majorKeyReps,
+  minorKeyReps,
 
   // calculated center of effect for the set of notes
   pitchSetRep: null,
@@ -138,7 +138,7 @@ export default Module.extend({
   },
 
   reset() {
-    this.pitchSetRep = [];
+    this.pitchSetRep = null;
     this.pitchSetDuration = 0;
     set(this, 'nearestKeys', null);
   },
@@ -154,7 +154,6 @@ export default Module.extend({
       console.log('module-value didCreate saveLater');
       this.requestSave();
     }
-    this.pitchReps = [];
   },
 
   // use the algorithm to overwrite the precalculated key representations
