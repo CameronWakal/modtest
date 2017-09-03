@@ -1,3 +1,7 @@
 {{partial 'module-label'}}
-{{module.nearestKeyNames}}
+<div class="module-content">
+  {{#each module.nearestKeyNames as |keyName|}}
+    {{~ toggle-button label=keyName ~}}
+  {{/each}}
+</div>
 {{partial 'module-ports'}}

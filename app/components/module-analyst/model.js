@@ -18,7 +18,7 @@ const {
  * http://dspace.mit.edu/handle/1721.1/9139#files-area
  */
 
-const maxValues = 8;
+const nearestKeysCount = 3;
 
 // notes are indexed by number of perfect fifths (seven half-steps) starting from C
 // e.g. C->G is 7 half steps, G->D is another 7 half-steps
@@ -102,16 +102,19 @@ export default Module.extend({
   // accumulated total of pitch durations added to the set
   pitchSetDuration: 0,
   nearestKeys: null,
+  nearestKeysCount,
 
   nearestKeyNames: computed('nearestKeys', function() {
     let nearestKeys = get(this, 'nearestKeys');
-    if (nearestKeys) {
-      let names = '';
-      nearestKeys.forEach(function(key) {
-        names += `${indexedPitchNames[key.index]}${key.scale} `;
-      });
-      return names;
+    let keyNames = [];
+    for (let i = 0; i < this.nearestKeysCount; i++) {
+      if (nearestKeys) {
+        keyNames[i] = `${indexedPitchNames[nearestKeys[i].index]}${nearestKeys[i].scale}`;
+      } else {
+        keyNames[i] = '--';
+      }
     }
+    return keyNames;
   }),
 
   valueInPort: belongsTo('port-value-in', { async: false }),
@@ -129,7 +132,7 @@ export default Module.extend({
       newValue = semitoneIndexes[newValue];
       this.addPitchToSet(newValue, 1);
 
-      let nearestKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
+      let nearestKeys = this.nearestKeysToRep(this.pitchSetRep, this.nearestKeysCount);
       set(this, 'nearestKeys', nearestKeys);
     }
   },
