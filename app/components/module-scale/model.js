@@ -28,6 +28,7 @@ export default Module.extend({
   degreeInPort: belongsTo('port-value-in', { async: false }),
   octaveInPort: belongsTo('port-value-in', { async: false }),
   rootInPort: belongsTo('port-value-in', { async: false }),
+  modeInPort: belongsTo('port-value-in', { async: false }),
 
   onModeChanged: observer('mode', function() {
     let items = get(this, 'degrees.items');
@@ -70,6 +71,10 @@ export default Module.extend({
 
   }),
 
+  updateScale() {
+
+  },
+
   getNote() {
 
     // 1. get input values
@@ -109,7 +114,9 @@ export default Module.extend({
       // create ports
       this.addValueInPort('degree', 'degreeInPort', { defaultValue: 0 });
       this.addValueInPort('octave', 'octaveInPort', { isEnabled: false, defaultValue: 3, minValue: -2, maxValue: 8 });
-      this.addValueInPort('root', 'rootInPort', { isEnabled: false, defaultValue: 0 });
+      this.addValueInPort('root', 'rootInPort', { defaultValue: 0 });
+      this.addValueInPort('mode', 'modeInPort', { defaultValue: 0 });
+      this.addEventInPort('update', 'updateScale', true);
       this.addValueOutPort('note', 'getNote', true);
 
       // create settings

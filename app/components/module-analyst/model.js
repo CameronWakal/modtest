@@ -12,6 +12,8 @@ const {
   belongsTo
 } = DS;
 
+const latency = 10;
+
 /* Module attempts to identify key signature of a series of notes,
  * using the 'CEG Key-Finding Method' as described in the paper
  * 'Towards a Mathematical Model of Tonality'
@@ -104,6 +106,9 @@ export default Module.extend({
   nearestKeys: null,
   nearestKeysCount,
 
+  // user-selected key from the component
+  selectedKey: null,
+
   nearestKeyNames: computed('nearestKeys', function() {
     let nearestKeys = get(this, 'nearestKeys');
     let keyNames = [];
@@ -117,7 +122,15 @@ export default Module.extend({
     return keyNames;
   }),
 
+  selectedKeyName: computed('selectedKey', function() {
+    let key = get(this, 'selectedKey');
+    if (key) {
+      return `${indexedPitchNames[key.index]}${key.scale}`;
+    }
+  }),
+
   valueInPort: belongsTo('port-value-in', { async: false }),
+  keyChangedPort: belongsTo('port-event-out', { async: false }),
 
   // so the graphable child module can inherit it
   spiralRadius: r,
@@ -151,9 +164,35 @@ export default Module.extend({
       this.addValueInPort('value', 'valueInPort', { isEnabled: true });
       this.addEventInPort('reset', 'reset', true);
 
+      this.addValueOutPort('root', 'getRoot', true);
+      this.addValueOutPort('mode', 'getMode', true);
+      this.addEventOutPort('update', 'keyChangedPort', true);
+
       console.log('module-value didCreate saveLater');
       this.requestSave();
     }
+  },
+
+  setSelectedKey(keyIndex) {
+    let keys = get(this, 'nearestKeys');
+    if (keys) {
+      set(this, 'selectedKey', keys[keyIndex]);
+    } else {
+      set(this, 'selectedKey', null);
+    }
+    get(this, 'keyChangedPort').sendEvent({
+      targetTime: performance.now(),
+      callbackTime: performance.now(),
+      outputTime: performance.now() + latency
+    });
+  },
+
+  getMode() {
+
+  },
+
+  getRoot() {
+
   },
 
   // use the algorithm to overwrite the precalculated key representations

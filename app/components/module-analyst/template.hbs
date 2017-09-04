@@ -1,7 +1,7 @@
 {{partial 'module-label'}}
 <div class="module-content">
-  {{#each module.nearestKeyNames as |keyName|}}
-    {{~ toggle-button label=keyName ~}}
+  {{#each module.nearestKeyNames as |keyName index|}}
+    {{~ toggle-button label=keyName isOn=(is-equal keyName module.selectedKeyName) click=(action 'selectKey' index)~}}
   {{/each}}
 </div>
 {{partial 'module-ports'}}
