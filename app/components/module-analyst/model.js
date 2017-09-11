@@ -109,24 +109,55 @@ export default Module.extend({
   // user-selected key from the component
   selectedKey: null,
 
-  nearestKeyNames: computed('nearestKeys', function() {
-    let nearestKeys = get(this, 'nearestKeys');
-    let keyNames = [];
-    for (let i = 0; i < this.nearestKeysCount; i++) {
-      if (nearestKeys) {
-        keyNames[i] = `${indexedPitchNames[nearestKeys[i].index]}${nearestKeys[i].scale}`;
-      } else {
-        keyNames[i] = '--';
-      }
+  // strings representing the displayedKeys, or '--' if nearest keys
+  // has not been calculated yet.
+  displayedKeyNames: computed('displayedKeys', function() {
+    let displayedKeys = get(this, 'displayedKeys');
+    let nearestKeysCount = get(this, 'nearestKeysCount');
+    let displayedKeyNames = new Array(nearestKeysCount);
+
+    if (displayedKeys == null) {
+      displayedKeyNames.fill('--');
+    } else {
+      displayedKeyNames = displayedKeys.map(function(key) {
+        return `${indexedPitchNames[key.index]}${key.scale}`;
+      });
     }
-    return keyNames;
+
+    return displayedKeyNames;
   }),
 
+  // string representing the selected key
   selectedKeyName: computed('selectedKey', function() {
     let key = get(this, 'selectedKey');
     if (key) {
       return `${indexedPitchNames[key.index]}${key.scale}`;
     }
+  }),
+
+  // same as nearestKeys, but with selectedKey in the last slot in the case
+  // that selectedKey isn't already included.
+  displayedKeys: computed('nearestKeys.[]', 'selectedKey', function() {
+    let nearestKeys = get(this, 'nearestKeys');
+    let selectedKey = get(this, 'selectedKey');
+
+    if (selectedKey == null || nearestKeys == null) {
+      return nearestKeys;
+    }
+
+    let foundKey = nearestKeys.find(function(key) {
+      return key.index == selectedKey.index && key.scale == selectedKey.scale;
+    });
+
+    if (foundKey) {
+      return nearestKeys;
+    }
+
+    let displayedKeys = nearestKeys.slice();
+    displayedKeys.pop();
+    displayedKeys.pushObject(selectedKey);
+    return displayedKeys;
+
   }),
 
   valueInPort: belongsTo('port-value-in', { async: false }),
@@ -154,6 +185,7 @@ export default Module.extend({
     this.pitchSetRep = null;
     this.pitchSetDuration = 0;
     set(this, 'nearestKeys', null);
+    set(this, 'selectedKey', null);
   },
 
   ready() {
@@ -174,9 +206,14 @@ export default Module.extend({
   },
 
   setSelectedKey(keyIndex) {
-    let keys = get(this, 'nearestKeys');
+    let keys = get(this, 'displayedKeys');
     if (keys) {
-      set(this, 'selectedKey', keys[keyIndex]);
+      let key = keys[keyIndex];
+      if (key !== get(this, 'selectedKey')) {
+        set(this, 'selectedKey', keys[keyIndex]);
+      } else {
+        set(this, 'selectedKey', null);
+      }
     } else {
       set(this, 'selectedKey', null);
     }

@@ -8,7 +8,6 @@ const {
 } = Ember;
 
 const {
-  attr,
   belongsTo
 } = DS;
 
