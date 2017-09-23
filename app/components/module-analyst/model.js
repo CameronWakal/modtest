@@ -5,7 +5,8 @@ import Module from '../module/model';
 const {
   get,
   set,
-  computed
+  computed,
+  observer
 } = Ember;
 
 const {
@@ -160,6 +161,47 @@ export default Module.extend({
 
   }),
 
+  keyToOutput: computed('nearestKeys.[]', 'selectedKey', function() {
+    let nearestKeys = get(this, 'nearestKeys');
+    let selectedKey = get(this, 'selectedKey');
+
+    if (selectedKey) {
+      return selectedKey;
+    } else if (nearestKeys) {
+      return nearestKeys[0];
+    } else {
+      return null;
+    }
+  }),
+
+  keyToOutputChanged: observer('keyToOutput', function() {
+    get(this, 'keyChangedPort').sendEvent({
+      targetTime: performance.now(),
+      callbackTime: performance.now(),
+      outputTime: performance.now() + latency
+    });
+  }),
+
+  getMode() {
+    let key = get(this, 'keyToOutput');
+    if (key) {
+      if (key.scale == 'M') {
+        console.log('getMode 0');
+        return 0; // Ionian Mode
+      } else if (key.scale == 'm') {
+        console.log('getMode 5');
+        return 5; // Aeolian Mode
+      }
+    }
+  },
+
+  getRoot() {
+    let key = get(this, 'keyToOutput');
+    if (key) {
+      return semitoneIndexes[key.index];
+    }
+  },
+
   valueInPort: belongsTo('port-value-in', { async: false }),
   keyChangedPort: belongsTo('port-event-out', { async: false }),
 
@@ -203,6 +245,9 @@ export default Module.extend({
       console.log('module-value didCreate saveLater');
       this.requestSave();
     }
+
+    // activate keyToOutputChanged observer
+    get(this, 'keyToOutput');
   },
 
   setSelectedKey(keyIndex) {
@@ -217,19 +262,6 @@ export default Module.extend({
     } else {
       set(this, 'selectedKey', null);
     }
-    get(this, 'keyChangedPort').sendEvent({
-      targetTime: performance.now(),
-      callbackTime: performance.now(),
-      outputTime: performance.now() + latency
-    });
-  },
-
-  getMode() {
-
-  },
-
-  getRoot() {
-
   },
 
   // use the algorithm to overwrite the precalculated key representations
