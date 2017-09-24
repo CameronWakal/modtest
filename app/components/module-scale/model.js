@@ -5,7 +5,8 @@ import Module from '../module/model';
 const {
   observer,
   get,
-  set
+  set,
+  run
 } = Ember;
 
 const {
@@ -21,54 +22,56 @@ export default Module.extend({
   degreesInScale: 7,
   degrees: belongsTo('array', { async: false }),
   inputType: 'Number',
-
-  mode: attr('string', { defaultValue: 'I' }),
-  modeMenuOptions: ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'],
+  mode: null,
 
   degreeInPort: belongsTo('port-value-in', { async: false }),
   octaveInPort: belongsTo('port-value-in', { async: false }),
   rootInPort: belongsTo('port-value-in', { async: false }),
+  modeInPort: belongsTo('port-value-in', { async: false }),
 
-  onModeChanged: observer('mode', function() {
-    let items = get(this, 'degrees.items');
+  updateScale() {
+    let mode = get(this, 'modeInPort').getValue() % 7;
+    if (this.mode == mode) {
+      return;
+    }
+    this.mode = mode;
+    console.log('updating scale mode to', mode);
 
-    if (items) {
-      let mode = get(this, 'mode');
-      let newValues;
+    let newValues;
 
-      switch (mode) {
-        case 'I':
-          newValues = [0, 2, 4, 5, 7, 9, 11];
-        break;
-        case 'II':
-          newValues = [0, 2, 3, 5, 7, 9, 10];
-        break;
-        case 'III':
-          newValues = [0, 1, 3, 5, 7, 8, 10];
-        break;
-        case 'IV':
-          newValues = [0, 2, 4, 6, 7, 9, 11];
-        break;
-        case 'V':
-          newValues = [0, 2, 4, 5, 7, 9, 10];
-        break;
-        case 'VI':
-          newValues = [0, 2, 3, 5, 7, 8, 10];
-        break;
-        case 'VII':
-          newValues = [0, 1, 3, 5, 6, 8, 10];
-        break;
-        default:
-          console.log('module-scale error – unknown mode requested:', mode);
-          return;
-      }
-
-      items.forEach((item) => {
-        set(item, 'value', newValues[get(item, 'index')]);
-      });
+    switch (mode) {
+      case 0:
+        newValues = [0, 2, 4, 5, 7, 9, 11];
+      break;
+      case 1:
+        newValues = [0, 2, 3, 5, 7, 9, 10];
+      break;
+      case 2:
+        newValues = [0, 1, 3, 5, 7, 8, 10];
+      break;
+      case 3:
+        newValues = [0, 2, 4, 6, 7, 9, 11];
+      break;
+      case 4:
+        newValues = [0, 2, 4, 5, 7, 9, 10];
+      break;
+      case 5:
+        newValues = [0, 2, 3, 5, 7, 8, 10];
+      break;
+      case 6:
+        newValues = [0, 1, 3, 5, 6, 8, 10];
+      break;
+      default:
+        console.log('module-scale error – unknown mode requested:', mode);
+        return;
     }
 
-  }),
+    let items = get(this, 'degrees.items');
+    items.forEach((item) => {
+      set(item, 'value', newValues[get(item, 'index')]);
+    });
+
+  },
 
   getNote() {
 
@@ -110,10 +113,11 @@ export default Module.extend({
       this.addValueInPort('degree', 'degreeInPort', { defaultValue: 0 });
       this.addValueInPort('octave', 'octaveInPort', { isEnabled: false, defaultValue: 3, minValue: -2, maxValue: 8 });
       this.addValueInPort('root', 'rootInPort', { isEnabled: false, defaultValue: 0 });
+      this.addValueInPort('mode', 'modeInPort', { isEnabled: false, defaultValue: 0 });
+      this.addEventInPort('update', 'updateScale', true);
       this.addValueOutPort('note', 'getNote', true);
 
-      // create settings
-      this.addMenuSetting('Mode', 'mode', 'modeMenuOptions', this);
+      this.updateScale();
 
       console.log('module-scale.didCreate() requestSave()');
       this.requestSave();

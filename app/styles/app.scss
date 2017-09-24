@@ -25,12 +25,14 @@ $z-new-module: 500;
 @import 'components/patch-component/styles';
 @import 'components/port-setting/styles';
 @import 'components/toggle-button/styles';
+@import 'components/graph-canvas/styles';
+@import 'components/module-analyst/styles';
 
 html,
 input,
 button,
 select {
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased; // sass-lint:disable-line no-vendor-prefixes
   box-sizing: border-box;
   // font-family: 'Source Code Pro', monospace;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -63,7 +65,7 @@ button {
   color: $color-neutral-dark;
   display: inline-block;
   height: 2rem;
-  margin: 0 0 0 .5rem;
+  margin: 0 0 0 6px;
   outline: none;
 
   &:first-child {

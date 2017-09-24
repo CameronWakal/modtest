@@ -50,13 +50,13 @@ export default Module.extend({
     if (get(this, 'isNew')) {
       set(this, 'title', this.name);
       // create ports
-      this.addEventInPort('toggle', 'toggle', true);
+      this.addEventInPort('toggle', 'toggle', false);
       this.addEventInPort('mute', 'mute', false);
       this.addEventInPort('unmute', 'unmute', false);
-      this.addEventInPort('eventIn', 'eventIn', true);
-      this.addValueInPort('valueIn', 'valueInPort', { canBeEmpty: true });
-      this.addEventOutPort('eventOut', 'eventOutPort', true);
-      this.addValueOutPort('valueOut', 'getValue', true);
+      this.addEventInPort('in', 'eventIn', true);
+      this.addValueInPort('in', 'valueInPort', { canBeEmpty: true });
+      this.addEventOutPort('out', 'eventOutPort', true);
+      this.addValueOutPort('out', 'getValue', true);
       console.log('module-value didCreate saveLater');
       this.requestSave();
     }

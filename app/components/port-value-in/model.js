@@ -24,7 +24,6 @@ export default Port.extend({
   disabledValue: attr('number'),
 
   getValue() {
-
     if (!get(this, 'isEnabled')) {
       // assume disabledValue has already been validated against canBeEmpty, min, max
       return get(this, 'disabledValue');

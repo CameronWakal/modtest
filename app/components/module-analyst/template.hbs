@@ -1,0 +1,7 @@
+{{partial 'module-label'}}
+<div class="module-content">
+  {{#each module.displayedKeyNames as |keyName index|}}
+    {{~ toggle-button label=keyName isOn=(is-equal keyName module.selectedKeyName) click=(action 'selectKey' index)~}}
+  {{/each}}
+</div>
+{{partial 'module-ports'}}
