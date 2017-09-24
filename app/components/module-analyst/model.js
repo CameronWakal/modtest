@@ -186,10 +186,8 @@ export default Module.extend({
     let key = get(this, 'keyToOutput');
     if (key) {
       if (key.scale == 'M') {
-        console.log('getMode 0');
         return 0; // Ionian Mode
       } else if (key.scale == 'm') {
-        console.log('getMode 5');
         return 5; // Aeolian Mode
       }
     }
