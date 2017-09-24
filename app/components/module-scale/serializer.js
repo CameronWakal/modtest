@@ -4,7 +4,7 @@ export default ModuleSerializer.extend({
 
   attrs: {
     degrees: { embedded: 'always' },
-    settings: { embedded: 'never'}
+    settings: { embedded: 'never' }
   }
 
 });
