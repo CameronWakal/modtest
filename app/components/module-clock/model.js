@@ -1,13 +1,7 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import { set, get, observer } from '@ember/object';
 import DS from 'ember-data';
 import Module from '../module/model';
-
-const {
-  inject,
-  observer,
-  get,
-  set
-} = Ember;
 
 const {
   belongsTo,
@@ -24,8 +18,8 @@ export default Module.extend({
   type: 'module-clock', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Clock',
 
-  midi: inject.service(),
-  scheduler: inject.service(),
+  midi: service(),
+  scheduler: service(),
 
   tempoInPort: belongsTo('port-value-in', { async: false }),
   resInPort: belongsTo('port-value-in', { async: false }),

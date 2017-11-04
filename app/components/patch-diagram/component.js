@@ -1,13 +1,7 @@
-import Ember from 'ember';
-
-const {
-  Component,
-  $,
-  observer,
-  run,
-  get,
-  set
-} = Ember;
+import Component from '@ember/component';
+import $ from 'jquery';
+import { run } from '@ember/runloop';
+import { set, get, observer } from '@ember/object';
 
 const eventLineColor = '#ffd37b';
 const valueLineColor = '#ff917b';

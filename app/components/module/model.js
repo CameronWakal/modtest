@@ -1,12 +1,7 @@
+import { filterBy } from '@ember/object/computed';
+import { run } from '@ember/runloop';
+import { get, set, computed } from '@ember/object';
 import DS from 'ember-data';
-import Ember from 'ember';
-
-const {
-  computed,
-  run,
-  set,
-  get
-} = Ember;
 
 const {
   belongsTo,
@@ -29,16 +24,16 @@ export default Model.extend({
 
   shouldAutoSave: false,
 
-  eventOutPorts: computed.filterBy('ports', 'type', 'port-event-out'),
-  eventInPorts: computed.filterBy('ports', 'type', 'port-event-in'),
-  valueOutPorts: computed.filterBy('ports', 'type', 'port-value-out'),
-  valueInPorts: computed.filterBy('ports', 'type', 'port-value-in'),
+  eventOutPorts: filterBy('ports', 'type', 'port-event-out'),
+  eventInPorts: filterBy('ports', 'type', 'port-event-in'),
+  valueOutPorts: filterBy('ports', 'type', 'port-value-out'),
+  valueInPorts: filterBy('ports', 'type', 'port-value-in'),
   outPorts: computed('ports.@each.type', function() {
     return get(this, 'ports').filter((item) => {
       return get(item, 'type') === 'port-value-out' || get(item, 'type') === 'port-event-out';
     });
   }),
-  enabledPorts: computed.filterBy('ports', 'isEnabled', true),
+  enabledPorts: filterBy('ports', 'isEnabled', true),
 
   didCreate() {
     set(this, 'shouldAutoSave', true);

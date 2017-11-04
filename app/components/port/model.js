@@ -1,11 +1,6 @@
+import { bool } from '@ember/object/computed';
+import { get, observer, computed } from '@ember/object';
 import DS from 'ember-data';
-import Ember from 'ember';
-
-const {
-  computed,
-  observer,
-  get
-} = Ember;
 
 const {
   Model,
@@ -40,7 +35,7 @@ export default Model.extend({
     return get(this, 'type') === 'port-event-in' || get(this, 'type') === 'port-event-out';
   }),
 
-  isConnected: computed.bool('connections.length'),
+  isConnected: bool('connections.length'),
 
   // remove all connections
   disconnect() {

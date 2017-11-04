@@ -1,14 +1,7 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import { computed, observer, set, get } from '@ember/object';
 import Module from '../module/model';
 import DS from 'ember-data';
-
-const {
-  inject,
-  get,
-  set,
-  observer,
-  computed
-} = Ember;
 
 const {
   belongsTo,
@@ -25,7 +18,7 @@ export default Module.extend({
   note: null,
   velocity: null,
 
-  midi: inject.service(),
+  midi: service(),
 
   noteOnPort: belongsTo('port-event-out', { async: false }),
   noteOffPort: belongsTo('port-event-out', { async: false }),

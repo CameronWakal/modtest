@@ -1,14 +1,8 @@
-import Ember from 'ember';
-
-const {
-  Component,
-  $,
-  observer,
-  run,
-  isEmpty,
-  get,
-  set
-} = Ember;
+import Component from '@ember/component';
+import $ from 'jquery';
+import { run } from '@ember/runloop';
+import { isEmpty } from '@ember/utils';
+import { set, get, observer } from '@ember/object';
 
 export default Component.extend({
   classNames: ['port'],

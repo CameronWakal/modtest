@@ -1,15 +1,8 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import { equal } from '@ember/object/computed';
+import { observer, computed, set, get } from '@ember/object';
 import Module from '../module/model';
 import DS from 'ember-data';
-
-const {
-  get,
-  set,
-  inject,
-  computed,
-  computed: { equal },
-  observer
-} = Ember;
 
 const {
   belongsTo,
@@ -36,7 +29,7 @@ export default Module.extend({
   gateIsInBeats: equal('gateUnits', 'beats'),
   delayIsInBeats: equal('delayUnits', 'beats'),
 
-  scheduler: inject.service(),
+  scheduler: service(),
 
   tempoInPort: belongsTo('port-value-in', { async: false }),
   countInPort: belongsTo('port-value-in', { async: false }), // number of times to repeat

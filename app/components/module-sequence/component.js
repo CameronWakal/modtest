@@ -1,17 +1,13 @@
-import Ember from 'ember';
+import { alias } from '@ember/object/computed';
+import { observer } from '@ember/object';
 import ModuleGenericComponent from '../module/component';
-
-const {
-  observer,
-  computed
-} = Ember;
 
 export default ModuleGenericComponent.extend({
 
   classNames: ['module-sequence'],
 
-  latestTriggerTime: computed.alias('module.latestTriggerTime'),
-  triggerDuration: computed.alias('module.triggerDuration'),
+  latestTriggerTime: alias('module.latestTriggerTime'),
+  triggerDuration: alias('module.triggerDuration'),
 
   onLayoutChanged: observer('module.steps.length', 'module.inputType', 'module.displayScale', function() {
     this.sendAction('layoutChanged');

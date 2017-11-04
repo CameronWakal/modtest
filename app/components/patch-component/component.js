@@ -1,12 +1,6 @@
-import Ember from 'ember';
-
-const {
-  Component,
-  computed,
-  run,
-  get,
-  set
-} = Ember;
+import Component from '@ember/component';
+import { run } from '@ember/runloop';
+import { set, get, computed } from '@ember/object';
 
 export default Component.extend({
   classNames: ['patch'],

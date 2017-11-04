@@ -1,13 +1,7 @@
-import Ember from 'ember';
-
-const {
-  Component,
-  observer,
-  run,
-  get,
-  computed,
-  String
-} = Ember;
+import Component from '@ember/component';
+import { run } from '@ember/runloop';
+import { htmlSafe } from '@ember/string';
+import { computed, get, observer } from '@ember/object';
 
 export default Component.extend({
   classNames: ['graph-canvas'],
@@ -23,7 +17,7 @@ export default Component.extend({
 
   inlineStyles: computed('width', 'height', function() {
     let styleString = `width:${get(this, 'width')}px; height:${get(this, 'height')}px`;
-    return new String.htmlSafe(styleString);
+    return new htmlSafe(styleString);
   }),
 
   didInsertElement() {

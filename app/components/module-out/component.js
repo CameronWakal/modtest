@@ -1,13 +1,9 @@
+import { alias } from '@ember/object/computed';
 import ModuleGenericComponent from '../module/component';
-import Ember from 'ember';
-
-const {
-  computed
-} = Ember;
 
 export default ModuleGenericComponent.extend({
 
-  latestTriggerTime: computed.alias('module.latestTriggerTime'),
-  triggerDuration: computed.alias('module.triggerDuration')
+  latestTriggerTime: alias('module.latestTriggerTime'),
+  triggerDuration: alias('module.triggerDuration')
 
 });

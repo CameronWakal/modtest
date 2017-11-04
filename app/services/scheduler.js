@@ -5,12 +5,9 @@
   multiple components.
 */
 
-import Ember from 'ember';
+import Service from '@ember/service';
 
-const {
-  Service,
-  get
-} = Ember;
+import { get } from '@ember/object';
 
 // for slo-mo debugging
 const frameSkip = 0;

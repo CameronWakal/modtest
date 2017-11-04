@@ -1,15 +1,9 @@
-import Ember from 'ember';
-
-const {
-  Component,
-  computed,
-  observer,
-  String,
-  $,
-  run,
-  get,
-  set
-} = Ember;
+import { alias } from '@ember/object/computed';
+import Component from '@ember/component';
+import $ from 'jquery';
+import { run } from '@ember/runloop';
+import { set, get, observer, computed } from '@ember/object';
+import { htmlSafe } from '@ember/string';
 
 export default Component.extend({
   classNames: ['module'],
@@ -24,14 +18,14 @@ export default Component.extend({
   didMove: false,
   moveOffsetX: null,
   moveOffsetY: null,
-  xPos: computed.alias('module.xPos'),
-  yPos: computed.alias('module.yPos'),
+  xPos: alias('module.xPos'),
+  yPos: alias('module.yPos'),
 
   portIsConnectingFrom: false,
 
   inlineStyles: computed('xPos', 'yPos', function() {
     let styleString = `left:${get(this, 'xPos')}px; top:${get(this, 'yPos')}px`;
-    return new String.htmlSafe(styleString);
+    return new htmlSafe(styleString);
   }),
 
   onPortsChanged: observer('module.ports.@each.isEnabled', function() {

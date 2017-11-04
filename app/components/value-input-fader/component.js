@@ -1,11 +1,7 @@
-import Ember from 'ember';
-
-const {
-  Component,
-  String,
-  computed,
-  get
-} = Ember;
+import { empty } from '@ember/object/computed';
+import Component from '@ember/component';
+import { get, computed } from '@ember/object';
+import { htmlSafe } from '@ember/string';
 
 export default Component.extend({
 
@@ -16,12 +12,12 @@ export default Component.extend({
   ],
   attributeBindings: ['inlineStyles:style'],
 
-  noValue: computed.empty('item.value'),
+  noValue: empty('item.value'),
   inlineStyles: computed('displayScale', 'min', 'max', 'step', function() {
     let range = get(this, 'max') - get(this, 'min');
     let steps = range / get(this, 'step');
     let height = steps * get(this, 'displayScale');
-    return String.htmlSafe(`height:${height}px`);
+    return htmlSafe(`height:${height}px`);
   })
 
 });

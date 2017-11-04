@@ -1,12 +1,6 @@
-import Ember from 'ember';
+import { set, get, observer } from '@ember/object';
 import DS from 'ember-data';
 import Module from '../module/model';
-
-const {
-  observer,
-  get,
-  set
-} = Ember;
 
 const {
   belongsTo,

@@ -8,23 +8,19 @@
   patch is currently selected.
 */
 
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
 
-const {
-  Route,
-  inject,
-  get,
-  set,
-  isEmpty
-} = Ember;
+import Route from '@ember/routing/route';
+import { set, get } from '@ember/object';
+import { isEmpty } from '@ember/utils';
 
 export default Route.extend({
   model() {
     return this.store.findAll('patch');
   },
 
-  midi: inject.service(),
-  scheduler: inject.service(),
+  midi: service(),
+  scheduler: service(),
 
   init() {
     get(this, 'midi').setup();

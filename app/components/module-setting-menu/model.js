@@ -1,12 +1,7 @@
+import { alias } from '@ember/object/computed';
+import { defineProperty, get } from '@ember/object';
 import DS from 'ember-data';
-import Ember from 'ember';
 import ModuleSetting from '../module-setting/model';
-
-const {
-  computed,
-  get,
-  defineProperty
-} = Ember;
 
 const {
   attr
@@ -21,7 +16,7 @@ export default ModuleSetting.extend({
     this._super();
     // make an alias from this.items to module.itemsProperty at runtime
     let targetPath = `module.${get(this, 'itemsProperty')}`;
-    defineProperty(this, 'items', computed.alias(targetPath));
+    defineProperty(this, 'items', alias(targetPath));
   },
 
   save() {

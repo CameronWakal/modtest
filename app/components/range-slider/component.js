@@ -1,11 +1,6 @@
-import Ember from 'ember';
+import { run } from '@ember/runloop';
+import { get, observer } from '@ember/object';
 import XRangeInputComponent from 'emberx-range-input/components/x-range-input';
-
-const {
-  observer,
-  run,
-  get
-} = Ember;
 
 // emberx-range-input CLI addon for a range input component,
 // polyfilled by rangeslider.js so the slider can be both vertical AND have custom styles

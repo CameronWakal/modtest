@@ -1,11 +1,7 @@
+import { A } from '@ember/array';
+import { isNone } from '@ember/utils';
 import LFSerializer from 'ember-localforage-adapter/serializers/localforage';
 import DS from 'ember-data';
-import Ember from 'ember';
-
-const {
-  A,
-  isNone
-} = Ember;
 
 const {
   EmbeddedRecordsMixin

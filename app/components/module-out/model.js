@@ -1,14 +1,7 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import { observer, computed, set, get } from '@ember/object';
 import Module from '../module/model';
 import DS from 'ember-data';
-
-const {
-  inject,
-  get,
-  set,
-  computed,
-  observer
-} = Ember;
 
 const {
   belongsTo,
@@ -22,7 +15,7 @@ export default Module.extend({
   type: 'module-out', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Out',
 
-  midi: inject.service(),
+  midi: service(),
 
   outputDeviceName: attr('string', { defaultValue: 'All' }),
   deviceMenuOptions: computed('midi.outputDevices', 'outputDeviceName', function() {

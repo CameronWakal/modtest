@@ -1,15 +1,11 @@
+import { get } from '@ember/object';
 import DS from 'ember-data';
 import Port from '../port/model';
-import Ember from 'ember';
 
 const {
   hasMany,
   attr
 } = DS;
-
-const {
-  get
-} = Ember;
 
 export default Port.extend({
 

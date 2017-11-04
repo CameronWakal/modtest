@@ -1,11 +1,6 @@
-import Ember from 'ember';
+import { get, observer } from '@ember/object';
 import DS from 'ember-data';
 import Port from '../port/model';
-
-const {
-  observer,
-  get
-} = Ember;
 
 const {
   hasMany,

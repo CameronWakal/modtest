@@ -1,12 +1,5 @@
-import Ember from 'ember';
-
-const {
-  TextField,
-  observer,
-  computed,
-  get,
-  set
-} = Ember;
+import TextField from '@ember/component/text-field';
+import { set, get, computed, observer } from '@ember/object';
 
 // from template:
 // boundValue – external, persisted value, as opposed to current <input> value

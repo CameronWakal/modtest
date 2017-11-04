@@ -1,11 +1,6 @@
-import Ember from 'ember';
-
-const {
-  Component,
-  get,
-  computed,
-  String
-} = Ember;
+import Component from '@ember/component';
+import { computed, get } from '@ember/object';
+import { htmlSafe } from '@ember/string';
 
 export default Component.extend({
 
@@ -21,7 +16,7 @@ export default Component.extend({
   }),
 
   styleAttribute: computed('blinkDuration', function() {
-    return new String.htmlSafe(`animation-duration: ${get(this, 'blinkDuration')}ms;`);
+    return new htmlSafe(`animation-duration: ${get(this, 'blinkDuration')}ms;`);
   }),
 
   blinkDuration: 200,
