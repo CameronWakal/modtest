@@ -12,13 +12,13 @@ const latency = 10;
 
 export default Module.extend({
 
+  midi: service(),
+
   type: 'module-in', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'In',
 
   note: null,
   velocity: null,
-
-  midi: service(),
 
   noteOnPort: belongsTo('port-event-out', { async: false }),
   noteOffPort: belongsTo('port-event-out', { async: false }),

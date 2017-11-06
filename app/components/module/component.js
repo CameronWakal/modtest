@@ -18,10 +18,10 @@ export default Component.extend({
   didMove: false,
   moveOffsetX: null,
   moveOffsetY: null,
+  portIsConnectingFrom: false,
+
   xPos: alias('module.xPos'),
   yPos: alias('module.yPos'),
-
-  portIsConnectingFrom: false,
 
   inlineStyles: computed('xPos', 'yPos', function() {
     let styleString = `left:${get(this, 'xPos')}px; top:${get(this, 'yPos')}px`;
@@ -29,7 +29,7 @@ export default Component.extend({
   }),
 
   onPortsChanged: observer('module.ports.@each.isEnabled', function() {
-    this.sendAction('portsChanged');
+    get(this, 'portsChanged')();
   }),
 
   init() {
@@ -40,6 +40,39 @@ export default Component.extend({
       $(document).on('mouseup', this.mouseUpBody.bind(this));
       $(document).on('mousemove', this.mouseMoveBody.bind(this));
     }
+  },
+
+  actions: {
+    remove() {
+      this.attrs.remove();
+    },
+    selectPort(port) {
+      this.attrs.selectPort(port);
+    },
+
+    portStartedConnecting(port) {
+      set(this, 'portIsConnectingFrom', true);
+      get(this, 'portStartedConnecting')(port);
+    },
+
+    portFinishedConnecting() {
+      set(this, 'portIsConnectingFrom', false);
+      get(this, 'portFinishedConnecting')();
+    },
+
+    mouseEnterPort(port) {
+      get(this, 'mouseEnterPort')(port);
+    },
+
+    mouseLeavePort(port) {
+      get(this, 'mouseLeavePort')(port);
+    },
+
+    disconnectPort(port) {
+      port.disconnect();
+      get(this, 'portDisconnected')(port);
+    }
+
   },
 
   mouseDown(event) {
@@ -53,15 +86,15 @@ export default Component.extend({
       set(this, 'moveOffsetY', event.pageY - get(this, 'yPos'));
       $(document).on('mouseup', this.mouseUpBody.bind(this));
       $(document).on('mousemove', this.mouseMoveBody.bind(this));
-      this.sendAction('selected');
-      this.sendAction('startedMoving');
+      get(this, 'selected')();
+      get(this, 'startedMoving')();
     }
   },
 
   keyDown(event) {
     if (event.keyCode === 8 && this.$().is(':focus')) {
       event.preventDefault();
-      this.sendAction('remove');
+      get(this, 'remove')();
     }
   },
 
@@ -106,39 +139,6 @@ export default Component.extend({
       $(document).off('mouseup');
       $(document).off('mousemove');
     });
-  },
-
-  actions: {
-    remove() {
-      this.attrs.remove();
-    },
-    selectPort(port) {
-      this.attrs.selectPort(port);
-    },
-
-    portStartedConnecting(port) {
-      set(this, 'portIsConnectingFrom', true);
-      this.sendAction('portStartedConnecting', port);
-    },
-
-    portFinishedConnecting() {
-      set(this, 'portIsConnectingFrom', false);
-      this.sendAction('portFinishedConnecting');
-    },
-
-    mouseEnterPort(port) {
-      this.sendAction('mouseEnterPort', port);
-    },
-
-    mouseLeavePort(port) {
-      this.sendAction('mouseLeavePort', port);
-    },
-
-    disconnectPort(port) {
-      port.disconnect();
-      this.sendAction('portDisconnected', port);
-    }
-
   }
 
 });

@@ -15,18 +15,11 @@ const midiTimingEventsPerBeat = 24; // always the case AFAIK
 
 export default Module.extend({
 
-  type: 'module-clock', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'Clock',
-
   midi: service(),
   scheduler: service(),
 
-  tempoInPort: belongsTo('port-value-in', { async: false }),
-  resInPort: belongsTo('port-value-in', { async: false }),
-  resetOutPort: belongsTo('port-event-out', { async: false }),
-  trigOutPort: belongsTo('port-event-out', { async: false }),
-  source: attr('string', { defaultValue: 'Internal' }),
-  sourceMenuValues: ['Internal', 'External'],
+  type: 'module-clock', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name: 'Clock',
 
   isStarted: false,
   // last time an internal event was sent out.
@@ -39,6 +32,14 @@ export default Module.extend({
   latestMidiEventTimestamp: null,
   // number of midi timing events that have been received since the beginning of the current beat (external mode)
   midiEventCount: null,
+
+  sourceMenuValues: ['Internal', 'External'],
+
+  tempoInPort: belongsTo('port-value-in', { async: false }),
+  resInPort: belongsTo('port-value-in', { async: false }),
+  resetOutPort: belongsTo('port-event-out', { async: false }),
+  trigOutPort: belongsTo('port-event-out', { async: false }),
+  source: attr('string', { defaultValue: 'Internal' }),
 
   onSourceChanged: observer('source', function() {
     if (get(this, 'source') === 'Internal') {

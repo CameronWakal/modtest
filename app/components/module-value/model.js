@@ -19,6 +19,21 @@ export default Module.extend({
 
   valueInPort: belongsTo('port-value-in', { async: false }),
 
+  onValueChanged: observer('value', function() {
+    if (get(this, 'hasDirtyAttributes')) {
+      let changeEvent = {
+        targetTime: performance.now(),
+        outputTime: performance.now() + latency,
+        callbackTime: performance.now()
+      };
+      get(this, 'changeOutPort').sendEvent(changeEvent);
+
+      console.log('module-value.onValueChanged() requestSave()');
+      this.requestSave();
+    }
+
+  }),
+
   getValue() {
     return get(this, 'value');
   },
@@ -40,23 +55,6 @@ export default Module.extend({
       console.log('module-value didCreate saveLater');
       this.requestSave();
     }
-  },
-
-  onValueChanged: observer('value', function() {
-
-    if (get(this, 'hasDirtyAttributes')) {
-
-      let changeEvent = {
-        targetTime: performance.now(),
-        outputTime: performance.now() + latency,
-        callbackTime: performance.now()
-      };
-      get(this, 'changeOutPort').sendEvent(changeEvent);
-
-      console.log('module-value.onValueChanged() requestSave()');
-      this.requestSave();
-    }
-
-  })
+  }
 
 });

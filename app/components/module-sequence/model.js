@@ -11,15 +11,20 @@ export default Module.extend({
 
   type: 'module-sequence', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Sequence',
+  inputTypeMenuOptions: ['Number', 'Slider', 'Both', 'Button'],
+  latestTriggerTime: null,
+  triggerDuration: null,
 
   steps: belongsTo('array', { async: false }),
   trigOutPort: belongsTo('port-event-out', { async: false }),
   inputType: attr('string', { defaultValue: 'Number' }),
-  inputTypeMenuOptions: ['Number', 'Slider', 'Both', 'Button'],
   displayScale: attr('number', { defaultValue: 1 }),
 
-  latestTriggerTime: null,
-  triggerDuration: null,
+  onAttrChanged: observer('inputType', 'displayScale', function() {
+    if (get(this, 'hasDirtyAttributes')) {
+      this.requestSave();
+    }
+  }),
 
   getValue() {
     return get(this, 'steps.currentItem.value');
@@ -89,12 +94,6 @@ export default Module.extend({
     get(this, 'steps').remove();
     this._super();
   },
-
-  onAttrChanged: observer('inputType', 'displayScale', function() {
-    if (get(this, 'hasDirtyAttributes')) {
-      this.requestSave();
-    }
-  }),
 
   save() {
     get(this, 'steps').save();

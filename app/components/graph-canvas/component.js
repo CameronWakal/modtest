@@ -20,11 +20,6 @@ export default Component.extend({
     return new htmlSafe(styleString);
   }),
 
-  didInsertElement() {
-    // bind redraw on window resize
-    // $(window).on('resize', run.bind(this, this.drawConnections));
-  },
-
   onValuesChanged: observer(
     'lineValues.[]',
     'triangesValues.[]',
@@ -36,7 +31,13 @@ export default Component.extend({
     'yScale',
     function() {
       run.once(this, 'draw');
-    }),
+    }
+  ),
+
+  didInsertElement() {
+    // bind redraw on window resize
+    // $(window).on('resize', run.bind(this, this.drawConnections));
+  },
 
   // draw connections between ports,
   // draw line from new connection port to cursor position

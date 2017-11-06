@@ -9,10 +9,10 @@ const {
 
 export default Module.extend({
 
+  midi: service(),
+
   type: 'module-ccout', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'CC Out',
-
-  midi: service(),
 
   controlInPort: belongsTo('port-value-in', { async: false }),
   channelInPort: belongsTo('port-value-in', { async: false }),

@@ -1,5 +1,6 @@
 import { alias } from '@ember/object/computed';
 import { observer } from '@ember/object';
+import { get } from '@ember/object';
 import ModuleGenericComponent from '../module/component';
 
 export default ModuleGenericComponent.extend({
@@ -10,7 +11,7 @@ export default ModuleGenericComponent.extend({
   triggerDuration: alias('module.triggerDuration'),
 
   onLayoutChanged: observer('module.steps.length', 'module.inputType', 'module.displayScale', function() {
-    this.sendAction('layoutChanged');
+    get(this, 'layoutChanged')();
   })
 
 });

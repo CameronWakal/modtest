@@ -21,7 +21,7 @@ export default Component.extend({
 
   mouseMove(event) {
     if (get(this, 'mouseIsDown')) {
-      this.sendAction('addModule', get(this, 'moduleType'), event);
+      get(this, 'addModule')(get(this, 'moduleType'), event);
       set(this, 'mouseIsDown', false);
     }
   }

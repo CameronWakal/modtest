@@ -12,6 +12,9 @@ export default Module.extend({
   type: 'module-graph', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Graph',
 
+  lineValues: null,
+  trianglesValues: null,
+
   xMin: attr('number', { defaultValue: -1 }),
   xMax: attr('number', { defaultValue: 1 }),
   yMin: attr('number', { defaultValue: -1 }),
@@ -23,9 +26,6 @@ export default Module.extend({
   yLineValueInPort: belongsTo('port-value-in', { async: false }),
   xTrianglesValueInPort: belongsTo('port-value-in', { async: false }),
   yTrianglesValueInPort: belongsTo('port-value-in', { async: false }),
-
-  lineValues: null,
-  trianglesValues: null,
 
   writeLineValue() {
     let xLineValue = get(this, 'xLineValueInPort').getValue();

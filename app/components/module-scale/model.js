@@ -12,9 +12,9 @@ export default Module.extend({
   name: 'Scale',
 
   degreesInScale: 7,
-  degrees: belongsTo('array', { async: false }),
   inputType: 'Number',
   mode: null,
+  degrees: belongsTo('array', { async: false }),
 
   degreeInPort: belongsTo('port-value-in', { async: false }),
   octaveInPort: belongsTo('port-value-in', { async: false }),

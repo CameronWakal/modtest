@@ -8,6 +8,10 @@ export default Component.extend({
   classNameBindings: ['animationClass'],
   attributeBindings: ['styleAttribute:style'],
 
+  blinkDuration: 200,
+  blinkTrigger: null,
+  countIsEven: true,
+
   animationClass: computed('blinkTrigger', function() {
     if (get(this, 'blinkTrigger')) {
       this.countIsEven = !this.countIsEven;
@@ -17,10 +21,6 @@ export default Component.extend({
 
   styleAttribute: computed('blinkDuration', function() {
     return new htmlSafe(`animation-duration: ${get(this, 'blinkDuration')}ms;`);
-  }),
-
-  blinkDuration: 200,
-  blinkTrigger: null,
-  countIsEven: true
+  })
 
 });

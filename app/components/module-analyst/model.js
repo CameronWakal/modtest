@@ -103,6 +103,15 @@ export default Module.extend({
   // user-selected key from the component
   selectedKey: null,
 
+  // so the graphable child module can inherit it
+  spiralRadius: r,
+  spiralHeight: h,
+  weightA: a,
+  weightB: b,
+
+  valueInPort: belongsTo('port-value-in', { async: false }),
+  keyChangedPort: belongsTo('port-event-out', { async: false }),
+
   // strings representing the displayedKeys, or '--' if nearest keys
   // has not been calculated yet.
   displayedKeyNames: computed('displayedKeys', function() {
@@ -192,15 +201,6 @@ export default Module.extend({
       return semitoneIndexes[key.index];
     }
   },
-
-  valueInPort: belongsTo('port-value-in', { async: false }),
-  keyChangedPort: belongsTo('port-event-out', { async: false }),
-
-  // so the graphable child module can inherit it
-  spiralRadius: r,
-  spiralHeight: h,
-  weightA: a,
-  weightB: b,
 
   addValue() {
     let newValue = get(this, 'valueInPort').getValue();

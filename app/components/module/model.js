@@ -13,27 +13,26 @@ const {
 export default Model.extend({
 
   type: 'module', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  settings: hasMany('module-setting', { polymorphic: true }),
+  shouldAutoSave: false,
+
   title: attr('string'),
-
-  patch: belongsTo('patch', { async: false }),
-  ports: hasMany('port', { polymorphic: true, async: false }),
-
   xPos: attr('number', { defaultValue: 0 }),
   yPos: attr('number', { defaultValue: 0 }),
 
-  shouldAutoSave: false,
+  settings: hasMany('module-setting', { polymorphic: true }),
+  patch: belongsTo('patch', { async: false }),
+  ports: hasMany('port', { polymorphic: true, async: false }),
 
   eventOutPorts: filterBy('ports', 'type', 'port-event-out'),
   eventInPorts: filterBy('ports', 'type', 'port-event-in'),
   valueOutPorts: filterBy('ports', 'type', 'port-value-out'),
   valueInPorts: filterBy('ports', 'type', 'port-value-in'),
+  enabledPorts: filterBy('ports', 'isEnabled', true),
   outPorts: computed('ports.@each.type', function() {
     return get(this, 'ports').filter((item) => {
       return get(item, 'type') === 'port-value-out' || get(item, 'type') === 'port-event-out';
     });
   }),
-  enabledPorts: filterBy('ports', 'isEnabled', true),
 
   didCreate() {
     set(this, 'shouldAutoSave', true);

@@ -11,26 +11,22 @@ const {
 
 export default Module.extend({
 
+  scheduler: service(),
+
   type: 'module-repeat', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Repeat',
 
-  mode: attr('string', { defaultValue: 'count only' }),
+  latestTriggerTime: null,
+  triggerDuration: null,
+  unitsMenuOptions: ['beats', 'ms'],
   modeMenuOptions: ['count only', 'gate only', 'count+gate'],
+
+  mode: attr('string', { defaultValue: 'count only' }),
   delayUnits: attr('string', { defaultValue: 'beats' }),
   gateUnits: attr('string', { defaultValue: 'beats' }),
-  unitsMenuOptions: ['beats', 'ms'],
 
-  gateIsOn: computed('mode', function() {
-    return get(this, 'mode') === 'gate only' || get(this, 'mode') === 'count+gate';
-  }),
-  countIsOn: computed('mode', function() {
-    return get(this, 'mode') === 'count only' || get(this, 'mode') === 'count+gate';
-  }),
   gateIsInBeats: equal('gateUnits', 'beats'),
   delayIsInBeats: equal('delayUnits', 'beats'),
-
-  scheduler: service(),
-
   tempoInPort: belongsTo('port-value-in', { async: false }),
   countInPort: belongsTo('port-value-in', { async: false }), // number of times to repeat
   gateNumeratorInPort: belongsTo('port-value-in', { async: false }), // period to continue repeating
@@ -39,9 +35,12 @@ export default Module.extend({
   delayDenominatorInPort: belongsTo('port-value-in', { async: false }), // delay between repeats
   trigOutPort: belongsTo('port-event-out', { async: false }),
 
-  latestTriggerTime: null,
-  triggerDuration: null,
-
+  gateIsOn: computed('mode', function() {
+    return get(this, 'mode') === 'gate only' || get(this, 'mode') === 'count+gate';
+  }),
+  countIsOn: computed('mode', function() {
+    return get(this, 'mode') === 'count only' || get(this, 'mode') === 'count+gate';
+  }),
   onSettingChanged: observer('mode', 'delayUnits', 'gateUnits', function() {
     if (get(this, 'hasDirtyAttributes')) {
       this.requestSave();

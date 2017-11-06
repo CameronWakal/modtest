@@ -12,12 +12,20 @@ const noteDuration = 20;
 
 export default Module.extend({
 
+  midi: service(),
+
   type: 'module-out', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Out',
 
-  midi: service(),
+  events: [],
+  latestTriggerTime: null,
+  triggerDuration: null,
 
+  noteInPort: belongsTo('port-value-in', { async: false }),
+  velInPort: belongsTo('port-value-in', { async: false }),
+  channelInPort: belongsTo('port-value-in', { async: false }),
   outputDeviceName: attr('string', { defaultValue: 'All' }),
+
   deviceMenuOptions: computed('midi.outputDevices', 'outputDeviceName', function() {
     let devices = get(this, 'midi.outputDevices').mapBy('name');
     let currentDevice = get(this, 'outputDeviceName');
@@ -26,14 +34,6 @@ export default Module.extend({
     }
     return ['All', ...devices];
   }),
-
-  noteInPort: belongsTo('port-value-in', { async: false }),
-  velInPort: belongsTo('port-value-in', { async: false }),
-  channelInPort: belongsTo('port-value-in', { async: false }),
-
-  events: [],
-  latestTriggerTime: null,
-  triggerDuration: null,
 
   onOutputDeviceNameChanged: observer('outputDeviceName', function() {
     if (get(this, 'hasDirtyAttributes')) {
