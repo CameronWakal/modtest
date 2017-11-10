@@ -12,6 +12,9 @@ export default Component.extend({
     'port.isEventPort:event-port-setting'
   ],
   attributeBindings: ['title'],
+
+  portIsValueIn: equal('port.type', 'port-value-in'),
+
   title: computed('port.{minValue,maxValue,canBeEmpty,type}', function() {
     let title = '';
     if (get(this, 'port.type') == 'port-value-in') {
@@ -30,7 +33,6 @@ export default Component.extend({
     return title.trim();
   }),
 
-  portIsValueIn: equal('port.type', 'port-value-in'),
   labelWithType: computed('port.{label,type}', function() {
     let type = get(this, 'port.type');
     let label = get(this, 'port.label');

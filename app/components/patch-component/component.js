@@ -4,10 +4,14 @@ import { set, get, computed } from '@ember/object';
 
 export default Component.extend({
   classNames: ['patch'],
-
   classNameBindings: ['newConnectionClass'],
 
   diagramNeedsUpdate: true,
+  selectedModule: null,
+  movingModule: null,
+  connectingFromPort: null,
+  connectingToPort: null,
+
   // css class to tell ports which type can accept the current pending connection
   newConnectionClass: computed('connectingFromPort', function() {
     let port = get(this, 'connectingFromPort');
@@ -17,11 +21,6 @@ export default Component.extend({
       return null;
     }
   }),
-
-  selectedModule: null,
-  movingModule: null,
-  connectingFromPort: null,
-  connectingToPort: null,
 
   didReceiveAttrs() {
     set(this, 'diagramNeedsUpdate', true);
@@ -34,7 +33,7 @@ export default Component.extend({
   actions: {
 
     removePatch() {
-      this.sendAction('removePatch');
+      get(this, 'removePatch')();
     },
 
     savePatch() {

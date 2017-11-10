@@ -11,12 +11,11 @@ const {
 export default Model.extend({
 
   length: attr('number', { defaultValue: 0 }),
-  items: hasMany('arrayItem'),
-
   valueMin: attr('number', { defaultValue: 0 }),
   valueMax: attr('number', { defaultValue: 127 }),
   valueStep: attr('number', { defaultValue: 1 }),
 
+  items: hasMany('arrayItem'),
   currentItem: belongsTo('arrayItem', { async: false }),
   module: belongsTo('module', { async: false, polymorphic: true }),
 

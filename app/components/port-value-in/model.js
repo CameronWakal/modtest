@@ -18,6 +18,13 @@ export default Port.extend({
   maxValue: attr('number'),
   disabledValue: attr('number'),
 
+  onDisabledValueChanged: observer('disabledValue', function() {
+    if (get(this, 'hasDirtyAttributes') && !get(this, 'isNew')) {
+      console.log('port-value-in disabledValueChanged');
+      this.requestSave();
+    }
+  }),
+
   getValue() {
     if (!get(this, 'isEnabled')) {
       // assume disabledValue has already been validated against canBeEmpty, min, max
@@ -53,13 +60,6 @@ export default Port.extend({
     }
 
     return totalValue;
-  },
-
-  onDisabledValueChanged: observer('disabledValue', function() {
-    if (get(this, 'hasDirtyAttributes') && !get(this, 'isNew')) {
-      console.log('port-value-in disabledValueChanged');
-      this.requestSave();
-    }
-  })
+  }
 
 });

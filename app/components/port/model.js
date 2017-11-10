@@ -9,15 +9,17 @@ const {
 } = DS;
 
 export default Model.extend({
+  type: 'port', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+
   label: attr('string'),
   isEnabled: attr('boolean', { defaultValue: true }),
   module: belongsTo('module', { polymorphic: true, async: false }),
 
+  isConnected: bool('connections.length'),
+
   uniqueCssIdentifier: computed('id', function() {
     return `port-${this.id}`;
   }),
-
-  type: 'port', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
 
   compatibleType: computed(function() {
     switch (get(this, 'type')) {
@@ -35,7 +37,12 @@ export default Model.extend({
     return get(this, 'type') === 'port-event-in' || get(this, 'type') === 'port-event-out';
   }),
 
-  isConnected: bool('connections.length'),
+  onAttrChanged: observer('isEnabled', 'label', function() {
+    if (get(this, 'hasDirtyAttributes') && !get(this, 'isNew')) {
+      console.log('port attrchanged');
+      this.requestSave();
+    }
+  }),
 
   // remove all connections
   disconnect() {
@@ -53,13 +60,6 @@ export default Model.extend({
 
   requestSave() {
     get(this, 'module').requestSave();
-  },
-
-  onAttrChanged: observer('isEnabled', 'label', function() {
-    if (get(this, 'hasDirtyAttributes') && !get(this, 'isNew')) {
-      console.log('port attrchanged');
-      this.requestSave();
-    }
-  })
+  }
 
 });

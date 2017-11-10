@@ -18,7 +18,7 @@ export default Component.extend({
 
   onDisable: observer('port.isEnabled', function() {
     if (!get(this, 'port.isEnabled') && !isEmpty(get(this, 'port.connections'))) {
-      this.sendAction('disconnect');
+      get(this, 'disconnect')();
     }
   }),
 
@@ -27,7 +27,7 @@ export default Component.extend({
     this.$().focus();
     set(this, 'isConnectingFrom', true);
     $(document).on('mouseup', this.mouseUpBody.bind(this));
-    this.sendAction('startedConnecting', event);
+    get(this, 'startedConnecting')(event);
     return false;
   },
 

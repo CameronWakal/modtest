@@ -12,7 +12,7 @@ export default Component.extend({
     let patches = get(this, 'patches').toArray();
     let selectedPatch = patches[selectedIndex];
     set(this, 'selectedPatch', selectedPatch);
-    this.sendAction('patchChanged', selectedPatch);
+    get(this, 'patchChanged')(selectedPatch);
   }
 
 });

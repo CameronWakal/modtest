@@ -19,11 +19,6 @@ export default Component.extend({
 
   mouseListenerAdded: false,
 
-  didInsertElement() {
-    this.onPortsChanged();
-    $(window).on('resize', run.bind(this, this.drawConnections));
-  },
-
   onMovingModuleChanged: observer('movingModule', function() {
     if (get(this, 'movingModule')) {
       this.addMouseListener();
@@ -54,6 +49,11 @@ export default Component.extend({
       });
     }
   }),
+
+  didInsertElement() {
+    this.onPortsChanged();
+    $(window).on('resize', run.bind(this, this.drawConnections));
+  },
 
   // search for connected ports in dom and store the jquery objects
   // so we can draw connections between ports later.
@@ -139,7 +139,7 @@ export default Component.extend({
       if (i != null) {
         event.preventDefault();
         let con = get(this, 'connections').toArray().objectAt(i);
-        this.sendAction('removeConnection', con.inPort, con.outPort);
+        get(this, 'removeConnection')(con.inPort, con.outPort);
         set(this, 'selectedConnectionIndex', null);
       }
     }
@@ -208,9 +208,8 @@ export default Component.extend({
 
   // Check if mouse position is close to any connection line
   // http://jsfiddle.net/mmansion/9K5p9/
-
   mouseDown(event) {
-    this.sendAction('moduleDeselected');
+    get(this, 'moduleDeselected');
     set(this, 'selectedConnectionIndex', null);
     let startX, startY, endX, endY, point, lineStart, lineEnd, distance;
     let cons = get(this, 'connections');

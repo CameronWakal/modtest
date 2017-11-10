@@ -19,16 +19,16 @@ export default TextField.extend({
     this.resetValue();
   }),
 
+  didReceiveAttrs() {
+    this.resetValue();
+  },
+
   click() {
     this.$().select();
   },
 
   focusOut() {
     this.updateValue();
-  },
-
-  didReceiveAttrs() {
-    this.resetValue();
   },
 
   updateValue() {
@@ -40,7 +40,7 @@ export default TextField.extend({
         set(this, 'value', boundValue);
       } else {
         set(this, 'boundValue', value);
-        this.sendAction('valueUpdated');
+        get(this, 'valueUpdated')();
       }
     }
   },
