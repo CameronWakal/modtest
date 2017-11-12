@@ -9,6 +9,9 @@ const {
   attr
 } = DS;
 
+const unitsMenuOptions = ['beats', 'ms'];
+const modeMenuOptions = ['count only', 'gate only', 'count+gate'];
+
 export default Module.extend({
 
   scheduler: service(),
@@ -18,8 +21,8 @@ export default Module.extend({
 
   latestTriggerTime: null,
   triggerDuration: null,
-  unitsMenuOptions: ['beats', 'ms'],
-  modeMenuOptions: ['count only', 'gate only', 'count+gate'],
+  unitsMenuOptions,
+  modeMenuOptions,
 
   mode: attr('string', { defaultValue: 'count only' }),
   delayUnits: attr('string', { defaultValue: 'beats' }),

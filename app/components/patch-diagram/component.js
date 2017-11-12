@@ -13,7 +13,7 @@ export default Component.extend({
   tabindex: -1,
   tagName: 'canvas',
 
-  connections: [],
+  connections: null,
   selectedConnectionIndex: null,
   newConnectionFrom: null,
 
@@ -51,6 +51,7 @@ export default Component.extend({
   }),
 
   didInsertElement() {
+    this.connections = [];
     this.onPortsChanged();
     $(window).on('resize', run.bind(this, this.drawConnections));
   },

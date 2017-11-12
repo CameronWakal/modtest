@@ -17,7 +17,7 @@ export default Module.extend({
   type: 'module-out', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Out',
 
-  events: [],
+  events: null,
   latestTriggerTime: null,
   triggerDuration: null,
 
@@ -96,6 +96,8 @@ export default Module.extend({
   },
 
   ready() {
+    this.events = [];
+
     if (get(this, 'isNew')) {
       set(this, 'title', this.name);
 

@@ -13,6 +13,8 @@ const defaultTempo = 120;
 const latency = 10;
 const midiTimingEventsPerBeat = 24; // always the case AFAIK
 
+const sourceMenuValues = ['Internal', 'External'];
+
 export default Module.extend({
 
   midi: service(),
@@ -33,7 +35,7 @@ export default Module.extend({
   // number of midi timing events that have been received since the beginning of the current beat (external mode)
   midiEventCount: null,
 
-  sourceMenuValues: ['Internal', 'External'],
+  sourceMenuValues,
 
   tempoInPort: belongsTo('port-value-in', { async: false }),
   resInPort: belongsTo('port-value-in', { async: false }),

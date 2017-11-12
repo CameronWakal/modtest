@@ -7,11 +7,13 @@ const {
   attr
 } = DS;
 
+const inputTypeMenuOptions = ['Number', 'Slider', 'Both', 'Button'];
+
 export default Module.extend({
 
   type: 'module-sequence', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Sequence',
-  inputTypeMenuOptions: ['Number', 'Slider', 'Both', 'Button'],
+  inputTypeMenuOptions,
   latestTriggerTime: null,
   triggerDuration: null,
 
