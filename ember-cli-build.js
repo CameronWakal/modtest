@@ -25,8 +25,8 @@ module.exports = function(defaults) {
   // along with the exports of each module as its value.
 
   //don't import the rangeslider css, as we're fully customizing appearance
-  //app.import('bower_components/rangeslider.js/dist/rangeslider.css');
-  app.import('bower_components/rangeslider.js/dist/rangeslider.js');
+  //app.import('node_modules/rangeslider.js/dist/rangeslider.css');
+  app.import('node_modules/rangeslider.js/dist/rangeslider.js');
 
   return app.toTree();
 };
