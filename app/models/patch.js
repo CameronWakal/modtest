@@ -1,9 +1,5 @@
+import { get } from '@ember/object';
 import DS from 'ember-data';
-import Ember from 'ember';
-
-const {
-  get
-} = Ember;
 
 const {
   Model,
@@ -12,8 +8,9 @@ const {
 } = DS;
 
 export default Model.extend({
-  modules: hasMany('module', { polymorphic: true }),
   title: attr('string', { defaultValue: 'Untitled Patch' }),
+
+  modules: hasMany('module', { polymorphic: true }),
 
   save() {
     if (!get(this, 'isDeleted')) {

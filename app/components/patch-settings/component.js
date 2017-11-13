@@ -1,17 +1,14 @@
-import Ember from 'ember';
-
-const {
-  Component
-} = Ember;
+import Component from '@ember/component';
+import { get } from '@ember/object';
 
 export default Component.extend({
 
   actions: {
     removePatch() {
-      this.sendAction('removePatch');
+      get(this, 'removePatch')();
     },
     titleChanged() {
-      this.sendAction('patchTitleChanged');
+      get(this, 'patchTitleChanged')();
     }
   }
 

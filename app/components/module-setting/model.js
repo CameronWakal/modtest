@@ -1,11 +1,6 @@
-import Ember from 'ember';
+import { alias } from '@ember/object/computed';
+import { get, defineProperty } from '@ember/object';
 import DS from 'ember-data';
-
-const {
-  computed,
-  defineProperty,
-  get
-} = Ember;
 
 const {
   Model,
@@ -15,17 +10,16 @@ const {
 
 export default Model.extend({
 
-  label: attr('string'),
   type: 'module-setting', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  module: belongsTo('module', { async: false, polymorphic: true }),
-
+  label: attr('string'),
   // a property name on the parent module to read/write
   targetValue: attr('string'),
+  module: belongsTo('module', { async: false, polymorphic: true }),
 
   ready() {
     // make an alias from this.value to module.targetValue at runtime
     let targetPath = `module.${get(this, 'targetValue')}`;
-    defineProperty(this, 'value', computed.alias(targetPath));
+    defineProperty(this, 'value', alias(targetPath));
   },
 
   remove() {

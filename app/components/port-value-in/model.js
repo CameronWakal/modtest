@@ -1,11 +1,6 @@
-import Ember from 'ember';
+import { get, observer } from '@ember/object';
 import DS from 'ember-data';
 import Port from '../port/model';
-
-const {
-  observer,
-  get
-} = Ember;
 
 const {
   hasMany,
@@ -22,6 +17,13 @@ export default Port.extend({
   minValue: attr('number'),
   maxValue: attr('number'),
   disabledValue: attr('number'),
+
+  onDisabledValueChanged: observer('disabledValue', function() {
+    if (get(this, 'hasDirtyAttributes') && !get(this, 'isNew')) {
+      console.log('port-value-in disabledValueChanged');
+      this.requestSave();
+    }
+  }),
 
   getValue() {
     if (!get(this, 'isEnabled')) {
@@ -58,13 +60,6 @@ export default Port.extend({
     }
 
     return totalValue;
-  },
-
-  onDisabledValueChanged: observer('disabledValue', function() {
-    if (get(this, 'hasDirtyAttributes') && !get(this, 'isNew')) {
-      console.log('port-value-in disabledValueChanged');
-      this.requestSave();
-    }
-  })
+  }
 
 });

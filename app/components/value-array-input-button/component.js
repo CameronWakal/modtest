@@ -1,11 +1,6 @@
-import Ember from 'ember';
-
-const {
-  Component,
-  computed,
-  get,
-  set
-} = Ember;
+import { notEmpty } from '@ember/object/computed';
+import Component from '@ember/component';
+import { set, get, computed } from '@ember/object';
 
 export default Component.extend({
 
@@ -17,7 +12,7 @@ export default Component.extend({
     'item.isCurrentItem:current'
   ],
 
-  isOn: computed.notEmpty('item.value'),
+  isOn: notEmpty('item.value'),
   isAccented: computed('item.value', 'max', function() {
     return get(this, 'item.value') === get(this, 'max');
   }),

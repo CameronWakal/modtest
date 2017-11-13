@@ -1,43 +1,35 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import { equal } from '@ember/object/computed';
+import { observer, computed, set, get } from '@ember/object';
 import Module from '../module/model';
 import DS from 'ember-data';
-
-const {
-  get,
-  set,
-  inject,
-  computed,
-  computed: { equal },
-  observer
-} = Ember;
 
 const {
   belongsTo,
   attr
 } = DS;
 
+const unitsMenuOptions = ['beats', 'ms'];
+const modeMenuOptions = ['count only', 'gate only', 'count+gate'];
+
 export default Module.extend({
+
+  scheduler: service(),
 
   type: 'module-repeat', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Repeat',
 
+  latestTriggerTime: null,
+  triggerDuration: null,
+  unitsMenuOptions,
+  modeMenuOptions,
+
   mode: attr('string', { defaultValue: 'count only' }),
-  modeMenuOptions: ['count only', 'gate only', 'count+gate'],
   delayUnits: attr('string', { defaultValue: 'beats' }),
   gateUnits: attr('string', { defaultValue: 'beats' }),
-  unitsMenuOptions: ['beats', 'ms'],
 
-  gateIsOn: computed('mode', function() {
-    return get(this, 'mode') === 'gate only' || get(this, 'mode') === 'count+gate';
-  }),
-  countIsOn: computed('mode', function() {
-    return get(this, 'mode') === 'count only' || get(this, 'mode') === 'count+gate';
-  }),
   gateIsInBeats: equal('gateUnits', 'beats'),
   delayIsInBeats: equal('delayUnits', 'beats'),
-
-  scheduler: inject.service(),
-
   tempoInPort: belongsTo('port-value-in', { async: false }),
   countInPort: belongsTo('port-value-in', { async: false }), // number of times to repeat
   gateNumeratorInPort: belongsTo('port-value-in', { async: false }), // period to continue repeating
@@ -46,9 +38,12 @@ export default Module.extend({
   delayDenominatorInPort: belongsTo('port-value-in', { async: false }), // delay between repeats
   trigOutPort: belongsTo('port-event-out', { async: false }),
 
-  latestTriggerTime: null,
-  triggerDuration: null,
-
+  gateIsOn: computed('mode', function() {
+    return get(this, 'mode') === 'gate only' || get(this, 'mode') === 'count+gate';
+  }),
+  countIsOn: computed('mode', function() {
+    return get(this, 'mode') === 'count only' || get(this, 'mode') === 'count+gate';
+  }),
   onSettingChanged: observer('mode', 'delayUnits', 'gateUnits', function() {
     if (get(this, 'hasDirtyAttributes')) {
       this.requestSave();

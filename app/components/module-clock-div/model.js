@@ -1,11 +1,6 @@
-import Ember from 'ember';
+import { set, get } from '@ember/object';
 import Module from '../module/model';
 import DS from 'ember-data';
-
-const {
-  get,
-  set
-} = Ember;
 
 const {
   belongsTo
@@ -21,13 +16,13 @@ export default Module.extend({
   // many input events. If shiftBy is greater than divBy, the shift value will be shiftBy%divBy.
   // a resetIn does not cause an out event, it just resets the module for the next clockIn.
 
-  divByPort: belongsTo('port-value-in', { async: false }),
-  shiftByPort: belongsTo('port-value-in', { async: false }),
-  trigOutPort: belongsTo('port-event-out', { async: false }),
-
   count: 0,
   latestTriggerTime: null,
   triggerDuration: null,
+
+  divByPort: belongsTo('port-value-in', { async: false }),
+  shiftByPort: belongsTo('port-value-in', { async: false }),
+  trigOutPort: belongsTo('port-event-out', { async: false }),
 
   onClockIn(event) {
     let count = get(this, 'count');

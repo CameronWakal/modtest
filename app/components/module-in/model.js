@@ -1,14 +1,7 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import { computed, observer, set, get } from '@ember/object';
 import Module from '../module/model';
 import DS from 'ember-data';
-
-const {
-  inject,
-  get,
-  set,
-  observer,
-  computed
-} = Ember;
 
 const {
   belongsTo,
@@ -19,13 +12,13 @@ const latency = 10;
 
 export default Module.extend({
 
+  midi: service(),
+
   type: 'module-in', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'In',
 
   note: null,
   velocity: null,
-
-  midi: inject.service(),
 
   noteOnPort: belongsTo('port-event-out', { async: false }),
   noteOffPort: belongsTo('port-event-out', { async: false }),

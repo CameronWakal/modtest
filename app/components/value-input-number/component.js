@@ -1,12 +1,5 @@
-import Ember from 'ember';
-
-const {
-  TextField,
-  observer,
-  computed,
-  get,
-  set
-} = Ember;
+import TextField from '@ember/component/text-field';
+import { set, get, computed, observer } from '@ember/object';
 
 // from template:
 // boundValue – external, persisted value, as opposed to current <input> value
@@ -32,16 +25,16 @@ export default TextField.extend({
     this.resetValue();
   }),
 
+  didReceiveAttrs() {
+    this.resetValue();
+  },
+
   click() {
     this.$().select();
   },
 
   focusOut() {
     this.updateValue();
-  },
-
-  didReceiveAttrs() {
-    this.resetValue();
   },
 
   updateValue() {
@@ -81,13 +74,13 @@ export default TextField.extend({
     switch (event.keyCode) {
       case 13: // enter/return
         this.$().select();
-      break;
+        break;
       case 27: // escape
         this.$().select();
-      break;
+        break;
       case 38: // up arrow
         this.$().select();
-      break;
+        break;
       case 40: // down arrow
         this.$().select();
 
@@ -100,14 +93,14 @@ export default TextField.extend({
     switch (event.keyCode) {
       case 13: // enter/return
         this.updateValue();
-      break;
+        break;
       case 27: // escape
         this.resetValue();
-      break;
+        break;
       case 38: // up arrow
         this.incrementProperty('value');
         this.updateValue();
-      break;
+        break;
       case 40: // down arrow
         this.decrementProperty('value');
         this.updateValue();

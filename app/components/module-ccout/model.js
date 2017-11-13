@@ -1,12 +1,7 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import { set, get } from '@ember/object';
 import Module from '../module/model';
 import DS from 'ember-data';
-
-const {
-  inject,
-  get,
-  set
-} = Ember;
 
 const {
   belongsTo
@@ -14,10 +9,10 @@ const {
 
 export default Module.extend({
 
+  midi: service(),
+
   type: 'module-ccout', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'CC Out',
-
-  midi: inject.service(),
 
   controlInPort: belongsTo('port-value-in', { async: false }),
   channelInPort: belongsTo('port-value-in', { async: false }),

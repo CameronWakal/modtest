@@ -1,11 +1,5 @@
+import { set, get, observer } from '@ember/object';
 import DS from 'ember-data';
-import Ember from 'ember';
-
-const {
-  observer,
-  get,
-  set
-} = Ember;
 
 const {
   Model,
@@ -17,12 +11,11 @@ const {
 export default Model.extend({
 
   length: attr('number', { defaultValue: 0 }),
-  items: hasMany('arrayItem'),
-
   valueMin: attr('number', { defaultValue: 0 }),
   valueMax: attr('number', { defaultValue: 127 }),
   valueStep: attr('number', { defaultValue: 1 }),
 
+  items: hasMany('arrayItem'),
   currentItem: belongsTo('arrayItem', { async: false }),
   module: belongsTo('module', { async: false, polymorphic: true }),
 
@@ -82,7 +75,7 @@ export default Model.extend({
 
   shiftForward() {
     let oldValues = get(this, 'items').mapBy('value');
-    get(this, 'items').forEach((item,index) => {
+    get(this, 'items').forEach((item, index) => {
       if (index < oldValues.length - 1) {
         set(item, 'value', oldValues[index + 1]);
       } else {
@@ -93,7 +86,7 @@ export default Model.extend({
 
   shiftBackward() {
     let oldValues = get(this, 'items').mapBy('value');
-    get(this, 'items').forEach((item,index) => {
+    get(this, 'items').forEach((item, index) => {
       if (index > 0) {
         set(item, 'value', oldValues[index - 1]);
       } else {

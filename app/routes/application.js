@@ -8,61 +8,25 @@
   patch is currently selected.
 */
 
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
 
-const {
-  Route,
-  inject,
-  get,
-  set,
-  isEmpty
-} = Ember;
+import Route from '@ember/routing/route';
+import { set, get } from '@ember/object';
+import { isEmpty } from '@ember/utils';
 
 export default Route.extend({
+  midi: service(),
+  scheduler: service(),
+
   model() {
     return this.store.findAll('patch');
-  },
-
-  midi: inject.service(),
-  scheduler: inject.service(),
-
-  init() {
-    get(this, 'midi').setup();
-    get(this, 'scheduler').setup();
-    this._super(...arguments);
   },
 
   activate() {
     this.loadDefaultPatch();
   },
 
-  // when arriving at the index route, transition to the first patch in the list,
-  // or a new patch if the list is empty.
-  loadDefaultPatch() {
-    if (this.modelFor('patch') == null) {
-      // if no patch is selected
-      if (isEmpty(this.modelFor('application'))) {
-        // add a patch to the list if there are none
-        let patch = this.store.createRecord('patch');
-        patch.save();
-        this.replaceWith('patch', patch);
-        set(this.controllerFor('application'), 'currentPatch', patch);
-      } else {
-        // if there are patches in the list, transition to the first one
-        let patches = this.modelFor('application');
-        let patchesList = patches.toArray();
-        this.replaceWith('patch', patchesList[0]);
-      }
-    } else {
-      // patch route still has a model from before we hit the browser back button
-      this.replaceWith('patch', this.modelFor('patch'));
-    }
-    // set currentPatch on app controller so it can init dropdown patch menu
-    set(this.controllerFor('application'), 'currentPatch', this.modelFor('patch'));
-  },
-
   actions: {
-
     newPatch() {
       let patch = this.store.createRecord('patch');
       patch.save();
@@ -98,5 +62,37 @@ export default Route.extend({
       }
     }
 
+  },
+
+  init() {
+    get(this, 'midi').setup();
+    get(this, 'scheduler').setup();
+    this._super(...arguments);
+  },
+
+  // when arriving at the index route, transition to the first patch in the list,
+  // or a new patch if the list is empty.
+  loadDefaultPatch() {
+    if (this.modelFor('patch') == null) {
+      // if no patch is selected
+      if (isEmpty(this.modelFor('application'))) {
+        // add a patch to the list if there are none
+        let patch = this.store.createRecord('patch');
+        patch.save();
+        this.replaceWith('patch', patch);
+        set(this.controllerFor('application'), 'currentPatch', patch);
+      } else {
+        // if there are patches in the list, transition to the first one
+        let patches = this.modelFor('application');
+        let patchesList = patches.toArray();
+        this.replaceWith('patch', patchesList[0]);
+      }
+    } else {
+      // patch route still has a model from before we hit the browser back button
+      this.replaceWith('patch', this.modelFor('patch'));
+    }
+    // set currentPatch on app controller so it can init dropdown patch menu
+    set(this.controllerFor('application'), 'currentPatch', this.modelFor('patch'));
   }
+
 });

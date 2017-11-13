@@ -1,10 +1,6 @@
-import Ember from 'ember';
+import { get } from '@ember/object';
 import DS from 'ember-data';
 import ModuleAnalyst from '../module-analyst/model';
-
-const {
-  get
-} = Ember;
 
 const {
   belongsTo

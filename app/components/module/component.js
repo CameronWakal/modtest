@@ -1,15 +1,9 @@
-import Ember from 'ember';
-
-const {
-  Component,
-  computed,
-  observer,
-  String,
-  $,
-  run,
-  get,
-  set
-} = Ember;
+import { alias } from '@ember/object/computed';
+import Component from '@ember/component';
+import $ from 'jquery';
+import { run } from '@ember/runloop';
+import { set, get, observer, computed } from '@ember/object';
+import { htmlSafe } from '@ember/string';
 
 export default Component.extend({
   classNames: ['module'],
@@ -24,18 +18,18 @@ export default Component.extend({
   didMove: false,
   moveOffsetX: null,
   moveOffsetY: null,
-  xPos: computed.alias('module.xPos'),
-  yPos: computed.alias('module.yPos'),
-
   portIsConnectingFrom: false,
+
+  xPos: alias('module.xPos'),
+  yPos: alias('module.yPos'),
 
   inlineStyles: computed('xPos', 'yPos', function() {
     let styleString = `left:${get(this, 'xPos')}px; top:${get(this, 'yPos')}px`;
-    return new String.htmlSafe(styleString);
+    return new htmlSafe(styleString);
   }),
 
   onPortsChanged: observer('module.ports.@each.isEnabled', function() {
-    this.sendAction('portsChanged');
+    get(this, 'portsChanged')();
   }),
 
   init() {
@@ -48,26 +42,59 @@ export default Component.extend({
     }
   },
 
+  actions: {
+    remove() {
+      this.attrs.remove();
+    },
+    selectPort(port) {
+      this.attrs.selectPort(port);
+    },
+
+    portStartedConnecting(port) {
+      set(this, 'portIsConnectingFrom', true);
+      get(this, 'portStartedConnecting')(port);
+    },
+
+    portFinishedConnecting() {
+      set(this, 'portIsConnectingFrom', false);
+      get(this, 'portFinishedConnecting')();
+    },
+
+    mouseEnterPort(port) {
+      get(this, 'mouseEnterPort')(port);
+    },
+
+    mouseLeavePort(port) {
+      get(this, 'mouseLeavePort')(port);
+    },
+
+    disconnectPort(port) {
+      port.disconnect();
+      get(this, 'portDisconnected')(port);
+    }
+
+  },
+
   mouseDown(event) {
-    if ($(event.target).hasClass('module') ||
-        $(event.target).hasClass('module-label') ||
-        $(event.target).hasClass('module-ports') ||
-        $(event.target).hasClass('indicator-blinking')
-      ) {
+    if ($(event.target).hasClass('module')
+      || $(event.target).hasClass('module-label')
+      || $(event.target).hasClass('module-ports')
+      || $(event.target).hasClass('indicator-blinking')
+    ) {
       set(this, 'isMoving', true);
       set(this, 'moveOffsetX', event.pageX - get(this, 'xPos'));
       set(this, 'moveOffsetY', event.pageY - get(this, 'yPos'));
       $(document).on('mouseup', this.mouseUpBody.bind(this));
       $(document).on('mousemove', this.mouseMoveBody.bind(this));
-      this.sendAction('selected');
-      this.sendAction('startedMoving');
+      get(this, 'selected')();
+      get(this, 'startedMoving')();
     }
   },
 
   keyDown(event) {
     if (event.keyCode === 8 && this.$().is(':focus')) {
       event.preventDefault();
-      this.sendAction('remove');
+      get(this, 'remove')();
     }
   },
 
@@ -112,39 +139,6 @@ export default Component.extend({
       $(document).off('mouseup');
       $(document).off('mousemove');
     });
-  },
-
-  actions: {
-    remove() {
-      this.attrs.remove();
-    },
-    selectPort(port) {
-      this.attrs.selectPort(port);
-    },
-
-    portStartedConnecting(port) {
-      set(this, 'portIsConnectingFrom', true);
-      this.sendAction('portStartedConnecting', port);
-    },
-
-    portFinishedConnecting() {
-      set(this, 'portIsConnectingFrom', false);
-      this.sendAction('portFinishedConnecting');
-    },
-
-    mouseEnterPort(port) {
-      this.sendAction('mouseEnterPort', port);
-    },
-
-    mouseLeavePort(port) {
-      this.sendAction('mouseLeavePort', port);
-    },
-
-    disconnectPort(port) {
-      port.disconnect();
-      this.sendAction('portDisconnected', port);
-    }
-
   }
 
 });

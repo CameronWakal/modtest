@@ -1,11 +1,5 @@
+import { get, observer, computed } from '@ember/object';
 import DS from 'ember-data';
-import Ember from 'ember';
-
-const {
-  computed,
-  observer,
-  get
-} = Ember;
 
 const {
   Model,

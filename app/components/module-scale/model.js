@@ -1,11 +1,6 @@
-import Ember from 'ember';
+import { set, get } from '@ember/object';
 import DS from 'ember-data';
 import Module from '../module/model';
-
-const {
-  get,
-  set
-} = Ember;
 
 const {
   belongsTo
@@ -17,9 +12,9 @@ export default Module.extend({
   name: 'Scale',
 
   degreesInScale: 7,
-  degrees: belongsTo('array', { async: false }),
   inputType: 'Number',
   mode: null,
+  degrees: belongsTo('array', { async: false }),
 
   degreeInPort: belongsTo('port-value-in', { async: false }),
   octaveInPort: belongsTo('port-value-in', { async: false }),
@@ -39,25 +34,25 @@ export default Module.extend({
     switch (mode) {
       case 0:
         newValues = [0, 2, 4, 5, 7, 9, 11];
-      break;
+        break;
       case 1:
         newValues = [0, 2, 3, 5, 7, 9, 10];
-      break;
+        break;
       case 2:
         newValues = [0, 1, 3, 5, 7, 8, 10];
-      break;
+        break;
       case 3:
         newValues = [0, 2, 4, 6, 7, 9, 11];
-      break;
+        break;
       case 4:
         newValues = [0, 2, 4, 5, 7, 9, 10];
-      break;
+        break;
       case 5:
         newValues = [0, 2, 3, 5, 7, 8, 10];
-      break;
+        break;
       case 6:
         newValues = [0, 1, 3, 5, 6, 8, 10];
-      break;
+        break;
       default:
         console.log('module-scale error – unknown mode requested:', mode);
         return;

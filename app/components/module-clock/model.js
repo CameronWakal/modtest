@@ -1,13 +1,7 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import { set, get, observer } from '@ember/object';
 import DS from 'ember-data';
 import Module from '../module/model';
-
-const {
-  inject,
-  observer,
-  get,
-  set
-} = Ember;
 
 const {
   belongsTo,
@@ -19,20 +13,15 @@ const defaultTempo = 120;
 const latency = 10;
 const midiTimingEventsPerBeat = 24; // always the case AFAIK
 
+const sourceMenuValues = ['Internal', 'External'];
+
 export default Module.extend({
+
+  midi: service(),
+  scheduler: service(),
 
   type: 'module-clock', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Clock',
-
-  midi: inject.service(),
-  scheduler: inject.service(),
-
-  tempoInPort: belongsTo('port-value-in', { async: false }),
-  resInPort: belongsTo('port-value-in', { async: false }),
-  resetOutPort: belongsTo('port-event-out', { async: false }),
-  trigOutPort: belongsTo('port-event-out', { async: false }),
-  source: attr('string', { defaultValue: 'Internal' }),
-  sourceMenuValues: ['Internal', 'External'],
 
   isStarted: false,
   // last time an internal event was sent out.
@@ -45,6 +34,14 @@ export default Module.extend({
   latestMidiEventTimestamp: null,
   // number of midi timing events that have been received since the beginning of the current beat (external mode)
   midiEventCount: null,
+
+  sourceMenuValues,
+
+  tempoInPort: belongsTo('port-value-in', { async: false }),
+  resInPort: belongsTo('port-value-in', { async: false }),
+  resetOutPort: belongsTo('port-event-out', { async: false }),
+  trigOutPort: belongsTo('port-event-out', { async: false }),
+  source: attr('string', { defaultValue: 'Internal' }),
 
   onSourceChanged: observer('source', function() {
     if (get(this, 'source') === 'Internal') {

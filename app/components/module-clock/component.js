@@ -1,19 +1,15 @@
-import Ember from 'ember';
+import { alias } from '@ember/object/computed';
+import { get } from '@ember/object';
 import ModuleGenericComponent from '../module/component';
-
-const {
-  computed,
-  get
-} = Ember;
 
 export default ModuleGenericComponent.extend({
 
   classNames: ['module-clock'],
   classNameBindings: ['isStarted:started'],
 
-  isStarted: computed.alias('module.isStarted'),
-  latestTriggerTime: computed.alias('module.latestTriggerTime'),
-  tickDuration: computed.alias('module.tickDuration'),
+  isStarted: alias('module.isStarted'),
+  latestTriggerTime: alias('module.latestTriggerTime'),
+  tickDuration: alias('module.tickDuration'),
 
   actions: {
     start() {
