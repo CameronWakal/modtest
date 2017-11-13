@@ -80,10 +80,9 @@ export default ModuleSequence.extend({
       // if the second was the bigger array, slice the remaining elements/arrays and update
       if (minLength === firstLength) {
         second = Array.prototype.slice.call(second, minLength);
-      }
+      } else {
       // Otherwise update the second (smallest array) with the remainders of the first
       // and update the first array to include only the extended sub-arrays
-      else {
         second = Array.prototype.slice.call(first, minLength);
         first = Array.prototype.slice.call(first, 0, minLength);
       }

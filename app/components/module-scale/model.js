@@ -34,25 +34,25 @@ export default Module.extend({
     switch (mode) {
       case 0:
         newValues = [0, 2, 4, 5, 7, 9, 11];
-      break;
+        break;
       case 1:
         newValues = [0, 2, 3, 5, 7, 9, 10];
-      break;
+        break;
       case 2:
         newValues = [0, 1, 3, 5, 7, 8, 10];
-      break;
+        break;
       case 3:
         newValues = [0, 2, 4, 6, 7, 9, 11];
-      break;
+        break;
       case 4:
         newValues = [0, 2, 4, 5, 7, 9, 10];
-      break;
+        break;
       case 5:
         newValues = [0, 2, 3, 5, 7, 8, 10];
-      break;
+        break;
       case 6:
         newValues = [0, 1, 3, 5, 6, 8, 10];
-      break;
+        break;
       default:
         console.log('module-scale error – unknown mode requested:', mode);
         return;

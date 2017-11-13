@@ -75,7 +75,7 @@ export default Model.extend({
 
   shiftForward() {
     let oldValues = get(this, 'items').mapBy('value');
-    get(this, 'items').forEach((item,index) => {
+    get(this, 'items').forEach((item, index) => {
       if (index < oldValues.length - 1) {
         set(item, 'value', oldValues[index + 1]);
       } else {
@@ -86,7 +86,7 @@ export default Model.extend({
 
   shiftBackward() {
     let oldValues = get(this, 'items').mapBy('value');
-    get(this, 'items').forEach((item,index) => {
+    get(this, 'items').forEach((item, index) => {
       if (index > 0) {
         set(item, 'value', oldValues[index - 1]);
       } else {

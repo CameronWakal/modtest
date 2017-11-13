@@ -54,7 +54,7 @@ export default TextField.extend({
     switch (event.keyCode) {
       case 13: // enter/return
         this.$().select();
-      break;
+        break;
       case 27: // escape
         this.$().select();
     }
@@ -66,7 +66,7 @@ export default TextField.extend({
     switch (event.keyCode) {
       case 13: // enter/return
         this.updateValue();
-      break;
+        break;
       case 27: // escape
         this.resetValue();
     }
