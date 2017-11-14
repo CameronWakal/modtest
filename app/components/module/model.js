@@ -64,6 +64,7 @@ export default Model.extend({
     });
     get(this, 'ports').pushObject(port);
     port.save();
+    return port;
   },
 
   // targetVar is checked by the port when a request for the value comes in
@@ -78,8 +79,18 @@ export default Model.extend({
     port.save();
   },
 
-  // portVar is used to easily refer to this specific port from within the module
+  // create a value-in-port and add it to the internal list of ports,
+  // then assign it to the provided variable.
   addValueInPort(label, portVar, options) {
+    let port = this.addValueInPortWithoutAssignment(label, options);
+    set(this, portVar, port);
+  },
+
+  // create a value-in-port and add it to the internal list of ports,
+  // but then just return it rather than assigning it to the provided
+  // port variable as above. This can be useful if you want to create
+  // a dynamic number of ports in a hasMany, for example.
+  addValueInPortWithoutAssignment(label, options) {
     if (options.isEnabled == null) {
       options.isEnabled = true;
     }
@@ -97,8 +108,8 @@ export default Model.extend({
       module: this
     });
     get(this, 'ports').pushObject(port);
-    set(this, portVar, port);
     port.save();
+    return port;
   },
 
   addNumberSetting(label, targetValue, module) {
