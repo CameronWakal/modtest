@@ -2,6 +2,11 @@ import { set, get, observer } from '@ember/object';
 import Module from '../module/model';
 import DS from 'ember-data';
 
+/*  This module accepts a number of event and value inputs, and a single 'switch' value input.
+ *  The value of the switch input determines which event and value ports will be patched
+ *  through to the outputs. The number of input ports can be configured via a module setting.
+ */
+
 const {
   belongsTo,
   hasMany,
@@ -54,19 +59,12 @@ export default Module.extend({
     for (let i = 0; i < count; i++) {
       port = get(this, 'valueInPorts').popObject();
       get(this, 'ports').removeObject(port);
+      port.disconnect();
+      port.destroyRecord();
       port = get(this, 'eventInPorts').popObject();
       get(this, 'ports').removeObject(port);
-    }
-  },
-
-  getValue() {
-    let switchVal = get(this, 'switchInPort').getValue();
-    if (switchVal === 0) {
-      return get(this, 'in0Port').getValue();
-    } else if (switchVal === 1) {
-      return get(this, 'in1Port').getValue();
-    } else {
-      return null;
+      port.disconnect();
+      port.destroyRecord();
     }
   },
 
@@ -88,8 +86,22 @@ export default Module.extend({
     }
   },
 
-  onEventIn(event) {
-    console.log('Switch received event!', event);
+  getValue() {
+    let switchVal = get(this, 'switchInPort').getValue();
+    if (switchVal == null) {
+      return null;
+    }
+    let ports = get(this, 'valueInPorts');
+    let port = ports.objectAt(switchVal);
+    return port.getValue();
+  },
+
+  onEventIn(event, port) {
+    let switchVal = get(this, 'switchInPort').getValue();
+    let portNumber = parseInt(get(port, 'label'));
+    if (switchVal != null && !isNaN(portNumber)) {
+      get(this, 'eventOutPort').sendEvent(event);
+    }
   }
 
 });
