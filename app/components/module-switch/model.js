@@ -33,7 +33,6 @@ export default Module.extend({
       let currentCount = get(this, 'valueInPorts.length');
       let newCount = Math.min(Math.max(get(this, 'inputPortsCount'), minInputs), maxInputs);
       let change = newCount - currentCount;
-      let port;
       if (change > 0) {
         this._addInputPorts(change);
       } else if (change < 0) {

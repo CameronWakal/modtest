@@ -45,7 +45,7 @@ export default Component.extend({
       run.scheduleOnce('afterRender', this, function() {
         this.updateConnections();
         this.drawConnections();
-        this.attrs.didUpdate();
+        get(this, 'didUpdate')();
       });
     }
   }),

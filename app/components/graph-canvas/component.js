@@ -17,7 +17,7 @@ export default Component.extend({
 
   inlineStyles: computed('width', 'height', function() {
     let styleString = `width:${get(this, 'width')}px; height:${get(this, 'height')}px`;
-    return new htmlSafe(styleString);
+    return htmlSafe(styleString);
   }),
 
   onValuesChanged: observer(

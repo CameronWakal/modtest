@@ -20,7 +20,7 @@ export default Component.extend({
   }),
 
   styleAttribute: computed('blinkDuration', function() {
-    return new htmlSafe(`animation-duration: ${get(this, 'blinkDuration')}ms;`);
+    return htmlSafe(`animation-duration: ${get(this, 'blinkDuration')}ms;`);
   })
 
 });

@@ -18,11 +18,12 @@ const lookahead = 16.666;
 
 export default Service.extend({
 
-  requests: [],
+  requests: null,
   frameCounter: 0, // for slo-mo debugging
 
   setup() {
     window.requestAnimationFrame(this._sendEvents.bind(this));
+    this.requests = [];
   },
 
   queueEvent(event, callback) {

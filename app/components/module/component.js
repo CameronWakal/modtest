@@ -25,7 +25,7 @@ export default Component.extend({
 
   inlineStyles: computed('xPos', 'yPos', function() {
     let styleString = `left:${get(this, 'xPos')}px; top:${get(this, 'yPos')}px`;
-    return new htmlSafe(styleString);
+    return htmlSafe(styleString);
   }),
 
   onPortsChanged: observer('module.ports.@each.isEnabled', function() {
@@ -44,10 +44,10 @@ export default Component.extend({
 
   actions: {
     remove() {
-      this.attrs.remove();
+      get(this, 'remove')();
     },
     selectPort(port) {
-      this.attrs.selectPort(port);
+      get(this, 'selectPort')(port);
     },
 
     portStartedConnecting(port) {
