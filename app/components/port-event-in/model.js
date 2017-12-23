@@ -21,7 +21,7 @@ export default Port.extend({
     let targetMethodName = get(this, 'targetMethod');
     let targetMethod = get(module, targetMethodName).bind(module);
 
-    targetMethod(event);
+    targetMethod(event, this);
   }
 
 });

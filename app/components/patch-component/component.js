@@ -117,7 +117,6 @@ export default Component.extend({
       this.patch.save();
       module.remove();
       set(this, 'diagramNeedsUpdate', true);
-
     },
 
     addModule(type, event) {

@@ -45,7 +45,7 @@ export default Component.extend({
       run.scheduleOnce('afterRender', this, function() {
         this.updateConnections();
         this.drawConnections();
-        this.attrs.didUpdate();
+        get(this, 'didUpdate')();
       });
     }
   }),
@@ -210,7 +210,7 @@ export default Component.extend({
   // Check if mouse position is close to any connection line
   // http://jsfiddle.net/mmansion/9K5p9/
   mouseDown(event) {
-    get(this, 'moduleDeselected');
+    get(this, 'moduleDeselected')();
     set(this, 'selectedConnectionIndex', null);
     let startX, startY, endX, endY, point, lineStart, lineEnd, distance;
     let cons = get(this, 'connections');
