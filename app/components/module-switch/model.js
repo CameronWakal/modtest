@@ -99,7 +99,9 @@ export default Module.extend({
     let switchVal = get(this, 'switchInPort').getValue();
     let portNumber = parseInt(get(port, 'label'));
     if (switchVal != null && !isNaN(portNumber)) {
-      get(this, 'eventOutPort').sendEvent(event);
+      if(switchVal == portNumber) {
+        get(this, 'eventOutPort').sendEvent(event);
+      }
     }
   }
 
