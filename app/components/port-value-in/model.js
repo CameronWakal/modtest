@@ -1,4 +1,5 @@
 import { get, observer } from '@ember/object';
+import { isEmpty } from '@ember/utils';
 import DS from 'ember-data';
 import Port from '../port/model';
 
@@ -17,10 +18,19 @@ export default Port.extend({
   minValue: attr('number'),
   maxValue: attr('number'),
   disabledValue: attr('number'),
+  disabledValueChangedMethod: attr('string'), // method to notify the module that the disabled value has changed
 
   onDisabledValueChanged: observer('disabledValue', function() {
     if (get(this, 'hasDirtyAttributes') && !get(this, 'isNew')) {
       console.log('port-value-in disabledValueChanged');
+
+      let module = get(this, 'module');
+      let methodName = get(this, 'disabledValueChangedMethod');
+      if (!isEmpty(methodName)) {
+        let methodToCall = get(module, methodName).bind(module);
+        methodToCall();
+      }
+
       this.requestSave();
     }
   }),

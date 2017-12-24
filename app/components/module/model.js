@@ -103,6 +103,7 @@ export default Model.extend({
       canBeEmpty: options.canBeEmpty,
       defaultValue: options.defaultValue,
       disabledValue: options.defaultValue,
+      disabledValueChangedMethod: options.disabledValueChangedMethod,
       minValue: options.minValue,
       maxValue: options.maxValue,
       module: this

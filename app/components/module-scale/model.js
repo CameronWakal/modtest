@@ -105,7 +105,7 @@ export default Module.extend({
       this.addValueInPort('degree', 'degreeInPort', { defaultValue: 0 });
       this.addValueInPort('octave', 'octaveInPort', { isEnabled: false, defaultValue: 3, minValue: -2, maxValue: 8 });
       this.addValueInPort('root', 'rootInPort', { isEnabled: false, defaultValue: 0 });
-      this.addValueInPort('mode', 'modeInPort', { isEnabled: false, defaultValue: 0 });
+      this.addValueInPort('mode', 'modeInPort', { isEnabled: false, defaultValue: 0, disabledValueChangedMethod: 'updateScale' });
       this.addEventInPort('update', 'updateScale', true);
       this.addValueOutPort('note', 'getNote', true);
 
