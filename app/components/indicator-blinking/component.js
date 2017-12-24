@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed, get } from '@ember/object';
+import { computed, get, set } from '@ember/object';
 import { htmlSafe } from '@ember/string';
 
 export default Component.extend({
@@ -11,6 +11,12 @@ export default Component.extend({
   blinkDuration: 200,
   blinkTrigger: null,
   countIsEven: true,
+
+  init() {
+    // prevent lamps from initially blinking when revisiting an already-loaded patch route
+    set(this, 'blinkTrigger', null);
+    this._super(...arguments);
+  },
 
   animationClass: computed('blinkTrigger', function() {
     if (get(this, 'blinkTrigger')) {
