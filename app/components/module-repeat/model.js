@@ -147,11 +147,6 @@ export default Module.extend({
       console.log('module-repeat.didCreate() requestSave()');
       this.requestSave();
     }
-  },
-
-  mod(num, mod) {
-    let remain = num % mod;
-    return Math.floor(remain >= 0 ? remain : remain + mod);
   }
 
 });

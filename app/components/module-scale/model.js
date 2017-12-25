@@ -1,4 +1,5 @@
 import { set, get } from '@ember/object';
+import { mod, div } from '../../utils/math-util';
 import DS from 'ember-data';
 import Module from '../module/model';
 
@@ -76,7 +77,7 @@ export default Module.extend({
     let octave = get(this, 'octaveInPort').getValue();
     let root = get(this, 'rootInPort').getValue();
 
-    let degreeInOctave = this.mod(degree, get(this, 'degreesInScale'));
+    let degreeInOctave = mod(degree, get(this, 'degreesInScale'));
     let degreeItem = get(this, 'degrees.items').findBy('index', degreeInOctave);
     set(this, 'degrees.currentItem', degreeItem);
     let intervalForDegree = get(degreeItem, 'value');
@@ -85,7 +86,7 @@ export default Module.extend({
       return null;
     }
 
-    octave = octave + 1 + this.div(degree, get(this, 'degreesInScale'));
+    octave = octave + 1 + div(degree, get(this, 'degreesInScale'));
     let note = (octave * 12) + root + intervalForDegree;
     // console.log('octave:'+octave+' root:'+root+' degree:'+degree+' interval:'+intervalForDegree+' note:'+note);
     return note;
@@ -124,15 +125,6 @@ export default Module.extend({
   save() {
     get(this, 'degrees').save();
     this._super();
-  },
-
-  mod(num, mod) {
-    let remain = num % mod;
-    return Math.floor(remain >= 0 ? remain : remain + mod);
-  },
-
-  div(num, denom) {
-    return Math[num > 0 ? 'floor' : 'ceil'](num / denom);
   }
 
 });

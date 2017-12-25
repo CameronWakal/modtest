@@ -1,6 +1,7 @@
 import { set, get } from '@ember/object';
 import Module from '../module/model';
 import DS from 'ember-data';
+import { mod } from '../../utils/math-util';
 
 const {
   belongsTo
@@ -29,7 +30,7 @@ export default Module.extend({
     let divBy = get(this, 'divByPort').getValue();
     let shiftBy = get(this, 'shiftByPort').getValue();
 
-    if (count - this.mod(shiftBy, divBy) === 0) {
+    if (count - mod(shiftBy, divBy) === 0) {
       if (get(this, 'trigOutPort.isConnected')) {
         // since we're changing the event duration, make a copy to avoid side effects
         let newEvent = Object.assign({}, event);
@@ -40,7 +41,7 @@ export default Module.extend({
       }
     }
 
-    set(this, 'count', this.mod(count + 1, divBy));
+    set(this, 'count', mod(count + 1, divBy));
   },
 
   onResetIn() {
@@ -61,11 +62,6 @@ export default Module.extend({
       console.log('module-clock-div.didCreate() requestSave()');
       this.requestSave();
     }
-  },
-
-  mod(num, mod) {
-    let remain = num % mod;
-    return Math.floor(remain >= 0 ? remain : remain + mod);
   }
 
 });
