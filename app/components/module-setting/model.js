@@ -15,6 +15,8 @@ export default Model.extend({
   // a property name on the parent module to read/write
   targetValue: attr('string'),
   module: belongsTo('module', { async: false, polymorphic: true }),
+  minValue: attr('number'),
+  maxValue: attr('number'),
 
   ready() {
     // make an alias from this.value to module.targetValue at runtime

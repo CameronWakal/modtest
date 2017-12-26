@@ -113,9 +113,18 @@ export default Model.extend({
     return port;
   },
 
-  addNumberSetting(label, targetValue, module) {
+  addNumberSetting(label, targetValue, module, options) {
+    if (options == null) {
+      options = {};
+    }
+    if (options.canBeEmpty == null) {
+      options.canBeEmpty = false;
+    }
     let setting = this.store.createRecord('module-setting', {
       label,
+      canBeEmpty: options.canBeEmpty,
+      minValue: options.minValue,
+      maxValue: options.maxValue,
       targetValue,
       module
     });

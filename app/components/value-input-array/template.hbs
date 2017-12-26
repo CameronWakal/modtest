@@ -1,7 +1,7 @@
 {{#if shouldIncludeSlider}}
   <div class="value-input-array-sliders">
     {{#each array.items as |item|}}
-      {{~value-input-fader 
+      {{~value-input-fader
         item=item
         min=array.valueMin
         max=array.valueMax
@@ -14,11 +14,12 @@
 {{#if shouldIncludeNumber}}
   <div class="value-input-array-numbers">
     {{#each array.items as |item|}}
-      {{~value-array-input-number 
-        item=item 
+      {{~value-array-input-number
+        item=item
         boundValue=item.value
         min=array.valueMin
         max=array.valueMax
+        canBeEmpty=true
         step=array.valueStep
       ~}}
     {{/each}}
@@ -27,8 +28,8 @@
 {{#if isTypeButton}}
   <div class="value-input-array-buttons">
     {{#each array.items as |item|}}
-      {{~value-array-input-button 
-        item=item 
+      {{~value-array-input-button
+        item=item
         min=array.valueMin
         max=array.valueMax
       ~}}

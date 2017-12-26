@@ -76,11 +76,11 @@ export default Module.extend({
       this.addMenuSetting('Input Type', 'inputType', 'inputTypeMenuOptions', this);
 
       // todo: make config option for settings that must have a non-null numeric value
-      this.addNumberSetting('Length', 'steps.length', this);
+      this.addNumberSetting('Length', 'steps.length', this, { minValue: 1, maxValue: 64 });
       this.addNumberSetting('Input Min', 'steps.valueMin', this);
       this.addNumberSetting('Input Max', 'steps.valueMax', this);
-      this.addNumberSetting('Input Step', 'steps.valueStep', this);
-      this.addNumberSetting('Display Scale', 'displayScale', this);
+      this.addNumberSetting('Input Step', 'steps.valueStep', this, { minValue: 1 });
+      this.addNumberSetting('Display Scale', 'displayScale', this, { minValue: 1 });
 
       // create ports
       this.addEventInPort('inc', 'incrementStep', true);

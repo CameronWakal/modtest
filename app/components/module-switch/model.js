@@ -71,7 +71,7 @@ export default Module.extend({
     if (get(this, 'isNew')) {
       set(this, 'title', this.name);
 
-      this.addNumberSetting('Inputs', 'inputPortsCount', this);
+      this.addNumberSetting('Inputs', 'inputPortsCount', this, { minValue: 1, maxValue: 8 });
 
       this.addValueInPort('switch', 'switchInPort', { canBeEmpty: true });
       this.addValueOutPort('out', 'getValue', true);
