@@ -17,7 +17,6 @@ export default Model.extend({
   module: belongsTo('module', { async: false, polymorphic: true }),
   minValue: attr('number'),
   maxValue: attr('number'),
-  defaultValue: attr('number'),
 
   ready() {
     // make an alias from this.value to module.targetValue at runtime

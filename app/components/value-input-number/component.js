@@ -3,7 +3,6 @@ import { set, get, computed, observer } from '@ember/object';
 
 // from template:
 // boundValue – external, persisted value, as opposed to current <input> value
-// defaultValue
 // canBeEmpty
 // minValue
 // maxValue
@@ -41,12 +40,12 @@ export default TextField.extend({
     let value = parseInt(get(this, 'value'));
 
     if (isNaN(value)) {
-      // if new value is NaN, set boundValue to null or defaultValue,
+      // if new value is NaN, set boundValue to null or boundValue,
       // depending on canBeEmpty flag
       if (get(this, 'canBeEmpty')) {
         value = null;
       } else {
-        value = get(this, 'defaultValue');
+        value = get(this, 'boundValue');
       }
     } else {
       // if new value is a number, make sure it's within min/max
@@ -63,9 +62,6 @@ export default TextField.extend({
 
   resetValue() {
     let value = get(this, 'boundValue');
-    if (!get(this, 'canBeEmpty') && value == null) {
-      value = get(this, 'defaultValue');
-    }
     set(this, 'value', value);
   },
 

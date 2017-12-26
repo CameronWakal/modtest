@@ -125,7 +125,6 @@ export default Model.extend({
       canBeEmpty: options.canBeEmpty,
       minValue: options.minValue,
       maxValue: options.maxValue,
-      defaultValue: get(module, targetValue),
       targetValue,
       module
     });
