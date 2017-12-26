@@ -104,7 +104,6 @@ export default Module.extend({
 
     repeatEvent = {
       targetTime: event.targetTime + delay,
-      outputTime: event.outputTime + delay,
       duration: delay,
       repeatCount: eventRepeatCount,
       repeatOriginalTargetTime: eventOriginalTargetTime

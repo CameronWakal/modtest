@@ -6,7 +6,6 @@
 */
 
 import Service from '@ember/service';
-
 import { get } from '@ember/object';
 
 // for slo-mo debugging

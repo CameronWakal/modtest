@@ -6,8 +6,6 @@ const {
   belongsTo
 } = DS;
 
-const latency = 10;
-
 /* Module attempts to identify key signature of a series of notes,
  * using the 'CEG Key-Finding Method' as described in the paper
  * 'Towards a Mathematical Model of Tonality'
@@ -179,8 +177,7 @@ export default Module.extend({
   keyToOutputChanged: observer('keyToOutput', function() {
     get(this, 'keyChangedPort').sendEvent({
       targetTime: performance.now(),
-      callbackTime: performance.now(),
-      outputTime: performance.now() + latency
+      callbackTime: performance.now()
     });
   }),
 

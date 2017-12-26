@@ -8,8 +8,6 @@ const {
   attr
 } = DS;
 
-const latency = 10;
-
 export default Module.extend({
 
   midi: service(),
@@ -54,7 +52,6 @@ export default Module.extend({
     if (get(this, 'noteOnPort.isConnected')) {
       let event = {
         targetTime: timestamp,
-        outputTime: timestamp + latency,
         callbackTime: performance.now()
       };
       get(this, 'noteOnPort').sendEvent(event);
@@ -68,7 +65,6 @@ export default Module.extend({
     if (get(this, 'noteOnPort.isConnected')) {
       let event = {
         targetTime: timestamp,
-        outputTime: timestamp + latency,
         callbackTime: performance.now()
       };
       get(this, 'noteOffPort').sendEvent(event);

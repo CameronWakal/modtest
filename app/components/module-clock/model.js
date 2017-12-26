@@ -10,7 +10,6 @@ const {
 
 const defaultRes = 4; // ticks per beat
 const defaultTempo = 120;
-const latency = 10;
 const midiTimingEventsPerBeat = 24; // always the case AFAIK
 
 const sourceMenuValues = ['Internal', 'External'];
@@ -79,8 +78,7 @@ export default Module.extend({
     set(this, 'isStarted', true);
     if (get(this, 'source') === 'Internal') {
       this.queueEvent({
-        targetTime: performance.now(),
-        outputTime: performance.now() + latency
+        targetTime: performance.now()
       });
     } else {
       this.resetExternalTimer();
@@ -123,7 +121,6 @@ export default Module.extend({
         // form and send the output event
         outputEvent = {
           targetTime: event.timeStamp,
-          outputTime: event.timeStamp + latency,
           callbackTime: performance.now(),
           duration: tickDuration
         };
@@ -145,7 +142,6 @@ export default Module.extend({
         // form and send the output event
         outputEvent = {
           targetTime: adjustedTargetTimestamp,
-          outputTime: adjustedTargetTimestamp + latency,
           callbackTime: performance.now(),
           duration: tickDuration
         };
@@ -178,8 +174,7 @@ export default Module.extend({
 
       // schedule the next event
       this.queueEvent({
-        targetTime: event.targetTime + tickDuration,
-        outputTime: event.outputTime + tickDuration
+        targetTime: event.targetTime + tickDuration
       });
 
       // prepare and send the current event

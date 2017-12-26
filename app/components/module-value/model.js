@@ -7,8 +7,6 @@ const {
   belongsTo
 } = DS;
 
-const latency = 10;
-
 export default Module.extend({
 
   type: 'module-value', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
@@ -23,7 +21,6 @@ export default Module.extend({
     if (get(this, 'hasDirtyAttributes')) {
       let changeEvent = {
         targetTime: performance.now(),
-        outputTime: performance.now() + latency,
         callbackTime: performance.now()
       };
       get(this, 'changeOutPort').sendEvent(changeEvent);

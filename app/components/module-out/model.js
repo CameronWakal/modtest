@@ -9,6 +9,7 @@ const {
 } = DS;
 
 const noteDuration = 20;
+const latency = 10;
 
 export default Module.extend({
 
@@ -42,9 +43,9 @@ export default Module.extend({
   }),
 
   sendEvent(event) {
-    // the clock adds some padding ms to the event timestamps to allow for callback latency.
-    // send an alert if the callback latency is more than the allowed padding.
-    let netLatency = window.performance.now() - event.outputTime;
+    // we add some padding ms to the event timestamps to allow for latency.
+    // send an alert if the latency is more than the allowed padding.
+    let netLatency = performance.now() - (event.targetTime + latency);
     if (netLatency > 0) {
       console.log(`Note event is late by ${netLatency}`);
     }
@@ -52,7 +53,7 @@ export default Module.extend({
     // Diagnostic:
     // Calculate average callback delay and average time for event to traverse graph.
 
-    event.completionTime = window.performance.now();
+    event.completionTime = performance.now();
     get(this, 'events').push(event);
     if (get(this, 'events.length') >= 64) {
 
@@ -84,7 +85,7 @@ export default Module.extend({
       value: get(this, 'noteInPort').getValue(),
       velocity: get(this, 'velInPort').getValue(),
       duration: noteDuration,
-      timestamp: event.outputTime,
+      timestamp: event.targetTime + latency,
       channel: get(this, 'channelInPort').getValue() - 1
     };
     if (note.value != null) {

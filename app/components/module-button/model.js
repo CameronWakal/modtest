@@ -6,8 +6,6 @@ const {
   belongsTo
 } = DS;
 
-const latency = 10;
-
 export default Module.extend({
 
   type: 'module-button', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
@@ -18,8 +16,7 @@ export default Module.extend({
   trig() {
     get(this, 'eventOutPort').sendEvent({
       targetTime: performance.now(),
-      callbackTime: performance.now(),
-      outputTime: performance.now() + latency
+      callbackTime: performance.now()
     });
   },
 
