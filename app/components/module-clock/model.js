@@ -73,6 +73,7 @@ export default Module.extend({
 
   start() {
     if (get(this, 'isStarted')) {
+      get(this, 'scheduler').cancelEventsForModule(this);
       this.reset();
     }
     set(this, 'isStarted', true);
@@ -188,7 +189,7 @@ export default Module.extend({
   },
 
   queueEvent(event) {
-    get(this, 'scheduler').queueEvent(event, this.onSchedulerCallback.bind(this));
+    get(this, 'scheduler').queueEvent(event, this.onSchedulerCallback.bind(this), this);
   },
 
   sendEvent(event) {

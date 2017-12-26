@@ -26,11 +26,16 @@ export default Service.extend({
     this.requests = [];
   },
 
-  queueEvent(event, callback) {
+  queueEvent(event, callback, module) {
     this.requests.pushObject({
       callback,
-      event
+      event,
+      module
     });
+  },
+
+  cancelEventsForModule(module) {
+    this.requests = this.requests.rejectBy('module', module);
   },
 
   _sendEvents() {
