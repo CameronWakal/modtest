@@ -14,6 +14,7 @@ export default Component.extend({
   attributeBindings: ['title'],
 
   portIsValueIn: equal('port.type', 'port-value-in'),
+  portIsEventOut: equal('port.type', 'port-event-out'),
 
   title: computed('port.{minValue,maxValue,canBeEmpty,type}', function() {
     let title = '';

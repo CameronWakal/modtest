@@ -2,13 +2,15 @@
   {{input type="checkbox" checked=port.isEnabled}}
   {{labelWithType}}
 </label>
-{{#if portIsValueIn}}
-  {{#unless port.isEnabled}}
+{{#unless port.isEnabled}}
+  {{#if portIsValueIn}}
     {{value-input-number
       boundValue=port.disabledValue
       canBeEmpty=port.canBeEmpty
       minValue=port.minValue
       maxValue=port.maxValue
     }}
-  {{/unless}}
-{{/if}}
+  {{else if portIsEventOut}}
+    <div class="select-menu-wrapper">{{select-menu items='hi,there' selectedItem='there'}}</div>
+  {{/if}}
+{{/unless}}

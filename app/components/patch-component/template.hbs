@@ -42,19 +42,21 @@
 {{/ember-wormhole}}
 
 <div class="modules" id="modules">
-  {{#each patch.modules as |module|}}{{component  module.type
-                                                  module=module
-                                                  remove=(action 'removeModule' module)
-                                                  selected=(action 'moduleSelected' module)
-                                                  portStartedConnecting=(action 'portStartedConnecting' module)
-                                                  portFinishedConnecting=(action 'portFinishedConnecting')
-                                                  startedMoving=(action 'moduleStartedMoving' module)
-                                                  finishedMoving=(action 'moduleFinishedMoving')
-                                                  mouseEnterPort=(action 'mouseEnterPort')
-                                                  mouseLeavePort=(action 'mouseLeavePort')
-                                                  portDisconnected=(action 'portDisconnected')
-                                                  portsChanged=(action 'modulePortsChanged' module)
-                                                  layoutChanged=(action 'moduleLayoutChanged' module)
-                                                  savePatch=(action 'savePatch')
-        }}{{/each}}
+  {{#each patch.modules as |module|}}
+    {{component   module.type
+                  module=module
+                  remove=(action 'removeModule' module)
+                  selected=(action 'moduleSelected' module)
+                  portStartedConnecting=(action 'portStartedConnecting' module)
+                  portFinishedConnecting=(action 'portFinishedConnecting')
+                  startedMoving=(action 'moduleStartedMoving' module)
+                  finishedMoving=(action 'moduleFinishedMoving')
+                  mouseEnterPort=(action 'mouseEnterPort')
+                  mouseLeavePort=(action 'mouseLeavePort')
+                  portDisconnected=(action 'portDisconnected')
+                  portsChanged=(action 'modulePortsChanged' module)
+                  layoutChanged=(action 'moduleLayoutChanged' module)
+                  savePatch=(action 'savePatch')
+    }}
+  {{/each}}
 </div>
