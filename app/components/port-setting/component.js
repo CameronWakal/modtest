@@ -47,5 +47,12 @@ export default Component.extend({
       case 'port-event-out':
         return `${label}->`;
     }
+  }),
+
+  busMenuItems: computed('port.busses.@each.title', function() {
+    let busNames = get(this, 'port.busses').mapBy('title');
+    let busLabels = busNames.map(name => `${name} bus`);
+    return ['off', ...busLabels];
   })
+
 });

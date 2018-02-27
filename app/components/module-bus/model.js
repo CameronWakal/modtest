@@ -5,12 +5,11 @@
     without needing to visually patch them on the diagram.
 */
 
-import { set, get } from '@ember/object';
+import { get } from '@ember/object';
 import DS from 'ember-data';
 import Module from '../module/model';
 
 const {
-  attr,
   belongsTo
 } = DS;
 

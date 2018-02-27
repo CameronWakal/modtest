@@ -1,4 +1,4 @@
-import { bool } from '@ember/object/computed';
+import { bool, alias } from '@ember/object/computed';
 import { get, observer, computed } from '@ember/object';
 import DS from 'ember-data';
 
@@ -16,6 +16,7 @@ export default Model.extend({
   module: belongsTo('module', { polymorphic: true, async: false }),
 
   isConnected: bool('connections.length'),
+  busses: alias('module.busses'),
 
   uniqueCssIdentifier: computed('id', function() {
     return `port-${this.id}`;

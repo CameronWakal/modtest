@@ -1,4 +1,4 @@
-import { filterBy } from '@ember/object/computed';
+import { filterBy, alias } from '@ember/object/computed';
 import { run } from '@ember/runloop';
 import { get, set, computed } from '@ember/object';
 import DS from 'ember-data';
@@ -28,6 +28,7 @@ export default Model.extend({
   valueOutPorts: filterBy('ports', 'type', 'port-value-out'),
   valueInPorts: filterBy('ports', 'type', 'port-value-in'),
   enabledPorts: filterBy('ports', 'isEnabled', true),
+  busses: alias('patch.busses'),
   outPorts: computed('ports.@each.type', function() {
     return get(this, 'ports').filter((item) => {
       return get(item, 'type') === 'port-value-out' || get(item, 'type') === 'port-event-out';
