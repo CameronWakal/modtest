@@ -2,13 +2,20 @@
   {{input type="checkbox" checked=port.isEnabled}}
   {{labelWithType}}
 </label>
-{{#if portIsValueIn}}
-  {{#unless port.isEnabled}}
+{{#unless port.isEnabled}}
+  {{#if portIsValueIn}}
     {{value-input-number
       boundValue=port.disabledValue
       canBeEmpty=port.canBeEmpty
       minValue=port.minValue
       maxValue=port.maxValue
     }}
-  {{/unless}}
-{{/if}}
+  {{else if port.isEventPort}}
+    {{port-setting-bus-menu
+      busses=port.module.patch.busses
+      connectedBus=connectedBus
+      disconnectFromBus=(action 'disconnectFromBus')
+      connectToBus=(action 'connectToBus')
+    }}
+  {{/if}}
+{{/unless}}

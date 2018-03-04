@@ -9,10 +9,10 @@ export default Component.extend({
 
   change() {
     let selectedIndex = this.$('option:selected').index();
-    let patches = get(this, 'patches').toArray();
-    let selectedPatch = patches[selectedIndex];
-    set(this, 'selectedPatch', selectedPatch);
-    get(this, 'patchChanged')(selectedPatch);
+    let items = get(this, 'items').toArray();
+    let selectedItem = items[selectedIndex];
+    set(this, 'selectedItem', selectedItem);
+    get(this, 'itemSelected')(selectedItem);
   }
 
 });

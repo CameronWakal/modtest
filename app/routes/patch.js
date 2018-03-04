@@ -1,5 +1,6 @@
 import Route from '@ember/routing/route';
 import { get, set } from '@ember/object';
+import RSVP from 'rsvp';
 
 export default Route.extend({
 
@@ -9,7 +10,10 @@ export default Route.extend({
     // cause yet. For now I'm reloading the new patch when the route changes :(
     if (!get(patch, 'isNew')) {
       return patch.reload().then(function(patch) {
-        return get(patch, 'modules');
+        return RSVP.hash({
+          modules: get(patch, 'modules'),
+          busses: get(patch, 'busses')
+        });
       });
     }
   },

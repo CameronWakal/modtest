@@ -29,7 +29,6 @@ export default Route.extend({
   actions: {
     newPatch() {
       let patch = this.store.createRecord('patch');
-      patch.save();
       this.transitionTo('patch', patch);
       set(this.controllerFor('application'), 'currentPatch', patch);
     },

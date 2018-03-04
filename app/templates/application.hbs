@@ -1,5 +1,5 @@
 <div class ="app-header">
-  <div class="select-menu-wrapper">{{patch-menu patches=patches selectedPatch=currentPatch patchChanged=(action 'patchChanged')}}</div>
+  <div class="select-menu-wrapper">{{select-by-title-menu items=patches selectedItem=currentPatch itemSelected=(action 'patchChanged')}}</div>
   <button {{action 'newPatch'}}>New</button>
 </div>
 <div class="app-sidebar" id="settings-container">

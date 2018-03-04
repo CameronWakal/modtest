@@ -1,6 +1,7 @@
 import { bool } from '@ember/object/computed';
 import { get, observer, computed } from '@ember/object';
 import DS from 'ember-data';
+import { isEmpty } from '@ember/utils';
 
 const {
   Model,
@@ -41,6 +42,16 @@ export default Model.extend({
     if (get(this, 'hasDirtyAttributes') && !get(this, 'isNew')) {
       console.log('port attrchanged');
       this.requestSave();
+    }
+  }),
+
+  // clear all connections when enabling or disabling
+  // connections must be cleared when enabling in case the port
+  // is connected to a bus
+  onEnabledChanged: observer('isEnabled', function() {
+    console.log('onEnabledChanged');
+    if (!isEmpty(get(this, 'connections'))) {
+      this.disconnect();
     }
   }),
 

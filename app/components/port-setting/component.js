@@ -14,6 +14,39 @@ export default Component.extend({
   attributeBindings: ['title'],
 
   portIsValueIn: equal('port.type', 'port-value-in'),
+  portIsEventOut: equal('port.type', 'port-event-out'),
+
+  connectedBus: computed('port.{isEnabled,connections}', function() {
+    if (get(this, 'port.isEnabled')) {
+      console.log('computed connectedBus is null');
+      return null;
+    }
+    return get(this, 'port.connections.firstObject.module');
+  }),
+
+  actions: {
+    disconnectFromBus() {
+      if (get(this, 'connectedBus')) {
+        console.log('disconnecting!');
+        get(this, 'port').disconnect();
+      }
+    },
+
+    connectToBus(bus) {
+      let sourcePort, destPort;
+      if (get(this, 'portIsEventOut')) {
+        sourcePort = get(this, 'port');
+        destPort = get(bus, 'eventInPort');
+      } else {
+        sourcePort = get(bus, 'eventOutPort');
+        destPort = get(this, 'port');
+      }
+
+      this.actions.disconnectFromBus();
+      console.log('connecting!');
+      get(this, 'addBusConnection')(sourcePort, destPort);
+    }
+  },
 
   title: computed('port.{minValue,maxValue,canBeEmpty,type}', function() {
     let title = '';
@@ -47,4 +80,5 @@ export default Component.extend({
         return `${label}->`;
     }
   })
+
 });

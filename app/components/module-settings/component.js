@@ -21,6 +21,10 @@ export default Component.extend({
   actions: {
     titleChanged() {
       this.module.requestSave();
+    },
+
+    addBusConnection(sourcePort, destPort) {
+      get(this, 'addBusConnection')(sourcePort, destPort);
     }
   }
 
