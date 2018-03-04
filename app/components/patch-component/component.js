@@ -138,7 +138,7 @@ export default Component.extend({
     removeConnection(sourcePort, destPort) {
       this.removeBusConnection(sourcePort, destPort);
       set(this, 'diagramNeedsUpdate', true);
-    },
+    }
   },
 
   addConnection(sourcePort, destPort) {

@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import $ from 'jquery';
 import { run } from '@ember/runloop';
-import { set, get, observer } from '@ember/object';
+import { set, get } from '@ember/object';
 
 export default Component.extend({
   classNames: ['port'],

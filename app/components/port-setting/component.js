@@ -1,7 +1,6 @@
 import Component from '@ember/component';
-import { computed, get, observer } from '@ember/object';
+import { computed, get } from '@ember/object';
 import { equal } from '@ember/object/computed';
-import { isEmpty } from '@ember/utils';
 
 export default Component.extend({
 
@@ -17,7 +16,7 @@ export default Component.extend({
   portIsValueIn: equal('port.type', 'port-value-in'),
   portIsEventOut: equal('port.type', 'port-event-out'),
 
-  connectedBus: computed('port.isEnabled', 'port.connections', function(){
+  connectedBus: computed('port.{isEnabled,connections}', function() {
     if (get(this, 'port.isEnabled')) {
       console.log('computed connectedBus is null');
       return null;

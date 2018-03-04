@@ -1,4 +1,4 @@
-import { bool, alias } from '@ember/object/computed';
+import { bool } from '@ember/object/computed';
 import { get, observer, computed } from '@ember/object';
 import DS from 'ember-data';
 import { isEmpty } from '@ember/utils';

@@ -1,4 +1,4 @@
-import { filterBy, alias } from '@ember/object/computed';
+import { filterBy } from '@ember/object/computed';
 import { run } from '@ember/runloop';
 import { get, set, computed } from '@ember/object';
 import DS from 'ember-data';
@@ -28,9 +28,9 @@ export default Model.extend({
   valueOutPorts: filterBy('ports', 'type', 'port-value-out'),
   valueInPorts: filterBy('ports', 'type', 'port-value-in'),
   enabledPorts: filterBy('ports', 'isEnabled', true),
-  enabledOutPorts: computed('ports.@each.type', 'ports.@each.isEnabled', function() {
+  enabledOutPorts: computed('ports.@each.{type,isEnabled}', function() {
     return get(this, 'ports').filter((item) => {
-      return get(item, 'isEnabled') && ( get(item, 'type') === 'port-value-out' || get(item, 'type') === 'port-event-out' );
+      return get(item, 'isEnabled') && (get(item, 'type') === 'port-value-out' || get(item, 'type') === 'port-event-out');
     });
   }),
 
