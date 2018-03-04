@@ -10,7 +10,7 @@
       minValue=port.minValue
       maxValue=port.maxValue
     }}
-  {{else if portIsEventOut}}
+  {{else if port.isEventPort}}
     {{port-setting-bus-menu
       busses=port.module.patch.busses
       connectedBus=connectedBus

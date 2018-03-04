@@ -28,8 +28,8 @@ export default Module.extend({
   ready() {
     if (get(this, 'isNew')) {
       // create ports
-      this.addEventInPort('eventIn', 'eventIn', true);
-      this.addEventOutPort('eventOut', 'eventOutPort', true);
+      this.addEventInPort('eventIn', 'eventIn', false);
+      this.addEventOutPort('eventOut', 'eventOutPort', false);
       console.log('module-bus didCreate saveLater');
       this.requestSave();
     }
