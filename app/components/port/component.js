@@ -1,7 +1,6 @@
 import Component from '@ember/component';
 import $ from 'jquery';
 import { run } from '@ember/runloop';
-import { isEmpty } from '@ember/utils';
 import { set, get, observer } from '@ember/object';
 
 export default Component.extend({
@@ -15,12 +14,6 @@ export default Component.extend({
   tabindex: -1,
 
   isConnectingFrom: false,
-
-  onDisable: observer('port.isEnabled', function() {
-    if (!get(this, 'port.isEnabled') && !isEmpty(get(this, 'port.connections'))) {
-      get(this, 'disconnect')();
-    }
-  }),
 
   mouseDown(event) {
     event.preventDefault();

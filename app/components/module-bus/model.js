@@ -6,6 +6,7 @@
 */
 
 import { get } from '@ember/object';
+import { alias } from '@ember/object/computed';
 import DS from 'ember-data';
 import Module from '../module/model';
 
@@ -18,6 +19,7 @@ export default Module.extend({
   type: 'module-bus', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
 
   eventOutPort: belongsTo('port-event-out', { async: false }),
+  eventInPort: alias('eventInPorts.firstObject'),
 
   eventIn(event) {
     get(this, 'eventOutPort').sendEvent(event);

@@ -68,7 +68,7 @@ export default Component.extend({
 
     modules.forEach((module) => {
 
-      outPorts = get(module, 'outPorts');
+      outPorts = get(module, 'enabledOutPorts');
       outPorts.forEach((outPort) => {
 
         outPortDom = $(modulesDom).find(`.${get(outPort, 'uniqueCssIdentifier')}`);

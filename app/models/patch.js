@@ -16,9 +16,9 @@ export default Model.extend({
   ready() {
     if (get(this, 'isNew')) {
       // create bus modules for routing invisible bus connections
-      let clockBus = this.store.createRecord('module-bus', { patch: this, shouldAutoSave: true, title: 'clock' });
+      let clockBus = this.store.createRecord('module-bus', { patch: this, shouldAutoSave: true, title: 'clock bus' });
       get(this, 'busses').pushObject(clockBus);
-      let resetBus = this.store.createRecord('module-bus', { patch: this, shouldAutoSave: true, title: 'reset' });
+      let resetBus = this.store.createRecord('module-bus', { patch: this, shouldAutoSave: true, title: 'reset bus' });
       get(this, 'busses').pushObject(resetBus);
     }
   },

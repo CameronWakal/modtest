@@ -124,30 +124,36 @@ export default Component.extend({
       get(this, 'patch.modules').pushObject(module);
     },
 
-    removeConnection(sourcePort, destPort) {
-      get(sourcePort, 'connections').removeObject(destPort);
-      console.log('patch.removeConnection() requestSave()');
-      get(sourcePort, 'module').requestSave();
-      get(destPort, 'connections').removeObject(sourcePort);
-      console.log('patch.removeConnection() requestSave()');
+    // a bus connection doesn't appear in the diagram, so no update necessary
+    addBusConnection(sourcePort, destPort) {
+      get(destPort, 'connections').pushObject(sourcePort);
+      console.log('patch.addConnection() requestSave()');
       get(destPort, 'module').requestSave();
 
-      set(this, 'diagramNeedsUpdate', true);
-    }
+      get(sourcePort, 'connections').pushObject(destPort);
+      console.log('patch.addConnection() requestSave()');
+      get(sourcePort, 'module').requestSave();
+    },
 
+    removeConnection(sourcePort, destPort) {
+      this.removeBusConnection(sourcePort, destPort);
+      set(this, 'diagramNeedsUpdate', true);
+    },
   },
 
   addConnection(sourcePort, destPort) {
-    get(destPort, 'connections').pushObject(sourcePort);
-    console.log('patch.addConnection() requestSave()');
-    get(destPort, 'module').requestSave();
-
-    get(sourcePort, 'connections').pushObject(destPort);
-    console.log('patch.addConnection() requestSave()');
-    get(sourcePort, 'module').requestSave();
-
+    this.actions.addBusConnection(sourcePort, destPort);
     set(this, 'diagramNeedsUpdate', true);
+  },
 
+  // a bus connection doesn't appear in the diagram, so no update necessary
+  removeBusConnection(sourcePort, destPort) {
+    get(sourcePort, 'connections').removeObject(destPort);
+    console.log('patch.removeConnection() requestSave()');
+    get(sourcePort, 'module').requestSave();
+    get(destPort, 'connections').removeObject(sourcePort);
+    console.log('patch.removeConnection() requestSave()');
+    get(destPort, 'module').requestSave();
   }
 
 });

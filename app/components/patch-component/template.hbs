@@ -11,7 +11,7 @@
 {{#ember-wormhole to="settings-container"}}
   <div>
     {{#if selectedModule}}
-      {{module-settings module=selectedModule}}
+      {{module-settings module=selectedModule addBusConnection=(action 'addBusConnection')}}
     {{else}}
       {{patch-settings
         patch=patch

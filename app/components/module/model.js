@@ -28,10 +28,9 @@ export default Model.extend({
   valueOutPorts: filterBy('ports', 'type', 'port-value-out'),
   valueInPorts: filterBy('ports', 'type', 'port-value-in'),
   enabledPorts: filterBy('ports', 'isEnabled', true),
-  busses: alias('patch.busses'),
-  outPorts: computed('ports.@each.type', function() {
+  enabledOutPorts: computed('ports.@each.type', 'ports.@each.isEnabled', function() {
     return get(this, 'ports').filter((item) => {
-      return get(item, 'type') === 'port-value-out' || get(item, 'type') === 'port-event-out';
+      return get(item, 'isEnabled') && ( get(item, 'type') === 'port-value-out' || get(item, 'type') === 'port-event-out' );
     });
   }),
 

@@ -11,6 +11,11 @@
       maxValue=port.maxValue
     }}
   {{else if portIsEventOut}}
-    <div class="select-menu-wrapper">{{select-menu items=busMenuItems selectedItem='there'}}</div>
+    {{port-setting-bus-menu
+      busses=port.module.patch.busses
+      connectedBus=connectedBus
+      disconnectFromBus=(action 'disconnectFromBus')
+      connectToBus=(action 'connectToBus')
+    }}
   {{/if}}
 {{/unless}}
