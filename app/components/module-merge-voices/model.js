@@ -89,7 +89,7 @@ export default Module.extend({
   },
 
   getValue() {
-    if(this.selectedValueInPort) {
+    if (this.selectedValueInPort) {
       return this.selectedValueInPort.getValue();
     }
     return null;
