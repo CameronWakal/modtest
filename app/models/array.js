@@ -17,7 +17,7 @@ export default Model.extend({
 
   items: hasMany('arrayItem'),
   currentItem: belongsTo('arrayItem', { async: false }),
-  module: belongsTo('module', { async: false, polymorphic: true }),
+  module: belongsTo('module', { async: false, polymorphic: true, inverse: null }),
 
   onLengthChanged: observer('length', function() {
     let length = get(this, 'items.length');

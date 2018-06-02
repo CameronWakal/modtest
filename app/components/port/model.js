@@ -14,7 +14,7 @@ export default Model.extend({
 
   label: attr('string'),
   isEnabled: attr('boolean', { defaultValue: true }),
-  module: belongsTo('module', { polymorphic: true, async: false }),
+  module: belongsTo('module', { polymorphic: true, async: false, inverse: 'ports' }),
 
   isConnected: bool('connections.length'),
 

@@ -21,7 +21,7 @@ export default Model.extend({
 
   settings: hasMany('module-setting', { polymorphic: true }),
   patch: belongsTo('patch', { async: false }),
-  ports: hasMany('port', { polymorphic: true, async: false }),
+  ports: hasMany('port', { polymorphic: true, async: false, inverse: 'module' }),
 
   eventOutPorts: filterBy('ports', 'type', 'port-event-out'),
   eventInPorts: filterBy('ports', 'type', 'port-event-in'),
