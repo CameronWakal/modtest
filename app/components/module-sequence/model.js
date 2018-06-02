@@ -17,7 +17,7 @@ export default Module.extend({
   latestTriggerTime: null,
   triggerDuration: null,
 
-  steps: belongsTo('array', { async: false }),
+  steps: belongsTo('array', { async: false, inverse: null }),
   trigOutPort: belongsTo('port-event-out', { async: false }),
   inputType: attr('string', { defaultValue: 'Number' }),
   displayScale: attr('number', { defaultValue: 1 }),
