@@ -1,4 +1,4 @@
-import { set, get, observer, computed } from '@ember/object';
+import { set, get, observer } from '@ember/object';
 import Module from '../module/model';
 import DS from 'ember-data';
 
@@ -152,9 +152,9 @@ export default Module.extend({
     if (!isNaN(portNumber)) {
 
       this.getNoteRangeForVoice(portNumber + 1);
-      //let ports = get(this, 'valueInPorts');
-      //this.selectedValueInPort = ports.objectAt(portNumber);
-      //get(this, 'eventOutPort').sendEvent(event);
+      // let ports = get(this, 'valueInPorts');
+      // this.selectedValueInPort = ports.objectAt(portNumber);
+      // get(this, 'eventOutPort').sendEvent(event);
     }
   }
 
