@@ -11,7 +11,7 @@ export default ModuleGenericComponent.extend({
   triggerDuration: alias('module.triggerDuration'),
 
   onLayoutChanged: observer('module.steps.length', 'module.inputType', 'module.displayScale', function() {
-    get(this, 'layoutChanged')();
+    this.layoutChanged();
   })
 
 });

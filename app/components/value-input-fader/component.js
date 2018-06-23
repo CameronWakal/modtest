@@ -14,9 +14,9 @@ export default Component.extend({
 
   noValue: empty('item.value'),
   inlineStyles: computed('displayScale', 'min', 'max', 'step', function() {
-    let range = get(this, 'max') - get(this, 'min');
-    let steps = range / get(this, 'step');
-    let height = steps * get(this, 'displayScale');
+    let range = this.max - this.min;
+    let steps = range / this.step;
+    let height = steps * this.displayScale;
     return htmlSafe(`height:${height}px`);
   })
 

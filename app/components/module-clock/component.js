@@ -13,15 +13,15 @@ export default ModuleGenericComponent.extend({
 
   actions: {
     start() {
-      get(this, 'module').start();
+      this.module.start();
     },
 
     stop() {
-      get(this, 'module').stop();
+      this.module.stop();
     },
 
     reset() {
-      get(this, 'module').reset();
+      this.module.reset();
     }
   }
 

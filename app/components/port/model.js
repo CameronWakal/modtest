@@ -23,7 +23,7 @@ export default Model.extend({
   }),
 
   compatibleType: computed(function() {
-    switch (get(this, 'type')) {
+    switch (this.type) {
       case 'port-value-in': return 'port-value-out';
       case 'port-value-out': return 'port-value-in';
       case 'port-event-out': return 'port-event-in';
@@ -32,14 +32,14 @@ export default Model.extend({
   }),
 
   isValuePort: computed('type', function() {
-    return get(this, 'type') === 'port-value-in' || get(this, 'type') === 'port-value-out';
+    return this.type === 'port-value-in' || this.type === 'port-value-out';
   }),
   isEventPort: computed('type', function() {
-    return get(this, 'type') === 'port-event-in' || get(this, 'type') === 'port-event-out';
+    return this.type === 'port-event-in' || this.type === 'port-event-out';
   }),
 
   onAttrChanged: observer('isEnabled', 'label', function() {
-    if (get(this, 'hasDirtyAttributes') && !get(this, 'isNew')) {
+    if (this.hasDirtyAttributes && !this.isNew) {
       console.log('port attrchanged');
       this.requestSave();
     }
@@ -50,14 +50,14 @@ export default Model.extend({
   // is connected to a bus
   onEnabledChanged: observer('isEnabled', function() {
     console.log('onEnabledChanged');
-    if (!isEmpty(get(this, 'connections'))) {
+    if (!isEmpty(this.connections)) {
       this.disconnect();
     }
   }),
 
   // remove all connections
   disconnect() {
-    let connections = get(this, 'connections').toArray();
+    let connections = this.connections.toArray();
     connections.forEach((connection) => {
       get(connection, 'connections').removeObject(this);
       console.log('port.disconnect() requestSave()');
@@ -70,7 +70,7 @@ export default Model.extend({
   },
 
   requestSave() {
-    get(this, 'module').requestSave();
+    this.module.requestSave();
   }
 
 });

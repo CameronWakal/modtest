@@ -17,7 +17,7 @@ export default Port.extend({
   targetMethod: attr('string'),
 
   getValue() {
-    return get(this, 'module')[get(this, 'targetMethod')]();
+    return this.module[this.targetMethod]();
   }
 
 });

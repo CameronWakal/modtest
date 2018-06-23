@@ -15,7 +15,7 @@ export default Component.extend({
   hasPorts: notEmpty('module.ports'),
 
   isEmpty: computed('module.{settings,valueInPorts}', function() {
-    return !get(this, 'hasSettings') && !get(this, 'hasPorts');
+    return !this.hasSettings && !this.hasPorts;
   }),
 
   actions: {
@@ -24,7 +24,7 @@ export default Component.extend({
     },
 
     addBusConnection(sourcePort, destPort) {
-      get(this, 'addBusConnection')(sourcePort, destPort);
+      this.addBusConnection(sourcePort, destPort);
     }
   }
 

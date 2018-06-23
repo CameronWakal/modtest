@@ -14,16 +14,16 @@ export default Model.extend({
   busses: hasMany('module-bus'),
 
   ready() {
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       // create bus modules for routing invisible bus connections
       let resetBus = this.store.createRecord('module-bus', { patch: this, shouldAutoSave: true, title: 'reset bus' });
-      get(this, 'busses').pushObject(resetBus);
+      this.busses.pushObject(resetBus);
       this.save();
     }
   },
 
   save() {
-    if (!get(this, 'isDeleted')) {
+    if (!this.isDeleted) {
       console.log('patch save');
     } else {
       console.log('patch delete');

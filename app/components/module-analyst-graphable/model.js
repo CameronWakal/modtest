@@ -25,7 +25,7 @@ export default ModuleAnalyst.extend({
 
   ready() {
     this._super();
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       // graphing outputs
       this.addValueOutPort('sx', 'getSpiralX', true);
       this.addValueOutPort('sy', 'getSpiralY', true);
@@ -66,10 +66,10 @@ export default ModuleAnalyst.extend({
   },
 
   draw() {
-    let index = get(this, 'drawIndexInPort').getValue();
-    let scale = get(this, 'drawScaleInPort').getValue() ? 'major' : 'minor';
+    let index = this.drawIndexInPort.getValue();
+    let scale = this.drawScaleInPort.getValue() ? 'major' : 'minor';
 
-    get(this, 'resetOut').sendEvent({});
+    this.resetOut.sendEvent({});
     this.drawSpiralDebug();
     this.drawTrianglesDebug(index, scale);
   },
@@ -86,7 +86,7 @@ export default ModuleAnalyst.extend({
       this.spiralX = x * 1000;
       this.spiralY = y * 1000;
       this.spiralZ = z * 1000;
-      get(this, 'spiralDebugOut').sendEvent({});
+      this.spiralDebugOut.sendEvent({});
     }
   },
 
@@ -102,25 +102,25 @@ export default ModuleAnalyst.extend({
       this.trianglesX = p.x * 1000;
       this.trianglesY = p.y * 1000;
       this.trianglesZ = p.z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
+      this.trianglesDebugOut.sendEvent({});
 
       p = this.majorChordRepForIndex(i + 1);
       this.trianglesX = p.x * 1000;
       this.trianglesY = p.y * 1000;
       this.trianglesZ = p.z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
+      this.trianglesDebugOut.sendEvent({});
 
       p = this.majorChordRepForIndex(i - 1);
       this.trianglesX = p.x * 1000;
       this.trianglesY = p.y * 1000;
       this.trianglesZ = p.z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
+      this.trianglesDebugOut.sendEvent({});
 
       p = this.majorKeyRepForIndex(i);
       this.trianglesX = p.x * 1000;
       this.trianglesY = p.y * 1000;
       this.trianglesZ = p.z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
+      this.trianglesDebugOut.sendEvent({});
 
     } else if (scale == 'minor') {
 
@@ -148,23 +148,23 @@ export default ModuleAnalyst.extend({
       this.trianglesX = c1.x * 1000;
       this.trianglesY = c1.y * 1000;
       this.trianglesZ = c1.z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
+      this.trianglesDebugOut.sendEvent({});
 
       this.trianglesX = c2x * 1000;
       this.trianglesY = c2y * 1000;
       this.trianglesZ = c2z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
+      this.trianglesDebugOut.sendEvent({});
 
       this.trianglesX = c3x * 1000;
       this.trianglesY = c3y * 1000;
       this.trianglesZ = c3z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
+      this.trianglesDebugOut.sendEvent({});
 
       let p = this.minorKeyRepForIndex(i);
       this.trianglesX = p.x * 1000;
       this.trianglesY = p.y * 1000;
       this.trianglesZ = p.z * 1000;
-      get(this, 'trianglesDebugOut').sendEvent({});
+      this.trianglesDebugOut.sendEvent({});
 
     } else {
       console.log('drawTrianglesDebug unrecognized scale');
@@ -176,25 +176,25 @@ export default ModuleAnalyst.extend({
     this.trianglesX = p.x * 1000;
     this.trianglesY = p.y * 1000;
     this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
+    this.trianglesDebugOut.sendEvent({});
 
     p = this.pitchRepForIndex(i + 1);
     this.trianglesX = p.x * 1000;
     this.trianglesY = p.y * 1000;
     this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
+    this.trianglesDebugOut.sendEvent({});
 
     p = this.pitchRepForIndex(i + 4);
     this.trianglesX = p.x * 1000;
     this.trianglesY = p.y * 1000;
     this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
+    this.trianglesDebugOut.sendEvent({});
 
     p = this.majorChordRepForIndex(i);
     this.trianglesX = p.x * 1000;
     this.trianglesY = p.y * 1000;
     this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
+    this.trianglesDebugOut.sendEvent({});
 
   },
 
@@ -203,25 +203,25 @@ export default ModuleAnalyst.extend({
     this.trianglesX = p.x * 1000;
     this.trianglesY = p.y * 1000;
     this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
+    this.trianglesDebugOut.sendEvent({});
 
     p = this.pitchRepForIndex(i + 1);
     this.trianglesX = p.x * 1000;
     this.trianglesY = p.y * 1000;
     this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
+    this.trianglesDebugOut.sendEvent({});
 
     p = this.pitchRepForIndex(i - 3);
     this.trianglesX = p.x * 1000;
     this.trianglesY = p.y * 1000;
     this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
+    this.trianglesDebugOut.sendEvent({});
 
     p = this.minorChordRepForIndex(i);
     this.trianglesX = p.x * 1000;
     this.trianglesY = p.y * 1000;
     this.trianglesZ = p.z * 1000;
-    get(this, 'trianglesDebugOut').sendEvent({});
+    this.trianglesDebugOut.sendEvent({});
   }
 
 });

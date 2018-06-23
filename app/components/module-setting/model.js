@@ -20,7 +20,7 @@ export default Model.extend({
 
   ready() {
     // make an alias from this.value to module.targetValue at runtime
-    let targetPath = `module.${get(this, 'targetValue')}`;
+    let targetPath = `module.${this.targetValue}`;
     defineProperty(this, 'value', alias(targetPath));
   },
 
