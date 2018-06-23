@@ -24,19 +24,19 @@ export default Component.extend({
   yPos: alias('module.yPos'),
 
   inlineStyles: computed('xPos', 'yPos', function() {
-    let styleString = `left:${get(this, 'xPos')}px; top:${get(this, 'yPos')}px`;
+    let styleString = `left:${this.xPos}px; top:${this.yPos}px`;
     return htmlSafe(styleString);
   }),
 
   onPortsChanged: observer('module.ports.@each.isEnabled', function() {
-    get(this, 'portsChanged')();
+    this.portsChanged();
   }),
 
   init() {
     this._super(...arguments);
 
-    if (get(this, 'module.isNew')) {
-      set(this, 'isMoving', true);
+    if (this.module.isNew) {
+      this.isMoving = true;
       $(document).on('mouseup', this.mouseUpBody.bind(this));
       $(document).on('mousemove', this.mouseMoveBody.bind(this));
     }
@@ -44,33 +44,33 @@ export default Component.extend({
 
   actions: {
     remove() {
-      get(this, 'remove')();
+      this.remove();
     },
     selectPort(port) {
-      get(this, 'selectPort')(port);
+      this.selectPort(port);
     },
 
     portStartedConnecting(port) {
-      set(this, 'portIsConnectingFrom', true);
-      get(this, 'portStartedConnecting')(port);
+      this.portIsConnectingFrom = true;
+      this.portStartedConnecting(port);
     },
 
     portFinishedConnecting() {
-      set(this, 'portIsConnectingFrom', false);
-      get(this, 'portFinishedConnecting')();
+      this.portIsConnectingFrom = false;
+      this.portFinishedConnecting();
     },
 
     mouseEnterPort(port) {
-      get(this, 'mouseEnterPort')(port);
+      this.mouseEnterPort(port);
     },
 
     mouseLeavePort(port) {
-      get(this, 'mouseLeavePort')(port);
+      this.mouseLeavePort(port);
     },
 
     disconnectPort(port) {
       port.disconnect();
-      get(this, 'portDisconnected')(port);
+      this.portDisconnected(port);
     }
 
   },
@@ -81,20 +81,20 @@ export default Component.extend({
       || $(event.target).hasClass('module-ports')
       || $(event.target).hasClass('indicator-blinking')
     ) {
-      set(this, 'isMoving', true);
-      set(this, 'moveOffsetX', event.pageX - get(this, 'xPos'));
-      set(this, 'moveOffsetY', event.pageY - get(this, 'yPos'));
+      this.isMoving = true;
+      this.moveOffsetX = event.pageX - this.xPos;
+      this.moveOffsetY = event.pageY - this.yPos;
       $(document).on('mouseup', this.mouseUpBody.bind(this));
       $(document).on('mousemove', this.mouseMoveBody.bind(this));
-      get(this, 'selected')();
-      get(this, 'startedMoving')();
+      this.selected();
+      this.startedMoving();
     }
   },
 
   keyDown(event) {
     if (event.keyCode === 8 && this.$().is(':focus')) {
       event.preventDefault();
-      get(this, 'remove')();
+      this.remove();
     }
   },
 
