@@ -17,7 +17,11 @@ export default Model.extend({
 
   items: hasMany('arrayItem'),
   currentItem: belongsTo('arrayItem', { async: false }),
-  module: belongsTo('module', { async: false, polymorphic: true, inverse: null }),
+  // the array needs a reference to the parent module to request an embeddedRecords save,
+  // but we don't want this to be a belongsTo because of polymorphism problems that started
+  // in Ember 3.1. So instead, after an array record is created or when it is loaded, the
+  // managing module will set itself as the array's dataManager.
+  dataManager: null,
 
   onLengthChanged: observer('length', function() {
     let length = get(this, 'items.length');
@@ -54,7 +58,7 @@ export default Model.extend({
   // ask managing module to save me when my properties have changed.
   requestSave() {
     console.log('array requestSave');
-    get(this, 'module').requestSave();
+    this.dataManager.requestSave();
   },
 
   incrementAll() {

@@ -68,7 +68,7 @@ export default Module.extend({
       set(this, 'title', this.name);
 
       // create steps
-      let steps = this.store.createRecord('array', { module: this });
+      let steps = this.store.createRecord('array');
       set(this, 'steps', steps);
       set(this, 'steps.length', 8);
 
@@ -90,6 +90,7 @@ export default Module.extend({
 
       this.requestSave();
     }
+    get(this, 'steps').dataManager = this;
   },
 
   remove() {
