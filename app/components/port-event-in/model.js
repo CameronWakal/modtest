@@ -17,9 +17,7 @@ export default Port.extend({
 
   // pass the event to the targetMethod of the module
   sendEvent(event) {
-    let module = this.module;
-    let targetMethodName = this.targetMethod;
-    let targetMethod = get(module, targetMethodName).bind(module);
+    let targetMethod = get(this.module, this.targetMethod).bind(this.module);
 
     targetMethod(event, this);
   }

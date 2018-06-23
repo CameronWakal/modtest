@@ -5,7 +5,6 @@
     without needing to visually patch them on the diagram.
 */
 
-import { get } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import DS from 'ember-data';
 import Module from '../module/model';

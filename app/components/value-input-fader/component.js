@@ -1,6 +1,6 @@
 import { empty } from '@ember/object/computed';
 import Component from '@ember/component';
-import { get, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import { htmlSafe } from '@ember/string';
 
 export default Component.extend({

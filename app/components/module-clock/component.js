@@ -1,5 +1,4 @@
 import { alias } from '@ember/object/computed';
-import { get } from '@ember/object';
 import ModuleGenericComponent from '../module/component';
 
 export default ModuleGenericComponent.extend({

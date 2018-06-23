@@ -1,5 +1,5 @@
 import { alias } from '@ember/object/computed';
-import { get, defineProperty } from '@ember/object';
+import { defineProperty } from '@ember/object';
 import DS from 'ember-data';
 
 const {

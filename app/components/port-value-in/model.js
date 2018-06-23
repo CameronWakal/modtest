@@ -24,10 +24,9 @@ export default Port.extend({
     if (this.hasDirtyAttributes && !this.isNew) {
       console.log('port-value-in disabledValueChanged');
 
-      let module = this.module;
       let methodName = this.disabledValueChangedMethod;
       if (!isEmpty(methodName)) {
-        let methodToCall = get(module, methodName).bind(module);
+        let methodToCall = get(this.module, methodName).bind(this.module);
         methodToCall();
       }
 

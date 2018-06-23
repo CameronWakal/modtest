@@ -51,12 +51,12 @@ export default Component.extend({
     },
 
     portStartedConnecting(port) {
-      this.portIsConnectingFrom = true;
+      set(this, 'portIsConnectingFrom', true);
       this.portStartedConnecting(port);
     },
 
     portFinishedConnecting() {
-      this.portIsConnectingFrom = false;
+      set(this, 'portIsConnectingFrom', false);
       this.portFinishedConnecting();
     },
 

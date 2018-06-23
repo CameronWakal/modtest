@@ -1,5 +1,5 @@
 import { run } from '@ember/runloop';
-import { get, observer } from '@ember/object';
+import { observer } from '@ember/object';
 import XRangeInputComponent from 'emberx-range-input/components/x-range-input';
 
 // emberx-range-input CLI addon for a range input component,
