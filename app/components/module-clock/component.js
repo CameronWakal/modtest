@@ -1,5 +1,4 @@
 import { alias } from '@ember/object/computed';
-import { get } from '@ember/object';
 import ModuleGenericComponent from '../module/component';
 
 export default ModuleGenericComponent.extend({
@@ -13,15 +12,15 @@ export default ModuleGenericComponent.extend({
 
   actions: {
     start() {
-      get(this, 'module').start();
+      this.module.start();
     },
 
     stop() {
-      get(this, 'module').stop();
+      this.module.stop();
     },
 
     reset() {
-      get(this, 'module').reset();
+      this.module.reset();
     }
   }
 

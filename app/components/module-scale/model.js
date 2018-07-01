@@ -97,10 +97,11 @@ export default Module.extend({
       set(this, 'title', this.name);
 
       // create degrees
-      let degrees = this.store.createRecord('array', { module: this });
+      let degrees = this.store.createRecord('array');
       set(this, 'degrees', degrees);
       set(this, 'degrees.valueMax', 11);
       set(this, 'degrees.length', get(this, 'degreesInScale'));
+      get(this, 'degrees').dataManager = this;
 
       // create ports
       this.addValueInPort('degree', 'degreeInPort', { defaultValue: 0 });
@@ -114,6 +115,8 @@ export default Module.extend({
 
       console.log('module-scale.didCreate() requestSave()');
       this.requestSave();
+    } else {
+      get(this, 'degrees').dataManager = this;
     }
   },
 

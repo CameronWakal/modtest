@@ -18,7 +18,7 @@ export default Model.extend({
   }),
 
   onValueChanged: observer('value', function() {
-    if (get(this, 'hasDirtyAttributes')) {
+    if (this.hasDirtyAttributes) {
       this.requestSave();
     }
   }),
@@ -31,7 +31,7 @@ export default Model.extend({
   // ask managing module to save me when my properties have changed.
   requestSave() {
     console.log('array-item requestSave');
-    get(this, 'array').requestSave();
+    this.array.requestSave();
   }
 
 });

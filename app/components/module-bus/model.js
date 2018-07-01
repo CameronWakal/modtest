@@ -5,7 +5,6 @@
     without needing to visually patch them on the diagram.
 */
 
-import { get } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import DS from 'ember-data';
 import Module from '../module/model';
@@ -22,11 +21,11 @@ export default Module.extend({
   eventInPort: alias('eventInPorts.firstObject'),
 
   eventIn(event) {
-    get(this, 'eventOutPort').sendEvent(event);
+    this.eventOutPort.sendEvent(event);
   },
 
   ready() {
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       // create ports
       this.addEventInPort('eventIn', 'eventIn', false);
       this.addEventOutPort('eventOut', 'eventOutPort', false);

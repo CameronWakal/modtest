@@ -21,7 +21,7 @@ export default Model.extend({
 
   settings: hasMany('module-setting', { polymorphic: true }),
   patch: belongsTo('patch', { async: false }),
-  ports: hasMany('port', { polymorphic: true, async: false }),
+  ports: hasMany('port', { polymorphic: true, async: false, inverse: 'module' }),
 
   eventOutPorts: filterBy('ports', 'type', 'port-event-out'),
   eventInPorts: filterBy('ports', 'type', 'port-event-in'),
@@ -29,7 +29,7 @@ export default Model.extend({
   valueInPorts: filterBy('ports', 'type', 'port-value-in'),
   enabledPorts: filterBy('ports', 'isEnabled', true),
   enabledOutPorts: computed('ports.@each.{type,isEnabled}', function() {
-    return get(this, 'ports').filter((item) => {
+    return this.ports.filter((item) => {
       return get(item, 'isEnabled') && (get(item, 'type') === 'port-value-out' || get(item, 'type') === 'port-event-out');
     });
   }),
@@ -49,7 +49,7 @@ export default Model.extend({
       isEnabled,
       module: this
     });
-    get(this, 'ports').pushObject(port);
+    this.ports.pushObject(port);
     set(this, portVar, port);
     port.save();
   },
@@ -62,7 +62,7 @@ export default Model.extend({
       isEnabled,
       module: this
     });
-    get(this, 'ports').pushObject(port);
+    this.ports.pushObject(port);
     port.save();
     return port;
   },
@@ -75,7 +75,7 @@ export default Model.extend({
       isEnabled,
       module: this
     });
-    get(this, 'ports').pushObject(port);
+    this.ports.pushObject(port);
     port.save();
   },
 
@@ -108,7 +108,7 @@ export default Model.extend({
       maxValue: options.maxValue,
       module: this
     });
-    get(this, 'ports').pushObject(port);
+    this.ports.pushObject(port);
     port.save();
     return port;
   },
@@ -128,7 +128,7 @@ export default Model.extend({
       targetValue,
       module
     });
-    get(this, 'settings').pushObject(setting);
+    this.settings.pushObject(setting);
   },
 
   addMenuSetting(label, targetValue, itemsProperty, module) {
@@ -139,14 +139,13 @@ export default Model.extend({
       module
     });
 
-    get(this, 'settings').pushObject(setting);
+    this.settings.pushObject(setting);
   },
 
   // useful if you're subclassing a module and don't need a setting from the parent
   removeSetting(label) {
-    let settings  = get(this, 'settings');
-    let setting = settings.findBy('label', label);
-    settings.removeObject(setting);
+    let setting = this.settings.findBy('label', label);
+    this.settings.removeObject(setting);
     this.store.findRecord('module-setting', setting.id, { backgroundReload: false }).then(function(setting) {
       setting.destroyRecord();
     });
@@ -158,8 +157,8 @@ export default Model.extend({
   },
 
   save() {
-    if (get(this, 'shouldAutoSave')) {
-      if (!get(this, 'isDeleted')) {
+    if (this.shouldAutoSave) {
+      if (!this.isDeleted) {
         console.log('module saved');
       } else {
         console.log('module deleted');
@@ -169,12 +168,12 @@ export default Model.extend({
   },
 
   remove() {
-    get(this, 'ports').toArray().forEach((port) => {
+    this.ports.toArray().forEach((port) => {
       port.disconnect();
       port.destroyRecord();
     });
 
-    get(this, 'settings').toArray().forEach((setting) => {
+    this.settings.toArray().forEach((setting) => {
       setting.remove();
     });
 

@@ -1,4 +1,3 @@
-import { get } from '@ember/object';
 import DS from 'ember-data';
 import Port from '../port/model';
 
@@ -15,7 +14,7 @@ export default Port.extend({
 
   // pass the event to connected ports
   sendEvent(event) {
-    get(this, 'connections').forEach((port) => {
+    this.connections.forEach((port) => {
       port.sendEvent(event);
     });
   }
