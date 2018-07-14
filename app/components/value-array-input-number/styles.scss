@@ -28,3 +28,19 @@ $color-current-input-highlight: rgba($color-warm-bright, .5);
   }
 
 }
+
+.value-input-array--number-slider {
+  .value-array-input-number {
+    &:first-child {
+      border-top-left-radius: 0;
+    }
+
+    &:last-child {
+      border-top-right-radius: 0;
+    }
+
+    &.current {
+      background: $color-fade-background-current;
+    }
+  }
+}

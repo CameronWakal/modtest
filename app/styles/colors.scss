@@ -33,7 +33,7 @@ $color-control-current: rgba($color-neutral-dim, .15);
 $color-module-background: rgba(desaturate(lighten($color-neutral-dark, 6%), 0%), .8);
 $color-selected-module-background: rgba(desaturate(lighten($color-neutral-dark, 20%), 0%), .8);
 $color-sidebar-background: rgba(desaturate(darken($color-neutral-dark, 1%), 0%), .8);
-//$color-sidebar-background: rgba($color-neutral-dark, 0.8);
 $color-selected-input-background: rgba(desaturate(lighten($color-neutral-dark, 40%), 0%), .8);
 
 $color-input-background: rgba($color-neutral-dark, .8);
+$color-fade-background-current: rgba($color-input-background, .4);

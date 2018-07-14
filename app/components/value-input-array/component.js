@@ -7,6 +7,7 @@ import Component from '@ember/component';
 export default Component.extend({
 
   classNames: ['value-input-array'],
+  classNameBindings: ['isTypeBoth:value-input-array--number-slider'],
 
   isTypeNumber: equal('inputType', 'Number'),
   isTypeSlider: equal('inputType', 'Slider'),
