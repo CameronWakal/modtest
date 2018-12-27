@@ -30,7 +30,7 @@ export default Component.extend({
     let self = this;
     run(function() {
       set(self, 'isConnectingFrom', false);
-      self.sendAction('finishedConnecting');
+      self.finishedConnecting();
       $(document).off('mouseup');
     });
   }
