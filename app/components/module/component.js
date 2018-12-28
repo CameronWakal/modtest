@@ -129,13 +129,13 @@ export default Component.extend({
         // enable future autosaves on the module and save the patch.
         if (get(self, 'module.isNew')) {
           set(self, 'module.shouldAutoSave', true);
-          self.sendAction('savePatch');
+          self.savePatch();
         }
 
         get(self, 'module').requestSave();
         set(self, 'didMove', false);
       }
-      self.sendAction('finishedMoving');
+      self.finishedMoving();
       $(document).off('mouseup');
       $(document).off('mousemove');
     });
