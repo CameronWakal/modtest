@@ -36,9 +36,14 @@ export default Model.extend({
     });
   }),
 
+  init() {
+    if(this.isNew) {
+      this.addPortGroup();
+    }
+  },
+
   didCreate() {
     set(this, 'shouldAutoSave', true);
-    this.addPortGroup();
   },
 
   didLoad() {
@@ -61,6 +66,7 @@ export default Model.extend({
       module: this
     });
     this.ports.pushObject(port);
+    this.portGroups.lastObject.ports.pushObject(port);
     set(this, portVar, port);
     port.save();
   },
@@ -74,6 +80,7 @@ export default Model.extend({
       module: this
     });
     this.ports.pushObject(port);
+    this.portGroups.lastObject.ports.pushObject(port);
     port.save();
     return port;
   },
@@ -87,6 +94,7 @@ export default Model.extend({
       module: this
     });
     this.ports.pushObject(port);
+    this.portGroups.lastObject.ports.pushObject(port);
     port.save();
   },
 
@@ -120,6 +128,7 @@ export default Model.extend({
       module: this
     });
     this.ports.pushObject(port);
+    this.portGroups.lastObject.ports.pushObject(port);
     port.save();
     return port;
   },
