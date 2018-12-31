@@ -23,6 +23,8 @@ export default Model.extend({
   patch: belongsTo('patch', { async: false }),
   ports: hasMany('port', { polymorphic: true, async: false, inverse: 'module' }),
 
+  portGroups: hasMany('port-group', { async: false }),
+
   eventOutPorts: filterBy('ports', 'type', 'port-event-out'),
   eventInPorts: filterBy('ports', 'type', 'port-event-in'),
   valueOutPorts: filterBy('ports', 'type', 'port-value-out'),
@@ -30,16 +32,25 @@ export default Model.extend({
   enabledPorts: filterBy('ports', 'isEnabled', true),
   enabledOutPorts: computed('ports.@each.{type,isEnabled}', function() {
     return this.ports.filter((item) => {
-      return get(item, 'isEnabled') && (get(item, 'type') === 'port-value-out' || get(item, 'type') === 'port-event-out');
+      return item.isEnabled && (item.type === 'port-value-out' || item.type === 'port-event-out');
     });
   }),
 
   didCreate() {
     set(this, 'shouldAutoSave', true);
+    this.addPortGroup();
   },
 
   didLoad() {
     set(this, 'shouldAutoSave', true);
+  },
+
+  // a grouping of ports within the port list, so you can have a degree of control
+  // over the order of ports when they're dynamically added or removed
+  addPortGroup() {
+    let portGroup = this.store.createRecord('port-group');
+    this.portGroups.pushObject(portGroup);
+    portGroup.save();
   },
 
   // portVar is used to easily refer to this specific port from within the module
