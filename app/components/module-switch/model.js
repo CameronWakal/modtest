@@ -78,6 +78,7 @@ export default Module.extend({
       this.addEventOutPort('out', 'eventOutPort', true);
 
       // add array of input ports
+      this.addPortGroup();
       this._addInputPorts(get(this, 'inputPortsCount'));
 
       console.log('module-switch.didCreate() requestSave()');

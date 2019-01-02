@@ -1,6 +1,6 @@
 import { filterBy } from '@ember/object/computed';
 import { run } from '@ember/runloop';
-import { get, set, computed } from '@ember/object';
+import { set, computed } from '@ember/object';
 import DS from 'ember-data';
 
 const {
@@ -37,7 +37,8 @@ export default Model.extend({
   }),
 
   init() {
-    if(this.isNew) {
+    this._super(...arguments);
+    if (this.isNew) {
       this.addPortGroup();
     }
   },
@@ -53,7 +54,9 @@ export default Model.extend({
   // a grouping of ports within the port list, so you can have a degree of control
   // over the order of ports when they're dynamically added or removed
   addPortGroup() {
-    let portGroup = this.store.createRecord('port-group');
+    // have to explicitly define the empty port arrays to avoid an annoying serializer warning:
+    // https://github.com/emberjs/data/issues/5173
+    let portGroup = this.store.createRecord('port-group', { basePorts: [], expansionPorts: [] });
     this.portGroups.pushObject(portGroup);
     portGroup.save();
   },
@@ -66,7 +69,7 @@ export default Model.extend({
       module: this
     });
     this.ports.pushObject(port);
-    this.portGroups.lastObject.ports.pushObject(port);
+    this.portGroups.lastObject.addPort(port);
     set(this, portVar, port);
     port.save();
   },
@@ -80,7 +83,7 @@ export default Model.extend({
       module: this
     });
     this.ports.pushObject(port);
-    this.portGroups.lastObject.ports.pushObject(port);
+    this.portGroups.lastObject.addPort(port);
     port.save();
     return port;
   },
@@ -94,7 +97,7 @@ export default Model.extend({
       module: this
     });
     this.ports.pushObject(port);
-    this.portGroups.lastObject.ports.pushObject(port);
+    this.portGroups.lastObject.addPort(port);
     port.save();
   },
 
@@ -128,7 +131,7 @@ export default Model.extend({
       module: this
     });
     this.ports.pushObject(port);
-    this.portGroups.lastObject.ports.pushObject(port);
+    this.portGroups.lastObject.addPort(port);
     port.save();
     return port;
   },
