@@ -25,6 +25,18 @@ export default Model.extend({
 
   portGroups: hasMany('port-group', { async: false }),
 
+  /*
+  ports: computed('portGroups.@each.ports', function() {
+    let ports = [];
+    this.portGroups.forEach(function(portGroup) {
+      portGroup.ports.forEach(function(port) {
+        ports.pushObject(port);
+      });
+    });
+    return ports;
+  }),
+  */
+
   eventOutPorts: filterBy('ports', 'type', 'port-event-out'),
   eventInPorts: filterBy('ports', 'type', 'port-event-in'),
   valueOutPorts: filterBy('ports', 'type', 'port-value-out'),
@@ -53,12 +65,20 @@ export default Model.extend({
 
   // a grouping of ports within the port list, so you can have a degree of control
   // over the order of ports when they're dynamically added or removed
-  addPortGroup() {
+  addPortGroup(options) {
     // have to explicitly define the empty port arrays to avoid an annoying serializer warning:
     // https://github.com/emberjs/data/issues/5173
     let portGroup = this.store.createRecord('port-group', { basePorts: [], expansionPorts: [] });
+
+    if (options && options.minSets) {
+      set(portGroup, 'minSets', options.minSets);
+    }
+    if (options && options.maxSets) {
+      set(portGroup, 'maxSets', options.maxSets);
+    }
     this.portGroups.pushObject(portGroup);
     portGroup.save();
+    return portGroup;
   },
 
   // portVar is used to easily refer to this specific port from within the module

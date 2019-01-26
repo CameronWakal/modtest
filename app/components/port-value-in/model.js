@@ -20,6 +20,22 @@ export default Port.extend({
   disabledValue: attr('number'),
   disabledValueChangedMethod: attr('string'), // method to notify the module that the disabled value has changed
 
+  copy() {
+    let newPort = this.store.createRecord('port-value-in', {
+      label: this.label,
+      isEnabled: this.isEnabled,
+      canBeEmpty: this.canBeEmpty,
+      defaultValue: this.defaultValue,
+      disabledValue: this.disabledValue,
+      disabledValueChangedMethod: this.disabledValueChangedMethod,
+      minValue: this.minValue,
+      maxValue: this.maxValue,
+      module: this.module
+    })
+    newPort.save();
+    return newPort;
+  },
+
   onDisabledValueChanged: observer('disabledValue', function() {
     if (this.hasDirtyAttributes && !this.isNew) {
       console.log('port-value-in disabledValueChanged');

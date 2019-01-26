@@ -21,12 +21,9 @@ export default Module.extend({
   type: 'module-switch', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Switch',
 
-  inputPortsCount: attr('number', { defaultValue: 2 }),
-
-  valueInPorts: hasMany('port-value-in', { async: false }),
-  eventInPorts: hasMany('port-event-in', { async: false }),
   switchInPort: belongsTo('port-value-in', { async: false }),
   eventOutPort: belongsTo('port-event-out', { async: false }),
+  inputPortsGroup: belongsTo('port-group', { async: false }),
 
   onImportPortsCountChanged: observer('inputPortsCount', function() {
     if (get(this, 'hasDirtyAttributes')) {
@@ -71,15 +68,19 @@ export default Module.extend({
     if (get(this, 'isNew')) {
       set(this, 'title', this.name);
 
-      this.addNumberSetting('Inputs', 'inputPortsCount', this, { minValue: 1, maxValue: 8 });
+      this.addNumberSetting('Input Mults', 'inputPortsGroup.expansionSetsCount', this, { minValue: 0, maxValue: 3 });
 
       this.addValueInPort('switch', 'switchInPort', { canBeEmpty: true });
       this.addValueOutPort('out', 'getValue', true);
       this.addEventOutPort('out', 'eventOutPort', true);
 
-      // add array of input ports
-      this.addPortGroup();
-      this._addInputPorts(get(this, 'inputPortsCount'));
+      // add an expandable group of input ports
+      let inputPorts = this.addPortGroup({ minSets: 0, maxSets: 3 });
+      set(this, 'inputPortsGroup', inputPorts);
+
+      // add one valueInPort and one eventInPort to the group
+      this.addValueInPortWithoutAssignment('0', { canBeEmpty: true });
+      this.addEventInPort('0', 'onEventIn', true);
 
       console.log('module-switch.didCreate() requestSave()');
       this.requestSave();

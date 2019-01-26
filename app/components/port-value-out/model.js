@@ -17,6 +17,17 @@ export default Port.extend({
 
   getValue() {
     return this.module[this.targetMethod]();
-  }
+  },
+
+  copy() {
+    let newPort = this.store.createRecord('port-value-out', {
+      label: this.label,
+      targetMethod: this.targetMethod,
+      isEnabled: this.isEnabled,
+      module: this.module
+    });
+    newPort.save();
+    return newPort;
+  },
 
 });

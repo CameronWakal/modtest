@@ -20,6 +20,17 @@ export default Port.extend({
     let targetMethod = get(this.module, this.targetMethod).bind(this.module);
 
     targetMethod(event, this);
-  }
+  },
+
+  copy() {
+    let newPort = this.store.createRecord('port-event-in', {
+      label: this.label,
+      targetMethod: this.targetMethod,
+      isEnabled: this.isEnabled,
+      module: this.module
+    });
+    newPort.save();
+    return newPort;
+  },
 
 });
