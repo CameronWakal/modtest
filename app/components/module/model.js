@@ -21,11 +21,10 @@ export default Model.extend({
 
   settings: hasMany('module-setting', { polymorphic: true }),
   patch: belongsTo('patch', { async: false }),
-  ports: hasMany('port', { polymorphic: true, async: false, inverse: 'module' }),
+  //ports: hasMany('port', { polymorphic: true, async: false, inverse: 'module' }),
 
   portGroups: hasMany('port-group', { async: false }),
 
-  /*
   ports: computed('portGroups.@each.ports', function() {
     let ports = [];
     this.portGroups.forEach(function(portGroup) {
@@ -35,7 +34,6 @@ export default Model.extend({
     });
     return ports;
   }),
-  */
 
   eventOutPorts: filterBy('ports', 'type', 'port-event-out'),
   eventInPorts: filterBy('ports', 'type', 'port-event-in'),

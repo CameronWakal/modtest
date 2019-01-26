@@ -2,7 +2,7 @@ import { filterBy, union } from '@ember/object/computed';
 import { set, observer } from '@ember/object';
 import DS from 'ember-data';
 
-const { Model, hasMany, attr } = DS;
+const { Model, belongsTo, hasMany, attr } = DS;
 
 export default Model.extend({
 
@@ -12,6 +12,7 @@ export default Model.extend({
   minSets: attr('number', { defaultValue: 0 }),
   maxSets: attr('number', { defaultValue: 0 }),
 
+  module: belongsTo('module', { polymorphic: true, async: false }),
   basePorts: hasMany('port', { polymorphic: true, async: false }),
   expansionPorts: hasMany('port', { polymorphic: true, async: false }),
   ports: union('basePorts', 'expansionPorts'),
@@ -27,11 +28,9 @@ export default Model.extend({
       let currentSetsCount = this.expansionPorts.length / this.basePorts.length;
       let newSetsCount = Math.min(Math.max(this.expansionSetsCount, this.minSets), this.maxSets);
       let change = newSetsCount - currentSetsCount;
-      console.log('change', change);
       if (change > 0) {
         this._addExpansionSets(change);
       } else if (change < 0) {
-        console.log('remove sets');
         this._removeExpansionSets(change * -1);
       }
     }
@@ -52,6 +51,7 @@ export default Model.extend({
         this.expansionPorts.pushObject(port);
       }
     }
+    this.module.requestSave();
   },
 
   _removeExpansionSets(count) {
@@ -66,6 +66,7 @@ export default Model.extend({
         port.destroyRecord();
       }
     }
+    this.module.requestSave();
   },
 
   save() {
