@@ -24,7 +24,7 @@ export default Port.extend({
       label: this.label,
       targetMethod: this.targetMethod,
       isEnabled: this.isEnabled,
-      module: this.module
+      portGroup: this.portGroup
     });
     newPort.save();
     return newPort;

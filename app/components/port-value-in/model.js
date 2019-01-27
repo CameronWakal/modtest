@@ -30,7 +30,7 @@ export default Port.extend({
       disabledValueChangedMethod: this.disabledValueChangedMethod,
       minValue: this.minValue,
       maxValue: this.maxValue,
-      module: this.module
+      portGroup: this.portGroup
     })
     newPort.save();
     return newPort;

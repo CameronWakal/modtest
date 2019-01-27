@@ -66,7 +66,7 @@ export default Model.extend({
   addPortGroup(options) {
     // have to explicitly define the empty port arrays to avoid an annoying serializer warning:
     // https://github.com/emberjs/data/issues/5173
-    let portGroup = this.store.createRecord('port-group', { basePorts: [], expansionPorts: [] });
+    let portGroup = this.store.createRecord('port-group', { basePorts: [], expansionPorts: [], module: this });
 
     if (options && options.minSets) {
       set(portGroup, 'minSets', options.minSets);
@@ -84,7 +84,7 @@ export default Model.extend({
     let port = this.store.createRecord('port-event-out', {
       label,
       isEnabled,
-      module: this
+      portGroup: this.portGroups.lastObject
     });
     this.ports.pushObject(port);
     this.portGroups.lastObject.addPort(port);
@@ -98,7 +98,7 @@ export default Model.extend({
       label,
       targetMethod,
       isEnabled,
-      module: this
+      portGroup: this.portGroups.lastObject
     });
     this.ports.pushObject(port);
     this.portGroups.lastObject.addPort(port);
@@ -112,7 +112,7 @@ export default Model.extend({
       label,
       targetMethod,
       isEnabled,
-      module: this
+      portGroup: this.portGroups.lastObject
     });
     this.ports.pushObject(port);
     this.portGroups.lastObject.addPort(port);
@@ -146,7 +146,7 @@ export default Model.extend({
       disabledValueChangedMethod: options.disabledValueChangedMethod,
       minValue: options.minValue,
       maxValue: options.maxValue,
-      module: this
+      portGroup: this.portGroups.lastObject
     });
     this.ports.pushObject(port);
     this.portGroups.lastObject.addPort(port);

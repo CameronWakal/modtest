@@ -1,5 +1,6 @@
 import { bool } from '@ember/object/computed';
 import { get, observer, computed } from '@ember/object';
+import { alias } from '@ember/object/computed';
 import DS from 'ember-data';
 import { isEmpty } from '@ember/utils';
 
@@ -15,6 +16,7 @@ export default Model.extend({
   label: attr('string'),
   isEnabled: attr('boolean', { defaultValue: true }),
   portGroup: belongsTo('portGroup', { polymorphic: true, async: false, inverse: null }),
+  module: alias('portGroup.module'),
 
   isConnected: bool('connections.length'),
 

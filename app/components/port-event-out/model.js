@@ -23,7 +23,7 @@ export default Port.extend({
     let newPort = this.store.createRecord('port-event-out', {
       label: this.label,
       isEnabled: this.isEnabled,
-      module: this.module
+      portGroup: this.portGroup
     });
     newPort.save();
     return newPort;
