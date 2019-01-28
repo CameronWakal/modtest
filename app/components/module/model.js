@@ -1,6 +1,6 @@
 import { filterBy } from '@ember/object/computed';
 import { run } from '@ember/runloop';
-import { get, set, computed } from '@ember/object';
+import { set, computed } from '@ember/object';
 import DS from 'ember-data';
 
 const {
@@ -21,7 +21,16 @@ export default Model.extend({
 
   settings: hasMany('module-setting', { polymorphic: true }),
   patch: belongsTo('patch', { async: false }),
-  ports: hasMany('port', { polymorphic: true, async: false, inverse: 'module' }),
+  portGroups: hasMany('port-group', { async: false }),
+  ports: computed('portGroups.@each.ports', function() {
+    let ports = [];
+    this.portGroups.forEach(function(portGroup) {
+      portGroup.ports.forEach(function(port) {
+        ports.pushObject(port);
+      });
+    });
+    return ports;
+  }),
 
   eventOutPorts: filterBy('ports', 'type', 'port-event-out'),
   eventInPorts: filterBy('ports', 'type', 'port-event-in'),
@@ -30,9 +39,16 @@ export default Model.extend({
   enabledPorts: filterBy('ports', 'isEnabled', true),
   enabledOutPorts: computed('ports.@each.{type,isEnabled}', function() {
     return this.ports.filter((item) => {
-      return get(item, 'isEnabled') && (get(item, 'type') === 'port-value-out' || get(item, 'type') === 'port-event-out');
+      return item.isEnabled && (item.type === 'port-value-out' || item.type === 'port-event-out');
     });
   }),
+
+  init() {
+    this._super(...arguments);
+    if (this.isNew) {
+      this.addPortGroup();
+    }
+  },
 
   didCreate() {
     set(this, 'shouldAutoSave', true);
@@ -42,14 +58,33 @@ export default Model.extend({
     set(this, 'shouldAutoSave', true);
   },
 
+  // a grouping of ports within the port list, so you can have a degree of control
+  // over the order of ports when they're dynamically added or removed
+  addPortGroup(options) {
+    // have to explicitly define the empty port arrays to avoid an annoying serializer warning:
+    // https://github.com/emberjs/data/issues/5173
+    let portGroup = this.store.createRecord('port-group', { basePorts: [], expansionPorts: [], module: this });
+
+    if (options && options.minSets) {
+      set(portGroup, 'minSets', options.minSets);
+    }
+    if (options && options.maxSets) {
+      set(portGroup, 'maxSets', options.maxSets);
+    }
+    this.portGroups.pushObject(portGroup);
+    portGroup.save();
+    return portGroup;
+  },
+
   // portVar is used to easily refer to this specific port from within the module
   addEventOutPort(label, portVar, isEnabled) {
     let port = this.store.createRecord('port-event-out', {
       label,
       isEnabled,
-      module: this
+      portGroup: this.portGroups.lastObject
     });
     this.ports.pushObject(port);
+    this.portGroups.lastObject.addPort(port);
     set(this, portVar, port);
     port.save();
   },
@@ -60,9 +95,10 @@ export default Model.extend({
       label,
       targetMethod,
       isEnabled,
-      module: this
+      portGroup: this.portGroups.lastObject
     });
     this.ports.pushObject(port);
+    this.portGroups.lastObject.addPort(port);
     port.save();
     return port;
   },
@@ -73,9 +109,10 @@ export default Model.extend({
       label,
       targetMethod,
       isEnabled,
-      module: this
+      portGroup: this.portGroups.lastObject
     });
     this.ports.pushObject(port);
+    this.portGroups.lastObject.addPort(port);
     port.save();
   },
 
@@ -106,9 +143,10 @@ export default Model.extend({
       disabledValueChangedMethod: options.disabledValueChangedMethod,
       minValue: options.minValue,
       maxValue: options.maxValue,
-      module: this
+      portGroup: this.portGroups.lastObject
     });
     this.ports.pushObject(port);
+    this.portGroups.lastObject.addPort(port);
     port.save();
     return port;
   },

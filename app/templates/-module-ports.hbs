@@ -1,9 +1,15 @@
-<div class="module-ports">{{#each module.enabledPorts as |port|}}{{component 
-  port.type 
-  port=port 
-  startedConnecting=(action 'portStartedConnecting' port)
-  finishedConnecting=(action 'portFinishedConnecting')
-  mouseEnter=(action 'mouseEnterPort' port)
-  mouseLeave=(action 'mouseLeavePort') 
-  disconnect=(action 'disconnectPort' port)
-}}{{/each}}</div>
+<div class="module-ports">
+  {{#each module.portGroups as |portGroup|}}
+    {{#each portGroup.enabledPorts as |port|}}
+      {{component
+        port.type
+        port=port
+        startedConnecting=(action 'portStartedConnecting' port)
+        finishedConnecting=(action 'portFinishedConnecting')
+        mouseEnter=(action 'mouseEnterPort' port)
+        mouseLeave=(action 'mouseLeavePort')
+        disconnect=(action 'disconnectPort' port)
+      }}
+    {{/each}}
+  {{/each}}
+</div>

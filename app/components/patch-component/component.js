@@ -127,11 +127,9 @@ export default Component.extend({
     // a bus connection doesn't appear in the diagram, so no update necessary
     addBusConnection(sourcePort, destPort) {
       get(destPort, 'connections').pushObject(sourcePort);
-      console.log('patch.addConnection() requestSave()');
       get(destPort, 'module').requestSave();
 
       get(sourcePort, 'connections').pushObject(destPort);
-      console.log('patch.addConnection() requestSave()');
       get(sourcePort, 'module').requestSave();
     },
 

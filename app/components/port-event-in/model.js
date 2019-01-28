@@ -18,8 +18,18 @@ export default Port.extend({
   // pass the event to the targetMethod of the module
   sendEvent(event) {
     let targetMethod = get(this.module, this.targetMethod).bind(this.module);
-
     targetMethod(event, this);
+  },
+
+  copy() {
+    let newPort = this.store.createRecord('port-event-in', {
+      label: this.label,
+      targetMethod: this.targetMethod,
+      isEnabled: this.isEnabled,
+      portGroup: this.portGroup
+    });
+    newPort.save();
+    return newPort;
   }
 
 });

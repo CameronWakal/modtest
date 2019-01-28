@@ -17,6 +17,16 @@ export default Port.extend({
     this.connections.forEach((port) => {
       port.sendEvent(event);
     });
+  },
+
+  copy() {
+    let newPort = this.store.createRecord('port-event-out', {
+      label: this.label,
+      isEnabled: this.isEnabled,
+      portGroup: this.portGroup
+    });
+    newPort.save();
+    return newPort;
   }
 
 });
