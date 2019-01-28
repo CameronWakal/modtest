@@ -18,7 +18,6 @@ export default Port.extend({
   // pass the event to the targetMethod of the module
   sendEvent(event) {
     let targetMethod = get(this.module, this.targetMethod).bind(this.module);
-
     targetMethod(event, this);
   },
 
@@ -31,6 +30,6 @@ export default Port.extend({
     });
     newPort.save();
     return newPort;
-  },
+  }
 
 });

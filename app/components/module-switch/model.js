@@ -1,4 +1,4 @@
-import { set, get, observer } from '@ember/object';
+import { set, get } from '@ember/object';
 import Module from '../module/model';
 import DS from 'ember-data';
 
@@ -8,13 +8,8 @@ import DS from 'ember-data';
  */
 
 const {
-  belongsTo,
-  hasMany,
-  attr
+  belongsTo
 } = DS;
-
-const maxInputs = 16;
-const minInputs = 1;
 
 export default Module.extend({
 

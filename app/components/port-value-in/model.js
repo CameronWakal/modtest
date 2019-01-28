@@ -31,7 +31,7 @@ export default Port.extend({
       minValue: this.minValue,
       maxValue: this.maxValue,
       portGroup: this.portGroup
-    })
+    });
     newPort.save();
     return newPort;
   },

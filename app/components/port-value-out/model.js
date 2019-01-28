@@ -28,6 +28,6 @@ export default Port.extend({
     });
     newPort.save();
     return newPort;
-  },
+  }
 
 });
