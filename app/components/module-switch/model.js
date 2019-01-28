@@ -25,45 +25,6 @@ export default Module.extend({
   eventOutPort: belongsTo('port-event-out', { async: false }),
   inputPortsGroup: belongsTo('port-group', { async: false }),
 
-  onImportPortsCountChanged: observer('inputPortsCount', function() {
-    if (get(this, 'hasDirtyAttributes')) {
-      let currentCount = get(this, 'valueInPorts.length');
-      let newCount = Math.min(Math.max(get(this, 'inputPortsCount'), minInputs), maxInputs);
-      let change = newCount - currentCount;
-      if (change > 0) {
-        this._addInputPorts(change);
-      } else if (change < 0) {
-        this._removeInputPorts(change * -1);
-      }
-      this.requestSave();
-    }
-  }),
-
-  _addInputPorts(count) {
-    let port;
-    let currentCount = get(this, 'valueInPorts.length');
-    for (let i = 0; i < count; i++) {
-      port = this.addValueInPortWithoutAssignment(currentCount + i, { canBeEmpty: true });
-      get(this, 'valueInPorts').pushObject(port);
-      port = this.addEventInPort(currentCount + i, 'onEventIn', true);
-      get(this, 'eventInPorts').pushObject(port);
-    }
-  },
-
-  _removeInputPorts(count) {
-    let port;
-    for (let i = 0; i < count; i++) {
-      port = get(this, 'valueInPorts').popObject();
-      get(this, 'ports').removeObject(port);
-      port.disconnect();
-      port.destroyRecord();
-      port = get(this, 'eventInPorts').popObject();
-      get(this, 'ports').removeObject(port);
-      port.disconnect();
-      port.destroyRecord();
-    }
-  },
-
   ready() {
     if (get(this, 'isNew')) {
       set(this, 'title', this.name);
@@ -92,8 +53,11 @@ export default Module.extend({
     if (switchVal == null) {
       return null;
     }
-    let ports = get(this, 'valueInPorts');
+    let ports = get(this, 'inputPortsGroup.valueInPorts');
     let port = ports.objectAt(switchVal);
+    if (port == null) {
+      return null;
+    }
     return port.getValue();
   },
 

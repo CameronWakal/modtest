@@ -16,6 +16,10 @@ export default Model.extend({
   basePorts: hasMany('port', { polymorphic: true, async: false }),
   expansionPorts: hasMany('port', { polymorphic: true, async: false }),
   ports: union('basePorts', 'expansionPorts'),
+  eventOutPorts: filterBy('ports', 'type', 'port-event-out'),
+  eventInPorts: filterBy('ports', 'type', 'port-event-in'),
+  valueOutPorts: filterBy('ports', 'type', 'port-value-out'),
+  valueInPorts: filterBy('ports', 'type', 'port-value-in'),
   enabledPorts: filterBy('ports', 'isEnabled', true),
 
   addPort(port) {
