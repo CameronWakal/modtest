@@ -27,8 +27,6 @@ export default Module.extend({
       this.addNumberSetting('Input Mults', 'inputPortsGroup.expansionSetsCount', this, { minValue: 0, maxValue: 3 });
 
       this.addValueInPort('switch', 'switchInPort', { canBeEmpty: true });
-      this.addValueOutPort('out', 'getValue', true);
-      this.addEventOutPort('out', 'eventOutPort', true);
 
       // add an expandable group of input ports
       let inputPorts = this.addPortGroup({ minSets: 0, maxSets: 3 });
@@ -37,6 +35,12 @@ export default Module.extend({
       // add one valueInPort and one eventInPort to the group
       this.addValueInPortWithoutAssignment('0', { canBeEmpty: true });
       this.addEventInPort('0', 'onEventIn', true);
+
+      set(inputPorts, 'expansionSetsCount', 1);
+
+      this.addPortGroup();
+      this.addValueOutPort('out', 'getValue', true);
+      this.addEventOutPort('out', 'eventOutPort', true);
 
       console.log('module-switch.didCreate() requestSave()');
       this.requestSave();
