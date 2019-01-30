@@ -8,7 +8,7 @@ export default Model.extend({
 
   // a port group can repeat its set of ports in a variable length series
   // eg in1, out1, in2, out2, in3, out3, would have a series length of 3.
-  expansionSetsCount: attr('number', { defaultValue: 0 }),
+  portSetsCount: attr('number', { defaultValue: 1 }),
   minSets: attr('number', { defaultValue: 0 }),
   maxSets: attr('number', { defaultValue: 0 }),
 
@@ -26,11 +26,11 @@ export default Model.extend({
     this.basePorts.pushObject(port);
   },
 
-  onExpansionPortSetsCountChanged: observer('expansionSetsCount', function() {
+  onExpansionPortSetsCountChanged: observer('portSetsCount', function() {
     console.log('expansion port sets count changed');
     if (this.hasDirtyAttributes) {
-      let currentSetsCount = this.expansionPorts.length / this.basePorts.length;
-      let newSetsCount = Math.min(Math.max(this.expansionSetsCount, this.minSets), this.maxSets);
+      let currentSetsCount = (this.expansionPorts.length / this.basePorts.length) + 1;
+      let newSetsCount = Math.min(Math.max(this.portSetsCount, this.minSets), this.maxSets);
       let change = newSetsCount - currentSetsCount;
       if (change > 0) {
         this._addExpansionSets(change);
@@ -42,7 +42,7 @@ export default Model.extend({
 
   _addExpansionSets(count) {
     let setSize = this.basePorts.length;
-    let currentSetsCount = this.expansionPorts.length / setSize;
+    let currentSetsCount = (this.expansionPorts.length / setSize) + 1;
     let port, basePort, basePortLabel;
 
     for (let i = currentSetsCount; i < currentSetsCount + count; i++) {
@@ -51,7 +51,7 @@ export default Model.extend({
         basePortLabel = basePort.label.split('0')[0];
         port = basePort.copy();
 
-        set(port, 'label', basePortLabel + (i + 1));
+        set(port, 'label', basePortLabel + i);
         this.expansionPorts.pushObject(port);
       }
     }
@@ -60,7 +60,7 @@ export default Model.extend({
 
   _removeExpansionSets(count) {
     let setSize = this.basePorts.length;
-    let currentSetsCount = this.expansionPorts.length / setSize;
+    let currentSetsCount = (this.expansionPorts.length / setSize) + 1;
     let port;
 
     for (let i = currentSetsCount; i > currentSetsCount - count; i--) {

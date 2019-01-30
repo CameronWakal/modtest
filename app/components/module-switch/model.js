@@ -24,7 +24,7 @@ export default Module.extend({
     if (get(this, 'isNew')) {
       set(this, 'title', this.name);
 
-      this.addNumberSetting('Input Mults', 'inputPortsGroup.expansionSetsCount', this, { minValue: 0, maxValue: 3 });
+      this.addNumberSetting('input sets', 'inputPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
 
       this.addValueInPort('switch', 'switchInPort', { canBeEmpty: true });
 
@@ -36,7 +36,7 @@ export default Module.extend({
       this.addValueInPortWithoutAssignment('0', { canBeEmpty: true });
       this.addEventInPort('0', 'onEventIn', true);
 
-      set(inputPorts, 'expansionSetsCount', 1);
+      set(inputPorts, 'portSetsCount', 2);
 
       this.addPortGroup();
       this.addValueOutPort('out', 'getValue', true);
