@@ -17,7 +17,7 @@ export default Module.extend({
   mode: null,
   degrees: belongsTo('array', { async: false }),
 
-  degreeInPort: belongsTo('port-value-in', { async: false }),
+  degreeInPortsGroup: belongsTo('port-group', { async: false }),
   octaveInPort: belongsTo('port-value-in', { async: false }),
   rootInPort: belongsTo('port-value-in', { async: false }),
   modeInPort: belongsTo('port-value-in', { async: false }),
@@ -66,16 +66,22 @@ export default Module.extend({
 
   },
 
-  getNote() {
+  getNote(port) {
+
+    let voiceNumber = parseInt(get(port, 'label'));
+    let degreeInPorts = get(this, 'degreeInPortsGroup.valueInPorts');
+    let degreeInPort = degreeInPorts.objectAt(voiceNumber);
 
     // 1. get input values
     // 2. set defaults if they are null
     // 3. convert to integers
     // 4. do math
 
-    let degree = get(this, 'degreeInPort').getValue();
+    let degree = degreeInPort.getValue();
     let octave = get(this, 'octaveInPort').getValue();
     let root = get(this, 'rootInPort').getValue();
+
+    console.log('voicenumber', voiceNumber, 'degree', degree);
 
     let degreeInOctave = mod(degree, get(this, 'degreesInScale'));
     let degreeItem = get(this, 'degrees.items').findBy('index', degreeInOctave);
@@ -104,12 +110,19 @@ export default Module.extend({
       get(this, 'degrees').dataManager = this;
 
       // create ports
-      this.addValueInPort('degree', 'degreeInPort', { defaultValue: 0 });
       this.addValueInPort('octave', 'octaveInPort', { isEnabled: false, defaultValue: 3, minValue: -2, maxValue: 8 });
       this.addValueInPort('root', 'rootInPort', { isEnabled: false, defaultValue: 0 });
       this.addValueInPort('mode', 'modeInPort', { isEnabled: false, defaultValue: 0, disabledValueChangedMethod: 'updateScale' });
-      this.addEventInPort('update', 'updateScale', true);
-      this.addValueOutPort('note', 'getNote', true);
+      this.addEventInPort('update', 'updateScale', false);
+
+      // add an expandable group of input ports
+      let degreeInPorts = this.addPortGroup({ minSets: 1, maxSets: 4 });
+      set(this, 'degreeInPortsGroup', degreeInPorts);
+      this.addValueInPort('0', 'degreeInPort', { canBeEmpty: true });
+      this.addValueOutPort('0', 'getNote', true);
+
+      this.addNumberSetting('voices', 'degreeInPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
+      set(degreeInPorts, 'portSetsCount', 2);
 
       this.updateScale();
 

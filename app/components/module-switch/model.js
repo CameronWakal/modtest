@@ -29,7 +29,7 @@ export default Module.extend({
       this.addValueInPort('switch', 'switchInPort', { canBeEmpty: true });
 
       // add an expandable group of input ports
-      let inputPorts = this.addPortGroup({ minSets: 0, maxSets: 3 });
+      let inputPorts = this.addPortGroup({ minSets: 1, maxSets: 4 });
       set(this, 'inputPortsGroup', inputPorts);
 
       // add one valueInPort and one eventInPort to the group

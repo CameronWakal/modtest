@@ -27,8 +27,6 @@ export default Model.extend({
   },
 
   onExpansionPortSetsCountChanged: observer('portSetsCount', function() {
-    console.log('expansion port sets count changed');
-    if (this.hasDirtyAttributes) {
       let currentSetsCount = (this.expansionPorts.length / this.basePorts.length) + 1;
       let newSetsCount = Math.min(Math.max(this.portSetsCount, this.minSets), this.maxSets);
       let change = newSetsCount - currentSetsCount;
@@ -37,7 +35,6 @@ export default Model.extend({
       } else if (change < 0) {
         this._removeExpansionSets(change * -1);
       }
-    }
   }),
 
   _addExpansionSets(count) {
