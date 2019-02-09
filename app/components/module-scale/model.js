@@ -1,4 +1,4 @@
-import { set, get } from '@ember/object';
+import { set, get, observer } from '@ember/object';
 import { mod, div } from '../../utils/math-util';
 import DS from 'ember-data';
 import Module from '../module/model';
@@ -21,6 +21,15 @@ export default Module.extend({
   octaveInPort: belongsTo('port-value-in', { async: false }),
   rootInPort: belongsTo('port-value-in', { async: false }),
   modeInPort: belongsTo('port-value-in', { async: false }),
+
+  // track the array indexes of the most recently read value on each note out port
+  currentItems: null,
+  onVoiceCountChanged: observer('degreeInPortsGroup.portSetsCount', function() {
+    if (this.hasDirtyAttributes && !this.isNew) {
+      let voiceCount = this.degreeInPortsGroup.portSetsCount;
+      currentItems = new Array(voiceCount).fill(null);
+    }
+  }),
 
   updateScale() {
     let mode = get(this, 'modeInPort').getValue() % 7;
@@ -80,26 +89,31 @@ export default Module.extend({
     let degree = degreeInPort.getValue();
     let octave = get(this, 'octaveInPort').getValue();
     let root = get(this, 'rootInPort').getValue();
+    let degreeItem;
 
-    console.log('voicenumber', voiceNumber, 'degree', degree);
+    if (degree != null) {
+      let degreeInOctave = mod(degree, get(this, 'degreesInScale'));
+      let degreeItem = get(this, 'degrees.items').findBy('index', degreeInOctave);
+      this.currentItems[voiceNumber] = degreeItem;
+      console.log('currentItems:', this.currentItems);
 
-    let degreeInOctave = mod(degree, get(this, 'degreesInScale'));
-    let degreeItem = get(this, 'degrees.items').findBy('index', degreeInOctave);
-    set(this, 'degrees.currentItem', degreeItem);
-    let intervalForDegree = get(degreeItem, 'value');
+      let intervalForDegree = get(degreeItem, 'value');
+      if (intervalForDegree == null) {
+        return null;
+      }
 
-    if (intervalForDegree == null) {
-      return null;
+      octave = octave + 1 + div(degree, get(this, 'degreesInScale'));
+      let note = (octave * 12) + root + intervalForDegree;
+      // console.log('octave:'+octave+' root:'+root+' degree:'+degree+' interval:'+intervalForDegree+' note:'+note);
+      return note;
+    } else {
+      this.currentItems[voiceNumber] = null;
+      console.log('currentItems:', this.currentItems);
     }
-
-    octave = octave + 1 + div(degree, get(this, 'degreesInScale'));
-    let note = (octave * 12) + root + intervalForDegree;
-    // console.log('octave:'+octave+' root:'+root+' degree:'+degree+' interval:'+intervalForDegree+' note:'+note);
-    return note;
   },
 
   ready() {
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
 
       // create degrees
@@ -131,6 +145,9 @@ export default Module.extend({
     } else {
       get(this, 'degrees').dataManager = this;
     }
+
+    // initialize array to track current value for each voice
+    this.currentItems = new Array(2).fill(null);
   },
 
   remove() {

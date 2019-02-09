@@ -13,8 +13,11 @@ export default Model.extend({
   index: attr('number'),
   array: belongsTo('array', { async: false, inverse: 'items' }),
 
-  isCurrentItem: computed('array.currentItem', function() {
-    return this === get(this, 'array.currentItem');
+  isCurrentItem: computed('array.currentItems.@each', function() {
+    let currentItems = get (this, 'array.currentItems');
+    if (currentItems) {
+      return this.array.currentItems.any((item) => this === item);
+    }
   }),
 
   onValueChanged: observer('value', function() {
