@@ -69,10 +69,12 @@ export default Module.extend({
         return;
     }
 
-    let items = get(this, 'degrees.items');
-    items.forEach((item) => {
-      set(item, 'value', newValues[get(item, 'index')]);
+    get(this, 'degrees.items').then(function(items) {
+      items.forEach((item) => {
+        set(item, 'value', newValues[item.index]);
+      });
     });
+
 
   },
 
