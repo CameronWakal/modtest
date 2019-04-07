@@ -1,4 +1,5 @@
-import { set, get, observer } from '@ember/object';
+import { set, get, observer, defineProperty } from '@ember/object';
+import { alias, map } from '@ember/object/computed';
 import { mod, div } from '../../utils/math-util';
 import DS from 'ember-data';
 import Module from '../module/model';
@@ -22,13 +23,18 @@ export default Module.extend({
   rootInPort: belongsTo('port-value-in', { async: false }),
   modeInPort: belongsTo('port-value-in', { async: false }),
 
-  // track the array indexes of the most recently read value on each note out port
-  currentItems: null,
   onVoiceCountChanged: observer('degreeInPortsGroup.portSetsCount', function() {
     if (this.hasDirtyAttributes && !this.isNew) {
       let voiceCount = this.degreeInPortsGroup.portSetsCount;
-      currentItems = new Array(voiceCount).fill(null);
     }
+  }),
+
+  // track the array indexes of the most recently read value on each note out port
+  currentIndexes: map('degreeInPortsGroup.valueInPorts', function(port, index) {
+
+      console.log('mapping port', port, 'with index', index, 'andValue', port.getValue());
+
+      return port.getValue();
   }),
 
   updateScale() {
@@ -89,14 +95,10 @@ export default Module.extend({
     let degree = degreeInPort.getValue();
     let octave = get(this, 'octaveInPort').getValue();
     let root = get(this, 'rootInPort').getValue();
-    let degreeItem;
 
     if (degree != null) {
       let degreeInOctave = mod(degree, get(this, 'degreesInScale'));
       let degreeItem = get(this, 'degrees.items').findBy('index', degreeInOctave);
-      this.currentItems[voiceNumber] = degreeItem;
-      console.log('currentItems:', this.currentItems);
-
       let intervalForDegree = get(degreeItem, 'value');
       if (intervalForDegree == null) {
         return null;
@@ -106,9 +108,6 @@ export default Module.extend({
       let note = (octave * 12) + root + intervalForDegree;
       // console.log('octave:'+octave+' root:'+root+' degree:'+degree+' interval:'+intervalForDegree+' note:'+note);
       return note;
-    } else {
-      this.currentItems[voiceNumber] = null;
-      console.log('currentItems:', this.currentItems);
     }
   },
 
@@ -120,8 +119,8 @@ export default Module.extend({
       let degrees = this.store.createRecord('array');
       set(this, 'degrees', degrees);
       set(this, 'degrees.valueMax', 11);
-      set(this, 'degrees.length', get(this, 'degreesInScale'));
-      get(this, 'degrees').dataManager = this;
+      set(this, 'degrees.length', this.degreesInScale);
+      this.degrees.dataManager = this;
 
       // create ports
       this.addValueInPort('octave', 'octaveInPort', { isEnabled: false, defaultValue: 3, minValue: -2, maxValue: 8 });
@@ -146,8 +145,6 @@ export default Module.extend({
       get(this, 'degrees').dataManager = this;
     }
 
-    // initialize array to track current value for each voice
-    this.currentItems = new Array(2).fill(null);
   },
 
   remove() {

@@ -1,4 +1,4 @@
-import { get, observer, computed } from '@ember/object';
+import { observer, computed } from '@ember/object';
 import DS from 'ember-data';
 
 const {
@@ -13,10 +13,10 @@ export default Model.extend({
   index: attr('number'),
   array: belongsTo('array', { async: false, inverse: 'items' }),
 
-  isCurrentItem: computed('array.currentItems.@each', function() {
-    let currentItems = get (this, 'array.currentItems');
-    if (currentItems) {
-      return this.array.currentItems.any((item) => this === item);
+  isCurrentItem: computed('array.currentIndexes.@each', function() {
+    console.log('isCurrentItem computed, currentIndexes', this.array.currentIndexes);
+    if (this.array.currentIndexes) {
+      return this.array.currentIndexes.any((index) => this.index == index);
     }
   }),
 

@@ -1,12 +1,11 @@
-import { alias } from '@ember/object/computed';
 import { set, get, observer } from '@ember/object';
 import DS from 'ember-data';
+import { alias } from '@ember/object/computed';
 
 const {
   Model,
   attr,
-  hasMany,
-  belongsTo
+  hasMany
 } = DS;
 
 export default Model.extend({
@@ -19,7 +18,7 @@ export default Model.extend({
   items: hasMany('arrayItem'),
   // the parent model can point this variable to a hasMany of array items if needed.
   // the array will highlight any items that appear in currentItems in the UI.
-  currentItems: null,
+  currentIndexes: alias('dataManager.currentIndexes'),
   // the array needs a reference to the parent module to request an embeddedRecords save,
   // but we don't want this to be a belongsTo because of polymorphism problems that started
   // in Ember 3.1. So instead, after an array record is created or when it is loaded, the
