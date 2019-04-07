@@ -1,5 +1,5 @@
-import { set, get, observer, defineProperty } from '@ember/object';
-import { alias, map } from '@ember/object/computed';
+import { set, get } from '@ember/object';
+import { map } from '@ember/object/computed';
 import { mod, div } from '../../utils/math-util';
 import DS from 'ember-data';
 import Module from '../module/model';
@@ -23,18 +23,10 @@ export default Module.extend({
   rootInPort: belongsTo('port-value-in', { async: false }),
   modeInPort: belongsTo('port-value-in', { async: false }),
 
-  onVoiceCountChanged: observer('degreeInPortsGroup.portSetsCount', function() {
-    if (this.hasDirtyAttributes && !this.isNew) {
-      let voiceCount = this.degreeInPortsGroup.portSetsCount;
-    }
-  }),
-
   // track the array indexes of the most recently read value on each note out port
-  currentIndexes: map('degreeInPortsGroup.valueInPorts', function(port, index) {
-
-      console.log('mapping port', port, 'with index', index, 'andValue', port.getValue());
-
-      return port.getValue();
+  currentIndexes: map('degreeInPortsGroup.valueInPorts.@each.computedValue', function(port, index) {
+    console.log('mapping port', port, 'with index', index, 'andValue', port.computedValue);
+    return port.computedValue;
   }),
 
   updateScale() {

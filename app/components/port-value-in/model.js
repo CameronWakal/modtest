@@ -1,4 +1,4 @@
-import { get, observer } from '@ember/object';
+import { get, set, observer } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import DS from 'ember-data';
 import Port from '../port/model';
@@ -19,6 +19,11 @@ export default Port.extend({
   maxValue: attr('number'),
   disabledValue: attr('number'),
   disabledValueChangedMethod: attr('string'), // method to notify the module that the disabled value has changed
+
+  // module values are not computed properties for performance reasons. However, everything in the templates is
+  // rendered using computed properties. This ComputedValue property can be used to watch the most recently
+  // fetched value. It's updated on getValue().
+  computedValue: null,
 
   copy() {
     let newPort = this.store.createRecord('port-value-in', {
@@ -53,6 +58,7 @@ export default Port.extend({
   getValue() {
     if (!this.isEnabled) {
       // assume disabledValue has already been validated against canBeEmpty, min, max
+      set(this, 'computedValue', this.disabledValue);
       return this.disabledValue;
     }
 
@@ -84,6 +90,7 @@ export default Port.extend({
       }
     }
 
+    set(this, 'computedValue', totalValue);
     return totalValue;
   }
 
