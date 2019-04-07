@@ -14,7 +14,6 @@ export default Model.extend({
   array: belongsTo('array', { async: false, inverse: 'items' }),
 
   isCurrentItem: computed('array.currentIndexes.@each', function() {
-    console.log('isCurrentItem computed, currentIndexes', this.array.currentIndexes);
     if (this.array.currentIndexes) {
       return this.array.currentIndexes.any((index) => this.index == index);
     }

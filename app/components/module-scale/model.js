@@ -23,10 +23,13 @@ export default Module.extend({
   rootInPort: belongsTo('port-value-in', { async: false }),
   modeInPort: belongsTo('port-value-in', { async: false }),
 
-  // track the array indexes of the most recently read value on each note out port
-  currentIndexes: map('degreeInPortsGroup.valueInPorts.@each.computedValue', function(port, index) {
-    console.log('mapping port', port, 'with index', index, 'andValue', port.computedValue);
-    return port.computedValue;
+  // map the value of each valueInPort to the current scale. This is referenced by
+  // the degrees array in order to display the currently selected intervals in the UI.
+  currentIndexes: map('degreeInPortsGroup.valueInPorts.@each.computedValue', function(port) {
+    if (port.computedValue == null) {
+      return null;
+    }
+    return mod(port.computedValue, this.degreesInScale);
   }),
 
   updateScale() {
