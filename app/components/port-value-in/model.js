@@ -43,7 +43,6 @@ export default Port.extend({
 
   onDisabledValueChanged: observer('disabledValue', function() {
     if (this.hasDirtyAttributes && !this.isNew) {
-      console.log('port-value-in disabledValueChanged');
 
       let methodName = this.disabledValueChangedMethod;
       if (!isEmpty(methodName)) {
@@ -51,6 +50,8 @@ export default Port.extend({
         methodToCall();
       }
 
+      // save me so my attributes are marked as clean, request module save to persist changes.
+      this.save();
       this.requestSave();
     }
   }),
