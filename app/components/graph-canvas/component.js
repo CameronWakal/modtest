@@ -34,16 +34,12 @@ export default Component.extend({
     }
   ),
 
-  didInsertElement() {
-    // bind redraw on window resize
-    // $(window).on('resize', run.bind(this, this.drawConnections));
-  },
-
   // draw connections between ports,
   // draw line from new connection port to cursor position
   draw() {
 
-    let c = this.$().get(0);
+    console.log('todo: replace jquery selector before using this draw function.');
+    //let c = this.$().get(0);
     let ctx = c.getContext('2d');
     let pxRatio = window.devicePixelRatio;
     let width = get(this, 'width');

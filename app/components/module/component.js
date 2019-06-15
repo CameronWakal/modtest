@@ -19,6 +19,8 @@ export default Component.extend({
   moveOffsetX: null,
   moveOffsetY: null,
   portIsConnectingFrom: false,
+  mouseUpBodyFunction: null,
+  mouseMoveBodyFunction: null,
 
   xPos: alias('module.xPos'),
   yPos: alias('module.yPos'),
@@ -35,10 +37,14 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
+    // save reference to bound function so removeEventListener will work
+    this.mouseUpBodyFunction = this.mouseUpBody.bind(this);
+    this.mouseMoveBodyFunction = this.mouseMoveBody.bind(this);
+
     if (this.module.isNew) {
       this.isMoving = true;
-      $(document).on('mouseup', this.mouseUpBody.bind(this));
-      $(document).on('mousemove', this.mouseMoveBody.bind(this));
+      document.addEventListener('mouseup', this.mouseUpBodyFunction);
+      document.addEventListener('mousemove', this.mouseMoveBodyFunction);
     }
   },
 
@@ -76,23 +82,23 @@ export default Component.extend({
   },
 
   mouseDown(event) {
-    if ($(event.target).hasClass('module')
-      || $(event.target).hasClass('module-label')
-      || $(event.target).hasClass('module-ports')
-      || $(event.target).hasClass('indicator-blinking')
+    if (event.target.classList.contains('module')
+      || event.target.classList.contains('module-label')
+      || event.target.classList.contains('module-ports')
+      || event.target.classList.contains('indicator-blinking')
     ) {
       this.isMoving = true;
       this.moveOffsetX = event.pageX - this.xPos;
       this.moveOffsetY = event.pageY - this.yPos;
-      $(document).on('mouseup', this.mouseUpBody.bind(this));
-      $(document).on('mousemove', this.mouseMoveBody.bind(this));
+      document.addEventListener('mouseup', this.mouseUpBodyFunction);
+      document.addEventListener('mousemove', this.mouseMoveBodyFunction);
       this.selected();
       this.startedMoving();
     }
   },
 
   keyDown(event) {
-    if (event.keyCode === 8 && this.$().is(':focus')) {
+    if (event.keyCode === 8 && this.element === document.activeElement) {
       event.preventDefault();
       this.remove();
     }
@@ -136,8 +142,8 @@ export default Component.extend({
         set(self, 'didMove', false);
       }
       self.finishedMoving();
-      $(document).off('mouseup');
-      $(document).off('mousemove');
+      document.removeEventListener('mouseup', self.mouseUpBodyFunction);
+      document.removeEventListener('mousemove', self.mouseMoveBodyFunction);
     });
   }
 
