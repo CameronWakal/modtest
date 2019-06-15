@@ -29,7 +29,7 @@ export default TextField.extend({
   },
 
   click() {
-    this.$().select();
+    this.element.select();
   },
 
   focusOut() {
@@ -69,16 +69,16 @@ export default TextField.extend({
 
     switch (event.keyCode) {
       case 13: // enter/return
-        this.$().select();
+        this.element.select();
         break;
       case 27: // escape
-        this.$().select();
+        this.element.select();
         break;
       case 38: // up arrow
-        this.$().select();
+        this.element.select();
         break;
       case 40: // down arrow
-        this.$().select();
+        this.element.select();
 
     }
   },
