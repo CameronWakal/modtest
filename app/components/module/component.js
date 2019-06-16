@@ -1,6 +1,5 @@
 import { alias } from '@ember/object/computed';
 import Component from '@ember/component';
-import $ from 'jquery';
 import { run } from '@ember/runloop';
 import { set, get, observer, computed } from '@ember/object';
 import { htmlSafe } from '@ember/string';
