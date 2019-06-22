@@ -8,7 +8,7 @@ export default Component.extend({
   attributeBindings: ['name'],
 
   change() {
-    let selectedIndex = this.$('option:selected').index();
+    let selectedIndex = this.element.selectedIndex;
     let items = get(this, 'items');
     set(this, 'selectedItem', items[selectedIndex]);
   }
