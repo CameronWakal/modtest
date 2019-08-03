@@ -53,7 +53,7 @@ export default Component.extend({
   didInsertElement() {
     this.connections = [];
     this.onPortsChanged();
-    $(window).on('resize', run.bind(this, this.drawConnections));
+    window.onresize = run.bind(this, this.drawConnections);
   },
 
   // search for connected ports in dom and store the jquery objects
@@ -61,7 +61,7 @@ export default Component.extend({
   updateConnections() {
     let outPorts, inPorts, outPortDom, inPortDom;
 
-    let modulesDom = this.$().siblings('#modules').children();
+    let modulesDom = document.getElementById('modules').childNodes;
     let modules = get(this, 'patch.modules');
     set(this, 'connections', []);
     let self = this;
@@ -160,8 +160,7 @@ export default Component.extend({
   drawConnections(event) {
     let newPort = get(this, 'newConnectionFrom');
 
-    let c = this.$().get(0);
-    let ctx = c.getContext('2d');
+    let ctx = this.element.getContext('2d');
     let pxRatio = window.devicePixelRatio;
     ctx.canvas.width  = window.innerWidth * pxRatio;
     ctx.canvas.height = window.innerHeight * pxRatio;
