@@ -8,7 +8,7 @@ export default Component.extend({
   attributeBindings: ['name'],
 
   change() {
-    let selectedIndex = this.element.selectedIndex;
+    let { selectedIndex } = this.element;
     let items = get(this, 'items');
     set(this, 'selectedItem', items[selectedIndex]);
   }

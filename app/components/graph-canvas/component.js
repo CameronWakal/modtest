@@ -38,8 +38,7 @@ export default Component.extend({
   // draw line from new connection port to cursor position
   draw() {
 
-    console.log('todo: replace jquery selector before using this draw function.');
-    //let c = this.$().get(0);
+    let c = this.$().get(0);
     let ctx = c.getContext('2d');
     let pxRatio = window.devicePixelRatio;
     let width = get(this, 'width');

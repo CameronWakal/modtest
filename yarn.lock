@@ -4002,7 +4002,7 @@ ember-wormhole@^0.5.2:
     ember-cli-babel "^6.10.0"
     ember-cli-htmlbars "^2.0.1"
 
-emberx-range-input@^1.0.2:
+emberx-range-input@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/emberx-range-input/-/emberx-range-input-1.0.3.tgz#f62991eea02566b4056fdadd693283b45e988710"
   integrity sha512-9lJafjc5gnGQSwhAU9OSVY+z7nAG7tDnDlW8MXXxb6dAQpr8ULsek3WmKhTMjBa6PjsqwQU2d7LvhYokv/c89A==
@@ -8049,7 +8049,7 @@ range-parser@~1.2.1:
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
 
-rangeslider.js@^2.3.1:
+rangeslider.js@^2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/rangeslider.js/-/rangeslider.js-2.3.2.tgz#8f11b3817ce1784c687bf81deb9493fb40122fc1"
   integrity sha512-ghYGdrOiS0/Btz1jel03TCucgeW1pqPKI0RVG7neYw3ZeOgOVrNgx2p4V2FVIkKGiLfJRuqlqkIC/Eq/5ARmoQ==
