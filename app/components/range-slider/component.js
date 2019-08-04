@@ -25,7 +25,8 @@ export default XRangeInputComponent.extend({
   }),
 
   onValueChanged: observer('value', function() {
-    this.$().val(this.value).change();
+    this.element.value = this.value;
+    this.element.dispatchEvent(new Event('change'));
   }),
 
   didInsertElement() {

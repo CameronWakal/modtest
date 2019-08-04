@@ -1,5 +1,4 @@
 import Component from '@ember/component';
-import $ from 'jquery';
 import { run } from '@ember/runloop';
 import { set, get } from '@ember/object';
 
@@ -14,24 +13,26 @@ export default Component.extend({
   tabindex: -1,
 
   isConnectingFrom: false,
+  mouseUpBodyFunction: null,
 
   mouseDown(event) {
     event.preventDefault();
-    this.$().focus();
+    this.element.focus();
     set(this, 'isConnectingFrom', true);
-    $(document).on('mouseup', this.mouseUpBody.bind(this));
+    this.mouseUpBodyFunction = this.mouseUpBody.bind(this);
+    document.addEventListener('mouseup', this.mouseUpBodyFunction);
     get(this, 'startedConnecting')(event);
     return false;
   },
 
   mouseUpBody(event) {
     event.preventDefault();
-    this.$().blur();
+    this.element.blur();
     let self = this;
     run(function() {
       set(self, 'isConnectingFrom', false);
       self.finishedConnecting();
-      $(document).off('mouseup');
+      document.removeEventListener('mouseup', self.mouseUpBodyFunction);
     });
   }
 

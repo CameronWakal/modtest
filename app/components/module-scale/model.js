@@ -75,7 +75,6 @@ export default Module.extend({
       });
     });
 
-
   },
 
   getNote(port) {

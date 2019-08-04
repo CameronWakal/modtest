@@ -1,6 +1,6 @@
 import { empty } from '@ember/object/computed';
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { computed, set } from '@ember/object';
 import { htmlSafe } from '@ember/string';
 
 export default Component.extend({
@@ -18,6 +18,12 @@ export default Component.extend({
     let steps = range / this.step;
     let height = steps * this.displayScale;
     return htmlSafe(`height:${height}px`);
-  })
+  }),
+
+  actions: {
+    updateValue(value) {
+      set(this, 'item.value', value);
+    }
+  }
 
 });

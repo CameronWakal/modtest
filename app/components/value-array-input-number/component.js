@@ -12,18 +12,18 @@ export default ValueInputNumber.extend({
   classNameBindings: ['item.isCurrentItem:current'],
 
   selectNext() {
-    if (this.$().next().length) {
-      this.$().next().focus();
+    if (this.element.nextElementSibling) {
+      this.element.nextElementSibling.focus();
     } else {
-      this.$().siblings().first().focus();
+      this.element.parentElement.firstElementChild.focus();
     }
   },
 
   selectPrevious() {
-    if (this.$().prev().length) {
-      this.$().prev().focus();
+    if (this.element.previousElementSibling) {
+      this.element.previousElementSibling.focus();
     } else {
-      this.$().siblings().last().focus();
+      this.element.parentElement.lastElementChild.focus();
     }
   },
 
@@ -31,10 +31,10 @@ export default ValueInputNumber.extend({
 
     switch (event.keyCode) {
       case 37: // left arrow
-        this.$().select();
+        this.element.select();
         break;
       case 39: // right arrow
-        this.$().select();
+        this.element.select();
         break;
       default:
         this._super(event);

@@ -1,5 +1,4 @@
 import Component from '@ember/component';
-import $ from 'jquery';
 import { run } from '@ember/runloop';
 import { set, get, observer } from '@ember/object';
 
@@ -17,7 +16,7 @@ export default Component.extend({
   selectedConnectionIndex: null,
   newConnectionFrom: null,
 
-  mouseListenerAdded: false,
+  mouseMoveBodyFunction: null,
 
   onMovingModuleChanged: observer('movingModule', function() {
     if (get(this, 'movingModule')) {
@@ -53,7 +52,7 @@ export default Component.extend({
   didInsertElement() {
     this.connections = [];
     this.onPortsChanged();
-    $(window).on('resize', run.bind(this, this.drawConnections));
+    window.onresize = run.bind(this, this.drawConnections);
   },
 
   // search for connected ports in dom and store the jquery objects
@@ -61,7 +60,7 @@ export default Component.extend({
   updateConnections() {
     let outPorts, inPorts, outPortDom, inPortDom;
 
-    let modulesDom = this.$().siblings('#modules').children();
+    let modulesDom = document.getElementById('modules');
     let modules = get(this, 'patch.modules');
     set(this, 'connections', []);
     let self = this;
@@ -71,12 +70,12 @@ export default Component.extend({
       outPorts = get(module, 'enabledOutPorts');
       outPorts.forEach((outPort) => {
 
-        outPortDom = $(modulesDom).find(`.${get(outPort, 'uniqueCssIdentifier')}`);
+        outPortDom = modulesDom.getElementsByClassName(outPort.uniqueCssIdentifier)[0];
 
         inPorts = get(outPort, 'connections');
         inPorts.forEach((inPort) => {
 
-          inPortDom = $(modulesDom).find(`.${get(inPort, 'uniqueCssIdentifier')}`);
+          inPortDom = modulesDom.getElementsByClassName(inPort.uniqueCssIdentifier)[0];
           get(self, 'connections').addObject({
             inPortDom,
             outPortDom,
@@ -90,8 +89,8 @@ export default Component.extend({
 
   // start drawing a line from the new connection port to the cursor location on mouse move
   addNewConnection() {
-    let module = this.$().siblings('#modules').children('.port-connecting-from');
-    let port = $(module).children('.module-ports').children('.connecting-from');
+    let module = document.getElementById('modules').getElementsByClassName('port-connecting-from')[0];
+    let port = module.getElementsByClassName('module-ports')[0].getElementsByClassName('connecting-from')[0];
     this.addMouseListener();
     set(this, 'newConnectionFrom', port);
     this.drawConnections();
@@ -106,21 +105,19 @@ export default Component.extend({
 
   // add a mouse listener if it isn't already set
   addMouseListener() {
-    let mouseListenerAdded = get(this, 'mouseListenerAdded');
-    if (!mouseListenerAdded) {
-      $(document).on('mousemove', this.mouseMoveBody.bind(this));
-      set(this, 'mouseListenerAdded', true);
+    if (!this.mouseMoveBodyFunction) {
+      this.mouseMoveBodyFunction = this.mouseMoveBody.bind(this);
+      document.addEventListener('mousemove', this.mouseMoveBodyFunction);
     }
   },
 
   // remove the mouse listener only if there is neither a moving module or a connecting port
   removeMouseListener() {
-    let mouseListenerAdded = get(this, 'mouseListenerAdded');
     let movingModule = get(this, 'movingModule');
     let connectingFromPort = get(this, 'connectingFromPort');
-    if (mouseListenerAdded && !movingModule && !connectingFromPort) {
-      $(document).off('mousemove');
-      set(this, 'mouseListenerAdded', false);
+    if (this.mouseMoveBodyFunction && !movingModule && !connectingFromPort) {
+      document.removeEventListener('mousemove', this.mouseMoveBodyFunction);
+      this.mouseMoveBodyFunction = null;
     }
 
   },
@@ -160,25 +157,22 @@ export default Component.extend({
   drawConnections(event) {
     let newPort = get(this, 'newConnectionFrom');
 
-    let c = this.$().get(0);
-    let ctx = c.getContext('2d');
+    let ctx = this.element.getContext('2d');
     let pxRatio = window.devicePixelRatio;
     ctx.canvas.width  = window.innerWidth * pxRatio;
     ctx.canvas.height = window.innerHeight * pxRatio;
 
-    let startX, startY, endX, endY;
+    let start, end;
 
     let connections = get(this, 'connections');
     connections.forEach((con, index) => {
 
-      startX = $(con.outPortDom).offset().left + $(con.outPortDom).outerWidth() / 2;
-      startY = $(con.outPortDom).offset().top + $(con.outPortDom).outerHeight() / 2;
-      endX = $(con.inPortDom).offset().left + $(con.inPortDom).outerWidth() / 2;
-      endY = $(con.inPortDom).offset().top + $(con.inPortDom).outerHeight() / 2;
+      start = this.portElementCenter(con.outPortDom);
+      end = this.portElementCenter(con.inPortDom);
 
       ctx.beginPath();
-      ctx.moveTo(startX * pxRatio, startY * pxRatio);
-      ctx.lineTo(endX * pxRatio, endY * pxRatio);
+      ctx.moveTo(start.x * pxRatio, start.y * pxRatio);
+      ctx.lineTo(end.x * pxRatio, end.y * pxRatio);
       ctx.lineWidth = 1 * pxRatio;
       if (get(con.inPort, 'type') === 'port-event-in' || get(con.inPort, 'type') === 'port-event-out') {
         ctx.strokeStyle = eventLineColor;
@@ -195,11 +189,10 @@ export default Component.extend({
 
     // drawing a line from selected port to current mouse drag position
     if (newPort && event) {
-      startX = $(newPort).offset().left + $(newPort).outerWidth() / 2;
-      startY = $(newPort).offset().top + $(newPort).outerHeight() / 2;
+      start = this.portElementCenter(newPort);
 
       ctx.beginPath();
-      ctx.moveTo(startX * pxRatio, startY * pxRatio);
+      ctx.moveTo(start.x * pxRatio, start.y * pxRatio);
       ctx.lineTo(event.pageX * pxRatio, event.pageY * pxRatio);
       ctx.strokeStyle = selectedLineColor;
       ctx.stroke();
@@ -212,21 +205,16 @@ export default Component.extend({
   mouseDown(event) {
     get(this, 'moduleDeselected')();
     set(this, 'selectedConnectionIndex', null);
-    let startX, startY, endX, endY, point, lineStart, lineEnd, distance;
+    let start, end, point, lineStart, lineEnd, distance;
     let cons = get(this, 'connections');
     cons.forEach((con, index) => {
 
       // todo: should cache this stuff instead of re-jquerying it
-      startX = $(con.outPortDom).offset().left + $(con.outPortDom).outerWidth() / 2;
-      startY = $(con.outPortDom).offset().top + $(con.outPortDom).outerHeight() / 2;
-      endX = $(con.inPortDom).offset().left + $(con.inPortDom).outerWidth() / 2;
-      endY = $(con.inPortDom).offset().top + $(con.inPortDom).outerHeight() / 2;
-
+      start = this.portElementCenter(con.outPortDom);
+      end = this.portElementCenter(con.inPortDom);
       point = { x: event.pageX, y: event.pageY };
-      lineStart = { x: startX, y: startY };
-      lineEnd = { x: endX, y: endY };
 
-      distance = this.distToSegment(point, lineStart, lineEnd);
+      distance = this.distToSegment(point, start, end);
 
       if (distance < 5) {
         set(this, 'selectedConnectionIndex', index);
@@ -236,6 +224,12 @@ export default Component.extend({
 
     this.drawConnections();
 
+  },
+
+  portElementCenter(port) {
+    let x = port.offsetLeft + port.parentElement.parentElement.offsetLeft + port.offsetWidth / 2;
+    let y = port.offsetTop + port.parentElement.parentElement.offsetTop + port.offsetHeight / 2;
+    return { x, y };
   },
 
   // Functions to hittest mouse position and patch connections
