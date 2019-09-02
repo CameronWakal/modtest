@@ -1,4 +1,4 @@
-import { set, get, observer } from '@ember/object';
+import { set, get, observer, computed } from '@ember/object';
 import DS from 'ember-data';
 import Module from '../module/model';
 
@@ -28,31 +28,33 @@ export default Module.extend({
     }
   }),
 
+  // currentIndexes is referenced by the steps array to highlight the currently selected
+  // steps in the UI. A sequence only ever has one selected step.
+  currentIndexes: computed('currentIndex', function() {
+    return [this.currentIndex];
+  }),
+  currentIndex: null,
+
   getValue() {
-    return get(this, 'steps.currentItem.value');
+    return this.steps.items.findBy('index', this.currentIndex).value;
   },
 
   incrementStep(event) {
-    let step = get(this, 'steps.currentItem');
-    let index = get(this, 'steps.currentItem.index');
-    let length = get(this, 'steps.length');
-    let steps = get(this, 'steps.items');
-    let nextStep;
 
     // update step
-    if (!step) {
-      nextStep = steps.findBy('index', 0);
-    } else if (index < length - 1) {
-      nextStep = steps.findBy('index', index + 1);
+    if (this.currentIndex == null) {
+      set(this, 'currentIndex', 0);
+    } else if (this.currentIndex < this.steps.length - 1) {
+      set(this, 'currentIndex', this.currentIndex + 1);
     } else {
-      nextStep = steps.findBy('index', 0);
+      set(this, 'currentIndex', 0);
     }
-    set(this, 'steps.currentItem', nextStep);
 
     // output event if current step has a value
-    if (!isNaN(parseInt(get(this, 'steps.currentItem.value')))) {
-      if (get(this, 'trigOutPort.isConnected')) {
-        get(this, 'trigOutPort').sendEvent(event);
+    let step = this.steps.items.findBy('index', this.currentIndex);
+    if (!isNaN(parseInt(step.value))) {
+      if (this.trigOutPort.isConnected) {
+        this.trigOutPort.sendEvent(event);
         set(this, 'triggerDuration', event.duration);
         set(this, 'latestTriggerTime', event.targetTime);
       }
@@ -60,7 +62,7 @@ export default Module.extend({
   },
 
   reset() {
-    set(this, 'steps.currentItem', null);
+    set(this, 'currentIndex', null);
   },
 
   ready() {
