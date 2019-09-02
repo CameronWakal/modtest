@@ -44,12 +44,12 @@ export default Module.extend({
 
   onSourceChanged: observer('source', function() {
     if (get(this, 'source') === 'Internal') {
-      get(this, 'midi').timingListener = null;
+      this.midi.timingListener = null;
       if (this.isStarted) { // reset the internal clock
         this.start();
       }
     } else if (get(this, 'source') === 'External') {
-      get(this, 'midi').timingListener = this;
+      this.midi.timingListener = this;
       this.resetExternalTimer();
     }
     if (get(this, 'hasDirtyAttributes')) {

@@ -205,7 +205,7 @@ export default Component.extend({
   mouseDown(event) {
     get(this, 'moduleDeselected')();
     set(this, 'selectedConnectionIndex', null);
-    let start, end, point, lineStart, lineEnd, distance;
+    let start, end, point, distance;
     let cons = get(this, 'connections');
     cons.forEach((con, index) => {
 
