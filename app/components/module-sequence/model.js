@@ -36,7 +36,11 @@ export default Module.extend({
   currentIndex: null,
 
   getValue() {
-    return this.steps.items.findBy('index', this.currentIndex).value;
+    let item = this.steps.items.findBy('index', this.currentIndex);
+    if (item) {
+      return item.value;
+    }
+    return null;
   },
 
   incrementStep(event) {
