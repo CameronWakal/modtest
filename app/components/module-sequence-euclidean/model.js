@@ -14,24 +14,28 @@ export default ModuleSequence.extend({
   stepsInPort: belongsTo('port-value-in', { async: false }),
   pulsesInPort: belongsTo('port-value-in', { async: false }),
 
-  ready() {
+  build() {
     this._super();
-    if (get(this, 'isNew')) {
-      set(this, 'title', this.name);
+    set(this, 'title', this.name);
 
-      // unlike the parent, we want length to be a port instead of a setting
-      this.removeSetting('Length');
+    // unlike the parent, we want length to be a port instead of a setting
+    this.removeSetting('Length');
 
-      // add a sequence length port instead
-      this.addValueInPort('steps', 'stepsInPort', { defaultValue: 8, minValue: 0, maxValue: 128, isEnabled: true, disabledValueChangedMethod: 'updateSequence' });
-      this.addValueInPort('pulses', 'pulsesInPort', { defaultValue: 0, minValue: 0, maxValue: 128, isEnabled: true, disabledValueChangedMethod: 'updateSequence' });
+    // add a sequence length port instead
+    this.addValueInPort('steps', 'stepsInPort', { defaultValue: 8, minValue: 0, maxValue: 128, isEnabled: true, disabledValueChangedMethod: 'updateSequence' });
+    this.addValueInPort('pulses', 'pulsesInPort', { defaultValue: 0, minValue: 0, maxValue: 128, isEnabled: true, disabledValueChangedMethod: 'updateSequence' });
 
-      // event to trigger euclid calculation
-      this.addEventInPort('update', 'updateSequence', true);
+    // event to trigger euclid calculation
+    this.addEventInPort('update', 'updateSequence', true);
 
-      set(this, 'inputType', 'Button');
+    set(this, 'inputType', 'Button');
 
-      this.requestSave();
+    this.requestSave();
+  },
+
+  ready() {
+    if (!this.isNew) {
+      this._super();
     }
   },
 

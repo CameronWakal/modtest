@@ -24,14 +24,12 @@ export default Module.extend({
     this.eventOutPort.sendEvent(event);
   },
 
-  ready() {
-    if (this.isNew) {
+  build() {
       // create ports
       this.addEventInPort('eventIn', 'eventIn', false);
       this.addEventOutPort('eventOut', 'eventOutPort', false);
       console.log('module-bus didCreate saveLater');
       this.requestSave();
-    }
   }
 
 });

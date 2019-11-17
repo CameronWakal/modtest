@@ -48,20 +48,18 @@ export default Module.extend({
     set(this, 'count', 0);
   },
 
-  ready() {
-    if (get(this, 'isNew')) {
-      set(this, 'title', this.name);
+  build() {
+    set(this, 'title', this.name);
 
-      this.addEventInPort('clock', 'onClockIn', true);
-      this.addEventInPort('reset', 'onResetIn', false);
+    this.addEventInPort('clock', 'onClockIn', true);
+    this.addEventInPort('reset', 'onResetIn', false);
 
-      this.addValueInPort('div', 'divByPort', { isEnabled: false, defaultValue: 6, minValue: 1 });
-      this.addValueInPort('shift', 'shiftByPort', { isEnabled: false, defaultValue: 0 });
+    this.addValueInPort('div', 'divByPort', { isEnabled: false, defaultValue: 6, minValue: 1 });
+    this.addValueInPort('shift', 'shiftByPort', { isEnabled: false, defaultValue: 0 });
 
-      this.addEventOutPort('trig', 'trigOutPort', true);
-      console.log('module-clock-div.didCreate() requestSave()');
-      this.requestSave();
-    }
+    this.addEventOutPort('trig', 'trigOutPort', true);
+    console.log('module-clock-div.didCreate() requestSave()');
+    this.requestSave();
   }
 
 });

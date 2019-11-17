@@ -22,27 +22,25 @@ export default ModuleAnalyst.extend({
   drawScaleInPort: belongsTo('port-value-in', { async: false }),
   resetOut: belongsTo('port-event-out', { async: false }),
 
-  ready() {
+  build() {
     this._super();
-    if (this.isNew) {
-      // graphing outputs
-      this.addValueOutPort('sx', 'getSpiralX', true);
-      this.addValueOutPort('sy', 'getSpiralY', true);
-      this.addValueOutPort('sz', 'getSpiralZ', true);
-      this.addEventOutPort('s', 'spiralDebugOut', true);
-      this.addValueOutPort('tx', 'getTrianglesX', true);
-      this.addValueOutPort('ty', 'getTrianglesY', true);
-      this.addValueOutPort('tz', 'getTrianglesZ', true);
-      this.addEventOutPort('t', 'trianglesDebugOut', true);
+    // graphing outputs
+    this.addValueOutPort('sx', 'getSpiralX', true);
+    this.addValueOutPort('sy', 'getSpiralY', true);
+    this.addValueOutPort('sz', 'getSpiralZ', true);
+    this.addEventOutPort('s', 'spiralDebugOut', true);
+    this.addValueOutPort('tx', 'getTrianglesX', true);
+    this.addValueOutPort('ty', 'getTrianglesY', true);
+    this.addValueOutPort('tz', 'getTrianglesZ', true);
+    this.addEventOutPort('t', 'trianglesDebugOut', true);
 
-      this.addEventInPort('draw', 'draw', true);
-      this.addEventOutPort('reset', 'resetOut', true);
-      this.addValueInPort('index', 'drawIndexInPort', { 'isEnabled': true });
-      this.addValueInPort('scale', 'drawScaleInPort', { 'maxValue': 1, 'minValue': 0, 'isEnabled': true });
+    this.addEventInPort('draw', 'draw', true);
+    this.addEventOutPort('reset', 'resetOut', true);
+    this.addValueInPort('index', 'drawIndexInPort', { 'isEnabled': true });
+    this.addValueInPort('scale', 'drawScaleInPort', { 'maxValue': 1, 'minValue': 0, 'isEnabled': true });
 
-      console.log('module-value didCreate saveLater');
-      this.requestSave();
-    }
+    console.log('module-analyst-graphable didCreate saveLater');
+    this.requestSave();
   },
 
   getSpiralX() {

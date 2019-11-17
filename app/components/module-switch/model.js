@@ -20,31 +20,29 @@ export default Module.extend({
   eventOutPort: belongsTo('port-event-out', { async: false }),
   inputPortsGroup: belongsTo('port-group', { async: false }),
 
-  ready() {
-    if (get(this, 'isNew')) {
-      set(this, 'title', this.name);
+  build() {
+    set(this, 'title', this.name);
 
-      this.addNumberSetting('input sets', 'inputPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
+    this.addNumberSetting('input sets', 'inputPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
 
-      this.addValueInPort('switch', 'switchInPort', { canBeEmpty: true });
+    this.addValueInPort('switch', 'switchInPort', { canBeEmpty: true });
 
-      // add an expandable group of input ports
-      let inputPorts = this.addPortGroup({ minSets: 1, maxSets: 4 });
-      set(this, 'inputPortsGroup', inputPorts);
+    // add an expandable group of input ports
+    let inputPorts = this.addPortGroup({ minSets: 1, maxSets: 4 });
+    set(this, 'inputPortsGroup', inputPorts);
 
-      // add one valueInPort and one eventInPort to the group
-      this.addValueInPortWithoutAssignment('0', { canBeEmpty: true });
-      this.addEventInPort('0', 'onEventIn', true);
+    // add one valueInPort and one eventInPort to the group
+    this.addValueInPortWithoutAssignment('0', { canBeEmpty: true });
+    this.addEventInPort('0', 'onEventIn', true);
 
-      set(inputPorts, 'portSetsCount', 2);
+    set(inputPorts, 'portSetsCount', 2);
 
-      this.addPortGroup();
-      this.addValueOutPort('out', 'getValue', true);
-      this.addEventOutPort('out', 'eventOutPort', true);
+    this.addPortGroup();
+    this.addValueOutPort('out', 'getValue', true);
+    this.addEventOutPort('out', 'eventOutPort', true);
 
-      console.log('module-switch.didCreate() requestSave()');
-      this.requestSave();
-    }
+    console.log('module-switch.didCreate() requestSave()');
+    this.requestSave();
   },
 
   getValue() {

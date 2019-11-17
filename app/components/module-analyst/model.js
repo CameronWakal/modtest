@@ -218,24 +218,26 @@ export default Module.extend({
     set(this, 'selectedKey', null);
   },
 
+  build() {
+    set(this, 'title', this.name);
+    // create ports
+    this.addEventInPort('in', 'addValue', true);
+    this.addValueInPort('value', 'valueInPort', { isEnabled: true });
+    this.addEventInPort('reset', 'reset', true);
+
+    this.addValueOutPort('root', 'getRoot', true);
+    this.addValueOutPort('mode', 'getMode', true);
+    this.addEventOutPort('update', 'keyChangedPort', true);
+
+    console.log('module-value didCreate saveLater');
+    this.requestSave();
+  },
+
   ready() {
-    if (get(this, 'isNew')) {
-      set(this, 'title', this.name);
-      // create ports
-      this.addEventInPort('in', 'addValue', true);
-      this.addValueInPort('value', 'valueInPort', { isEnabled: true });
-      this.addEventInPort('reset', 'reset', true);
-
-      this.addValueOutPort('root', 'getRoot', true);
-      this.addValueOutPort('mode', 'getMode', true);
-      this.addEventOutPort('update', 'keyChangedPort', true);
-
-      console.log('module-value didCreate saveLater');
-      this.requestSave();
+    if (!this.isNew) {
+      // activate keyToOutputChanged observer
+      get(this, 'keyToOutput');
     }
-
-    // activate keyToOutputChanged observer
-    get(this, 'keyToOutput');
   },
 
   setSelectedKey(keyIndex) {

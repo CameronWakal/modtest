@@ -123,26 +123,24 @@ export default Module.extend({
     }
   },
 
-  ready() {
-    if (get(this, 'isNew')) {
-      set(this, 'title', this.name);
+  build() {
+    set(this, 'title', this.name);
 
-      this.addNumberSetting('Inputs', 'inputPortsCount', this, { minValue: minInputs, maxValue: maxInputs });
-      this.addNumberSetting('Semitone Range Min', 'semitoneRangeMin', this, { minValue: 0, maxValue: 127 });
-      this.addNumberSetting('Semitone Range Max', 'semitoneRangeMax', this, { minValue: 0, maxValue: 127 });
-      this.addNumberSetting('Voltage Min', 'voltageRangeMin', this, { minValue: -5, maxValue: 5 });
-      this.addNumberSetting('Voltage Max', 'voltageRangeMax', this, { minValue: -5, maxValue: 5 });
+    this.addNumberSetting('Inputs', 'inputPortsCount', this, { minValue: minInputs, maxValue: maxInputs });
+    this.addNumberSetting('Semitone Range Min', 'semitoneRangeMin', this, { minValue: 0, maxValue: 127 });
+    this.addNumberSetting('Semitone Range Max', 'semitoneRangeMax', this, { minValue: 0, maxValue: 127 });
+    this.addNumberSetting('Voltage Min', 'voltageRangeMin', this, { minValue: -5, maxValue: 5 });
+    this.addNumberSetting('Voltage Max', 'voltageRangeMax', this, { minValue: -5, maxValue: 5 });
 
-      this.addValueOutPort('low', 'getLowNote', true);
-      this.addValueOutPort('high', 'getHighNote', true);
-      this.addEventOutPort('out', 'eventOutPort', true);
+    this.addValueOutPort('low', 'getLowNote', true);
+    this.addValueOutPort('high', 'getHighNote', true);
+    this.addEventOutPort('out', 'eventOutPort', true);
 
-      // add array of input ports
-      this._addInputPorts(get(this, 'inputPortsCount'));
+    // add array of input ports
+    this._addInputPorts(get(this, 'inputPortsCount'));
 
-      console.log('module-plonkmap.didCreate() requestSave()');
-      this.requestSave();
-    }
+    console.log('module-plonkmap.didCreate() requestSave()');
+    this.requestSave();
   },
 
   getLowNote() {

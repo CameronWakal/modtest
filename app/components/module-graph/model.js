@@ -46,8 +46,7 @@ export default Module.extend({
     get(this, 'trianglesValues').clear();
   },
 
-  ready() {
-    if (get(this, 'isNew')) {
+  build() {
       set(this, 'title', this.name);
 
       this.addNumberSetting('xMin', 'xMin', this);
@@ -69,10 +68,13 @@ export default Module.extend({
 
       console.log('module-value didCreate saveLater');
       this.requestSave();
-    }
+  },
 
-    set(this, 'lineValues', []);
-    set(this, 'trianglesValues', []);
+  ready() {
+    if (!this.isNew) {
+      set(this, 'lineValues', []);
+      set(this, 'trianglesValues', []);
+    }
   }
 
 });

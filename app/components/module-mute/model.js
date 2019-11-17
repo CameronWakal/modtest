@@ -41,20 +41,18 @@ export default Module.extend({
     return null;
   },
 
-  ready() {
-    if (get(this, 'isNew')) {
-      set(this, 'title', this.name);
-      // create ports
-      this.addEventInPort('toggle', 'toggle', false);
-      this.addEventInPort('mute', 'mute', false);
-      this.addEventInPort('unmute', 'unmute', false);
-      this.addEventInPort('in', 'eventIn', true);
-      this.addValueInPort('in', 'valueInPort', { canBeEmpty: true });
-      this.addEventOutPort('out', 'eventOutPort', true);
-      this.addValueOutPort('out', 'getValue', true);
-      console.log('module-value didCreate saveLater');
-      this.requestSave();
-    }
+  build() {
+    set(this, 'title', this.name);
+    // create ports
+    this.addEventInPort('toggle', 'toggle', false);
+    this.addEventInPort('mute', 'mute', false);
+    this.addEventInPort('unmute', 'unmute', false);
+    this.addEventInPort('in', 'eventIn', true);
+    this.addValueInPort('in', 'valueInPort', { canBeEmpty: true });
+    this.addEventOutPort('out', 'eventOutPort', true);
+    this.addValueOutPort('out', 'getValue', true);
+    console.log('module-mute didCreate saveLater');
+    this.requestSave();
   }
 
 });

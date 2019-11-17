@@ -71,23 +71,27 @@ export default Module.extend({
     }
   },
 
-  ready() {
+  build() {
+    set(this, 'title', this.name);
+
+    // create ports
+    this.addEventOutPort('on', 'noteOnPort', true);
+    this.addEventOutPort('off', 'noteOffPort', false);
+    this.addValueOutPort('note', 'getNote', true);
+    this.addValueOutPort('vel', 'getVel', true);
+
+    // create settings
+    this.addMenuSetting('Input', 'inputDeviceName', 'deviceMenuOptions', this);
+
+    console.log('module-in.didCreate() requestSave()');
+    this.requestSave();
+
     get(this, 'midi').noteListener = this;
+  },
 
-    if (get(this, 'isNew')) {
-      set(this, 'title', this.name);
-
-      // create ports
-      this.addEventOutPort('on', 'noteOnPort', true);
-      this.addEventOutPort('off', 'noteOffPort', false);
-      this.addValueOutPort('note', 'getNote', true);
-      this.addValueOutPort('vel', 'getVel', true);
-
-      // create settings
-      this.addMenuSetting('Input', 'inputDeviceName', 'deviceMenuOptions', this);
-
-      console.log('module-in.didCreate() requestSave()');
-      this.requestSave();
+  ready() {
+    if (!this.isNew) {
+      get(this, 'midi').noteListener = this;
     }
   },
 

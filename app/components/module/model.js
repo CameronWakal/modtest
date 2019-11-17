@@ -182,7 +182,10 @@ export default Model.extend({
 
   // useful if you're subclassing a module and don't need a setting from the parent
   removeSetting(label) {
+    console.log('removeSetting label', label);
+    console.log('removeSetting settings', this.settings);
     let setting = this.settings.findBy('label', label);
+    console.log('removeSetting:', setting);
     this.settings.removeObject(setting);
     this.store.findRecord('module-setting', setting.id, { backgroundReload: false }).then(function(setting) {
       setting.destroyRecord();

@@ -71,21 +71,19 @@ export default Module.extend({
     }
   },
 
-  ready() {
-    if (get(this, 'isNew')) {
-      set(this, 'title', this.name);
+  build() {
+    set(this, 'title', this.name);
 
-      this.addNumberSetting('Inputs', 'inputPortsCount', this, { minValue: 1, maxValue: 8 });
+    this.addNumberSetting('Inputs', 'inputPortsCount', this, { minValue: 1, maxValue: 8 });
 
-      this.addValueOutPort('out', 'getValue', true);
-      this.addEventOutPort('out', 'eventOutPort', true);
+    this.addValueOutPort('out', 'getValue', true);
+    this.addEventOutPort('out', 'eventOutPort', true);
 
-      // add array of input ports
-      this._addInputPorts(get(this, 'inputPortsCount'));
+    // add array of input ports
+    this._addInputPorts(get(this, 'inputPortsCount'));
 
-      console.log('module-merge-voices.didCreate() requestSave()');
-      this.requestSave();
-    }
+    console.log('module-merge-voices.didCreate() requestSave()');
+    this.requestSave();
   },
 
   getValue() {

@@ -29,20 +29,18 @@ export default Module.extend({
 
   },
 
-  ready() {
-    if (get(this, 'isNew')) {
-      set(this, 'title', this.name);
+  build() {
+    set(this, 'title', this.name);
 
-      // create ports
-      this.addEventInPort('in', 'onEventIn', true);
-      this.addEventOutPort('out', 'eventOutPort', true);
+    // create ports
+    this.addEventInPort('in', 'onEventIn', true);
+    this.addEventOutPort('out', 'eventOutPort', true);
 
-      this.addValueInPort('numerator', 'numeratorInPort', { defaultValue: 1, minValue: 0, isEnabled: false });
-      this.addValueInPort('denominator', 'denominatorInPort', { defaultValue: 2, minValue: 1, isEnabled: false });
+    this.addValueInPort('numerator', 'numeratorInPort', { defaultValue: 1, minValue: 0, isEnabled: false });
+    this.addValueInPort('denominator', 'denominatorInPort', { defaultValue: 2, minValue: 1, isEnabled: false });
 
-      console.log('module-maybe.didCreate() requestSave()');
-      this.requestSave();
-    }
+    console.log('module-maybe.didCreate() requestSave()');
+    this.requestSave();
   }
 
 });

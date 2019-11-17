@@ -121,6 +121,8 @@ export default Component.extend({
 
     addModule(type, event) {
       let module = this.store.createRecord(`module-${type}`, { patch: this.patch, xPos: event.pageX - event.offsetX, yPos: event.pageY - event.offsetY });
+      module.build();
+      module.save();
       get(this, 'patch.modules').pushObject(module);
     },
 

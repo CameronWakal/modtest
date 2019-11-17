@@ -123,29 +123,27 @@ export default Module.extend({
 
   },
 
-  ready() {
-    if (get(this, 'isNew')) {
-      set(this, 'title', this.name);
+  build() {
+    set(this, 'title', this.name);
 
-      this.addEventInPort('trig', 'onEventIn', true);
+    this.addEventInPort('trig', 'onEventIn', true);
 
-      // create value-in ports
-      this.addValueInPort('tempo', 'tempoInPort', { defaultValue: 100, minValue: 1 });
-      this.addValueInPort('count', 'countInPort', { defaultValue: 0, minValue: 0 });
-      this.addValueInPort('gate', 'gateNumeratorInPort', { defaultValue: 0, minValue: 0 });
-      this.addValueInPort('gatedenom', 'gateDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
-      this.addValueInPort('delay', 'delayNumeratorInPort', { defaultValue: 1, minValue: 1 });
-      this.addValueInPort('delaydenom', 'delayDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
-      this.addEventOutPort('trig', 'trigOutPort', true);
+    // create value-in ports
+    this.addValueInPort('tempo', 'tempoInPort', { defaultValue: 100, minValue: 1 });
+    this.addValueInPort('count', 'countInPort', { defaultValue: 0, minValue: 0 });
+    this.addValueInPort('gate', 'gateNumeratorInPort', { defaultValue: 0, minValue: 0 });
+    this.addValueInPort('gatedenom', 'gateDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
+    this.addValueInPort('delay', 'delayNumeratorInPort', { defaultValue: 1, minValue: 1 });
+    this.addValueInPort('delaydenom', 'delayDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
+    this.addEventOutPort('trig', 'trigOutPort', true);
 
-      // create settings
-      this.addMenuSetting('Mode', 'mode', 'modeMenuOptions', this);
-      this.addMenuSetting('Delay Units', 'delayUnits', 'unitsMenuOptions', this);
-      this.addMenuSetting('Gate Units', 'durationUnits', 'unitsMenuOptions', this);
+    // create settings
+    this.addMenuSetting('Mode', 'mode', 'modeMenuOptions', this);
+    this.addMenuSetting('Delay Units', 'delayUnits', 'unitsMenuOptions', this);
+    this.addMenuSetting('Gate Units', 'durationUnits', 'unitsMenuOptions', this);
 
-      console.log('module-repeat.didCreate() requestSave()');
-      this.requestSave();
-    }
+    console.log('module-repeat.didCreate() requestSave()');
+    this.requestSave();
   }
 
 });

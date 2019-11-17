@@ -20,15 +20,13 @@ export default Module.extend({
     });
   },
 
-  ready() {
-    if (get(this, 'isNew')) {
-      set(this, 'title', this.name);
-      // create ports
-      this.addEventOutPort('out', 'eventOutPort', true);
+  build() {
+    set(this, 'title', this.name);
+    // create ports
+    this.addEventOutPort('out', 'eventOutPort', true);
 
-      console.log('module-value didCreate saveLater');
-      this.requestSave();
-    }
+    console.log('module-value didCreate saveLater');
+    this.requestSave();
   }
 
 });

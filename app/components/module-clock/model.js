@@ -57,17 +57,15 @@ export default Module.extend({
     }
   }),
 
-  ready() {
-    if (get(this, 'isNew')) {
-      set(this, 'title', this.name);
+  build() {
+    set(this, 'title', this.name);
 
-      this.addMenuSetting('Source', 'source', 'sourceMenuValues', this);
-      this.addValueInPort('tempo', 'tempoInPort', { isEnabled: false, defaultValue: defaultTempo, minValue: 1 });
-      this.addValueInPort('res', 'resInPort', { isEnabled: false, defaultValue: defaultRes, minValue: 1, maxValue: 24 });
-      this.addEventOutPort('reset', 'resetOutPort', false);
-      this.addEventOutPort('trig', 'trigOutPort', true);
-      this.requestSave();
-    }
+    this.addMenuSetting('Source', 'source', 'sourceMenuValues', this);
+    this.addValueInPort('tempo', 'tempoInPort', { isEnabled: false, defaultValue: defaultTempo, minValue: 1 });
+    this.addValueInPort('res', 'resInPort', { isEnabled: false, defaultValue: defaultRes, minValue: 1, maxValue: 24 });
+    this.addEventOutPort('reset', 'resetOutPort', false);
+    this.addEventOutPort('trig', 'trigOutPort', true);
+    this.requestSave();
   },
 
   start() {

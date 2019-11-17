@@ -107,40 +107,42 @@ export default Module.extend({
     }
   },
 
+  build() {
+    set(this, 'title', this.name);
+
+    // create degrees
+    let degrees = this.store.createRecord('array');
+    set(this, 'degrees', degrees);
+    set(this, 'degrees.valueMax', 11);
+    set(this, 'degrees.length', this.degreesInScale);
+    this.degrees.dataManager = this;
+
+    // create ports
+    this.addValueInPort('octave', 'octaveInPort', { isEnabled: false, defaultValue: 3, minValue: -2, maxValue: 8 });
+    this.addValueInPort('root', 'rootInPort', { isEnabled: false, defaultValue: 0 });
+    this.addValueInPort('mode', 'modeInPort', { isEnabled: false, defaultValue: 0, disabledValueChangedMethod: 'updateScale' });
+    this.addEventInPort('update', 'updateScale', false);
+
+    // add an expandable group of input ports
+    let degreeInPorts = this.addPortGroup({ minSets: 1, maxSets: 4 });
+    set(this, 'degreeInPortsGroup', degreeInPorts);
+    this.addValueInPort('0', 'degreeInPort', { canBeEmpty: true });
+    this.addValueOutPort('0', 'getNote', true);
+
+    this.addNumberSetting('voices', 'degreeInPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
+    set(degreeInPorts, 'portSetsCount', 2);
+
+    this.updateScale();
+
+    console.log('module-scale.didCreate() requestSave()');
+    this.requestSave();
+
+  },
+
   ready() {
-    if (this.isNew) {
-      set(this, 'title', this.name);
-
-      // create degrees
-      let degrees = this.store.createRecord('array');
-      set(this, 'degrees', degrees);
-      set(this, 'degrees.valueMax', 11);
-      set(this, 'degrees.length', this.degreesInScale);
-      this.degrees.dataManager = this;
-
-      // create ports
-      this.addValueInPort('octave', 'octaveInPort', { isEnabled: false, defaultValue: 3, minValue: -2, maxValue: 8 });
-      this.addValueInPort('root', 'rootInPort', { isEnabled: false, defaultValue: 0 });
-      this.addValueInPort('mode', 'modeInPort', { isEnabled: false, defaultValue: 0, disabledValueChangedMethod: 'updateScale' });
-      this.addEventInPort('update', 'updateScale', false);
-
-      // add an expandable group of input ports
-      let degreeInPorts = this.addPortGroup({ minSets: 1, maxSets: 4 });
-      set(this, 'degreeInPortsGroup', degreeInPorts);
-      this.addValueInPort('0', 'degreeInPort', { canBeEmpty: true });
-      this.addValueOutPort('0', 'getNote', true);
-
-      this.addNumberSetting('voices', 'degreeInPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
-      set(degreeInPorts, 'portSetsCount', 2);
-
-      this.updateScale();
-
-      console.log('module-scale.didCreate() requestSave()');
-      this.requestSave();
-    } else {
+    if (!this.isNew) {
       get(this, 'degrees').dataManager = this;
     }
-
   },
 
   remove() {

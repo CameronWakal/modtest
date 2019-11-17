@@ -50,37 +50,40 @@ export default Module.extend({
     return null;
   },
 
+  build() {
+    set(this, 'title', this.name);
+
+    // create steps
+    let steps = this.store.createRecord('array');
+    set(this, 'steps', steps);
+    set(this, 'steps.length', 8);
+
+    // create settings
+    this.addMenuSetting('Input Type', 'inputType', 'inputTypeMenuOptions', this);
+
+    // todo: make config option for settings that must have a non-null numeric value
+    this.addNumberSetting('Length', 'steps.length', this, { minValue: 1, maxValue: 64 });
+    this.addNumberSetting('Input Min', 'steps.valueMin', this);
+    this.addNumberSetting('Input Max', 'steps.valueMax', this);
+    this.addNumberSetting('Input Step', 'steps.valueStep', this, { minValue: 1 });
+    this.addNumberSetting('Display Scale', 'displayScale', this, { minValue: 1 });
+
+    // add an expandable group of value input/output pairs
+    let readPorts = this.addPortGroup({ minSets: 1, maxSets: 4 });
+    set(this, 'readPortsGroup', readPorts);
+    this.addValueInPort('0', 'indexInPort', { canBeEmpty: true });
+    this.addValueOutPort('0', 'getValue', true);
+
+    this.addNumberSetting('read ports', 'readPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
+    set(readPorts, 'portSetsCount', 2);
+
+    this.requestSave();
+  },
+
   ready() {
-    if (get(this, 'isNew')) {
-      set(this, 'title', this.name);
-
-      // create steps
-      let steps = this.store.createRecord('array');
-      set(this, 'steps', steps);
-      set(this, 'steps.length', 8);
-
-      // create settings
-      this.addMenuSetting('Input Type', 'inputType', 'inputTypeMenuOptions', this);
-
-      // todo: make config option for settings that must have a non-null numeric value
-      this.addNumberSetting('Length', 'steps.length', this, { minValue: 1, maxValue: 64 });
-      this.addNumberSetting('Input Min', 'steps.valueMin', this);
-      this.addNumberSetting('Input Max', 'steps.valueMax', this);
-      this.addNumberSetting('Input Step', 'steps.valueStep', this, { minValue: 1 });
-      this.addNumberSetting('Display Scale', 'displayScale', this, { minValue: 1 });
-
-      // add an expandable group of value input/output pairs
-      let readPorts = this.addPortGroup({ minSets: 1, maxSets: 4 });
-      set(this, 'readPortsGroup', readPorts);
-      this.addValueInPort('0', 'indexInPort', { canBeEmpty: true });
-      this.addValueOutPort('0', 'getValue', true);
-
-      this.addNumberSetting('read ports', 'readPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
-      set(readPorts, 'portSetsCount', 2);
-
-      this.requestSave();
+    if (!this.isNew) {
+      get(this, 'steps').dataManager = this;
     }
-    get(this, 'steps').dataManager = this;
   },
 
   remove() {

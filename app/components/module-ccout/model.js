@@ -28,8 +28,7 @@ export default Module.extend({
     }
   },
 
-  ready() {
-    if (get(this, 'isNew')) {
+  build() {
       set(this, 'title', this.name);
 
       // create ports
@@ -41,7 +40,6 @@ export default Module.extend({
 
       console.log('module-ccout.didCreate() requestSave()');
       this.requestSave();
-    }
   }
 
 });

@@ -69,8 +69,7 @@ export default Module.extend({
     set(this, 'currentIndex', null);
   },
 
-  ready() {
-    if (get(this, 'isNew')) {
+  build() {
       set(this, 'title', this.name);
 
       // create steps
@@ -95,8 +94,14 @@ export default Module.extend({
       this.addEventOutPort('trig', 'trigOutPort', false);
 
       this.requestSave();
+
+      get(this, 'steps').dataManager = this;
+  },
+
+  ready() {
+    if (!this.isNew) {
+      get(this, 'steps').dataManager = this;
     }
-    get(this, 'steps').dataManager = this;
   },
 
   remove() {

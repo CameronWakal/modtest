@@ -41,17 +41,15 @@ export default Module.extend({
     this.requestSave();
   },
 
-  ready() {
-    if (get(this, 'isNew')) {
-      set(this, 'title', this.name);
-      // create ports
-      this.addEventInPort('set', 'setValue', false);
-      this.addValueInPort('value', 'valueInPort', { isEnabled: false });
-      this.addValueOutPort('value', 'getValue', true);
-      this.addEventOutPort('changed', 'changeOutPort', false);
-      console.log('module-value didCreate saveLater');
-      this.requestSave();
-    }
+  build() {
+    set(this, 'title', this.name);
+    // create ports
+    this.addEventInPort('set', 'setValue', false);
+    this.addValueInPort('value', 'valueInPort', { isEnabled: false });
+    this.addValueOutPort('value', 'getValue', true);
+    this.addEventOutPort('changed', 'changeOutPort', false);
+    console.log('module-value didCreate saveLater');
+    this.requestSave();
   }
 
 });
