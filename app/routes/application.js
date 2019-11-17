@@ -29,6 +29,11 @@ export default Route.extend({
   actions: {
     newPatch() {
       let patch = this.store.createRecord('patch');
+      // create bus modules for routing invisible bus connections
+      let resetBus = this.store.createRecord('module-bus', { patch: patch, shouldAutoSave: true, title: 'reset bus' });
+      patch.busses.pushObject(resetBus);
+      patch.save();
+
       this.transitionTo('patch', patch);
       set(this.controllerFor('application'), 'currentPatch', patch);
     },
