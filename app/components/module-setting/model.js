@@ -18,7 +18,8 @@ export default Model.extend({
   minValue: attr('number'),
   maxValue: attr('number'),
 
-  ready() {
+  init() {
+    this._super(...arguments);
     // make an alias from this.value to module.targetValue at runtime
     let targetPath = `module.${this.targetValue}`;
     defineProperty(this, 'value', alias(targetPath));

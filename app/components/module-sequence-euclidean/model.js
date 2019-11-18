@@ -33,12 +33,6 @@ export default ModuleSequence.extend({
     this.requestSave();
   },
 
-  ready() {
-    if (!this.isNew) {
-      this._super();
-    }
-  },
-
   updateSequence() {
     let stepCount = get(this, 'stepsInPort').getValue();
     let pulseCount = get(this, 'pulsesInPort').getValue();

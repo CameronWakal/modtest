@@ -96,6 +96,13 @@ export default Module.extend({
 
   },
 
+  init() {
+    this._super(...arguments);
+    if (!this.isNew) {
+      this.events = [];
+    }
+  },
+
   build() {
     set(this, 'title', this.name);
 
@@ -112,12 +119,6 @@ export default Module.extend({
     this.requestSave();
 
     this.events = [];
-  },
-
-  ready() {
-    if (!this.isNew) {
-      this.events = [];
-    }
   }
 
 });

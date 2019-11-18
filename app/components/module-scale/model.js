@@ -107,6 +107,13 @@ export default Module.extend({
     }
   },
 
+  init() {
+    this._super(...arguments);
+    if (!this.isNew) {
+      get(this, 'degrees').dataManager = this;
+    }
+  },
+
   build() {
     set(this, 'title', this.name);
 
@@ -137,12 +144,6 @@ export default Module.extend({
     console.log('module-scale.didCreate() requestSave()');
     this.requestSave();
 
-  },
-
-  ready() {
-    if (!this.isNew) {
-      get(this, 'degrees').dataManager = this;
-    }
   },
 
   remove() {

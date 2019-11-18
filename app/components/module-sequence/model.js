@@ -69,39 +69,40 @@ export default Module.extend({
     set(this, 'currentIndex', null);
   },
 
-  build() {
-      set(this, 'title', this.name);
-
-      // create steps
-      let steps = this.store.createRecord('array');
-      set(this, 'steps', steps);
-      set(this, 'steps.length', 8);
-
-      // create settings
-      this.addMenuSetting('Input Type', 'inputType', 'inputTypeMenuOptions', this);
-
-      // todo: make config option for settings that must have a non-null numeric value
-      this.addNumberSetting('Length', 'steps.length', this, { minValue: 1, maxValue: 64 });
-      this.addNumberSetting('Input Min', 'steps.valueMin', this);
-      this.addNumberSetting('Input Max', 'steps.valueMax', this);
-      this.addNumberSetting('Input Step', 'steps.valueStep', this, { minValue: 1 });
-      this.addNumberSetting('Display Scale', 'displayScale', this, { minValue: 1 });
-
-      // create ports
-      this.addEventInPort('inc', 'incrementStep', true);
-      this.addEventInPort('reset', 'reset', false);
-      this.addValueOutPort('value', 'getValue', true);
-      this.addEventOutPort('trig', 'trigOutPort', false);
-
-      this.requestSave();
-
-      get(this, 'steps').dataManager = this;
-  },
-
-  ready() {
+  init() {
+    this._super(...arguments);
     if (!this.isNew) {
       get(this, 'steps').dataManager = this;
     }
+  },
+
+  build() {
+    set(this, 'title', this.name);
+
+    // create steps
+    let steps = this.store.createRecord('array');
+    set(this, 'steps', steps);
+    set(this, 'steps.length', 8);
+
+    // create settings
+    this.addMenuSetting('Input Type', 'inputType', 'inputTypeMenuOptions', this);
+
+    // todo: make config option for settings that must have a non-null numeric value
+    this.addNumberSetting('Length', 'steps.length', this, { minValue: 1, maxValue: 64 });
+    this.addNumberSetting('Input Min', 'steps.valueMin', this);
+    this.addNumberSetting('Input Max', 'steps.valueMax', this);
+    this.addNumberSetting('Input Step', 'steps.valueStep', this, { minValue: 1 });
+    this.addNumberSetting('Display Scale', 'displayScale', this, { minValue: 1 });
+
+    // create ports
+    this.addEventInPort('inc', 'incrementStep', true);
+    this.addEventInPort('reset', 'reset', false);
+    this.addValueOutPort('value', 'getValue', true);
+    this.addEventOutPort('trig', 'trigOutPort', false);
+
+    this.requestSave();
+
+    get(this, 'steps').dataManager = this;
   },
 
   remove() {

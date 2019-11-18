@@ -46,6 +46,14 @@ export default Module.extend({
     get(this, 'trianglesValues').clear();
   },
 
+  init() {
+    this._super(...arguments);
+    if (!this.isNew) {
+      set(this, 'lineValues', []);
+      set(this, 'trianglesValues', []);
+    }
+  },
+
   build() {
       set(this, 'title', this.name);
 
@@ -68,13 +76,6 @@ export default Module.extend({
 
       console.log('module-value didCreate saveLater');
       this.requestSave();
-  },
-
-  ready() {
-    if (!this.isNew) {
-      set(this, 'lineValues', []);
-      set(this, 'trianglesValues', []);
-    }
   }
 
 });

@@ -50,6 +50,13 @@ export default Module.extend({
     return null;
   },
 
+  init() {
+    this._super(...arguments);
+    if (!this.isNew) {
+      get(this, 'steps').dataManager = this;
+    }
+  },
+
   build() {
     set(this, 'title', this.name);
 
@@ -78,12 +85,8 @@ export default Module.extend({
     set(readPorts, 'portSetsCount', 2);
 
     this.requestSave();
-  },
 
-  ready() {
-    if (!this.isNew) {
-      get(this, 'steps').dataManager = this;
-    }
+    get(this, 'steps').dataManager = this;
   },
 
   remove() {

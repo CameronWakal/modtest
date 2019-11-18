@@ -218,6 +218,14 @@ export default Module.extend({
     set(this, 'selectedKey', null);
   },
 
+  init() {
+    this._super(...arguments);
+    if (!this.isNew) {
+      // activate keyToOutputChanged observer
+      get(this, 'keyToOutput');
+    }
+  },
+
   build() {
     set(this, 'title', this.name);
     // create ports
@@ -231,13 +239,6 @@ export default Module.extend({
 
     console.log('module-value didCreate saveLater');
     this.requestSave();
-  },
-
-  ready() {
-    if (!this.isNew) {
-      // activate keyToOutputChanged observer
-      get(this, 'keyToOutput');
-    }
   },
 
   setSelectedKey(keyIndex) {
