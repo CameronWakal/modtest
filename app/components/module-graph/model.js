@@ -55,27 +55,27 @@ export default Module.extend({
   },
 
   build() {
-      set(this, 'title', this.name);
+    set(this, 'title', this.name);
 
-      this.addNumberSetting('xMin', 'xMin', this);
-      this.addNumberSetting('yMin', 'yMin', this);
-      this.addNumberSetting('xMax', 'xMax', this);
-      this.addNumberSetting('yMax', 'yMax', this);
-      this.addNumberSetting('xScale', 'xScale', this);
-      this.addNumberSetting('yScale', 'yScale', this);
-      // create ports
-      this.addValueInPort('lx', 'xLineValueInPort', { isEnabled: true });
-      this.addValueInPort('ly', 'yLineValueInPort', { isEnabled: true });
-      this.addEventInPort('l', 'writeLineValue', true);
+    this.addNumberSetting('xMin', 'xMin', this);
+    this.addNumberSetting('yMin', 'yMin', this);
+    this.addNumberSetting('xMax', 'xMax', this);
+    this.addNumberSetting('yMax', 'yMax', this);
+    this.addNumberSetting('xScale', 'xScale', this);
+    this.addNumberSetting('yScale', 'yScale', this);
+    // create ports
+    this.addValueInPort('lx', 'xLineValueInPort', { isEnabled: true });
+    this.addValueInPort('ly', 'yLineValueInPort', { isEnabled: true });
+    this.addEventInPort('l', 'writeLineValue', true);
 
-      this.addValueInPort('tx', 'xTrianglesValueInPort', { isEnabled: true });
-      this.addValueInPort('ty', 'yTrianglesValueInPort', { isEnabled: true });
-      this.addEventInPort('t', 'writeTrianglesValue', true);
+    this.addValueInPort('tx', 'xTrianglesValueInPort', { isEnabled: true });
+    this.addValueInPort('ty', 'yTrianglesValueInPort', { isEnabled: true });
+    this.addEventInPort('t', 'writeTrianglesValue', true);
 
-      this.addEventInPort('reset', 'reset', true);
+    this.addEventInPort('reset', 'reset', true);
 
-      console.log('module-value didCreate saveLater');
-      this.requestSave();
+    console.log('module-value didCreate saveLater');
+    this.requestSave();
   }
 
 });
