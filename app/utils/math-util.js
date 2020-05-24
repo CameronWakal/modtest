@@ -4,9 +4,4 @@ function mod(num, mod) {
   return Math.floor(remain >= 0 ? remain : remain + mod);
 }
 
-// integer division
-function div(num, denom) {
-  return Math[num > 0 ? 'floor' : 'ceil'](num / denom);
-}
-
-export { mod, div };
+export { mod };

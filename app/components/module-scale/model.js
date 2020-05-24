@@ -1,6 +1,6 @@
 import { set, get } from '@ember/object';
 import { map } from '@ember/object/computed';
-import { mod, div } from '../../utils/math-util';
+import { mod } from '../../utils/math-util';
 import DS from 'ember-data';
 import Module from '../module/model';
 
@@ -100,7 +100,7 @@ export default Module.extend({
         return null;
       }
 
-      octave = octave + 1 + div(degree, get(this, 'degreesInScale'));
+      octave = octave + 1 + Math.floor(degree / get(this, 'degreesInScale'));
       let note = (octave * 12) + root + intervalForDegree;
       // console.log('octave:'+octave+' root:'+root+' degree:'+degree+' interval:'+intervalForDegree+' note:'+note);
       return note;
