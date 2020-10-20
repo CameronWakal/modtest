@@ -22,8 +22,8 @@ export default ModuleAnalyst.extend({
   drawScaleInPort: belongsTo('port-value-in', { async: false }),
   resetOut: belongsTo('port-event-out', { async: false }),
 
-  ready() {
-    this._super();
+  init() {
+    this._super(...arguments);
     if (this.isNew) {
       // graphing outputs
       this.addValueOutPort('sx', 'getSpiralX', true);

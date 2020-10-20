@@ -20,7 +20,8 @@ export default Module.extend({
   eventOutPort: belongsTo('port-event-out', { async: false }),
   inputPortsGroup: belongsTo('port-group', { async: false }),
 
-  ready() {
+  init() {
+    this._super(...arguments);
     if (get(this, 'isNew')) {
       set(this, 'title', this.name);
 

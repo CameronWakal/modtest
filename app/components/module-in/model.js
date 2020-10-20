@@ -71,7 +71,8 @@ export default Module.extend({
     }
   },
 
-  ready() {
+  init() {
+    this._super(...arguments);
     get(this, 'midi').noteListener = this;
 
     if (get(this, 'isNew')) {

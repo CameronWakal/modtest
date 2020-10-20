@@ -107,7 +107,8 @@ export default Module.extend({
     }
   },
 
-  ready() {
+  init() {
+    this._super(...arguments);
     if (this.isNew) {
       set(this, 'title', this.name);
 

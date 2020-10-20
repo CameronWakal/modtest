@@ -46,7 +46,8 @@ export default Module.extend({
     get(this, 'trianglesValues').clear();
   },
 
-  ready() {
+  init() {
+    this._super(...arguments);
     if (get(this, 'isNew')) {
       set(this, 'title', this.name);
 

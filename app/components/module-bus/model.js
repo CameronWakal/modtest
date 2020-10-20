@@ -24,7 +24,8 @@ export default Module.extend({
     this.eventOutPort.sendEvent(event);
   },
 
-  ready() {
+  init() {
+    this._super(...arguments);
     if (this.isNew) {
       // create ports
       this.addEventInPort('eventIn', 'eventIn', false);

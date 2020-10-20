@@ -69,7 +69,8 @@ export default Module.extend({
     set(this, 'currentIndex', null);
   },
 
-  ready() {
+  init() {
+    this._super(...arguments);
     if (get(this, 'isNew')) {
       set(this, 'title', this.name);
 
