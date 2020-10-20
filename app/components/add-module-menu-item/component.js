@@ -1,4 +1,4 @@
-import { set, get } from '@ember/object';
+import { set, get, action } from '@ember/object';
 import Component from '@ember/component';
 
 export default Component.extend({
@@ -19,11 +19,22 @@ export default Component.extend({
     set(this, 'mouseIsDown', false);
   },
 
-  mouseMove(event) {
+  @action
+  handleMouseMove(event) {
     if (get(this, 'mouseIsDown')) {
       get(this, 'addModule')(get(this, 'moduleType'), event);
       set(this, 'mouseIsDown', false);
     }
+  },
+
+  didInsertElement() {
+    //super.didInsertElement(...arguments);
+    this.element.addEventListener('mousemove', this.handleMouseMove);
+  },
+
+  willDestroyElement() {
+    //super.willDestroyElement(...arguments);
+    this.element.removeEventListener('mousemove', this.handleMouseMove);
   }
 
 });
