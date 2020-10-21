@@ -12,7 +12,8 @@ export default Model.extend({
   modules: hasMany('module', { polymorphic: true, inverse: 'patch' }),
   busses: hasMany('module-bus'),
 
-  ready() {
+  init() {
+    this._super(...arguments);
     if (this.isNew) {
       // create bus modules for routing invisible bus connections
       let resetBus = this.store.createRecord('module-bus', { patch: this, shouldAutoSave: true, title: 'reset bus' });

@@ -52,7 +52,6 @@ export default Model.extend({
         this.expansionPorts.pushObject(port);
       }
     }
-    this.module.requestSave();
   },
 
   _removeExpansionSets(count) {

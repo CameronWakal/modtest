@@ -14,8 +14,8 @@ export default ModuleSequence.extend({
   stepsInPort: belongsTo('port-value-in', { async: false }),
   pulsesInPort: belongsTo('port-value-in', { async: false }),
 
-  ready() {
-    this._super();
+  init() {
+    this._super(...arguments);
     if (get(this, 'isNew')) {
       set(this, 'title', this.name);
 

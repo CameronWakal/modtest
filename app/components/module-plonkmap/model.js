@@ -123,7 +123,8 @@ export default Module.extend({
     }
   },
 
-  ready() {
+  init() {
+    this._super(...arguments);
     if (get(this, 'isNew')) {
       set(this, 'title', this.name);
 

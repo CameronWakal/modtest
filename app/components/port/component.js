@@ -34,6 +34,16 @@ export default Component.extend({
       self.finishedConnecting();
       document.removeEventListener('mouseup', self.mouseUpBodyFunction);
     });
+  },
+
+  didInsertElement() {
+    this.element.addEventListener('mouseenter', this.handleMouseEnter);
+    this.element.addEventListener('mouseleave', this.handleMouseLeave);
+  },
+
+  willDestroyElement() {
+    this.element.removeEventListener('mouseenter', this.handleMouseEnter);
+    this.element.removeEventListener('mouseenter', this.handleMouseLeave);
   }
 
 });

@@ -71,7 +71,8 @@ export default Module.extend({
     }
   },
 
-  ready() {
+  init() {
+    this._super(...arguments);
     get(this, 'midi').noteListener = this;
 
     if (get(this, 'isNew')) {
@@ -91,8 +92,9 @@ export default Module.extend({
     }
   },
 
-  didDelete() {
+  remove() {
     get(this, 'midi').noteListener = null;
+    this._super();
   }
 
 });

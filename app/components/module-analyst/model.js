@@ -134,6 +134,7 @@ export default Module.extend({
     if (key) {
       return `${indexedPitchNames[key.index]}${key.scale}`;
     }
+    return '';
   }),
 
   // same as nearestKeys, but with selectedKey in the last slot in the case

@@ -41,7 +41,8 @@ export default Module.extend({
     return null;
   },
 
-  ready() {
+  init() {
+    this._super(...arguments);
     if (get(this, 'isNew')) {
       set(this, 'title', this.name);
       // create ports

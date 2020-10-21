@@ -50,14 +50,6 @@ export default Model.extend({
     }
   },
 
-  didCreate() {
-    set(this, 'shouldAutoSave', true);
-  },
-
-  didLoad() {
-    set(this, 'shouldAutoSave', true);
-  },
-
   // a grouping of ports within the port list, so you can have a degree of control
   // over the order of ports when they're dynamically added or removed
   addPortGroup(options) {

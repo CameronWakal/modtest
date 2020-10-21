@@ -79,6 +79,7 @@ export default Component.extend({
       case 'port-event-out':
         return `${label}->`;
     }
+    return '';
   })
 
 });

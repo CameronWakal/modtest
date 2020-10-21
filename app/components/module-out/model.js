@@ -96,7 +96,8 @@ export default Module.extend({
 
   },
 
-  ready() {
+  init() {
+    this._super(...arguments);
     this.events = [];
 
     if (get(this, 'isNew')) {

@@ -1,5 +1,6 @@
 module.exports = {
   root: true,
+  parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module'
@@ -9,7 +10,6 @@ module.exports = {
   ],
   extends: [
     'eslint:recommended',
-    'plugin:ember-suave/recommended',
     'plugin:ember/recommended'
   ],
   env: {
@@ -17,7 +17,8 @@ module.exports = {
   },
   rules: {
     'no-console': 'off',
-    'ember/no-observers': 'off'
+    'ember/no-observers': 'off',
+    'ember/no-jquery': 'error'
   },
   overrides: [
     // node files

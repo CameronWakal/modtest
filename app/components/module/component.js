@@ -45,6 +45,9 @@ export default Component.extend({
       document.addEventListener('mouseup', this.mouseUpBodyFunction);
       document.addEventListener('mousemove', this.mouseMoveBodyFunction);
     }
+
+    // turn on autosaving for the module model after it has been initialized
+    this.module.shouldAutoSave = true;
   },
 
   actions: {

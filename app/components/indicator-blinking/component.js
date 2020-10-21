@@ -23,6 +23,7 @@ export default Component.extend({
       this.countIsEven = !this.countIsEven;
       return this.countIsEven ? 'on-even' : 'on-odd';
     }
+    return '';
   }),
 
   styleAttribute: computed('blinkDuration', function() {
