@@ -92,8 +92,9 @@ export default Module.extend({
     }
   },
 
-  didDelete() {
+  remove() {
     get(this, 'midi').noteListener = null;
+    this._super();
   }
 
 });
