@@ -28,12 +28,10 @@ export default Component.extend({
   },
 
   didInsertElement() {
-    //super.didInsertElement(...arguments);
     this.element.addEventListener('mousemove', this.handleMouseMove);
   },
 
   willDestroyElement() {
-    //super.willDestroyElement(...arguments);
     this.element.removeEventListener('mousemove', this.handleMouseMove);
   }
 

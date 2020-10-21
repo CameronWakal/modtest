@@ -17,6 +17,7 @@ export default Model.extend({
     if (this.array.currentIndexes) {
       return this.array.currentIndexes.any((index) => this.index == index);
     }
+    return false;
   }),
 
   onValueChanged: observer('value', function() {

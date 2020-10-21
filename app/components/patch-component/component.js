@@ -104,9 +104,7 @@ export default Component.extend({
     // diagram shit
 
     diagramDidUpdate() {
-      run.scheduleOnce('afterRender', this, function() {
-        set(this, 'diagramNeedsUpdate', false);
-      });
+      run.scheduleOnce('afterRender', this, this.diagramDoesntNeedUpdate);
     },
 
     // module management
@@ -137,6 +135,10 @@ export default Component.extend({
       this.removeBusConnection(sourcePort, destPort);
       set(this, 'diagramNeedsUpdate', true);
     }
+  },
+
+  diagramDoesntNeedUpdate() {
+    set(this, 'diagramNeedsUpdate', false);
   },
 
   addConnection(sourcePort, destPort) {

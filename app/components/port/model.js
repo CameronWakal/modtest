@@ -31,6 +31,7 @@ export default Model.extend({
       case 'port-event-out': return 'port-event-in';
       case 'port-event-in': return 'port-event-out';
     }
+    return '';
   }),
 
   isValuePort: computed('type', function() {

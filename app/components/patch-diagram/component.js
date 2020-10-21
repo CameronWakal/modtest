@@ -28,11 +28,7 @@ export default Component.extend({
 
   onConnectingFromPortChanged: observer('connectingFromPort', function() {
     if (get(this, 'connectingFromPort')) {
-      run.scheduleOnce('afterRender', this, function() {
-        // if this isn't scheduled, the ember classNameBindings don't get updated
-        // in time to be used by this function.
-        this.addNewConnection();
-      });
+      run.scheduleOnce('afterRender', this, this.addNewConnection);
     } else {
       this.removeNewConnection();
     }
@@ -41,13 +37,15 @@ export default Component.extend({
   // flag changes to true when controller wants diagram to update list of ports
   onPortsChanged: observer('needsUpdate', function() {
     if (get(this, 'needsUpdate')) {
-      run.scheduleOnce('afterRender', this, function() {
-        this.updateConnections();
-        this.drawConnections();
-        get(this, 'didUpdate')();
-      });
+      run.scheduleOnce('afterRender', this, this.updateAndDraw);
     }
   }),
+
+  updateAndDraw() {
+    this.updateConnections();
+    this.drawConnections();
+    get(this, 'didUpdate')();
+  },
 
   didInsertElement() {
     this.connections = [];
