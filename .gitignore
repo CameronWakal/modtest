@@ -26,3 +26,4 @@ package.json.ember-try
 .DS_Store
 yarn.lock
 package-lock.json
+yarn.lock
