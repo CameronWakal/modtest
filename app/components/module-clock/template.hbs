@@ -1,4 +1,4 @@
-<div class="module-header">{{partial 'module-label'}}{{indicator-blinking blinkDuration=tickDuration blinkTrigger=latestTriggerTime}}</div>
+<div class="module-header"><ModuleLabel @title={{module.title}} />{{indicator-blinking blinkDuration=tickDuration blinkTrigger=latestTriggerTime}}</div>
 <div class="module-content">
   {{toggle-button label='Start' isOn=isStarted click=(action 'start')}}{{toggle-button label='Stop' isOn=(not isStarted) click=(action 'stop')}}
 </div>
