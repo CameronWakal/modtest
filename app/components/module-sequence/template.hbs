@@ -1,4 +1,4 @@
-<div class="module-header">{{partial 'module-label'}}{{indicator-blinking blinkDuration=triggerDuration blinkTrigger=latestTriggerTime}}</div>
+<div class="module-header"><ModuleLabel @title={{module.title}} />{{indicator-blinking blinkDuration=triggerDuration blinkTrigger=latestTriggerTime}}</div>
 <div class="module-content">
 {{value-input-array
   array=module.steps
@@ -7,4 +7,11 @@
 }}
 </div>
 
-{{partial 'module-ports'}}
+<ModulePorts
+  @portGroups={{module.portGroups}}
+  @portStartedConnecting={{this.portStartedConnecting}}
+  @portFinishedConnecting={{this.portFinishedConnecting}}
+  @mouseEnterPort={{this.mouseEnterPort}}
+  @mouseLeavePort={{this.mouseLeavePort}}
+  @disconnectPort={{this.disconnectPort}}
+/>

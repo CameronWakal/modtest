@@ -1,4 +1,4 @@
-{{partial 'module-label'}}
+<ModuleLabel @title={{module.title}} />
 <div class="module-content">
 {{graph-canvas
   lineValues=module.lineValues
@@ -11,4 +11,11 @@
   yScale=module.yScale
 }}
 </div>
-{{partial 'module-ports'}}
+<ModulePorts
+  @portGroups={{module.portGroups}}
+  @portStartedConnecting={{this.portStartedConnecting}}
+  @portFinishedConnecting={{this.portFinishedConnecting}}
+  @mouseEnterPort={{this.mouseEnterPort}}
+  @mouseLeavePort={{this.mouseLeavePort}}
+  @disconnectPort={{this.disconnectPort}}
+/>

@@ -1,10 +1,17 @@
-{{partial 'module-label'}}
+<ModuleLabel @title={{module.title}} />
 
 <div class="module-content">
-{{value-input-array 
-  array=module.degrees 
+{{value-input-array
+  array=module.degrees
   inputType=module.inputType
 }}
 </div>
 
-{{partial 'module-ports'}}
+<ModulePorts
+  @portGroups={{module.portGroups}}
+  @portStartedConnecting={{this.portStartedConnecting}}
+  @portFinishedConnecting={{this.portFinishedConnecting}}
+  @mouseEnterPort={{this.mouseEnterPort}}
+  @mouseLeavePort={{this.mouseLeavePort}}
+  @disconnectPort={{this.disconnectPort}}
+/>

@@ -1,5 +1,12 @@
-{{partial 'module-label'}}
+<ModuleLabel @title={{module.title}} />
 <div class="module-content">
 {{value-input-number boundValue=module.value}}
 </div>
-{{partial 'module-ports'}}
+<ModulePorts
+  @portGroups={{module.portGroups}}
+  @portStartedConnecting={{this.portStartedConnecting}}
+  @portFinishedConnecting={{this.portFinishedConnecting}}
+  @mouseEnterPort={{this.mouseEnterPort}}
+  @mouseLeavePort={{this.mouseLeavePort}}
+  @disconnectPort={{this.disconnectPort}}
+/>
