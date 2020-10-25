@@ -4,7 +4,7 @@
 <div class="app-sidebar-section">
   <ul>
     <li>
-      {{value-input-string boundValue=module.title canBeEmpty=false valueUpdated=(action 'titleChanged')}}
+      <ValueInputString @boundValue={{this.module.title}} @canBeEmpty={{false}} @valueUpdated={{this.titleChanged}} />
     </li>
   </ul>
 </div>
@@ -13,7 +13,9 @@
     <ul>
       {{#each module.settings as |setting|}}
         <li>
-          {{component setting.type setting=setting}}
+          {{#let (component setting.type) as |SettingComponent|}}
+          <SettingComponent @setting={{setting}} />
+          {{/let}}
         </li>
       {{/each}}
     </ul>
@@ -26,7 +28,7 @@
     <ul>
       {{#each module.ports as |port|}}
         <li>
-          {{port-setting port=port addBusConnection=(action 'addBusConnection')}}
+          <PortSetting @port={{port}} @addBusConnection={{this.addBusConnection}} />
         </li>
       {{/each}}
     </ul>
