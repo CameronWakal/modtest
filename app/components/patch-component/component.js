@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { run } from '@ember/runloop';
-import { set, get, computed } from '@ember/object';
+import { set, get, computed, action } from '@ember/object';
 
 export default Component.extend({
   classNames: ['patch'],
@@ -14,7 +14,7 @@ export default Component.extend({
 
   // css class to tell ports which type can accept the current pending connection
   newConnectionClass: computed('connectingFromPort', function() {
-    let port = this.connectingFromPort;
+    let port = get(this, 'connectingFromPort');
     if (port) {
       return `new-connection new-connection-from-${get(port, 'type')}`;
     } else {
@@ -30,10 +30,26 @@ export default Component.extend({
     this.send('moduleDeselected');
   },
 
+  @action
+  diagramDidUpdate() {
+    run.scheduleOnce('afterRender', this, this.diagramDoesntNeedUpdate);
+  },
+
+  @action
+  removeConnection(sourcePort, destPort) {
+    this.removeBusConnection(sourcePort, destPort);
+    set(this, 'diagramNeedsUpdate', true);
+  },
+
+  @action
+  moduleDeselected() {
+    set(this, 'selectedModule', null);
+  },
+
   actions: {
 
     removePatch() {
-      this.removePatch();
+      get(this, 'removePatch')();
     },
 
     savePatch() {
@@ -47,10 +63,6 @@ export default Component.extend({
 
     moduleSelected(module) {
       set(this, 'selectedModule', module);
-    },
-
-    moduleDeselected() {
-      set(this, 'selectedModule', null);
     },
 
     moduleStartedMoving(module) {
@@ -67,8 +79,8 @@ export default Component.extend({
 
     // if there is a toPort and fromPort when finished, make the connection!
     modulePortFinishedConnecting() {
-      if (this.connectingToPort) {
-        this.addConnection(this.connectingFromPort, this.connectingToPort);
+      if (get(this, 'connectingToPort')) {
+        this.addConnection(get(this, 'connectingFromPort'), get(this, 'connectingToPort'));
       }
       set(this, 'connectingFromPort', null);
       set(this, 'connectingToPort', null);
@@ -87,7 +99,7 @@ export default Component.extend({
     },
 
     mouseEnterModulePort(toPort) {
-      let fromPort = this.connectingFromPort;
+      let fromPort = get(this, 'connectingFromPort');
       if (fromPort) { // we're dragging to create a new connection
         if (get(toPort, 'type') === get(fromPort, 'compatibleType')) { // we mouseEntered a compatible port type
           if (!get(fromPort, 'connections').findBy('id', toPort.id)) { // the two ports aren't already connected
@@ -99,12 +111,6 @@ export default Component.extend({
 
     mouseLeaveModulePort() {
       set(this, 'connectingToPort', null);
-    },
-
-    // diagram shit
-
-    diagramDidUpdate() {
-      run.scheduleOnce('afterRender', this, this.diagramDoesntNeedUpdate);
     },
 
     // module management
@@ -130,11 +136,6 @@ export default Component.extend({
       get(sourcePort, 'connections').pushObject(destPort);
       get(sourcePort, 'module').requestSave();
     },
-
-    removeConnection(sourcePort, destPort) {
-      this.removeBusConnection(sourcePort, destPort);
-      set(this, 'diagramNeedsUpdate', true);
-    }
   },
 
   diagramDoesntNeedUpdate() {

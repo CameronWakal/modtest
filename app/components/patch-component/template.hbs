@@ -1,12 +1,12 @@
-{{patch-diagram
-  patch=patch
-  needsUpdate=diagramNeedsUpdate
-  didUpdate=(action 'diagramDidUpdate')
-  removeConnection=(action 'removeConnection')
-  moduleDeselected=(action 'moduleDeselected')
-  movingModule=movingModule
-  connectingFromPort=connectingFromPort
-}}
+<PatchDiagram
+  @patch={{this.patch}}
+  @needsUpdate={{this.diagramNeedsUpdate}}
+  @didUpdate={{this.diagramDidUpdate}}
+  @removeConnection={{this.removeConnection}}
+  @moduleDeselected={{this.moduleDeselected}}
+  @movingModule={{this.movingModule}}
+  @connectingFromPort={{this.connectingFromPort}}
+/>
 
 {{#ember-wormhole to="settings-container"}}
   <div>

@@ -19,7 +19,7 @@ export default Component.extend({
   mouseMoveBodyFunction: null,
 
   onMovingModuleChanged: observer('movingModule', function() {
-    if (this.movingModule) {
+    if (get(this, 'movingModule')) {
       this.addMouseListener();
     } else {
       this.removeMouseListener();
@@ -27,7 +27,7 @@ export default Component.extend({
   }),
 
   onConnectingFromPortChanged: observer('connectingFromPort', function() {
-    if (this.connectingFromPort) {
+    if (get(this, 'connectingFromPort')) {
       run.scheduleOnce('afterRender', this, this.addNewConnection);
     } else {
       this.removeNewConnection();
@@ -44,7 +44,7 @@ export default Component.extend({
   updateAndDraw() {
     this.updateConnections();
     this.drawConnections();
-    this.didUpdate();
+    get(this, 'didUpdate')();
   },
 
   didInsertElement() {
@@ -111,8 +111,8 @@ export default Component.extend({
 
   // remove the mouse listener only if there is neither a moving module or a connecting port
   removeMouseListener() {
-    let movingModule = this.movingModule;
-    let connectingFromPort = this.connectingFromPort;
+    let movingModule = get(this, 'movingModule');
+    let connectingFromPort = get(this, 'connectingFromPort');
     if (this.mouseMoveBodyFunction && !movingModule && !connectingFromPort) {
       document.removeEventListener('mousemove', this.mouseMoveBodyFunction);
       this.mouseMoveBodyFunction = null;
@@ -123,7 +123,7 @@ export default Component.extend({
   // callback for mousemove on body
   mouseMoveBody(event) {
     event.preventDefault();
-    if (this.movingModule || this.connectingFromPort) {
+    if (get(this, 'movingModule') || get(this, 'connectingFromPort')) {
       this.drawConnections(event);
     }
   },
@@ -131,11 +131,11 @@ export default Component.extend({
   // if a connection is selected when the delete key is pressed, send disconnect action
   keyDown(event) {
     if (event.keyCode === 8) {
-      let i = this.selectedConnectionIndex;
+      let i = get(this, 'selectedConnectionIndex');
       if (i != null) {
         event.preventDefault();
-        let con = this.connections.toArray().objectAt(i);
-        this.removeConnection(con.inPort, con.outPort);
+        let con = get(this, 'connections').toArray().objectAt(i);
+        get(this, 'removeConnection')(con.inPort, con.outPort);
         set(this, 'selectedConnectionIndex', null);
       }
     }
@@ -143,7 +143,7 @@ export default Component.extend({
 
   // deselect selected connection on blur
   focusOut() {
-    let selection = this.selectedConnectionIndex;
+    let selection = get(this, 'selectedConnectionIndex');
     if (selection != null) {
       set(this, 'selectedConnectionIndex', null);
       this.drawConnections();
@@ -153,7 +153,7 @@ export default Component.extend({
   // draw connections between ports,
   // draw line from new connection port to cursor position
   drawConnections(event) {
-    let newPort = this.newConnectionFrom;
+    let newPort = get(this, 'newConnectionFrom');
 
     let ctx = this.element.getContext('2d');
     let pxRatio = window.devicePixelRatio;
@@ -162,7 +162,7 @@ export default Component.extend({
 
     let start, end;
 
-    let connections = this.connections;
+    let connections = get(this, 'connections');
     connections.forEach((con, index) => {
 
       start = this.portElementCenter(con.outPortDom);
@@ -177,7 +177,7 @@ export default Component.extend({
       } else {
         ctx.strokeStyle = valueLineColor;
       }
-      if (index === this.selectedConnectionIndex) {
+      if (index === get(this, 'selectedConnectionIndex')) {
         // style for a selected connection
         ctx.strokeStyle = selectedLineColor;
       }
@@ -201,10 +201,10 @@ export default Component.extend({
   // Check if mouse position is close to any connection line
   // http://jsfiddle.net/mmansion/9K5p9/
   mouseDown(event) {
-    this.moduleDeselected();
+    get(this, 'moduleDeselected')();
     set(this, 'selectedConnectionIndex', null);
     let start, end, point, distance;
-    let cons = this.connections;
+    let cons = get(this, 'connections');
     cons.forEach((con, index) => {
 
       // todo: should cache this stuff instead of re-jquerying it
