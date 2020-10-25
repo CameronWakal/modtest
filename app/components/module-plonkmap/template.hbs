@@ -1,2 +1,9 @@
 <div class="module-header"><ModuleLabel @title={{module.title}} />{{module.inputPortsCount}}/{{module.plonkPresetsCount}}</div>
-{{partial 'module-ports'}}
+<ModulePorts
+  @portGroups={{module.portGroups}}
+  @portStartedConnecting={{this.portStartedConnecting}}
+  @portFinishedConnecting={{this.portFinishedConnecting}}
+  @mouseEnterPort={{this.mouseEnterPort}}
+  @mouseLeavePort={{this.mouseLeavePort}}
+  @disconnectPort={{this.disconnectPort}}
+/>
