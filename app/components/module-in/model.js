@@ -24,7 +24,7 @@ export default Module.extend({
   inputDeviceName: attr('string', { defaultValue: 'All' }),
   deviceMenuOptions: computed('midi.inputDevices', 'inputDeviceName', function() {
     let devices = get(this, 'midi.inputDevices').mapBy('name');
-    let currentDevice = get(this, 'inputDeviceName');
+    let currentDevice = this.inputDeviceName;
     if (!devices.includes(currentDevice) && currentDevice !== 'All') {
       devices = [currentDevice, ...devices];
     }
@@ -32,17 +32,17 @@ export default Module.extend({
   }),
 
   onInputDeviceNameChanged: observer('inputDeviceName', function() {
-    if (get(this, 'hasDirtyAttributes')) {
+    if (this.hasDirtyAttributes) {
       this.requestSave();
     }
   }),
 
   getNote() {
-    return get(this, 'note');
+    return this.note;
   },
 
   getVel() {
-    return get(this, 'velocity');
+    return this.velocity;
   },
 
   noteOn(note, velocity, timestamp) {
@@ -54,7 +54,7 @@ export default Module.extend({
         targetTime: timestamp,
         callbackTime: performance.now()
       };
-      get(this, 'noteOnPort').sendEvent(event);
+      this.noteOnPort.sendEvent(event);
     }
   },
 
@@ -67,15 +67,15 @@ export default Module.extend({
         targetTime: timestamp,
         callbackTime: performance.now()
       };
-      get(this, 'noteOffPort').sendEvent(event);
+      this.noteOffPort.sendEvent(event);
     }
   },
 
   init() {
     this._super(...arguments);
-    get(this, 'midi').noteListener = this;
+    this.midi.noteListener = this;
 
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
 
       // create ports
@@ -93,7 +93,7 @@ export default Module.extend({
   },
 
   remove() {
-    get(this, 'midi').noteListener = null;
+    this.midi.noteListener = null;
     this._super();
   }
 

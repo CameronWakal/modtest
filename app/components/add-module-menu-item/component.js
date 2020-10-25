@@ -21,8 +21,8 @@ export default Component.extend({
 
   @action
   handleMouseMove(event) {
-    if (get(this, 'mouseIsDown')) {
-      get(this, 'addModule')(get(this, 'moduleType'), event);
+    if (this.mouseIsDown) {
+      this.addModule(this.moduleType, event);
       set(this, 'mouseIsDown', false);
     }
   },

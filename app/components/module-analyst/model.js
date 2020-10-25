@@ -113,8 +113,8 @@ export default Module.extend({
   // strings representing the displayedKeys, or '--' if nearest keys
   // has not been calculated yet.
   displayedKeyNames: computed('displayedKeys', function() {
-    let displayedKeys = get(this, 'displayedKeys');
-    let nearestKeysCount = get(this, 'nearestKeysCount');
+    let displayedKeys = this.displayedKeys;
+    let nearestKeysCount = this.nearestKeysCount;
     let displayedKeyNames = new Array(nearestKeysCount);
 
     if (displayedKeys == null) {
@@ -130,7 +130,7 @@ export default Module.extend({
 
   // string representing the selected key
   selectedKeyName: computed('selectedKey', function() {
-    let key = get(this, 'selectedKey');
+    let key = this.selectedKey;
     if (key) {
       return `${indexedPitchNames[key.index]}${key.scale}`;
     }
@@ -140,8 +140,8 @@ export default Module.extend({
   // same as nearestKeys, but with selectedKey in the last slot in the case
   // that selectedKey isn't already included.
   displayedKeys: computed('nearestKeys.[]', 'selectedKey', function() {
-    let nearestKeys = get(this, 'nearestKeys');
-    let selectedKey = get(this, 'selectedKey');
+    let nearestKeys = this.nearestKeys;
+    let selectedKey = this.selectedKey;
 
     if (selectedKey == null || nearestKeys == null) {
       return nearestKeys;
@@ -163,8 +163,8 @@ export default Module.extend({
   }),
 
   keyToOutput: computed('nearestKeys.[]', 'selectedKey', function() {
-    let nearestKeys = get(this, 'nearestKeys');
-    let selectedKey = get(this, 'selectedKey');
+    let nearestKeys = this.nearestKeys;
+    let selectedKey = this.selectedKey;
 
     if (selectedKey) {
       return selectedKey;
@@ -176,14 +176,14 @@ export default Module.extend({
   }),
 
   keyToOutputChanged: observer('keyToOutput', function() {
-    get(this, 'keyChangedPort').sendEvent({
+    this.keyChangedPort.sendEvent({
       targetTime: performance.now(),
       callbackTime: performance.now()
     });
   }),
 
   getMode() {
-    let key = get(this, 'keyToOutput');
+    let key = this.keyToOutput;
     if (key) {
       if (key.scale == 'M') {
         return 0; // Ionian Mode
@@ -194,14 +194,14 @@ export default Module.extend({
   },
 
   getRoot() {
-    let key = get(this, 'keyToOutput');
+    let key = this.keyToOutput;
     if (key) {
       return semitoneIndexes[key.index];
     }
   },
 
   addValue() {
-    let newValue = get(this, 'valueInPort').getValue();
+    let newValue = this.valueInPort.getValue();
     if (newValue != null) {
       newValue = newValue % 12;
       newValue = semitoneIndexes[newValue];
@@ -220,7 +220,7 @@ export default Module.extend({
   },
 
   ready() {
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
       // create ports
       this.addEventInPort('in', 'addValue', true);
@@ -236,14 +236,14 @@ export default Module.extend({
     }
 
     // activate keyToOutputChanged observer
-    get(this, 'keyToOutput');
+    this.keyToOutput;
   },
 
   setSelectedKey(keyIndex) {
-    let keys = get(this, 'displayedKeys');
+    let keys = this.displayedKeys;
     if (keys) {
       let key = keys[keyIndex];
-      if (key !== get(this, 'selectedKey')) {
+      if (key !== this.selectedKey) {
         set(this, 'selectedKey', keys[keyIndex]);
       } else {
         set(this, 'selectedKey', null);

@@ -16,7 +16,7 @@ export default ModuleSequence.extend({
 
   init() {
     this._super(...arguments);
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
 
       // unlike the parent, we want length to be a port instead of a setting
@@ -36,8 +36,8 @@ export default ModuleSequence.extend({
   },
 
   updateSequence() {
-    let stepCount = get(this, 'stepsInPort').getValue();
-    let pulseCount = get(this, 'pulsesInPort').getValue();
+    let stepCount = this.stepsInPort.getValue();
+    let pulseCount = this.pulsesInPort.getValue();
 
     // calculate euclidean pattern
     let pattern = this.getPattern(pulseCount, stepCount);

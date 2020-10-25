@@ -27,7 +27,7 @@ export default Model.extend({
 
   onLengthChanged: observer('length', function() {
     let length = get(this, 'items.length');
-    let newLength = get(this, 'length');
+    let newLength = this.length;
 
     if (newLength > length) {
       for (let i = length; i < newLength; i++) {
@@ -35,7 +35,7 @@ export default Model.extend({
       }
     } else if (newLength < length) {
       for (let i = length; i > newLength; i--) {
-        get(this, 'items').popObject();
+        this.items.popObject();
       }
     } else {
       return;
@@ -44,7 +44,7 @@ export default Model.extend({
   }),
 
   onAttrChanged: observer('length', 'valueMin', 'valueMax', 'valueStep', function() {
-    if (get(this, 'hasDirtyAttributes') && !get(this, 'isNew')) {
+    if (this.hasDirtyAttributes && !this.isNew) {
       this.requestSave();
     }
   }),
@@ -52,7 +52,7 @@ export default Model.extend({
   // mark myself as saved when requested by my managing module.
   save() {
     this._super({ adapterOptions: { dontPersist: true } });
-    get(this, 'items').forEach((item) => {
+    this.items.forEach((item) => {
       item.save();
     });
   },
@@ -64,7 +64,7 @@ export default Model.extend({
   },
 
   incrementAll() {
-    get(this, 'items').forEach((item) => {
+    this.items.forEach((item) => {
       if (get(item, 'value') != null) {
         set(item, 'value', get(item, 'value') + 1);
       }
@@ -72,7 +72,7 @@ export default Model.extend({
   },
 
   decrementAll() {
-    get(this, 'items').forEach((item) => {
+    this.items.forEach((item) => {
       if (get(item, 'value') != null) {
         set(item, 'value', get(item, 'value') - 1);
       }
@@ -80,8 +80,8 @@ export default Model.extend({
   },
 
   shiftForward() {
-    let oldValues = get(this, 'items').mapBy('value');
-    get(this, 'items').forEach((item, index) => {
+    let oldValues = this.items.mapBy('value');
+    this.items.forEach((item, index) => {
       if (index < oldValues.length - 1) {
         set(item, 'value', oldValues[index + 1]);
       } else {
@@ -91,8 +91,8 @@ export default Model.extend({
   },
 
   shiftBackward() {
-    let oldValues = get(this, 'items').mapBy('value');
-    get(this, 'items').forEach((item, index) => {
+    let oldValues = this.items.mapBy('value');
+    this.items.forEach((item, index) => {
       if (index > 0) {
         set(item, 'value', oldValues[index - 1]);
       } else {
@@ -102,7 +102,7 @@ export default Model.extend({
   },
 
   remove() {
-    get(this, 'items').toArray().forEach((item) => {
+    this.items.toArray().forEach((item) => {
       item.destroyRecord();
     });
     this.destroyRecord();

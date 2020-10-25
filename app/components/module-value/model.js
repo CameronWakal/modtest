@@ -18,12 +18,12 @@ export default Module.extend({
   valueInPort: belongsTo('port-value-in', { async: false }),
 
   onValueChanged: observer('value', function() {
-    if (get(this, 'hasDirtyAttributes')) {
+    if (this.hasDirtyAttributes) {
       let changeEvent = {
         targetTime: performance.now(),
         callbackTime: performance.now()
       };
-      get(this, 'changeOutPort').sendEvent(changeEvent);
+      this.changeOutPort.sendEvent(changeEvent);
 
       console.log('module-value.onValueChanged() requestSave()');
       this.requestSave();
@@ -32,18 +32,18 @@ export default Module.extend({
   }),
 
   getValue() {
-    return get(this, 'value');
+    return this.value;
   },
 
   setValue() {
-    let value = get(this, 'valueInPort').getValue();
+    let value = this.valueInPort.getValue();
     set(this, 'value', value);
     this.requestSave();
   },
 
   init() {
     this._super(...arguments);
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
       // create ports
       this.addEventInPort('set', 'setValue', false);

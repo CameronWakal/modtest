@@ -9,14 +9,14 @@ export default Component.extend({
   attributeBindings: ['inlineStyles:style'],
 
   width: computed('xMin', 'xMax', 'xScale', function() {
-    return (get(this, 'xMax') - get(this, 'xMin')) * get(this, 'xScale');
+    return (this.xMax - this.xMin) * this.xScale;
   }),
   height: computed('yMin', 'yMax', 'yScale', function() {
-    return (get(this, 'yMax') - get(this, 'yMin')) * get(this, 'yScale');
+    return (this.yMax - this.yMin) * this.yScale;
   }),
 
   inlineStyles: computed('width', 'height', function() {
-    let styleString = `width:${get(this, 'width')}px; height:${get(this, 'height')}px`;
+    let styleString = `width:${this.width}px; height:${this.height}px`;
     return htmlSafe(styleString);
   }),
 
@@ -40,12 +40,12 @@ export default Component.extend({
 
     let ctx = this.element.getContext('2d');
     let pxRatio = window.devicePixelRatio;
-    let width = get(this, 'width');
-    let height = get(this, 'height');
-    let minX = get(this, 'xMin') * 1000;
-    let maxX = get(this, 'xMax') * 1000;
-    let minY = get(this, 'yMin') * 1000;
-    let maxY = get(this, 'yMax') * 1000;
+    let width = this.width;
+    let height = this.height;
+    let minX = this.xMin * 1000;
+    let maxX = this.xMax * 1000;
+    let minY = this.yMin * 1000;
+    let maxY = this.yMax * 1000;
     ctx.canvas.width  = width * pxRatio;
     ctx.canvas.height = height * pxRatio;
     ctx.lineWidth = 1 * pxRatio;
@@ -71,7 +71,7 @@ export default Component.extend({
     ctx.strokeStyle = '#fff';
 
     let xStart, yStart, xEnd, yEnd;
-    let values = get(this, 'lineValues');
+    let values = this.lineValues;
 
     xStart = ((values[0].x - minX) / rangeX) * width;
     yStart = height - ((values[0].y - minY) / rangeY) * height;
@@ -90,7 +90,7 @@ export default Component.extend({
     // draw triangles
     ctx.lineWidth = 1 * pxRatio;
     ctx.strokeStyle = 'rgba(127,127,127,0.5)';
-    values = get(this, 'trianglesValues');
+    values = this.trianglesValues;
     // loop draws one triangle with CE dot
     for (let i = 0; i < values.length / 4; i++) {
       ctx.beginPath();

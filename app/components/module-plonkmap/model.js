@@ -85,15 +85,15 @@ export default Module.extend({
   },
 
   onAttrChanged: observer('semitoneRangeMin', 'semitoneRangeMax', 'voltageRangeMin', 'voltageRangeMax', function() {
-    if (get(this, 'hasDirtyAttributes')) {
+    if (this.hasDirtyAttributes) {
       this.requestSave();
     }
   }),
 
   onImportPortsCountChanged: observer('inputPortsCount', function() {
-    if (get(this, 'hasDirtyAttributes')) {
+    if (this.hasDirtyAttributes) {
       let currentCount = get(this, 'eventInPorts.length');
-      let newCount = Math.min(Math.max(get(this, 'inputPortsCount'), minInputs), maxInputs);
+      let newCount = Math.min(Math.max(this.inputPortsCount, minInputs), maxInputs);
       let change = newCount - currentCount;
       if (change > 0) {
         this._addInputPorts(change);
@@ -109,15 +109,15 @@ export default Module.extend({
     let currentCount = get(this, 'eventInPorts.length');
     for (let i = 0; i < count; i++) {
       port = this.addEventInPort(currentCount + i, 'onEventIn', true);
-      get(this, 'eventInPorts').pushObject(port);
+      this.eventInPorts.pushObject(port);
     }
   },
 
   _removeInputPorts(count) {
     let port;
     for (let i = 0; i < count; i++) {
-      port = get(this, 'eventInPorts').popObject();
-      get(this, 'ports').removeObject(port);
+      port = this.eventInPorts.popObject();
+      this.ports.removeObject(port);
       port.disconnect();
       port.destroyRecord();
     }
@@ -125,7 +125,7 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
 
       this.addNumberSetting('Inputs', 'inputPortsCount', this, { minValue: minInputs, maxValue: maxInputs });
@@ -139,7 +139,7 @@ export default Module.extend({
       this.addEventOutPort('out', 'eventOutPort', true);
 
       // add array of input ports
-      this._addInputPorts(get(this, 'inputPortsCount'));
+      this._addInputPorts(this.inputPortsCount);
 
       console.log('module-plonkmap.didCreate() requestSave()');
       this.requestSave();

@@ -17,21 +17,21 @@ export default Module.extend({
   denominatorInPort: belongsTo('port-value-in', { async: false }),
 
   onEventIn(event) {
-    let numerator = get(this, 'numeratorInPort').getValue();
-    let denominator = get(this, 'denominatorInPort').getValue();
+    let numerator = this.numeratorInPort.getValue();
+    let denominator = this.denominatorInPort.getValue();
 
     let prob = numerator / denominator;
     let rand = Math.random();
 
     if (rand <= prob) {
-      get(this, 'eventOutPort').sendEvent(event);
+      this.eventOutPort.sendEvent(event);
     }
 
   },
 
   init() {
     this._super(...arguments);
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
 
       // create ports

@@ -43,23 +43,23 @@ export default Module.extend({
   source: attr('string', { defaultValue: 'Internal' }),
 
   onSourceChanged: observer('source', function() {
-    if (get(this, 'source') === 'Internal') {
+    if (this.source === 'Internal') {
       this.midi.timingListener = null;
       if (this.isStarted) { // reset the internal clock
         this.start();
       }
-    } else if (get(this, 'source') === 'External') {
+    } else if (this.source === 'External') {
       this.midi.timingListener = this;
       this.resetExternalTimer();
     }
-    if (get(this, 'hasDirtyAttributes')) {
+    if (this.hasDirtyAttributes) {
       this.requestSave();
     }
   }),
 
   init() {
     this._super(...arguments);
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
 
       this.addMenuSetting('Source', 'source', 'sourceMenuValues', this);
@@ -72,12 +72,12 @@ export default Module.extend({
   },
 
   start() {
-    if (get(this, 'isStarted')) {
-      get(this, 'scheduler').cancelEventsForModule(this);
+    if (this.isStarted) {
+      this.scheduler.cancelEventsForModule(this);
       this.reset();
     }
     set(this, 'isStarted', true);
-    if (get(this, 'source') === 'Internal') {
+    if (this.source === 'Internal') {
       this.queueEvent({
         targetTime: performance.now()
       });
@@ -87,21 +87,21 @@ export default Module.extend({
   },
 
   stop() {
-    if (!get(this, 'isStarted')) {
+    if (!this.isStarted) {
       this.reset();
     }
     set(this, 'isStarted', false);
   },
 
   reset() {
-    get(this, 'resetOutPort').sendEvent();
+    this.resetOutPort.sendEvent();
   },
 
   onMidiTimingClock(event) {
     // todo: calculate ms offsets for fractional events and adjust target timestamps for outgoing events
 
     if (this.isStarted) {
-      let ticksPerBeat = get(this, 'resInPort').getValue();
+      let ticksPerBeat = this.resInPort.getValue();
       let midiEventsPerTick = midiTimingEventsPerBeat / ticksPerBeat;
       let midiEventDuration, tickDuration, outputEvent;
 
@@ -116,7 +116,7 @@ export default Module.extend({
       // Reset the internal state.
       if (this.midiEventCount == null) {
         // guess a tickDuration based on 120bpm if there isn't an existing tickDuration
-        tickDuration = get(this, 'tickDuration') ? get(this, 'tickDuration') : 500 / ticksPerBeat;
+        tickDuration = this.tickDuration ? this.tickDuration : 500 / ticksPerBeat;
         this.midiEventCount = 0;
 
         // form and send the output event
@@ -165,12 +165,12 @@ export default Module.extend({
   },
 
   onSchedulerCallback(event) {
-    if (this.isStarted && get(this, 'source') === 'Internal') {
+    if (this.isStarted && this.source === 'Internal') {
 
       // calculate the tickDuration to use for the duration of the current event,
       // and to schedule the next event.
-      let tempo = get(this, 'tempoInPort').getValue();
-      let res = get(this, 'resInPort').getValue();
+      let tempo = this.tempoInPort.getValue();
+      let res = this.resInPort.getValue();
       let tickDuration = 60000 / (tempo * res);// milliseconds per tick
 
       // schedule the next event
@@ -185,14 +185,14 @@ export default Module.extend({
   },
 
   queueEvent(event) {
-    get(this, 'scheduler').queueEvent(event, this.onSchedulerCallback.bind(this), this);
+    this.scheduler.queueEvent(event, this.onSchedulerCallback.bind(this), this);
   },
 
   sendEvent(event) {
     if (get(this, 'trigOutPort.isConnected')) {
       set(this, 'latestTriggerTime', event.targetTime);
       set(this, 'tickDuration', event.duration);
-      get(this, 'trigOutPort').sendEvent(event);
+      this.trigOutPort.sendEvent(event);
     }
   }
 

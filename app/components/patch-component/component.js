@@ -14,7 +14,7 @@ export default Component.extend({
 
   // css class to tell ports which type can accept the current pending connection
   newConnectionClass: computed('connectingFromPort', function() {
-    let port = get(this, 'connectingFromPort');
+    let port = this.connectingFromPort;
     if (port) {
       return `new-connection new-connection-from-${get(port, 'type')}`;
     } else {
@@ -33,7 +33,7 @@ export default Component.extend({
   actions: {
 
     removePatch() {
-      get(this, 'removePatch')();
+      this.removePatch();
     },
 
     savePatch() {
@@ -67,8 +67,8 @@ export default Component.extend({
 
     // if there is a toPort and fromPort when finished, make the connection!
     modulePortFinishedConnecting() {
-      if (get(this, 'connectingToPort')) {
-        this.addConnection(get(this, 'connectingFromPort'), get(this, 'connectingToPort'));
+      if (this.connectingToPort) {
+        this.addConnection(this.connectingFromPort, this.connectingToPort);
       }
       set(this, 'connectingFromPort', null);
       set(this, 'connectingToPort', null);
@@ -87,7 +87,7 @@ export default Component.extend({
     },
 
     mouseEnterModulePort(toPort) {
-      let fromPort = get(this, 'connectingFromPort');
+      let fromPort = this.connectingFromPort;
       if (fromPort) { // we're dragging to create a new connection
         if (get(toPort, 'type') === get(fromPort, 'compatibleType')) { // we mouseEntered a compatible port type
           if (!get(fromPort, 'connections').findBy('id', toPort.id)) { // the two ports aren't already connected

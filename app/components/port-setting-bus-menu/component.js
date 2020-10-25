@@ -6,19 +6,19 @@ export default Component.extend({
   actions: {
     busChanged(bus) {
       if (!bus.id) {
-        get(this, 'disconnectFromBus')();
+        this.disconnectFromBus();
       } else {
-        get(this, 'connectToBus')(bus);
+        this.connectToBus(bus);
       }
     }
   },
 
   menuItems: computed('busses', function() {
-    return [{ title: 'off' }, ...get(this, 'busses').toArray()];
+    return [{ title: 'off' }, ...this.busses.toArray()];
   }),
 
   selectedMenuItem: computed('connectedBus', function() {
-    let connectedBus = get(this, 'connectedBus');
+    let connectedBus = this.connectedBus;
     if (connectedBus) {
       return connectedBus;
     } else {

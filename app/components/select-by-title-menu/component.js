@@ -9,10 +9,10 @@ export default Component.extend({
 
   change() {
     let { selectedIndex } = this.element;
-    let items = get(this, 'items').toArray();
+    let items = this.items.toArray();
     let selectedItem = items[selectedIndex];
     set(this, 'selectedItem', selectedItem);
-    get(this, 'itemSelected')(selectedItem);
+    this.itemSelected(selectedItem);
   }
 
 });

@@ -29,21 +29,21 @@ export default Module.extend({
   },
 
   eventIn(event) {
-    if (!get(this, 'isMuted')) {
-      get(this, 'eventOutPort').sendEvent(event);
+    if (!this.isMuted) {
+      this.eventOutPort.sendEvent(event);
     }
   },
 
   getValue() {
-    if (!get(this, 'isMuted')) {
-      return get(this, 'valueInPort').getValue();
+    if (!this.isMuted) {
+      return this.valueInPort.getValue();
     }
     return null;
   },
 
   init() {
     this._super(...arguments);
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
       // create ports
       this.addEventInPort('toggle', 'toggle', false);

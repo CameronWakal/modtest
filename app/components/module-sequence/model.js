@@ -23,7 +23,7 @@ export default Module.extend({
   displayScale: attr('number', { defaultValue: 1 }),
 
   onAttrChanged: observer('inputType', 'displayScale', function() {
-    if (get(this, 'hasDirtyAttributes')) {
+    if (this.hasDirtyAttributes) {
       this.requestSave();
     }
   }),
@@ -71,7 +71,7 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
 
       // create steps
@@ -97,16 +97,16 @@ export default Module.extend({
 
       this.requestSave();
     }
-    get(this, 'steps').dataManager = this;
+    this.steps.dataManager = this;
   },
 
   remove() {
-    get(this, 'steps').remove();
+    this.steps.remove();
     this._super();
   },
 
   save() {
-    get(this, 'steps').save();
+    this.steps.save();
     this._super();
   }
 

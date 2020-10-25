@@ -19,7 +19,7 @@ export default Component.extend({
   },
 
   animationClass: computed('blinkTrigger', function() {
-    if (get(this, 'blinkTrigger')) {
+    if (this.blinkTrigger) {
       this.countIsEven = !this.countIsEven;
       return this.countIsEven ? 'on-even' : 'on-odd';
     }
@@ -27,7 +27,7 @@ export default Component.extend({
   }),
 
   styleAttribute: computed('blinkDuration', function() {
-    return htmlSafe(`animation-duration: ${get(this, 'blinkDuration')}ms;`);
+    return htmlSafe(`animation-duration: ${this.blinkDuration}ms;`);
   })
 
 });

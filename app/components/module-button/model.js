@@ -14,7 +14,7 @@ export default Module.extend({
   eventOutPort: belongsTo('port-event-out', { async: false }),
 
   trig() {
-    get(this, 'eventOutPort').sendEvent({
+    this.eventOutPort.sendEvent({
       targetTime: performance.now(),
       callbackTime: performance.now()
     });
@@ -22,7 +22,7 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
       // create ports
       this.addEventOutPort('out', 'eventOutPort', true);
