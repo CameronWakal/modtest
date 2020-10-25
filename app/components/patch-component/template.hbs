@@ -46,20 +46,22 @@
 
 <div class="modules" id="modules">
   {{#each patch.modules as |module|}}
-    {{component   module.type
-                  module=module
-                  remove=(action 'removeModule' module)
-                  selected=(action 'moduleSelected' module)
-                  modulePortStartedConnecting=(action 'modulePortStartedConnecting' module)
-                  modulePortFinishedConnecting=(action 'modulePortFinishedConnecting')
-                  startedMoving=(action 'moduleStartedMoving' module)
-                  finishedMoving=(action 'moduleFinishedMoving')
-                  mouseEnterModulePort=(action 'mouseEnterModulePort')
-                  mouseLeaveModulePort=(action 'mouseLeaveModulePort')
-                  portDisconnected=(action 'portDisconnected')
-                  portsChanged=(action 'modulePortsChanged' module)
-                  layoutChanged=(action 'moduleLayoutChanged' module)
-                  savePatch=(action 'savePatch')
-    }}
+    {{#let (component module.type) as |ModuleComponent|}}
+      <ModuleComponent
+        @module={{module}}
+        @remove={{fn this.removeModule module}}
+        @selected={{fn this.moduleSelected module}}
+        @modulePortStartedConnecting={{fn this.modulePortStartedConnecting module}}
+        @modulePortFinishedConnecting={{fn this.modulePortFinishedConnecting module}}
+        @startedMoving={{fn this.moduleStartedMoving module}}
+        @finishedMoving={{this.moduleFinishedMoving}}
+        @mouseEnterModulePort={{this.mouseEnterModulePort}}
+        @mouseLeaveModulePort={{this.mouseLeaveModulePort}}
+        @portDisconnected={{this.portDisconnected}}
+        @portsChanged={{fn this.modulePortsChanged module}}
+        @layoutChanged={{fn moduleLayoutChanged module}}
+        @savePatch={{this.savePatch}}
+      />
+    {{/let}}
   {{/each}}
 </div>

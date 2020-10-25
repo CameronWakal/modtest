@@ -67,72 +67,80 @@ export default Component.extend({
     get(this, 'patch.modules').pushObject(module);
   },
 
-  actions: {
-    savePatch() {
-      this.patch.save();
-    },
+  @action
+  removeModule(module) {
+    this.send('moduleDeselected');
+    get(this, 'patch.modules').removeObject(module);
+    this.patch.save();
+    module.remove();
+    set(this, 'diagramNeedsUpdate', true);
+  },
 
-    moduleSelected(module) {
-      set(this, 'selectedModule', module);
-    },
+  @action
+  moduleSelected(module) {
+    set(this, 'selectedModule', module);
+  },
 
-    moduleStartedMoving(module) {
-      set(this, 'movingModule', module);
-    },
+  @action
+  modulePortStartedConnecting(module, port) {
+    set(this, 'connectingFromPort', port);
+  },
 
-    moduleFinishedMoving() {
-      set(this, 'movingModule', null);
-    },
+  // if there is a toPort and fromPort when finished, make the connection!
+  @action
+  modulePortFinishedConnecting() {
+    if (get(this, 'connectingToPort')) {
+      this.addConnection(get(this, 'connectingFromPort'), get(this, 'connectingToPort'));
+    }
+    set(this, 'connectingFromPort', null);
+    set(this, 'connectingToPort', null);
+  },
 
-    modulePortStartedConnecting(module, port) {
-      set(this, 'connectingFromPort', port);
-    },
+  @action
+  moduleStartedMoving(module) {
+    set(this, 'movingModule', module);
+  },
 
-    // if there is a toPort and fromPort when finished, make the connection!
-    modulePortFinishedConnecting() {
-      if (get(this, 'connectingToPort')) {
-        this.addConnection(get(this, 'connectingFromPort'), get(this, 'connectingToPort'));
-      }
-      set(this, 'connectingFromPort', null);
-      set(this, 'connectingToPort', null);
-    },
+  @action
+  modulePortsChanged() {
+    set(this, 'diagramNeedsUpdate', true);
+  },
 
-    portDisconnected() {
-      set(this, 'diagramNeedsUpdate', true);
-    },
+  @action
+  moduleLayoutChanged() {
+    set(this, 'diagramNeedsUpdate', true);
+  },
 
-    modulePortsChanged() {
-      set(this, 'diagramNeedsUpdate', true);
-    },
+  @action
+  moduleFinishedMoving() {
+    set(this, 'movingModule', null);
+  },
 
-    moduleLayoutChanged() {
-      set(this, 'diagramNeedsUpdate', true);
-    },
-
-    mouseEnterModulePort(toPort) {
-      let fromPort = get(this, 'connectingFromPort');
-      if (fromPort) { // we're dragging to create a new connection
-        if (get(toPort, 'type') === get(fromPort, 'compatibleType')) { // we mouseEntered a compatible port type
-          if (!get(fromPort, 'connections').findBy('id', toPort.id)) { // the two ports aren't already connected
-            set(this, 'connectingToPort', toPort);
-          }
+  @action
+  mouseEnterModulePort(toPort) {
+    let fromPort = get(this, 'connectingFromPort');
+    if (fromPort) { // we're dragging to create a new connection
+      if (get(toPort, 'type') === get(fromPort, 'compatibleType')) { // we mouseEntered a compatible port type
+        if (!get(fromPort, 'connections').findBy('id', toPort.id)) { // the two ports aren't already connected
+          set(this, 'connectingToPort', toPort);
         }
       }
-    },
-
-    mouseLeaveModulePort() {
-      set(this, 'connectingToPort', null);
-    },
-
-    // module management
-
-    removeModule(module) {
-      this.send('moduleDeselected');
-      get(this, 'patch.modules').removeObject(module);
-      this.patch.save();
-      module.remove();
-      set(this, 'diagramNeedsUpdate', true);
     }
+  },
+
+  @action
+  mouseLeaveModulePort() {
+    set(this, 'connectingToPort', null);
+  },
+
+  @action
+  savePatch() {
+    this.patch.save();
+  },
+
+  @action
+  portDisconnected() {
+    set(this, 'diagramNeedsUpdate', true);
   },
 
   diagramDoesntNeedUpdate() {
