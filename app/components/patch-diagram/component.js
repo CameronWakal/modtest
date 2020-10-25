@@ -35,8 +35,8 @@ export default Component.extend({
   }),
 
   // flag changes to true when controller wants diagram to update list of ports
-  onPortsChanged: observer('needsUpdate', function() {
-    if (get(this, 'needsUpdate')) {
+  onPortsChanged: observer('attrs.needsUpdate', function() {
+    if (get(this, 'attrs.needsUpdate')) {
       run.scheduleOnce('afterRender', this, this.updateAndDraw);
     }
   }),
