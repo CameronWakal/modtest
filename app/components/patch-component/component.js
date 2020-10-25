@@ -46,18 +46,29 @@ export default Component.extend({
     set(this, 'selectedModule', null);
   },
 
+  @action
+  // a bus connection doesn't appear in the diagram, so no update necessary
+  addBusConnection(sourcePort, destPort) {
+    get(destPort, 'connections').pushObject(sourcePort);
+    get(destPort, 'module').requestSave();
+
+    get(sourcePort, 'connections').pushObject(destPort);
+    get(sourcePort, 'module').requestSave();
+  },
+
+  @action
+  patchTitleChanged() {
+    this.patch.save();
+  },
+
+  @action
+  addModule(type, event) {
+    let module = this.store.createRecord(`module-${type}`, { patch: this.patch, xPos: event.pageX - event.offsetX, yPos: event.pageY - event.offsetY });
+    get(this, 'patch.modules').pushObject(module);
+  },
+
   actions: {
-
-    removePatch() {
-      get(this, 'removePatch')();
-    },
-
     savePatch() {
-      this.patch.save();
-    },
-
-    patchTitleChanged() {
-      console.log('patchTitleChanged');
       this.patch.save();
     },
 
@@ -121,21 +132,7 @@ export default Component.extend({
       this.patch.save();
       module.remove();
       set(this, 'diagramNeedsUpdate', true);
-    },
-
-    addModule(type, event) {
-      let module = this.store.createRecord(`module-${type}`, { patch: this.patch, xPos: event.pageX - event.offsetX, yPos: event.pageY - event.offsetY });
-      get(this, 'patch.modules').pushObject(module);
-    },
-
-    // a bus connection doesn't appear in the diagram, so no update necessary
-    addBusConnection(sourcePort, destPort) {
-      get(destPort, 'connections').pushObject(sourcePort);
-      get(destPort, 'module').requestSave();
-
-      get(sourcePort, 'connections').pushObject(destPort);
-      get(sourcePort, 'module').requestSave();
-    },
+    }
   },
 
   diagramDoesntNeedUpdate() {
