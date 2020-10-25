@@ -67,6 +67,17 @@ export default Component.extend({
     this.mouseEnterModulePort(port);
   },
 
+  @action
+  mouseLeavePort(port) {
+    this.mouseLeaveModulePort(port);
+  },
+
+  @action
+  disconnectPort(port) {
+    port.disconnect();
+    this.portDisconnected(port);
+  },
+
   actions: {
     remove() {
       this.remove();
@@ -74,15 +85,6 @@ export default Component.extend({
 
     selectPort(port) {
       this.selectPort(port);
-    },
-
-    mouseLeavePort(port) {
-      this.mouseLeavePort(port);
-    },
-
-    disconnectPort(port) {
-      port.disconnect();
-      this.portDisconnected(port);
     }
 
   },

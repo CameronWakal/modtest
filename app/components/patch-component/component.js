@@ -97,7 +97,7 @@ export default Component.extend({
       }
     },
 
-    mouseLeavePort() {
+    mouseLeaveModulePort() {
       set(this, 'connectingToPort', null);
     },
 
