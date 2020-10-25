@@ -1,9 +1,7 @@
 <div class="module-header"><ModuleLabel @title={{module.title}} />{{indicator-blinking blinkDuration=triggerDuration blinkTrigger=latestTriggerTime}}</div>
 <ModulePorts
   @portGroups={{module.portGroups}}
-  {{action this.portStartedConnecting module}}
-  {{action this.portFinishedConnecting}}
-  {{action this.mouseEnterPort}}
-  {{action this.mouseLeavePort}}
-  {{action this.portDisconnected}}
+  @portStartedConnecting={{this.portStartedConnecting}}
+  @portFinishedConnecting={{this.portFinishedConnecting}}
+  @mouseEnterPort={{this.mouseEnterPort}}
 />

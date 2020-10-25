@@ -1,7 +1,7 @@
 import { alias } from '@ember/object/computed';
 import Component from '@ember/component';
 import { run } from '@ember/runloop';
-import { set, get, observer, computed } from '@ember/object';
+import { set, get, observer, computed, action } from '@ember/object';
 import { htmlSafe } from '@ember/string';
 
 export default Component.extend({
@@ -50,26 +50,30 @@ export default Component.extend({
     this.module.shouldAutoSave = true;
   },
 
+  @action
+  portStartedConnecting(port) {
+    set(this, 'portIsConnectingFrom', true);
+    this.modulePortStartedConnecting(port);
+  },
+
+  @action
+  portFinishedConnecting() {
+    set(this, 'portIsConnectingFrom', false);
+    this.modulePortFinishedConnecting();
+  },
+
+  @action
+  mouseEnterPort(port) {
+    this.mouseEnterModulePort(port);
+  },
+
   actions: {
     remove() {
       this.remove();
     },
+
     selectPort(port) {
       this.selectPort(port);
-    },
-
-    portStartedConnecting(port) {
-      set(this, 'portIsConnectingFrom', true);
-      this.portStartedConnecting(port);
-    },
-
-    portFinishedConnecting() {
-      set(this, 'portIsConnectingFrom', false);
-      this.portFinishedConnecting();
-    },
-
-    mouseEnterPort(port) {
-      this.mouseEnterPort(port);
     },
 
     mouseLeavePort(port) {

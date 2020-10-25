@@ -61,12 +61,12 @@ export default Component.extend({
       set(this, 'movingModule', null);
     },
 
-    portStartedConnecting(module, port) {
+    modulePortStartedConnecting(module, port) {
       set(this, 'connectingFromPort', port);
     },
 
     // if there is a toPort and fromPort when finished, make the connection!
-    portFinishedConnecting() {
+    modulePortFinishedConnecting() {
       if (get(this, 'connectingToPort')) {
         this.addConnection(get(this, 'connectingFromPort'), get(this, 'connectingToPort'));
       }
@@ -86,7 +86,7 @@ export default Component.extend({
       set(this, 'diagramNeedsUpdate', true);
     },
 
-    mouseEnterPort(toPort) {
+    mouseEnterModulePort(toPort) {
       let fromPort = get(this, 'connectingFromPort');
       if (fromPort) { // we're dragging to create a new connection
         if (get(toPort, 'type') === get(fromPort, 'compatibleType')) { // we mouseEntered a compatible port type
