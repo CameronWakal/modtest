@@ -22,5 +22,4 @@ branches:
     - master
 
 script:
-  - npm run lint:js
   - npm test
