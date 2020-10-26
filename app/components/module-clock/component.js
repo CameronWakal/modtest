@@ -1,4 +1,5 @@
 import { alias } from '@ember/object/computed';
+import { action } from '@ember/object';
 import ModuleGenericComponent from '../module/component';
 
 export default ModuleGenericComponent.extend({
@@ -10,18 +11,14 @@ export default ModuleGenericComponent.extend({
   latestTriggerTime: alias('module.latestTriggerTime'),
   tickDuration: alias('module.tickDuration'),
 
-  actions: {
-    start() {
-      this.module.start();
-    },
+  @action
+  start() {
+    this.module.start();
+  },
 
-    stop() {
-      this.module.stop();
-    },
-
-    reset() {
-      this.module.reset();
-    }
+  @action
+  stop() {
+    this.module.stop();
   }
 
 });

@@ -1,6 +1,14 @@
-<div class="module-header"><ModuleLabel @title={{module.title}} />{{indicator-blinking blinkDuration=tickDuration blinkTrigger=latestTriggerTime}}</div>
+<div class="module-header"><ModuleLabel @title={{module.title}} /><IndicatorBlinking @blinkDuration={{this.tickDuration}} @blinkTrigger={{this.latestTriggerTime}} /></div>
 <div class="module-content">
-  {{toggle-button label='Start' isOn=isStarted click=(action 'start')}}{{toggle-button label='Stop' isOn=(not isStarted) click=(action 'stop')}}
+  <ToggleButton
+    @label='Start'
+    @isOn={{this.isStarted}}
+    {{on 'click' this.start}}
+  /><ToggleButton
+    @label='Stop'
+    @isOn={{not this.isStarted}}
+    {{on 'click' this.stop}}
+  />
 </div>
 <ModulePorts
   @portGroups={{module.portGroups}}
