@@ -44,10 +44,10 @@ export default Component.extend({
       this.isMoving = true;
       document.addEventListener('mouseup', this.mouseUpBodyFunction);
       document.addEventListener('mousemove', this.mouseMoveBodyFunction);
+    } else {
+      this.module.shouldAutoSave = true;
     }
 
-    // turn on autosaving for the module model after it has been initialized
-    this.module.shouldAutoSave = true;
   },
 
   @action
