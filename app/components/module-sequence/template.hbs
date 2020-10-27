@@ -1,10 +1,10 @@
 <div class="module-header"><ModuleLabel @title={{module.title}} /><IndicatorBlinking @blinkDuration={{this.triggerDuration}} @blinkTrigger={{this.latestTriggerTime}}/></div>
 <div class="module-content">
-{{value-input-array
-  array=module.steps
-  inputType=module.inputType
-  displayScale=module.displayScale
-}}
+<ValueInputArray
+  @array={{this.module.steps}}
+  @inputType={{this.module.inputType}}
+  @displayScale={{this.module.displayScale}}
+/>
 </div>
 
 <ModulePorts

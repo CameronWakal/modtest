@@ -1,6 +1,6 @@
 <ModuleLabel @title={{module.title}} />
 <div class="module-content">
-  {{toggle-button label='Mute' isOn=module.isMuted click=(action 'mute')}}
+  <ToggleButton @label='Mute' @isOn={{this.module.isMuted}} {{on 'click' this.mute}}/>
 </div>
 <ModulePorts
   @portGroups={{module.portGroups}}
