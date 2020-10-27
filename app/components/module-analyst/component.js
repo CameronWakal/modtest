@@ -1,13 +1,13 @@
 import ModuleGenericComponent from '../module/component';
+import { action } from '@ember/object';
 
 export default ModuleGenericComponent.extend({
 
   classNames: ['module-analyst'],
 
-  actions: {
-    selectKey(index) {
-      this.module.setSelectedKey(index);
-    }
+  @action
+  selectKey(index) {
+    this.module.setSelectedKey(index);
   }
 
 });

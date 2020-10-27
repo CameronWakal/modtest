@@ -1,6 +1,6 @@
 <ModuleLabel @title={{module.title}} />
 <div class="module-content">
-  {{toggle-button label='Trig' click=(action 'trig')}}
+  <ToggleButton @label='Trig' {{on 'click' this.trig}}/>
 </div>
 <ModulePorts
   @portGroups={{module.portGroups}}

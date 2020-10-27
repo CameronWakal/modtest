@@ -1,13 +1,13 @@
 import ModuleGenericComponent from '../module/component';
+import { action } from '@ember/object';
 
 export default ModuleGenericComponent.extend({
 
   classNames: ['module-button'],
 
-  actions: {
-    trig() {
-      this.module.trig();
-    }
+  @action
+  trig() {
+    this.module.trig();
   }
 
 });
