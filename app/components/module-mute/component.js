@@ -1,13 +1,13 @@
 import ModuleGenericComponent from '../module/component';
+import { action } from '@ember/object';
 
 export default ModuleGenericComponent.extend({
 
   classNames: ['module-mute'],
 
-  actions: {
-    mute() {
-      this.module.toggleProperty('isMuted');
-    }
+  @action
+  mute() {
+    this.module.toggleProperty('isMuted');
   }
 
 });

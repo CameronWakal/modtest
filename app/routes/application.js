@@ -64,8 +64,8 @@ export default Route.extend({
   },
 
   init() {
-    get(this, 'midi').setup();
-    get(this, 'scheduler').setup();
+    this.midi.setup();
+    this.scheduler.setup();
     this._super(...arguments);
   },
 

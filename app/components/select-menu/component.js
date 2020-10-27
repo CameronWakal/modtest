@@ -9,7 +9,7 @@ export default Component.extend({
 
   change() {
     let { selectedIndex } = this.element;
-    let items = get(this, 'items');
+    let items = this.items;
     set(this, 'selectedItem', items[selectedIndex]);
   }
 

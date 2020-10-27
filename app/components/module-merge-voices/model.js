@@ -33,9 +33,9 @@ export default Module.extend({
   eventOutPort: belongsTo('port-event-out', { async: false }),
 
   onImportPortsCountChanged: observer('inputPortsCount', function() {
-    if (get(this, 'hasDirtyAttributes')) {
+    if (this.hasDirtyAttributes) {
       let currentCount = get(this, 'valueInPorts.length');
-      let newCount = Math.min(Math.max(get(this, 'inputPortsCount'), minInputs), maxInputs);
+      let newCount = Math.min(Math.max(this.inputPortsCount, minInputs), maxInputs);
       let change = newCount - currentCount;
       if (change > 0) {
         this._addInputPorts(change);
@@ -51,21 +51,21 @@ export default Module.extend({
     let currentCount = get(this, 'valueInPorts.length');
     for (let i = 0; i < count; i++) {
       port = this.addValueInPortWithoutAssignment(currentCount + i, { canBeEmpty: true });
-      get(this, 'valueInPorts').pushObject(port);
+      this.valueInPorts.pushObject(port);
       port = this.addEventInPort(currentCount + i, 'onEventIn', true);
-      get(this, 'eventInPorts').pushObject(port);
+      this.eventInPorts.pushObject(port);
     }
   },
 
   _removeInputPorts(count) {
     let port;
     for (let i = 0; i < count; i++) {
-      port = get(this, 'valueInPorts').popObject();
-      get(this, 'ports').removeObject(port);
+      port = this.valueInPorts.popObject();
+      this.ports.removeObject(port);
       port.disconnect();
       port.destroyRecord();
-      port = get(this, 'eventInPorts').popObject();
-      get(this, 'ports').removeObject(port);
+      port = this.eventInPorts.popObject();
+      this.ports.removeObject(port);
       port.disconnect();
       port.destroyRecord();
     }
@@ -73,7 +73,7 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
 
       this.addNumberSetting('Inputs', 'inputPortsCount', this, { minValue: 1, maxValue: 8 });
@@ -82,7 +82,7 @@ export default Module.extend({
       this.addEventOutPort('out', 'eventOutPort', true);
 
       // add array of input ports
-      this._addInputPorts(get(this, 'inputPortsCount'));
+      this._addInputPorts(this.inputPortsCount);
 
       console.log('module-merge-voices.didCreate() requestSave()');
       this.requestSave();
@@ -100,10 +100,10 @@ export default Module.extend({
     let portNumber = parseInt(get(port, 'label'));
     if (!isNaN(portNumber)) {
 
-      let ports = get(this, 'valueInPorts');
+      let ports = this.valueInPorts;
       this.selectedValueInPort = ports.objectAt(portNumber);
 
-      get(this, 'eventOutPort').sendEvent(event);
+      this.eventOutPort.sendEvent(event);
     }
   }
 

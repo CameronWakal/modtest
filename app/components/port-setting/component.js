@@ -26,25 +26,25 @@ export default Component.extend({
 
   actions: {
     disconnectFromBus() {
-      if (get(this, 'connectedBus')) {
+      if (this.connectedBus) {
         console.log('disconnecting!');
-        get(this, 'port').disconnect();
+        this.port.disconnect();
       }
     },
 
     connectToBus(bus) {
       let sourcePort, destPort;
-      if (get(this, 'portIsEventOut')) {
-        sourcePort = get(this, 'port');
+      if (this.portIsEventOut) {
+        sourcePort = this.port;
         destPort = get(bus, 'eventInPort');
       } else {
         sourcePort = get(bus, 'eventOutPort');
-        destPort = get(this, 'port');
+        destPort = this.port;
       }
 
       this.actions.disconnectFromBus();
       console.log('connecting!');
-      get(this, 'addBusConnection')(sourcePort, destPort);
+      this.addBusConnection(sourcePort, destPort);
     }
   },
 

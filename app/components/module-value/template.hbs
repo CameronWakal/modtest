@@ -1,6 +1,6 @@
 <ModuleLabel @title={{module.title}} />
 <div class="module-content">
-{{value-input-number boundValue=module.value}}
+<ValueInputNumber @boundValue={{this.module.value}}/>
 </div>
 <ModulePorts
   @portGroups={{module.portGroups}}

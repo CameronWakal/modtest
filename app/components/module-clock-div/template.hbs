@@ -1,4 +1,4 @@
-<div class="module-header"><ModuleLabel @title={{module.title}} />{{indicator-blinking blinkDuration=triggerDuration blinkTrigger=latestTriggerTime}}</div>
+<div class="module-header"><ModuleLabel @title={{module.title}} /><IndicatorBlinking @blinkDuration={{this.triggerDuration}} @blinkTrigger={{this.latestTriggerTime}} /></div>
 <ModulePorts
   @portGroups={{module.portGroups}}
   @portStartedConnecting={{this.portStartedConnecting}}

@@ -14,13 +14,13 @@ export default Component.extend({
 
   isOn: notEmpty('item.value'),
   isAccented: computed('item.value', 'max', function() {
-    return get(this, 'item.value') === get(this, 'max');
+    return get(this, 'item.value') === this.max;
   }),
 
   click(event) {
     let value = get(this, 'item.value');
-    let max = get(this, 'max');
-    let min = get(this, 'min');
+    let max = this.max;
+    let min = this.min;
 
     if (event.shiftKey) {
       if (value === max) {

@@ -21,7 +21,7 @@ export default Component.extend({
     set(this, 'isConnectingFrom', true);
     this.mouseUpBodyFunction = this.mouseUpBody.bind(this);
     document.addEventListener('mouseup', this.mouseUpBodyFunction);
-    get(this, 'startedConnecting')(event);
+    this.startedConnecting(event);
     return false;
   },
 

@@ -12,7 +12,7 @@ export default TextField.extend({
   classNameBindings: ['isPending:pending'],
 
   isPending: computed('value', 'boundValue', function() {
-    return get(this, 'value') !== get(this, 'boundValue');
+    return this.value !== this.boundValue;
   }),
 
   onBoundValueChanged: observer('boundValue', function() {
@@ -32,21 +32,21 @@ export default TextField.extend({
   },
 
   updateValue() {
-    let value = get(this, 'value');
-    let boundValue = get(this, 'boundValue');
+    let value = this.value;
+    let boundValue = this.boundValue;
 
     if (value !== boundValue) {
-      if (!get(this, 'canBeEmpty') && isEmpty(value)) {
+      if (!this.canBeEmpty && isEmpty(value)) {
         set(this, 'value', boundValue);
       } else {
         set(this, 'boundValue', value);
-        get(this, 'valueUpdated')();
+        this.valueUpdated();
       }
     }
   },
 
   resetValue() {
-    set(this, 'value', get(this, 'boundValue'));
+    set(this, 'value', this.boundValue);
   },
 
   keyUp(event) {

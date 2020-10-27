@@ -28,27 +28,27 @@ export default Module.extend({
   yTrianglesValueInPort: belongsTo('port-value-in', { async: false }),
 
   writeLineValue() {
-    let xLineValue = get(this, 'xLineValueInPort').getValue();
-    let yLineValue = get(this, 'yLineValueInPort').getValue();
-    get(this, 'lineValues').pushObject({ x: xLineValue, y: yLineValue });
+    let xLineValue = this.xLineValueInPort.getValue();
+    let yLineValue = this.yLineValueInPort.getValue();
+    this.lineValues.pushObject({ x: xLineValue, y: yLineValue });
   },
 
   // three values in a row draw a triangle, every fourth value will be
   // the center of effect for that triangle
   writeTrianglesValue() {
-    let x = get(this, 'xTrianglesValueInPort').getValue();
-    let y = get(this, 'yTrianglesValueInPort').getValue();
-    get(this, 'trianglesValues').pushObject({ x, y });
+    let x = this.xTrianglesValueInPort.getValue();
+    let y = this.yTrianglesValueInPort.getValue();
+    this.trianglesValues.pushObject({ x, y });
   },
 
   reset() {
-    get(this, 'lineValues').clear();
-    get(this, 'trianglesValues').clear();
+    this.lineValues.clear();
+    this.trianglesValues.clear();
   },
 
   init() {
     this._super(...arguments);
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
 
       this.addNumberSetting('xMin', 'xMin', this);

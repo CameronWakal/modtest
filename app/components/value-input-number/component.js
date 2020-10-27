@@ -13,11 +13,11 @@ export default TextField.extend({
   classNameBindings: ['isPending:pending'],
 
   isPending: computed('value', 'boundValue', function() {
-    let value = parseInt(get(this, 'value'));
+    let value = parseInt(this.value);
     if (isNaN(value)) {
       value = null;
     }
-    return value !== get(this, 'boundValue');
+    return value !== this.boundValue;
   }),
 
   onBoundValueChanged: observer('boundValue', function() {
@@ -37,23 +37,23 @@ export default TextField.extend({
   },
 
   updateValue() {
-    let value = parseInt(get(this, 'value'));
+    let value = parseInt(this.value);
 
     if (isNaN(value)) {
       // if new value is NaN, set boundValue to null or boundValue,
       // depending on canBeEmpty flag
-      if (get(this, 'canBeEmpty')) {
+      if (this.canBeEmpty) {
         value = null;
       } else {
-        value = get(this, 'boundValue');
+        value = this.boundValue;
       }
     } else {
       // if new value is a number, make sure it's within min/max
-      if (get(this, 'minValue') != null) {
-        value = Math.max(get(this, 'minValue'), value);
+      if (this.minValue != null) {
+        value = Math.max(this.minValue, value);
       }
-      if (get(this, 'maxValue') != null) {
-        value = Math.min(get(this, 'maxValue'), value);
+      if (this.maxValue != null) {
+        value = Math.min(this.maxValue, value);
       }
     }
     set(this, 'value', value);
@@ -61,7 +61,7 @@ export default TextField.extend({
   },
 
   resetValue() {
-    let value = get(this, 'boundValue');
+    let value = this.boundValue;
     set(this, 'value', value);
   },
 

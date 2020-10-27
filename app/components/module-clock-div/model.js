@@ -26,9 +26,9 @@ export default Module.extend({
   trigOutPort: belongsTo('port-event-out', { async: false }),
 
   onClockIn(event) {
-    let count = get(this, 'count');
-    let divBy = get(this, 'divByPort').getValue();
-    let shiftBy = get(this, 'shiftByPort').getValue();
+    let count = this.count;
+    let divBy = this.divByPort.getValue();
+    let shiftBy = this.shiftByPort.getValue();
 
     if (count - mod(shiftBy, divBy) === 0) {
       if (get(this, 'trigOutPort.isConnected')) {
@@ -37,7 +37,7 @@ export default Module.extend({
         newEvent.duration *= divBy;
         set(this, 'triggerDuration', newEvent.duration);
         set(this, 'latestTriggerTime', newEvent.targetTime);
-        get(this, 'trigOutPort').sendEvent(newEvent);
+        this.trigOutPort.sendEvent(newEvent);
       }
     }
 
@@ -50,7 +50,7 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
 
       this.addEventInPort('clock', 'onClockIn', true);

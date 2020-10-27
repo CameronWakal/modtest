@@ -39,13 +39,13 @@ export default Module.extend({
   trigOutPort: belongsTo('port-event-out', { async: false }),
 
   gateIsOn: computed('mode', function() {
-    return get(this, 'mode') === 'gate only' || get(this, 'mode') === 'count+gate';
+    return this.mode === 'gate only' || this.mode === 'count+gate';
   }),
   countIsOn: computed('mode', function() {
-    return get(this, 'mode') === 'count only' || get(this, 'mode') === 'count+gate';
+    return this.mode === 'count only' || this.mode === 'count+gate';
   }),
   onSettingChanged: observer('mode', 'delayUnits', 'gateUnits', function() {
-    if (get(this, 'hasDirtyAttributes')) {
+    if (this.hasDirtyAttributes) {
       this.requestSave();
     }
   }),
@@ -57,34 +57,34 @@ export default Module.extend({
   // in count+gate mode, an event repeats are limited by both count and gate.
   // gate and delay duration can be supplied in either beats or milliseconds.
   onEventIn(event) {
-    let tempo = get(this, 'tempoInPort').getValue();
+    let tempo = this.tempoInPort.getValue();
     let msPerBeat = 60000 / tempo;
 
     // gate is the maximum amount of time after the original event that repeats
     // will continue to fire.
-    let gateIsOn = get(this, 'gateIsOn');
-    let gateNumerator = get(this, 'gateNumeratorInPort').getValue();
-    let gateDenominator = get(this, 'gateDenominatorInPort').getValue();
+    let gateIsOn = this.gateIsOn;
+    let gateNumerator = this.gateNumeratorInPort.getValue();
+    let gateDenominator = this.gateDenominatorInPort.getValue();
     let gate = gateNumerator / gateDenominator;
-    if (get(this, 'delayIsInBeats')) {
+    if (this.delayIsInBeats) {
       gate *= msPerBeat;
     }
 
     // count is the maximum number of repeats that will fire for one original event.
-    let countIsOn = get(this, 'countIsOn');
-    let count = get(this, 'countInPort').getValue();
+    let countIsOn = this.countIsOn;
+    let count = this.countInPort.getValue();
 
     // delay is the amount of time between each repeat of an original event.
-    let delayNumerator = get(this, 'delayNumeratorInPort').getValue();
-    let delayDenominator = get(this, 'delayDenominatorInPort').getValue();
+    let delayNumerator = this.delayNumeratorInPort.getValue();
+    let delayDenominator = this.delayDenominatorInPort.getValue();
     let delay = delayNumerator / delayDenominator;
-    if (get(this, 'delayIsInBeats')) {
+    if (this.delayIsInBeats) {
       delay *= msPerBeat;
     }
 
     // examine incoming event and send it through if it's a queued repeat event
     if (event.repeatCount != null && event.repeatOriginalTargetTime != null) {
-      get(this, 'trigOutPort').sendEvent(event);
+      this.trigOutPort.sendEvent(event);
       set(this, 'triggerDuration', event.duration);
       set(this, 'latestTriggerTime', event.targetTime);
     }
@@ -118,14 +118,14 @@ export default Module.extend({
       eventShouldRepeat = false;
     }
     if (eventShouldRepeat) {
-      get(this, 'scheduler').queueEvent(repeatEvent, this.onEventIn.bind(this));
+      this.scheduler.queueEvent(repeatEvent, this.onEventIn.bind(this));
     }
 
   },
 
   init() {
     this._super(...arguments);
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
 
       this.addEventInPort('trig', 'onEventIn', true);

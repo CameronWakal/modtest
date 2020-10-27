@@ -33,7 +33,7 @@ export default Module.extend({
   }),
 
   updateScale() {
-    let mode = get(this, 'modeInPort').getValue() % 7;
+    let mode = this.modeInPort.getValue() % 7;
     if (this.mode == mode) {
       return;
     }
@@ -89,18 +89,18 @@ export default Module.extend({
     // 4. do math
 
     let degree = degreeInPort.getValue();
-    let octave = get(this, 'octaveInPort').getValue();
-    let root = get(this, 'rootInPort').getValue();
+    let octave = this.octaveInPort.getValue();
+    let root = this.rootInPort.getValue();
 
     if (degree != null) {
-      let degreeInOctave = mod(degree, get(this, 'degreesInScale'));
+      let degreeInOctave = mod(degree, this.degreesInScale);
       let degreeItem = get(this, 'degrees.items').findBy('index', degreeInOctave);
       let intervalForDegree = get(degreeItem, 'value');
       if (intervalForDegree == null) {
         return null;
       }
 
-      octave = octave + 1 + Math.floor(degree / get(this, 'degreesInScale'));
+      octave = octave + 1 + Math.floor(degree / this.degreesInScale);
       let note = (octave * 12) + root + intervalForDegree;
       // console.log('octave:'+octave+' root:'+root+' degree:'+degree+' interval:'+intervalForDegree+' note:'+note);
       return note;
@@ -139,18 +139,18 @@ export default Module.extend({
       console.log('module-scale.didCreate() requestSave()');
       this.requestSave();
     } else {
-      get(this, 'degrees').dataManager = this;
+      this.degrees.dataManager = this;
     }
 
   },
 
   remove() {
-    get(this, 'degrees').remove();
+    this.degrees.remove();
     this._super();
   },
 
   save() {
-    get(this, 'degrees').save();
+    this.degrees.save();
     this._super();
   }
 

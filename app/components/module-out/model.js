@@ -29,7 +29,7 @@ export default Module.extend({
 
   deviceMenuOptions: computed('midi.outputDevices', 'outputDeviceName', function() {
     let devices = get(this, 'midi.outputDevices').mapBy('name');
-    let currentDevice = get(this, 'outputDeviceName');
+    let currentDevice = this.outputDeviceName;
     if (!devices.includes(currentDevice) && currentDevice !== 'All') {
       devices = [currentDevice, ...devices];
     }
@@ -37,7 +37,7 @@ export default Module.extend({
   }),
 
   onOutputDeviceNameChanged: observer('outputDeviceName', function() {
-    if (get(this, 'hasDirtyAttributes')) {
+    if (this.hasDirtyAttributes) {
       this.requestSave();
     }
   }),
@@ -54,13 +54,13 @@ export default Module.extend({
     // Calculate average callback delay and average time for event to traverse graph.
 
     event.completionTime = performance.now();
-    get(this, 'events').push(event);
+    this.events.push(event);
     if (get(this, 'events.length') >= 64) {
 
-      let callbackDeltas = get(this, 'events').map((item) => {
+      let callbackDeltas = this.events.map((item) => {
         return item.callbackTime - item.targetTime;
       });
-      let executionDeltas = get(this, 'events').map((item) => {
+      let executionDeltas = this.events.map((item) => {
         return item.completionTime - item.callbackTime;
       });
 
@@ -82,14 +82,14 @@ export default Module.extend({
 
     // check the connection of the 'note' port for the value of the note to play.
     let note = {
-      value: get(this, 'noteInPort').getValue(),
-      velocity: get(this, 'velInPort').getValue(),
+      value: this.noteInPort.getValue(),
+      velocity: this.velInPort.getValue(),
       duration: noteDuration,
       timestamp: event.targetTime + latency,
-      channel: get(this, 'channelInPort').getValue() - 1
+      channel: this.channelInPort.getValue() - 1
     };
     if (note.value != null) {
-      get(this, 'midi').sendNote(note, get(this, 'outputDeviceName'));
+      this.midi.sendNote(note, this.outputDeviceName);
       set(this, 'triggerDuration', event.duration);
       set(this, 'latestTriggerTime', event.targetTime);
     }
@@ -100,7 +100,7 @@ export default Module.extend({
     this._super(...arguments);
     this.events = [];
 
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
 
       // create ports

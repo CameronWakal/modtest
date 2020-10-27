@@ -15,7 +15,7 @@ export default ModuleSetting.extend({
   init() {
     this._super(...arguments);
     // make an alias from this.items to module.itemsProperty at runtime
-    let targetPath = `module.${get(this, 'itemsProperty')}`;
+    let targetPath = `module.${this.itemsProperty}`;
     defineProperty(this, 'items', alias(targetPath));
   },
 

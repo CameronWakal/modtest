@@ -1,43 +1,43 @@
-{{patch-diagram
-  patch=patch
-  needsUpdate=diagramNeedsUpdate
-  didUpdate=(action 'diagramDidUpdate')
-  removeConnection=(action 'removeConnection')
-  moduleDeselected=(action 'moduleDeselected')
-  movingModule=movingModule
-  connectingFromPort=connectingFromPort
-}}
+<PatchDiagram
+  @patch={{this.patch}}
+  @needsUpdate={{this.diagramNeedsUpdate}}
+  @didUpdate={{this.diagramDidUpdate}}
+  @removeConnection={{this.removeConnection}}
+  @moduleDeselected={{this.moduleDeselected}}
+  @movingModule={{this.movingModule}}
+  @connectingFromPort={{this.connectingFromPort}}
+/>
 
 {{#ember-wormhole to="settings-container"}}
   <div>
     {{#if selectedModule}}
-      {{module-settings module=selectedModule addBusConnection=(action 'addBusConnection')}}
+      <ModuleSettings @module={{this.selectedModule}} @addBusConnection={{this.addBusConnection}} />
     {{else}}
-      {{patch-settings
-        patch=patch
-        removePatch=(action 'removePatch')
-        patchTitleChanged=(action 'patchTitleChanged')
-      }}
+      <PatchSettings
+        @patch={{this.patch}}
+        @removePatch={{this.removePatch}}
+        @patchTitleChanged={{this.patchTitleChanged}}
+      />
       <div class="app-sidebar-section modules-list"><h4>+ Module</h4>
       <ul>
-        <li>{{add-module-menu-item moduleType='array' label='Array' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='clock' label='Clock' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='clock-div' label='Clock Div' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='in' label='In' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='out' label='Out' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='ccout' label='CC Out' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='sequence' label='Sequence' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='scale' label='Scale' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='switch' label='Switch' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='maybe' label='Maybe' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='mute' label='Mute' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='value' label='Value' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='repeat' label='Repeat' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='sequence-euclidean' label='Euclidean' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='analyst' label='Guess Key' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='button' label='Button' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='merge-voices' label='Merge Voices' addModule=(action 'addModule')}}</li>
-        <li>{{add-module-menu-item moduleType='plonkmap' label='PlonkMap' addModule=(action 'addModule')}}</li>
+        <li><AddModuleMenuItem @moduleType='array' @label='Array' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='clock' @label='Clock' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='clock-div' @label='Clock Div' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='in' @label='In' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='out' @label='Out' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='ccout' @label='CC Out' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='sequence' @label='Sequence' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='scale' @label='Scale' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='switch' @label='Switch' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='maybe' @label='Maybe' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='mute' @label='Mute' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='value' @label='Value' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='repeat' @label='Repeat' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='sequence-euclidean' @label='Euclidean' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='analyst' @label='Guess Key' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='button' @label='Button' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='merge-voices' @label='Merge Voices' @addModule={{this.addModule}} /></li>
+        <li><AddModuleMenuItem @moduleType='plonkmap' @label='PlonkMap' @addModule={{this.addModule}} /></li>
       </ul>
       </div>
     {{/if}}
@@ -46,20 +46,22 @@
 
 <div class="modules" id="modules">
   {{#each patch.modules as |module|}}
-    {{component   module.type
-                  module=module
-                  remove=(action 'removeModule' module)
-                  selected=(action 'moduleSelected' module)
-                  modulePortStartedConnecting=(action 'modulePortStartedConnecting' module)
-                  modulePortFinishedConnecting=(action 'modulePortFinishedConnecting')
-                  startedMoving=(action 'moduleStartedMoving' module)
-                  finishedMoving=(action 'moduleFinishedMoving')
-                  mouseEnterModulePort=(action 'mouseEnterModulePort')
-                  mouseLeaveModulePort=(action 'mouseLeaveModulePort')
-                  portDisconnected=(action 'portDisconnected')
-                  portsChanged=(action 'modulePortsChanged' module)
-                  layoutChanged=(action 'moduleLayoutChanged' module)
-                  savePatch=(action 'savePatch')
-    }}
+    {{#let (component module.type) as |ModuleComponent|}}
+      <ModuleComponent
+        @module={{module}}
+        @remove={{fn this.removeModule module}}
+        @selected={{fn this.moduleSelected module}}
+        @modulePortStartedConnecting={{fn this.modulePortStartedConnecting module}}
+        @modulePortFinishedConnecting={{fn this.modulePortFinishedConnecting module}}
+        @startedMoving={{fn this.moduleStartedMoving module}}
+        @finishedMoving={{this.moduleFinishedMoving}}
+        @mouseEnterModulePort={{this.mouseEnterModulePort}}
+        @mouseLeaveModulePort={{this.mouseLeaveModulePort}}
+        @portDisconnected={{this.portDisconnected}}
+        @portsChanged={{fn this.modulePortsChanged module}}
+        @layoutChanged={{fn moduleLayoutChanged module}}
+        @savePatch={{this.savePatch}}
+      />
+    {{/let}}
   {{/each}}
 </div>

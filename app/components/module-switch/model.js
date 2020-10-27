@@ -22,7 +22,7 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
 
       this.addNumberSetting('input sets', 'inputPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
@@ -49,7 +49,7 @@ export default Module.extend({
   },
 
   getValue() {
-    let switchVal = get(this, 'switchInPort').getValue();
+    let switchVal = this.switchInPort.getValue();
     if (switchVal == null) {
       return null;
     }
@@ -62,11 +62,11 @@ export default Module.extend({
   },
 
   onEventIn(event, port) {
-    let switchVal = get(this, 'switchInPort').getValue();
+    let switchVal = this.switchInPort.getValue();
     let portNumber = parseInt(get(port, 'label'));
     if (switchVal != null && !isNaN(portNumber)) {
       if (switchVal == portNumber) {
-        get(this, 'eventOutPort').sendEvent(event);
+        this.eventOutPort.sendEvent(event);
       }
     }
   }

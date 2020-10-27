@@ -1,6 +1,6 @@
 import { notEmpty } from '@ember/object/computed';
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { computed, action } from '@ember/object';
 
 export default Component.extend({
 
@@ -18,14 +18,9 @@ export default Component.extend({
     return !this.hasSettings && !this.hasPorts;
   }),
 
-  actions: {
-    titleChanged() {
-      this.module.requestSave();
-    },
-
-    addBusConnection(sourcePort, destPort) {
-      this.addBusConnection(sourcePort, destPort);
-    }
+  @action
+  titleChanged() {
+    this.module.requestSave();
   }
 
 });

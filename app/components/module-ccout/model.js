@@ -20,17 +20,17 @@ export default Module.extend({
 
   sendEvent() {
     // check the connection of the 'note' port for the value of the note to play.
-    let value = get(this, 'valueInPort').getValue();
-    let control = get(this, 'controlInPort').getValue();
+    let value = this.valueInPort.getValue();
+    let control = this.controlInPort.getValue();
     if (value != null && control != null) {
-      let channel = get(this, 'channelInPort').getValue();
-      get(this, 'midi').sendCC(control, value, channel);
+      let channel = this.channelInPort.getValue();
+      this.midi.sendCC(control, value, channel);
     }
   },
 
   init() {
     this._super(...arguments);
-    if (get(this, 'isNew')) {
+    if (this.isNew) {
       set(this, 'title', this.name);
 
       // create ports

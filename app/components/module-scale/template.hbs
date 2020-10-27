@@ -1,10 +1,10 @@
 <ModuleLabel @title={{module.title}} />
 
 <div class="module-content">
-{{value-input-array
-  array=module.degrees
-  inputType=module.inputType
-}}
+<ValueInputArray
+  @array={{this.module.degrees}}
+  @inputType={{this.module.inputType}}
+/>
 </div>
 
 <ModulePorts
