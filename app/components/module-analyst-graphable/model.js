@@ -1,9 +1,5 @@
-import DS from 'ember-data';
+import { belongsTo } from '@ember-data/model';
 import ModuleAnalyst from '../module-analyst/model';
-
-const {
-  belongsTo
-} = DS;
 
 export default ModuleAnalyst.extend({
 

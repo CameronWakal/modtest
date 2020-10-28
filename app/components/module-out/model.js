@@ -1,12 +1,7 @@
 import { inject as service } from '@ember/service';
 import { observer, computed, set, get } from '@ember/object';
 import Module from '../module/model';
-import DS from 'ember-data';
-
-const {
-  belongsTo,
-  attr
-} = DS;
+import { belongsTo, attr } from '@ember-data/model';
 
 const noteDuration = 20;
 const latency = 10;

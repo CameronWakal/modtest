@@ -1,11 +1,6 @@
 import { set, get, observer, computed } from '@ember/object';
-import DS from 'ember-data';
+import { belongsTo, attr } from '@ember-data/model';
 import Module from '../module/model';
-
-const {
-  belongsTo,
-  attr
-} = DS;
 
 const inputTypeMenuOptions = ['Number', 'Slider', 'Both', 'Button'];
 

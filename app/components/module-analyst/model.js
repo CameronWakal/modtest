@@ -1,10 +1,6 @@
 import { observer, computed, set, get } from '@ember/object';
-import DS from 'ember-data';
+import { belongsTo } from '@ember-data/model';
 import Module from '../module/model';
-
-const {
-  belongsTo
-} = DS;
 
 /* Module attempts to identify key signature of a series of notes,
  * using the 'CEG Key-Finding Method' as described in the paper

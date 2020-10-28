@@ -1,14 +1,8 @@
 import { bool } from '@ember/object/computed';
 import { get, observer, computed } from '@ember/object';
 import { alias } from '@ember/object/computed';
-import DS from 'ember-data';
+import Model, { belongsTo, attr } from '@ember-data/model';
 import { isEmpty } from '@ember/utils';
-
-const {
-  Model,
-  attr,
-  belongsTo
-} = DS;
 
 export default Model.extend({
   type: 'port', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6

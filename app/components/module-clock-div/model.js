@@ -1,11 +1,7 @@
 import { set, get } from '@ember/object';
 import Module from '../module/model';
-import DS from 'ember-data';
+import { belongsTo } from '@ember-data/model';
 import { mod } from '../../utils/math-util';
-
-const {
-  belongsTo
-} = DS;
 
 export default Module.extend({
 

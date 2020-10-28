@@ -1,11 +1,7 @@
 import { alias } from '@ember/object/computed';
 import { defineProperty, get } from '@ember/object';
-import DS from 'ember-data';
+import { attr } from '@ember-data/model';
 import ModuleSetting from '../module-setting/model';
-
-const {
-  attr
-} = DS;
 
 export default ModuleSetting.extend({
 

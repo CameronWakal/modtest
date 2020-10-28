@@ -1,11 +1,7 @@
 import { inject as service } from '@ember/service';
 import { set, get } from '@ember/object';
 import Module from '../module/model';
-import DS from 'ember-data';
-
-const {
-  belongsTo
-} = DS;
+import { belongsTo } from '@ember-data/model';
 
 export default Module.extend({
 

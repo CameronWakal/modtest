@@ -1,14 +1,7 @@
 import { filterBy } from '@ember/object/computed';
 import { run } from '@ember/runloop';
 import { set, computed } from '@ember/object';
-import DS from 'ember-data';
-
-const {
-  belongsTo,
-  hasMany,
-  attr,
-  Model
-} = DS;
+import Model, { belongsTo, hasMany, attr } from '@ember-data/model';
 
 export default Model.extend({
 

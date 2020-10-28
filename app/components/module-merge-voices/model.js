@@ -1,6 +1,6 @@
 import { set, get, observer } from '@ember/object';
 import Module from '../module/model';
-import DS from 'ember-data';
+import { belongsTo, hasMany, attr } from '@ember-data/model';
 
 /*  This module accepts a number of event and value inputs.
  *  All events are passed through to the event out port, and the value that was paired
@@ -8,12 +8,6 @@ import DS from 'ember-data';
  *  use this to merge together event+value pairs from multiple sources into a single
  *  event and value output, without summing the values as a straight patch connection would.
  */
-
-const {
-  belongsTo,
-  hasMany,
-  attr
-} = DS;
 
 const maxInputs = 16;
 const minInputs = 1;

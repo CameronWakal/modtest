@@ -6,12 +6,8 @@
 */
 
 import { alias } from '@ember/object/computed';
-import DS from 'ember-data';
+import { belongsTo } from '@ember-data/model';
 import Module from '../module/model';
-
-const {
-  belongsTo
-} = DS;
 
 export default Module.extend({
 

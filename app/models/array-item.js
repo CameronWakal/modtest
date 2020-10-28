@@ -1,11 +1,5 @@
 import { observer, computed } from '@ember/object';
-import DS from 'ember-data';
-
-const {
-  Model,
-  attr,
-  belongsTo
-} = DS;
+import Model, { belongsTo, attr } from '@ember-data/model';
 
 export default Model.extend({
 

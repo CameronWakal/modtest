@@ -1,11 +1,6 @@
 import { set, get, observer } from '@ember/object';
-import DS from 'ember-data';
+import { belongsTo, attr } from '@ember-data/model';
 import Module from '../module/model';
-
-const {
-  attr,
-  belongsTo
-} = DS;
 
 export default Module.extend({
 

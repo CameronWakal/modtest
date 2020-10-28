@@ -2,12 +2,7 @@ import { inject as service } from '@ember/service';
 import { equal } from '@ember/object/computed';
 import { observer, computed, set, get } from '@ember/object';
 import Module from '../module/model';
-import DS from 'ember-data';
-
-const {
-  belongsTo,
-  attr
-} = DS;
+import { belongsTo, attr } from '@ember-data/model';
 
 const unitsMenuOptions = ['beats', 'ms'];
 const modeMenuOptions = ['count only', 'gate only', 'count+gate'];

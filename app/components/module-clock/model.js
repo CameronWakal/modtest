@@ -1,12 +1,7 @@
 import { inject as service } from '@ember/service';
 import { set, get, observer } from '@ember/object';
-import DS from 'ember-data';
+import { belongsTo, attr } from '@ember-data/model';
 import Module from '../module/model';
-
-const {
-  belongsTo,
-  attr
-} = DS;
 
 const defaultRes = 4; // ticks per beat
 const defaultTempo = 120;

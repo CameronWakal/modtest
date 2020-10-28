@@ -1,10 +1,4 @@
-import DS from 'ember-data';
-
-const {
-  Model,
-  hasMany,
-  attr
-} = DS;
+import Model, { hasMany, attr } from '@ember-data/model';
 
 export default Model.extend({
   title: attr('string', { defaultValue: 'Untitled Patch' }),

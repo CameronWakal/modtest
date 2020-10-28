@@ -1,10 +1,6 @@
 import { set, get } from '@ember/object';
-import DS from 'ember-data';
+import { belongsTo } from '@ember-data/model';
 import ModuleSequence from '../module-sequence/model';
-
-const {
-  belongsTo
-} = DS;
 
 export default ModuleSequence.extend({
 

@@ -1,6 +1,7 @@
 import { set, get, observer, computed } from '@ember/object';
 import Module from '../module/model';
-import DS from 'ember-data';
+import { belongsTo, hasMany, attr } from '@ember-data/model';
+
 
 /*  Convenience utility to map triggers to sounds in an Intellijel Plonk eurorack module,
  *  via midi->cv.
@@ -12,12 +13,6 @@ import DS from 'ember-data';
  *  the semitone and voltage range of the midi interface, and the number of
  *  voices mapped on the plonk, are configurable here via module settings.
  */
-
-const {
-  belongsTo,
-  hasMany,
-  attr
-} = DS;
 
 const maxInputs = 16;
 const minInputs = 1;

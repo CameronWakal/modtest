@@ -1,15 +1,11 @@
 import { set, get } from '@ember/object';
 import Module from '../module/model';
-import DS from 'ember-data';
+import { belongsTo } from '@ember-data/model';
 
 /*  This module accepts a number of event and value inputs, and a single 'switch' value input.
  *  The value of the switch input determines which event and value ports will be patched
  *  through to the outputs. The number of input ports can be configured via a module setting.
  */
-
-const {
-  belongsTo
-} = DS;
 
 export default Module.extend({
 

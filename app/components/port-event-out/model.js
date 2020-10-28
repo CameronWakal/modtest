@@ -1,9 +1,5 @@
-import DS from 'ember-data';
+import { hasMany } from '@ember-data/model';
 import Port from '../port/model';
-
-const {
-  hasMany
-} = DS;
 
 export default Port.extend({
 

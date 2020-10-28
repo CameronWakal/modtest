@@ -1,8 +1,6 @@
 import { filterBy, union } from '@ember/object/computed';
 import { set, observer } from '@ember/object';
-import DS from 'ember-data';
-
-const { Model, belongsTo, hasMany, attr } = DS;
+import Model, { belongsTo, hasMany, attr } from '@ember-data/model';
 
 export default Model.extend({
 
