@@ -1,13 +1,12 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import { action, set } from '@ember/object';
 
-export default Component.extend({
-  classNames: ['module-setting', 'module-setting-menu'],
+export default class ModuleSettingMenu extends Component {
 
   @action
   settingChanged(event) {
     let selectedIndex = event.target.selectedIndex;
-    set(this, 'setting.value', this.setting.items[selectedIndex]);
+    set(this, 'args.setting.value', this.args.setting.items[selectedIndex]);
   }
 
-});
+}

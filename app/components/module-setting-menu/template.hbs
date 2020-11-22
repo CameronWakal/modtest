@@ -1,2 +1,4 @@
-<span class="setting-label">{{setting.label}}</span>
-<div class="select-menu-wrapper"><SelectMenu @items={{setting.items}} @selectedItem={{setting.value}} @change={{this.settingChanged}} /></div>
+<div class="module-setting module-setting-menu">
+  <span class="setting-label">{{@setting.label}}</span>
+  <div class="select-menu-wrapper"><SelectMenu @items={{@setting.items}} @selectedItem={{@setting.value}} @change={{this.settingChanged}} /></div>
+</div>
