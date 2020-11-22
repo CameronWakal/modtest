@@ -3,11 +3,11 @@
   <ToggleButton
     @label='Start'
     @isOn={{this.isStarted}}
-    {{on 'click' this.start}}
+    @pressed={{this.start}}
   /><ToggleButton
     @label='Stop'
     @isOn={{not this.isStarted}}
-    {{on 'click' this.stop}}
+    @pressed={{this.stop}}
   />
 </div>
 <ModulePorts

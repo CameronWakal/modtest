@@ -1,7 +1,11 @@
 <ModuleLabel @title={{module.title}} />
 <div class="module-content">
   {{#each module.displayedKeyNames as |keyName index|~}}
-    <ToggleButton @label={{keyName}} @isOn={{is-equal keyName this.module.selectedKeyName}} {{on 'click' (fn this.selectKey index)}}/>
+    <ToggleButton
+      @label={{keyName}}
+      @isOn={{is-equal keyName this.module.selectedKeyName}}
+      @pressed={{fn this.selectKey index}}
+    />
   {{~/each}}
 </div>
 <ModulePorts
