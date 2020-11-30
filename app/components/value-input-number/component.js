@@ -1,5 +1,6 @@
-import TextField from '@ember/component/text-field';
-import { set, get, computed, observer } from '@ember/object';
+import Component from '@glimmer/component';
+import { set, get, computed, observer, action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 // from template:
 // boundValue – external, persisted value, as opposed to current <input> value
@@ -7,37 +8,23 @@ import { set, get, computed, observer } from '@ember/object';
 // minValue
 // maxValue
 
-export default TextField.extend({
+export default class ValueInputNumber extends Component {
 
-  classNames: ['value-input-number'],
-  classNameBindings: ['isPending:pending'],
+  @tracked value;
+  @tracked isPending = false;
 
-  isPending: computed('value', 'boundValue', function() {
-    let value = parseInt(this.value);
-    if (isNaN(value)) {
-      value = null;
-    }
-    return value !== this.boundValue;
-  }),
+  constructor() {
+    super(...arguments);
+    this.value = this.args.boundValue;
+  };
 
-  onBoundValueChanged: observer('boundValue', function() {
-    this.resetValue();
-  }),
+  @action
+  boundValueChanged(element, [boundValue]) {
+    this.updateValue(boundValue);
+  };
 
-  didReceiveAttrs() {
-    this.resetValue();
-  },
-
-  click() {
-    this.element.select();
-  },
-
-  focusOut() {
-    this.updateValue();
-  },
-
-  updateValue() {
-    let value = parseInt(this.value);
+  updateValue(inputValue) {
+    let value = parseInt(inputValue);
 
     if (isNaN(value)) {
       // if new value is NaN, set boundValue to null or boundValue,
@@ -56,51 +43,74 @@ export default TextField.extend({
         value = Math.min(this.maxValue, value);
       }
     }
-    set(this, 'value', value);
-    set(this, 'boundValue', value);
-  },
+
+    this.value = value;
+    if( this.value !== this.args.boundValue) {
+      this.isPending = true;
+    }
+  };
+
+  commitValue() {
+    this.args.valueChanged(this.value);
+    this.isPending = false;
+  };
 
   resetValue() {
-    let value = this.boundValue;
-    set(this, 'value', value);
-  },
+    this.value = this.args.boundValue;
+    this.isPending = false;
+  };
 
+  click(event) {
+    event.target.select();
+  };
+
+  @action
+  focusOut() {
+    this.commitValue();
+  };
+
+  @action
+  input(event) {
+    this.updateValue(event.target.value);
+  };
+
+  @action
   keyUp(event) {
 
     switch (event.keyCode) {
       case 13: // enter/return
-        this.element.select();
+        event.target.select();
         break;
       case 27: // escape
-        this.element.select();
+        event.target.select();
         break;
       case 38: // up arrow
-        this.element.select();
+        event.target.select();
         break;
       case 40: // down arrow
-        this.element.select();
-
+        event.target.select();
     }
-  },
+  };
 
+  @action
   keyDown(event) {
     console.log('keycode:', event.keyCode);
 
     switch (event.keyCode) {
       case 13: // enter/return
-        this.updateValue();
+        this.commitValue();
         break;
       case 27: // escape
         this.resetValue();
         break;
       case 38: // up arrow
-        this.incrementProperty('value');
-        this.updateValue();
+        this.updateValue(this.value + 1);
+        this.commitValue();
         break;
       case 40: // down arrow
-        this.decrementProperty('value');
-        this.updateValue();
+        this.updateValue(this.value - 1);
+        this.commitValue();
     }
   }
 
-});
+}

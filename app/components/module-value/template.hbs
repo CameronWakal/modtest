@@ -1,9 +1,12 @@
-<ModuleLabel @title={{module.title}} />
+<ModuleLabel @title={{this.module.title}} />
 <div class="module-content">
-<ValueInputNumber @boundValue={{this.module.value}}/>
+<ValueInputNumber
+  @boundValue={{this.module.value}}
+  @valueChanged={{this.valueInputChanged}}
+/>
 </div>
 <ModulePorts
-  @portGroups={{module.portGroups}}
+  @portGroups={{this.module.portGroups}}
   @portStartedConnecting={{this.portStartedConnecting}}
   @portFinishedConnecting={{this.portFinishedConnecting}}
   @mouseEnterPort={{this.mouseEnterPort}}
