@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import { set, get, computed, observer, action } from '@ember/object';
+import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 // from template:
