@@ -4,12 +4,13 @@
 </label>
 {{#unless port.isEnabled}}
   {{#if portIsValueIn}}
-    {{value-input-number
-      boundValue=port.disabledValue
-      canBeEmpty=port.canBeEmpty
-      minValue=port.minValue
-      maxValue=port.maxValue
-    }}
+    <ValueInputNumber
+      @boundValue={{this.port.disabledValue}}
+      @canBeEmpty={{this.port.canBeEmpty}}
+      @minValue={{this.port.minValue}}
+      @maxValue={{this.port.maxValue}}
+      @valueChanged={{this.valueInputChanged}}
+    />
   {{else if port.isEventPort}}
     {{port-setting-bus-menu
       busses=port.module.patch.busses

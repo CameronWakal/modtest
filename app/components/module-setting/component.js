@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed, get } from '@ember/object';
+import { computed, get, action } from '@ember/object';
 
 export default Component.extend({
   classNames: ['module-setting'],
@@ -13,5 +13,11 @@ export default Component.extend({
       title += `max:${get(this, 'setting.maxValue')} `;
     }
     return title.trim();
-  })
+  }),
+
+  @action
+  valueInputChanged(newValue) {
+    set(this, 'setting.value', newValue);
+  }
+
 });

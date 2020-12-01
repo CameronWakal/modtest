@@ -1,6 +1,7 @@
 <span class="setting-label">{{setting.label}}</span>
-{{value-input-number
-  boundValue=setting.value
-  minValue=setting.minValue
-  maxValue=setting.maxValue
-}}
+<ValueInputNumber
+  @boundValue={{this.setting.value}}
+  @minValue={{this.setting.minValue}}
+  @maxValue={{this.setting.maxValue}}
+  @valueChanged={{this.valueInputChanged}}
+/>

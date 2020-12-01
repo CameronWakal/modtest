@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed, get } from '@ember/object';
+import { computed, get, action, set } from '@ember/object';
 import { equal } from '@ember/object/computed';
 
 export default Component.extend({
@@ -23,6 +23,11 @@ export default Component.extend({
     }
     return get(this, 'port.connections.firstObject.module');
   }),
+
+  @action
+  valueInputChanged(newValue) {
+    set(this, 'port.disabledValue', newValue);
+  },
 
   actions: {
     disconnectFromBus() {
