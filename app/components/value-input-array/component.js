@@ -1,4 +1,5 @@
 import { equal, or } from '@ember/object/computed';
+import { action, set } from '@ember/object';
 import Component from '@ember/component';
 
 // renders a series of value inputs.
@@ -15,6 +16,11 @@ export default Component.extend({
   isTypeButton: equal('inputType', 'Button'),
 
   shouldIncludeNumber: or('isTypeNumber', 'isTypeBoth'),
-  shouldIncludeSlider: or('isTypeSlider', 'isTypeBoth')
+  shouldIncludeSlider: or('isTypeSlider', 'isTypeBoth'),
+
+  @action
+  itemValueChanged(item, newValue) {
+    set(item, 'value', newValue);
+  }
 
 });

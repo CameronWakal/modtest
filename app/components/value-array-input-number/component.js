@@ -1,4 +1,4 @@
-import { get } from '@ember/object';
+import { get, action } from '@ember/object';
 import ValueInputNumber from '../value-input-number/component';
 
 // like ValueInputNumber, but meant to be used as one of many inputs in an array:
@@ -6,79 +6,84 @@ import ValueInputNumber from '../value-input-number/component';
 // - supports shortcuts to shift or modify all items in the array
 // - supports key events to navigate focus between items in the array
 
-export default ValueInputNumber.extend({
+export default class ValueArrayInputNumber extends ValueInputNumber {
 
-  classNames: ['value-array-input-number'],
-  classNameBindings: ['item.isCurrentItem:current'],
+  //classNameBindings: ['item.isCurrentItem:current'],
 
-  selectNext() {
-    if (this.element.nextElementSibling) {
-      this.element.nextElementSibling.focus();
+  selectNext(currentElement) {
+    if (currentElement.nextElementSibling) {
+      currentElement.nextElementSibling.focus();
     } else {
-      this.element.parentElement.firstElementChild.focus();
+      currentElement.parentElement.firstElementChild.focus();
     }
-  },
+  };
 
-  selectPrevious() {
-    if (this.element.previousElementSibling) {
-      this.element.previousElementSibling.focus();
+  selectPrevious(currentElement) {
+    if (currentElement.previousElementSibling) {
+      console.log('prevsiblingvalue', currentElement.previousElementSibling.value);
+      currentElement.previousElementSibling.focus();
     } else {
-      this.element.parentElement.lastElementChild.focus();
+      currentElement.parentElement.lastElementChild.focus();
     }
-  },
+  };
 
+  @action
   keyUp(event) {
 
     switch (event.keyCode) {
       case 37: // left arrow
-        this.element.select();
+        event.target.select();
         break;
       case 39: // right arrow
-        this.element.select();
+        event.target.select();
         break;
       default:
-        this._super(event);
+        super.keyUp(event);
     }
-  },
+  };
 
+  @action
   keyDown(event) {
 
     switch (event.keyCode) {
       case 37: // left arrow
         if (event.shiftKey) {
-          this.updateValue();
-          get(this, 'item.array').shiftForward();
+          console.log("items1", get(this, 'args.item.array.items').mapBy('value'));
+          this.commitValue();
+          get(this, 'args.item.array').shiftForward();
+          console.log("items3", get(this, 'args.item.array.items').mapBy('value'));
         }
-        this.selectPrevious();
+        this.selectPrevious(event.target);
+        console.log("items4", get(this, 'args.item.array.items').mapBy('value'));
         break;
       case 39: // right arrow
         if (event.shiftKey) {
-          this.updateValue();
-          get(this, 'item.array').shiftBackward();
+          this.commitValue();
+          get(this, 'args.item.array').shiftBackward();
         }
-        this.selectNext();
+        this.selectNext(event.target);
         break;
       case 38: // up arrow
         if (event.shiftKey) {
-          this.updateValue();
-          get(this, 'item.array').incrementAll();
+          this.commitValue();
+          get(this, 'args.item.array').incrementAll();
         } else {
-          this.incrementProperty('value');
-          this.updateValue();
+          this.updateValue(this.value + 1);
+          this.commitValue();
         }
         break;
       case 40: // down arrow
         if (event.shiftKey) {
-          this.updateValue();
-          get(this, 'item.array').decrementAll();
+          this.commitValue();
+          get(this, 'args.item.array').decrementAll();
         } else {
-          this.decrementProperty('value');
-          this.updateValue();
+          this.updateValue(this.value - 1);
+          this.commitValue();
         }
         break;
       default:
-        this._super(event);
+        super.keyDown(event);
     }
-  }
+  };
 
-});
+}

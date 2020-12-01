@@ -1,0 +1,10 @@
+<input type="text"
+  class="value-input-number value-array-input-number {{if this.isPending 'pending'}}"
+  value={{this.value}}
+  {{did-update this.boundValueChanged @boundValue}}
+  {{on "click" this.click}}
+  {{on "focusout" this.focusOut}}
+  {{on "keyup" this.keyUp}}
+  {{on "keydown" this.keyDown}}
+  {{on "input" this.input}}
+/>

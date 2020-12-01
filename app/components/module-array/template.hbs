@@ -1,4 +1,4 @@
-<div class="module-header"><ModuleLabel @title={{module.title}} /></div>
+<div class="module-header"><ModuleLabel @title={{this.module.title}} /></div>
 <div class="module-content">
 <ValueInputArray
   @array={{this.module.steps}}
@@ -8,7 +8,7 @@
 </div>
 
 <ModulePorts
-  @portGroups={{module.portGroups}}
+  @portGroups={{this.module.portGroups}}
   @portStartedConnecting={{this.portStartedConnecting}}
   @portFinishedConnecting={{this.portFinishedConnecting}}
   @mouseEnterPort={{this.mouseEnterPort}}
