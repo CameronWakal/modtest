@@ -1,8 +1,8 @@
-
+@use 'sass:color';
 
 //BASE PALETTE
-$color-neutral-dark: saturate(darken(#282c34, 4%), 1%);
-$color-neutral-dim: desaturate(lighten($color-neutral-dark, 25%), 50%);
+$color-neutral-dark: color.adjust(color.adjust(#282c34, $lightness: -4%), $saturation: 1%);
+$color-neutral-dim: color.adjust(color.adjust($color-neutral-dark, $lightness: 25%), $saturation: -50%);
 $color-neutral-bright: #fff;
 $color-cool-bright: #ffd37b;
 $color-warm-bright: #ff917b;
@@ -18,10 +18,10 @@ $color-border-dim: rgba($color-neutral-bright, .3);
 $color-border-bright: rgba($color-neutral-bright, .3);
 
 //default text color:
-$color-text: lighten($color-neutral-dark, 60%);
+$color-text: color.adjust($color-neutral-dark, $lightness: 60%);
 
 //default button background:
-$color-button: rgba(desaturate(lighten($color-neutral-dark, 40%), 0%), .8);
+$color-button: rgba(color.adjust(color.adjust($color-neutral-dark, $lightness: 40%), $saturation: 0%), .8);
 
 //subtle background color for faders, etc.:
 $color-control: rgba($color-neutral-dim, .1);
@@ -30,10 +30,10 @@ $color-control: rgba($color-neutral-dim, .1);
 $color-control-current: rgba($color-neutral-dim, .15);
 
 //transparent module background:
-$color-module-background: rgba(desaturate(lighten($color-neutral-dark, 6%), 0%), .8);
-$color-selected-module-background: rgba(desaturate(lighten($color-neutral-dark, 20%), 0%), .8);
-$color-sidebar-background: rgba(desaturate(darken($color-neutral-dark, 1%), 0%), .8);
-$color-selected-input-background: rgba(desaturate(lighten($color-neutral-dark, 40%), 0%), .8);
+$color-module-background: rgba(color.adjust(color.adjust($color-neutral-dark, $lightness: 6%), $saturation: 0%), .8);
+$color-selected-module-background: rgba(color.adjust(color.adjust($color-neutral-dark, $lightness: 20%), $saturation: 0%), .8);
+$color-sidebar-background: rgba(color.adjust(color.adjust($color-neutral-dark, $lightness: -1%), $saturation: 0%), .8);
+$color-selected-input-background: rgba(color.adjust(color.adjust($color-neutral-dark, $lightness: 40%), $saturation: 0%), .8);
 
 $color-input-background: rgba($color-neutral-dark, .8);
 $color-fade-background-current: rgba($color-input-background, .4);

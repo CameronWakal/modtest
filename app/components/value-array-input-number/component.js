@@ -1,84 +1,99 @@
-import { get } from '@ember/object';
-import ValueInputNumber from '../value-input-number/component';
+import { action } from '@ember/object';
+import { set } from '@ember/object';
+import BaseValueInputComponent from '../base-value-input/component';
 
-// like ValueInputNumber, but meant to be used as one of many inputs in an array:
-// - can be styled based on whether it's the currently active item in the series
-// - supports shortcuts to shift or modify all items in the array
-// - supports key events to navigate focus between items in the array
-
-export default ValueInputNumber.extend({
-
-  classNames: ['value-array-input-number'],
-  classNameBindings: ['item.isCurrentItem:current'],
-
+/**
+ * Numeric input for use in arrays. Extends BaseValueInputComponent.
+ * Additional features:
+ * - Styled based on whether it's the currently active item
+ * - Arrow key navigation between items in the array
+ * - Shift+arrow shortcuts for array-wide operations
+ */
+export default class ValueArrayInputNumberComponent extends BaseValueInputComponent {
   selectNext() {
-    if (this.element.nextElementSibling) {
-      this.element.nextElementSibling.focus();
-    } else {
-      this.element.parentElement.firstElementChild.focus();
+    if (this._inputElement?.nextElementSibling) {
+      this._inputElement.nextElementSibling.focus();
+    } else if (this._inputElement?.parentElement?.firstElementChild) {
+      this._inputElement.parentElement.firstElementChild.focus();
     }
-  },
+  }
 
   selectPrevious() {
-    if (this.element.previousElementSibling) {
-      this.element.previousElementSibling.focus();
-    } else {
-      this.element.parentElement.lastElementChild.focus();
+    if (this._inputElement?.previousElementSibling) {
+      this._inputElement.previousElementSibling.focus();
+    } else if (this._inputElement?.parentElement?.lastElementChild) {
+      this._inputElement.parentElement.lastElementChild.focus();
     }
-  },
+  }
 
-  keyUp(event) {
-
+  @action
+  handleKeyUp(event) {
     switch (event.keyCode) {
+      case 13: // enter/return
+      case 27: // escape
       case 37: // left arrow
-        this.element.select();
-        break;
+      case 38: // up arrow
       case 39: // right arrow
-        this.element.select();
+      case 40: // down arrow
+        this._inputElement?.select();
         break;
-      default:
-        this._super(event);
     }
-  },
+  }
 
-  keyDown(event) {
+  @action
+  handleKeyDown(event) {
+    console.log('keycode:', event.keyCode);
 
     switch (event.keyCode) {
+      case 13: // enter/return
+        this.updateValue();
+        break;
+      case 27: // escape
+        this.resetValue();
+        break;
       case 37: // left arrow
         if (event.shiftKey) {
           this.updateValue();
-          get(this, 'item.array').shiftForward();
+          this.args.item?.array?.shiftForward();
         }
         this.selectPrevious();
         break;
       case 39: // right arrow
         if (event.shiftKey) {
           this.updateValue();
-          get(this, 'item.array').shiftBackward();
+          this.args.item?.array?.shiftBackward();
         }
         this.selectNext();
         break;
       case 38: // up arrow
         if (event.shiftKey) {
           this.updateValue();
-          get(this, 'item.array').incrementAll();
+          this.args.item?.array?.incrementAll();
         } else {
-          this.incrementProperty('value');
+          this.value = (parseInt(this.value) || 0) + 1;
           this.updateValue();
         }
         break;
       case 40: // down arrow
         if (event.shiftKey) {
           this.updateValue();
-          get(this, 'item.array').decrementAll();
+          this.args.item?.array?.decrementAll();
         } else {
-          this.decrementProperty('value');
+          this.value = (parseInt(this.value) || 0) - 1;
           this.updateValue();
         }
         break;
-      default:
-        this._super(event);
     }
   }
 
-});
+  // Override to update the item's value directly
+  commitValue(value) {
+    if (this.args.item) {
+      set(this.args.item, 'value', value);
+    } else if (this.args.onChange) {
+      this.args.onChange(value);
+    } else {
+      set(this.args, 'boundValue', value);
+    }
+  }
+}

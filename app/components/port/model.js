@@ -9,7 +9,7 @@ export default Model.extend({
 
   label: attr('string'),
   isEnabled: attr('boolean', { defaultValue: true }),
-  portGroup: belongsTo('portGroup', { polymorphic: true, async: false, inverse: null }),
+  portGroup: belongsTo('port-group', { polymorphic: true, async: false, inverse: null }),
   module: alias('portGroup.module'),
 
   isConnected: bool('connections.length'),
@@ -54,9 +54,13 @@ export default Model.extend({
 
   // remove all connections
   disconnect() {
-    let connections = this.connections.toArray();
+    let connections = this.connections.slice();
     connections.forEach((connection) => {
-      get(connection, 'connections').removeObject(this);
+      const connConnections = get(connection, 'connections');
+      const index = connConnections.indexOf(this);
+      if (index !== -1) {
+        connConnections.splice(index, 1);
+      }
       console.log('port.disconnect() requestSave()');
       get(connection, 'module').requestSave();
     }, this);

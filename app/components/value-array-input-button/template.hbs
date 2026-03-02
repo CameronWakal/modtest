@@ -1,1 +1,5 @@
-{{yield}}
+<button
+  type="button"
+  class="value-array-input-button {{if this.isOn 'on'}} {{if this.isAccented 'accent'}} {{if @item.isCurrentItem 'current'}}"
+  {{on "click" this.handleClick}}
+>{{yield}}</button>

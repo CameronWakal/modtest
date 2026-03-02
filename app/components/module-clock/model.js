@@ -31,10 +31,10 @@ export default Module.extend({
 
   sourceMenuValues,
 
-  tempoInPort: belongsTo('port-value-in', { async: false }),
-  resInPort: belongsTo('port-value-in', { async: false }),
-  resetOutPort: belongsTo('port-event-out', { async: false }),
-  trigOutPort: belongsTo('port-event-out', { async: false }),
+  tempoInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  resInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  resetOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
+  trigOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
   source: attr('string', { defaultValue: 'Internal' }),
 
   onSourceChanged: observer('source', function() {
@@ -54,7 +54,7 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
 
       this.addMenuSetting('Source', 'source', 'sourceMenuValues', this);

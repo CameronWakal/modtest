@@ -1,5 +1,4 @@
-import ModuleGenericComponent from '../module/component';
+import Component from '@glimmer/component';
 
-export default ModuleGenericComponent.extend({
-
-});
+export default class ModuleBusComponent extends Component {
+}

@@ -8,9 +8,10 @@
   @connectingFromPort={{this.connectingFromPort}}
 />
 
-{{#ember-wormhole to="settings-container"}}
+{{#if this.settingsContainer}}
+{{#in-element this.settingsContainer}}
   <div>
-    {{#if selectedModule}}
+    {{#if this.selectedModule}}
       <ModuleSettings @module={{this.selectedModule}} @addBusConnection={{this.addBusConnection}} />
     {{else}}
       <PatchSettings
@@ -42,10 +43,11 @@
       </div>
     {{/if}}
   </div>
-{{/ember-wormhole}}
+{{/in-element}}
+{{/if}}
 
 <div class="modules" id="modules">
-  {{#each patch.modules as |module|}}
+  {{#each this.patch.modules as |module|}}
     {{#let (component module.type) as |ModuleComponent|}}
       <ModuleComponent
         @module={{module}}
@@ -59,7 +61,7 @@
         @mouseLeaveModulePort={{this.mouseLeaveModulePort}}
         @portDisconnected={{this.portDisconnected}}
         @portsChanged={{fn this.modulePortsChanged module}}
-        @layoutChanged={{fn moduleLayoutChanged module}}
+        @layoutChanged={{fn this.moduleLayoutChanged module}}
         @savePatch={{this.savePatch}}
       />
     {{/let}}

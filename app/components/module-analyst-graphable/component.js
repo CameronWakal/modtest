@@ -1,7 +1,5 @@
-import ModuleAnalyst from '../module-analyst/component';
+import ModuleAnalystComponent from '../module-analyst/component';
+import { action } from '@ember/object';
 
-export default ModuleAnalyst.extend({
-
-  classNames: ['module-analyst-graphable']
-
-});
+export default class ModuleAnalystGraphableComponent extends ModuleAnalystComponent {
+}

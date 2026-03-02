@@ -1,17 +1,14 @@
-import Component from '@ember/component';
-import { computed, get } from '@ember/object';
+import Component from '@glimmer/component';
 
-export default Component.extend({
-  classNames: ['module-setting'],
-  attributeBindings: ['title'],
-  title: computed('setting.{minValue,maxValue,canBeEmpty}', function() {
+export default class ModuleSettingComponent extends Component {
+  get titleAttribute() {
     let title = '';
-    if (get(this, 'setting.minValue') != null) {
-      title += `min:${get(this, 'setting.minValue')} `;
+    if (this.args.setting?.minValue != null) {
+      title += `min:${this.args.setting.minValue} `;
     }
-    if (get(this, 'setting.maxValue') != null) {
-      title += `max:${get(this, 'setting.maxValue')} `;
+    if (this.args.setting?.maxValue != null) {
+      title += `max:${this.args.setting.maxValue} `;
     }
     return title.trim();
-  })
-});
+  }
+}

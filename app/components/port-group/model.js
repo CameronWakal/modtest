@@ -10,9 +10,9 @@ export default Model.extend({
   minSets: attr('number', { defaultValue: 0 }),
   maxSets: attr('number', { defaultValue: 0 }),
 
-  module: belongsTo('module', { polymorphic: true, async: false }),
-  basePorts: hasMany('port', { polymorphic: true, async: false }),
-  expansionPorts: hasMany('port', { polymorphic: true, async: false }),
+  module: belongsTo('module', { polymorphic: true, async: false, inverse: null }),
+  basePorts: hasMany('port', { polymorphic: true, async: false, inverse: null }),
+  expansionPorts: hasMany('port', { polymorphic: true, async: false, inverse: null }),
   ports: union('basePorts', 'expansionPorts'),
   eventOutPorts: filterBy('ports', 'type', 'port-event-out'),
   eventInPorts: filterBy('ports', 'type', 'port-event-in'),
@@ -21,7 +21,9 @@ export default Model.extend({
   enabledPorts: filterBy('ports', 'isEnabled', true),
 
   addPort(port) {
-    this.basePorts.pushObject(port);
+    this.basePorts.push(port);
+    // Notify that ports changed so dependent computed properties update
+    this.notifyPropertyChange('basePorts');
   },
 
   onExpansionPortSetsCountChanged: observer('portSetsCount', function() {
@@ -30,6 +32,7 @@ export default Model.extend({
     let change = newSetsCount - currentSetsCount;
     if (change > 0) {
       this._addExpansionSets(change);
+      this.module.requestSave();
     } else if (change < 0) {
       this._removeExpansionSets(change * -1);
     }
@@ -42,12 +45,12 @@ export default Model.extend({
 
     for (let i = currentSetsCount; i < currentSetsCount + count; i++) {
       for (let j = 0; j < setSize; j++) {
-        basePort = this.basePorts.objectAt(j);
+        basePort = this.basePorts.at(j);
         basePortLabel = basePort.label.split('0')[0];
         port = basePort.copy();
 
         set(port, 'label', basePortLabel + i);
-        this.expansionPorts.pushObject(port);
+        this.expansionPorts.push(port);
       }
     }
   },
@@ -59,9 +62,9 @@ export default Model.extend({
 
     for (let i = currentSetsCount; i > currentSetsCount - count; i--) {
       for (let j = 0; j < setSize; j++) {
-        port = this.expansionPorts.popObject();
+        port = this.expansionPorts.pop();
         port.disconnect();
-        port.destroyRecord();
+        this.store.unloadRecord(port);
       }
     }
     this.module.requestSave();

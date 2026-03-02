@@ -1,6 +1,6 @@
-import { set, get, observer } from '@ember/object';
+import { set, get, computed } from '@ember/object';
 import Module from '../module/model';
-import { belongsTo, hasMany, attr } from '@ember-data/model';
+import { belongsTo } from '@ember-data/model';
 
 /*  This module accepts a number of event and value inputs.
  *  All events are passed through to the event out port, and the value that was paired
@@ -8,9 +8,6 @@ import { belongsTo, hasMany, attr } from '@ember-data/model';
  *  use this to merge together event+value pairs from multiple sources into a single
  *  event and value output, without summing the values as a straight patch connection would.
  */
-
-const maxInputs = 16;
-const minInputs = 1;
 
 export default Module.extend({
 
@@ -20,65 +17,45 @@ export default Module.extend({
   // a value in port is selected when its counterpart event port receives an event.
   selectedValueInPort: null,
 
-  inputPortsCount: attr('number', { defaultValue: 2 }),
+  inputPortsGroup: belongsTo('port-group', { async: false, inverse: null }),
+  eventOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
 
-  valueInPorts: hasMany('port-value-in', { async: false }),
-  eventInPorts: hasMany('port-event-in', { async: false }),
-  eventOutPort: belongsTo('port-event-out', { async: false }),
-
-  onImportPortsCountChanged: observer('inputPortsCount', function() {
-    if (this.hasDirtyAttributes) {
-      let currentCount = get(this, 'valueInPorts.length');
-      let newCount = Math.min(Math.max(this.inputPortsCount, minInputs), maxInputs);
-      let change = newCount - currentCount;
-      if (change > 0) {
-        this._addInputPorts(change);
-      } else if (change < 0) {
-        this._removeInputPorts(change * -1);
-      }
-      this.requestSave();
-    }
+  // Get numbered ports from the input port group, sorted by label
+  numberedValueInPorts: computed('inputPortsGroup.valueInPorts.@each.label', function() {
+    if (!this.inputPortsGroup) return [];
+    return this.inputPortsGroup.valueInPorts
+      .slice()
+      .sort((a, b) => parseInt(a.label) - parseInt(b.label));
   }),
 
-  _addInputPorts(count) {
-    let port;
-    let currentCount = get(this, 'valueInPorts.length');
-    for (let i = 0; i < count; i++) {
-      port = this.addValueInPortWithoutAssignment(currentCount + i, { canBeEmpty: true });
-      this.valueInPorts.pushObject(port);
-      port = this.addEventInPort(currentCount + i, 'onEventIn', true);
-      this.eventInPorts.pushObject(port);
-    }
-  },
-
-  _removeInputPorts(count) {
-    let port;
-    for (let i = 0; i < count; i++) {
-      port = this.valueInPorts.popObject();
-      this.ports.removeObject(port);
-      port.disconnect();
-      port.destroyRecord();
-      port = this.eventInPorts.popObject();
-      this.ports.removeObject(port);
-      port.disconnect();
-      port.destroyRecord();
-    }
-  },
+  numberedEventInPorts: computed('inputPortsGroup.eventInPorts.@each.label', function() {
+    if (!this.inputPortsGroup) return [];
+    return this.inputPortsGroup.eventInPorts
+      .slice()
+      .sort((a, b) => parseInt(a.label) - parseInt(b.label));
+  }),
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
 
-      this.addNumberSetting('Inputs', 'inputPortsCount', this, { minValue: 1, maxValue: 8 });
-
+      // Output ports in the default port group
       this.addValueOutPort('out', 'getValue', true);
       this.addEventOutPort('out', 'eventOutPort', true);
 
-      // add array of input ports
-      this._addInputPorts(this.inputPortsCount);
+      // Expandable input port group
+      let inputGroup = this.addPortGroup({ minSets: 1, maxSets: 8 });
+      set(this, 'inputPortsGroup', inputGroup);
 
-      console.log('module-merge-voices.didCreate() requestSave()');
+      // Base input ports (labeled '0', expansion will be '1', '2', etc.)
+      this.addValueInPortWithoutAssignment('0', { canBeEmpty: true });
+      this.addEventInPort('0', 'onEventIn', true);
+
+      // Setting to control number of input pairs
+      this.addNumberSetting('Inputs', 'inputPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 8 });
+      set(inputGroup, 'portSetsCount', 2);
+
       this.requestSave();
     }
   },
@@ -93,11 +70,12 @@ export default Module.extend({
   onEventIn(event, port) {
     let portNumber = parseInt(get(port, 'label'));
     if (!isNaN(portNumber)) {
+      let ports = this.numberedValueInPorts;
+      this.selectedValueInPort = ports[portNumber];
 
-      let ports = this.valueInPorts;
-      this.selectedValueInPort = ports.objectAt(portNumber);
-
-      this.eventOutPort.sendEvent(event);
+      if (this.eventOutPort) {
+        this.eventOutPort.sendEvent(event);
+      }
     }
   }
 

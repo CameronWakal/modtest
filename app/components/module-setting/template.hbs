@@ -1,6 +1,10 @@
-<span class="setting-label">{{setting.label}}</span>
-{{value-input-number
-  boundValue=setting.value
-  minValue=setting.minValue
-  maxValue=setting.maxValue
-}}
+<div class="module-setting" title={{this.titleAttribute}}>
+  <span class="setting-label">{{@setting.label}}</span>
+  <ValueInputNumber
+    @boundValue={{@setting.value}}
+    @minValue={{@setting.minValue}}
+    @maxValue={{@setting.maxValue}}
+    @target={{@setting}}
+    @property="value"
+  />
+</div>

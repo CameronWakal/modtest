@@ -1,19 +1,20 @@
 <label class="setting-label">
-  {{input type="checkbox" checked=port.isEnabled}}
-  {{labelWithType}}
+  {{input type="checkbox" checked=this.port.isEnabled}}
+  {{this.labelWithType}}
 </label>
-{{#unless port.isEnabled}}
-  {{#if portIsValueIn}}
-    {{value-input-number
-      boundValue=port.disabledValue
-      canBeEmpty=port.canBeEmpty
-      minValue=port.minValue
-      maxValue=port.maxValue
-    }}
-  {{else if port.isEventPort}}
+{{#unless this.port.isEnabled}}
+  {{#if this.portIsValueIn}}
+    <ValueInputNumber
+      @boundValue={{this.port.disabledValue}}
+      @canBeEmpty={{this.port.canBeEmpty}}
+      @minValue={{this.port.minValue}}
+      @maxValue={{this.port.maxValue}}
+      @onChange={{action this.updateDisabledValue}}
+    />
+  {{else if this.port.isEventPort}}
     {{port-setting-bus-menu
-      busses=port.module.patch.busses
-      connectedBus=connectedBus
+      busses=this.port.module.patch.busses
+      connectedBus=this.connectedBus
       disconnectFromBus=(action 'disconnectFromBus')
       connectToBus=(action 'connectToBus')
     }}

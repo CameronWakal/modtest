@@ -1,11 +1,4 @@
-import { alias } from '@ember/object/computed';
-import ModuleGenericComponent from '../module/component';
+import Component from '@glimmer/component';
 
-export default ModuleGenericComponent.extend({
-
-  classNames: ['module-repeat'],
-
-  latestTriggerTime: alias('module.latestTriggerTime'),
-  triggerDuration: alias('module.triggerDuration')
-
-});
+export default class ModuleRepeatComponent extends Component {
+}

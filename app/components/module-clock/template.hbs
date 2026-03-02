@@ -1,20 +1,40 @@
-<div class="module-header"><ModuleLabel @title={{module.title}} /><IndicatorBlinking @blinkDuration={{this.tickDuration}} @blinkTrigger={{this.latestTriggerTime}} /></div>
-<div class="module-content">
-  <ToggleButton
-    @label='Start'
-    @isOn={{this.isStarted}}
-    {{on 'click' this.start}}
-  /><ToggleButton
-    @label='Stop'
-    @isOn={{not this.isStarted}}
-    {{on 'click' this.stop}}
+<ModuleWrapper
+  @module={{@module}}
+  @additionalClasses={{if @module.isStarted "started"}}
+  @remove={{@remove}}
+  @selected={{@selected}}
+  @modulePortStartedConnecting={{@modulePortStartedConnecting}}
+  @modulePortFinishedConnecting={{@modulePortFinishedConnecting}}
+  @startedMoving={{@startedMoving}}
+  @finishedMoving={{@finishedMoving}}
+  @mouseEnterModulePort={{@mouseEnterModulePort}}
+  @mouseLeaveModulePort={{@mouseLeaveModulePort}}
+  @portDisconnected={{@portDisconnected}}
+  @savePatch={{@savePatch}}
+  as |wrapper|
+>
+  <div class="module-header">
+    <ModuleLabel @title={{@module.title}} />
+    <IndicatorBlinking @blinkDuration={{@module.tickDuration}} @blinkTrigger={{@module.latestTriggerTime}} />
+  </div>
+  <div class="module-content">
+    <ToggleButton
+      @label='Start'
+      @isOn={{@module.isStarted}}
+      {{on 'click' this.start}}
+    />
+    <ToggleButton
+      @label='Stop'
+      @isOn={{not @module.isStarted}}
+      {{on 'click' this.stop}}
+    />
+  </div>
+  <ModulePorts
+    @portGroups={{@module.portGroups}}
+    @portStartedConnecting={{wrapper.portStartedConnecting}}
+    @portFinishedConnecting={{wrapper.portFinishedConnecting}}
+    @mouseEnterPort={{wrapper.mouseEnterPort}}
+    @mouseLeavePort={{wrapper.mouseLeavePort}}
+    @disconnectPort={{wrapper.disconnectPort}}
   />
-</div>
-<ModulePorts
-  @portGroups={{module.portGroups}}
-  @portStartedConnecting={{this.portStartedConnecting}}
-  @portFinishedConnecting={{this.portFinishedConnecting}}
-  @mouseEnterPort={{this.mouseEnterPort}}
-  @mouseLeavePort={{this.mouseLeavePort}}
-  @disconnectPort={{this.disconnectPort}}
-/>
+</ModuleWrapper>

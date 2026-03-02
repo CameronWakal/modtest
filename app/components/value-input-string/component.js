@@ -1,75 +1,47 @@
-import TextField from '@ember/component/text-field';
-import { set, get, computed, observer } from '@ember/object';
+import { action } from '@ember/object';
+import { set } from '@ember/object';
 import { isEmpty } from '@ember/utils';
+import BaseValueInputComponent from '../base-value-input/component';
 
-// from template:
-// boundValue – external, persisted value, as opposed to current <input> value
-// canBeEmpty
+/**
+ * String input component. Extends BaseValueInputComponent.
+ * Overrides parseValue for string handling instead of numeric.
+ */
+export default class ValueInputStringComponent extends BaseValueInputComponent {
+  // Strings don't need parsing - return as-is
+  parseValue(val) {
+    return val;
+  }
 
-export default TextField.extend({
-
-  classNames: ['value-input-string'],
-  classNameBindings: ['isPending:pending'],
-
-  isPending: computed('value', 'boundValue', function() {
-    return this.value !== this.boundValue;
-  }),
-
-  onBoundValueChanged: observer('boundValue', function() {
-    this.resetValue();
-  }),
-
-  didReceiveAttrs() {
-    this.resetValue();
-  },
-
-  click() {
-    this.element.select();
-  },
-
-  focusOut() {
-    this.updateValue();
-  },
+  get isPending() {
+    return this.value !== this.args.boundValue;
+  }
 
   updateValue() {
     let value = this.value;
-    let boundValue = this.boundValue;
+    let boundValue = this.args.boundValue;
 
     if (value !== boundValue) {
-      if (!this.canBeEmpty && isEmpty(value)) {
-        set(this, 'value', boundValue);
+      if (!this.args.canBeEmpty && isEmpty(value)) {
+        this.value = boundValue;
       } else {
-        set(this, 'boundValue', value);
-        this.valueUpdated();
+        this._lastBoundValue = value;
+        this.commitValue(value);
+        // Call valueUpdated callback if provided
+        if (this.args.valueUpdated) {
+          this.args.valueUpdated();
+        }
       }
-    }
-  },
-
-  resetValue() {
-    set(this, 'value', this.boundValue);
-  },
-
-  keyUp(event) {
-
-    switch (event.keyCode) {
-      case 13: // enter/return
-        this.element.select();
-        break;
-      case 27: // escape
-        this.element.select();
-    }
-  },
-
-  keyDown(event) {
-    console.log('keycode:', event.keyCode);
-
-    switch (event.keyCode) {
-      case 13: // enter/return
-        this.updateValue();
-        break;
-      case 27: // escape
-        this.resetValue();
     }
   }
 
-});
+  commitValue(value) {
+    if (this.args.onChange) {
+      this.args.onChange(value);
+    } else if (this.args.target && this.args.property) {
+      set(this.args.target, this.args.property, value);
+    } else {
+      console.warn('ValueInputString: No onChange handler provided. Value updates will fail.');
+    }
+  }
+}

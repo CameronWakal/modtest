@@ -1,5 +1,7 @@
-{{#each items as |item|}}
-  <option value="{{item}}" selected={{is-equal item selectedItem}}>
-    {{item}}
-  </option>
-{{/each}}
+<select name={{@name}} {{on "change" this.handleChange}}>
+  {{#each @items as |item|}}
+    <option value="{{item}}" selected={{is-equal item @selectedItem}}>
+      {{item}}
+    </option>
+  {{/each}}
+</select>

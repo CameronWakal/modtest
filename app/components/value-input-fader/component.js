@@ -1,7 +1,7 @@
 import { empty } from '@ember/object/computed';
 import Component from '@ember/component';
 import { computed, set } from '@ember/object';
-import { htmlSafe } from '@ember/string';
+import { htmlSafe } from '@ember/template';
 
 export default Component.extend({
 

@@ -6,7 +6,9 @@ module.exports = function(defaults) {
   let app = new EmberApp(defaults, {
     // Add options here
     sassOptions: {
-      includePaths: ['app']
+      includePaths: ['app'],
+      // Silence Sass @import deprecation warnings until full migration to @use
+      silenceDeprecations: ['import']
     }
   });
 
@@ -23,9 +25,8 @@ module.exports = function(defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
 
-  //don't import the rangeslider css, as we're fully customizing appearance
-  //app.import('node_modules/rangeslider.js/dist/rangeslider.css');
-  app.import('node_modules/rangeslider.js/dist/rangeslider.js');
+  // Shim to restore the Ember global for legacy addons (ember-localforage-adapter)
+  app.import('vendor/ember-global-shim.js', { prepend: true });
 
   return app.toTree();
 };

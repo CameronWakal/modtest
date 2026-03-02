@@ -26,6 +26,18 @@
     padding-right: 0;
   }
 
+  // Hide native range input (rangeslider.js creates custom elements)
+  input[type='range'] { // sass-lint:disable-line force-attribute-nesting no-qualifying-elements
+    display: none;
+  }
+
+  // Base rangeslider wrapper
+  .rangeslider {
+    display: block;
+    height: 100%;
+    position: relative;
+  }
+
   .rangeslider-fill {
     display: block;
     position: absolute;

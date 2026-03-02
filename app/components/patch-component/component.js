@@ -1,8 +1,11 @@
 import Component from '@ember/component';
-import { run } from '@ember/runloop';
+import { inject as service } from '@ember/service';
+import { scheduleOnce } from '@ember/runloop';
 import { set, get, computed, action } from '@ember/object';
 
 export default Component.extend({
+  store: service(),
+
   classNames: ['patch'],
   classNameBindings: ['newConnectionClass'],
 
@@ -11,6 +14,11 @@ export default Component.extend({
   movingModule: null,
   connectingFromPort: null,
   connectingToPort: null,
+
+  // DOM element for in-element helper (replacement for ember-wormhole)
+  get settingsContainer() {
+    return document.getElementById('settings-container');
+  },
 
   // css class to tell ports which type can accept the current pending connection
   newConnectionClass: computed('connectingFromPort', function() {
@@ -32,7 +40,7 @@ export default Component.extend({
 
   @action
   diagramDidUpdate() {
-    run.scheduleOnce('afterRender', this, this.diagramDoesntNeedUpdate);
+    scheduleOnce('afterRender', this, this.diagramDoesntNeedUpdate);
   },
 
   @action
@@ -49,10 +57,10 @@ export default Component.extend({
   @action
   // a bus connection doesn't appear in the diagram, so no update necessary
   addBusConnection(sourcePort, destPort) {
-    get(destPort, 'connections').pushObject(sourcePort);
+    get(destPort, 'connections').push(sourcePort);
     get(destPort, 'module').requestSave();
 
-    get(sourcePort, 'connections').pushObject(destPort);
+    get(sourcePort, 'connections').push(destPort);
     get(sourcePort, 'module').requestSave();
   },
 
@@ -64,13 +72,28 @@ export default Component.extend({
   @action
   addModule(type, event) {
     let module = this.store.createRecord(`module-${type}`, { patch: this.patch, xPos: event.pageX - event.offsetX, yPos: event.pageY - event.offsetY });
-    get(this, 'patch.modules').pushObject(module);
+
+    // In Ember Data 4.x, the relationship is already set via { patch: this.patch } in createRecord
+    // We don't need to manually push to the modules array if inverse relationship is defined
+    // But since inverse is null, we need to add manually
+    const modules = get(this, 'patch.modules');
+    if (modules.content) {
+      modules.content.push(module);
+    } else {
+      modules.push(module);
+    }
   },
 
   @action
   removeModule(module) {
     this.send('moduleDeselected');
-    get(this, 'patch.modules').removeObject(module);
+    const modules = get(this, 'patch.modules');
+    // Access content directly for async relationships to avoid deprecated PromiseManyArray methods
+    const modulesArray = modules.content || modules;
+    const moduleIndex = modulesArray.indexOf(module);
+    if (moduleIndex !== -1) {
+      modulesArray.splice(moduleIndex, 1);
+    }
     this.patch.save();
     module.remove();
     set(this, 'diagramNeedsUpdate', true);
@@ -121,7 +144,7 @@ export default Component.extend({
     let fromPort = get(this, 'connectingFromPort');
     if (fromPort) { // we're dragging to create a new connection
       if (get(toPort, 'type') === get(fromPort, 'compatibleType')) { // we mouseEntered a compatible port type
-        if (!get(fromPort, 'connections').findBy('id', toPort.id)) { // the two ports aren't already connected
+        if (!get(fromPort, 'connections').find(c => c.id === toPort.id)) { // the two ports aren't already connected
           set(this, 'connectingToPort', toPort);
         }
       }
@@ -154,10 +177,19 @@ export default Component.extend({
 
   // a bus connection doesn't appear in the diagram, so no update necessary
   removeBusConnection(sourcePort, destPort) {
-    get(sourcePort, 'connections').removeObject(destPort);
+    const sourceConnections = get(sourcePort, 'connections');
+    const destIndex = sourceConnections.indexOf(destPort);
+    if (destIndex !== -1) {
+      sourceConnections.splice(destIndex, 1);
+    }
     console.log('patch.removeConnection() requestSave()');
     get(sourcePort, 'module').requestSave();
-    get(destPort, 'connections').removeObject(sourcePort);
+
+    const destConnections = get(destPort, 'connections');
+    const sourceIndex = destConnections.indexOf(sourcePort);
+    if (sourceIndex !== -1) {
+      destConnections.splice(sourceIndex, 1);
+    }
     console.log('patch.removeConnection() requestSave()');
     get(destPort, 'module').requestSave();
   }

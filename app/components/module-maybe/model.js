@@ -7,10 +7,10 @@ export default Module.extend({
   type: 'module-maybe', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Maybe',
 
-  eventInPort: belongsTo('port-event-in', { async: false }),
-  eventOutPort: belongsTo('port-event-out', { async: false }),
-  numeratorInPort: belongsTo('port-value-in', { async: false }),
-  denominatorInPort: belongsTo('port-value-in', { async: false }),
+  eventInPort: belongsTo('port-event-in', { async: false, inverse: null }),
+  eventOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
+  numeratorInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  denominatorInPort: belongsTo('port-value-in', { async: false, inverse: null }),
 
   onEventIn(event) {
     let numerator = this.numeratorInPort.getValue();
@@ -27,7 +27,7 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
 
       // create ports

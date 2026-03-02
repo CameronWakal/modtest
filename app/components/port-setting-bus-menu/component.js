@@ -13,8 +13,14 @@ export default Component.extend({
     }
   },
 
-  menuItems: computed('busses', function() {
-    return [{ title: 'off' }, ...this.busses.toArray()];
+  menuItems: computed('busses.[]', function() {
+    const busses = this.busses;
+    if (!busses || !busses.length) {
+      return [{ title: 'off' }];
+    }
+    // Access content directly to avoid deprecated PromiseManyArray proxy methods
+    const bussesArray = busses.content || busses;
+    return [{ title: 'off' }, ...bussesArray];
   }),
 
   selectedMenuItem: computed('connectedBus', function() {

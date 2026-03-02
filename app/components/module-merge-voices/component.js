@@ -1,7 +1,4 @@
-import ModuleGenericComponent from '../module/component';
+import Component from '@glimmer/component';
 
-export default ModuleGenericComponent.extend({
-
-  classNames: ['module-merge-voices']
-
-});
+export default class ModuleMergeVoicesComponent extends Component {
+}

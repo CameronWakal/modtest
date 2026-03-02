@@ -13,13 +13,20 @@ export default Module.extend({
   triggerDuration: null,
 
   steps: belongsTo('array', { async: false, inverse: null }),
-  trigOutPort: belongsTo('port-event-out', { async: false }),
+  trigOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
   inputType: attr('string', { defaultValue: 'Number' }),
   displayScale: attr('number', { defaultValue: 1 }),
 
   onAttrChanged: observer('inputType', 'displayScale', function() {
     if (this.hasDirtyAttributes) {
       this.requestSave();
+    }
+  }),
+
+  // Ensure dataManager is set whenever steps relationship is established
+  onStepsChanged: observer('steps', function() {
+    if (this.steps && !this.steps.dataManager) {
+      this.steps.dataManager = this;
     }
   }),
 
@@ -31,7 +38,7 @@ export default Module.extend({
   currentIndex: null,
 
   getValue() {
-    let item = this.steps.items.findBy('index', this.currentIndex);
+    let item = this.steps.items.find(i => i.index === this.currentIndex);
     if (item) {
       return item.value;
     }
@@ -50,7 +57,7 @@ export default Module.extend({
     }
 
     // output event if current step has a value
-    let step = this.steps.items.findBy('index', this.currentIndex);
+    let step = this.steps.items.find(i => i.index === this.currentIndex);
     if (!isNaN(parseInt(step.value))) {
       if (this.trigOutPort.isConnected) {
         this.trigOutPort.sendEvent(event);
@@ -66,13 +73,13 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
 
       // create steps
       let steps = this.store.createRecord('array');
       set(this, 'steps', steps);
-      set(this, 'steps.length', 8);
+      this.steps.setLength(8);
 
       // create settings
       this.addMenuSetting('Input Type', 'inputType', 'inputTypeMenuOptions', this);
@@ -92,16 +99,20 @@ export default Module.extend({
 
       this.requestSave();
     }
-    this.steps.dataManager = this;
+    if (this.steps) {
+      this.steps.dataManager = this;
+    }
   },
 
   remove() {
-    this.steps.remove();
+    // Embedded records (steps) are removed automatically with the parent module
     this._super();
   },
 
   save() {
-    this.steps.save();
+    if (this.steps) {
+      this.steps.save();
+    }
     this._super();
   }
 

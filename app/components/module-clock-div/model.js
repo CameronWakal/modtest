@@ -1,6 +1,6 @@
 import { set, get } from '@ember/object';
-import Module from '../module/model';
 import { belongsTo } from '@ember-data/model';
+import Module from '../module/model';
 import { mod } from '../../utils/math-util';
 
 export default Module.extend({
@@ -17,9 +17,9 @@ export default Module.extend({
   latestTriggerTime: null,
   triggerDuration: null,
 
-  divByPort: belongsTo('port-value-in', { async: false }),
-  shiftByPort: belongsTo('port-value-in', { async: false }),
-  trigOutPort: belongsTo('port-event-out', { async: false }),
+  divByPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  shiftByPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  trigOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
 
   onClockIn(event) {
     let count = this.count;
@@ -46,7 +46,7 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
 
       this.addEventInPort('clock', 'onClockIn', true);

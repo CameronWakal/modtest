@@ -1,8 +1,4 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 
-export default Component.extend({
-  tagName: 'button',
-
-  classNames: ['toggle-button'],
-  classNameBindings: ['isOn:toggle-button-on']
-});
+export default class ToggleButtonComponent extends Component {
+}

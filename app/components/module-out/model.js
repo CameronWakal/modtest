@@ -17,13 +17,13 @@ export default Module.extend({
   latestTriggerTime: null,
   triggerDuration: null,
 
-  noteInPort: belongsTo('port-value-in', { async: false }),
-  velInPort: belongsTo('port-value-in', { async: false }),
-  channelInPort: belongsTo('port-value-in', { async: false }),
+  noteInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  velInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  channelInPort: belongsTo('port-value-in', { async: false, inverse: null }),
   outputDeviceName: attr('string', { defaultValue: 'All' }),
 
   deviceMenuOptions: computed('midi.outputDevices', 'outputDeviceName', function() {
-    let devices = get(this, 'midi.outputDevices').mapBy('name');
+    let devices = get(this, 'midi.outputDevices').map(d => d.name);
     let currentDevice = this.outputDeviceName;
     if (!devices.includes(currentDevice) && currentDevice !== 'All') {
       devices = [currentDevice, ...devices];
@@ -95,7 +95,7 @@ export default Module.extend({
     this._super(...arguments);
     this.events = [];
 
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
 
       // create ports

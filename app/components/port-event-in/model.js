@@ -7,7 +7,7 @@ export default Port.extend({
   type: 'port-event-in', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
 
   // eventIn ports can have multiple eventOut ports as sources
-  connections: hasMany('port-event-out', { async: true }),
+  connections: hasMany('port-event-out', { async: false, inverse: 'connections' }),
   targetMethod: attr('string'), // method to call onEvent
 
   // pass the event to the targetMethod of the module

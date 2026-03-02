@@ -1,14 +1,14 @@
 import Controller from '@ember/controller';
+import { action } from '@ember/object';
 import { alias } from '@ember/object/computed';
 
-export default Controller.extend({
-  currentPatch: null,
-  patches: alias('model'),
+export default class ApplicationController extends Controller {
+  currentPatch = null;
 
-  actions: {
-    patchChanged(newPatch) {
-      this.send('patchChangedFromController', newPatch);
-    }
+  @alias('model') patches;
+
+  @action
+  patchChanged(newPatch) {
+    this.send('patchChangedFromController', newPatch);
   }
-
-});
+}

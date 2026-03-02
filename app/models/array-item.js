@@ -7,9 +7,9 @@ export default Model.extend({
   index: attr('number'),
   array: belongsTo('array', { async: false, inverse: 'items' }),
 
-  isCurrentItem: computed('array.currentIndexes.@each', function() {
+  isCurrentItem: computed('array.currentIndexes.[]', function() {
     if (this.array.currentIndexes) {
-      return this.array.currentIndexes.any((index) => this.index == index);
+      return this.array.currentIndexes.any((index) => this.index === index);
     }
     return false;
   }),
@@ -28,7 +28,9 @@ export default Model.extend({
   // ask managing module to save me when my properties have changed.
   requestSave() {
     console.log('array-item requestSave');
-    this.array.requestSave();
+    if (this.array) {
+      this.array.requestSave();
+    }
   }
 
 });

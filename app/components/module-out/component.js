@@ -1,9 +1,11 @@
-import { alias } from '@ember/object/computed';
-import ModuleGenericComponent from '../module/component';
+import Component from '@glimmer/component';
 
-export default ModuleGenericComponent.extend({
+export default class ModuleOutComponent extends Component {
+  get latestTriggerTime() {
+    return this.args.module.latestTriggerTime;
+  }
 
-  latestTriggerTime: alias('module.latestTriggerTime'),
-  triggerDuration: alias('module.triggerDuration')
-
-});
+  get triggerDuration() {
+    return this.args.module.triggerDuration;
+  }
+}

@@ -1,16 +1,14 @@
-import { alias } from '@ember/object/computed';
-import { observer } from '@ember/object';
-import ModuleGenericComponent from '../module/component';
+import Component from '@glimmer/component';
 
-export default ModuleGenericComponent.extend({
+export default class ModuleArrayComponent extends Component {
+  get latestTriggerTime() {
+    return this.args.module.latestTriggerTime;
+  }
 
-  classNames: ['module-sequence'],
+  get triggerDuration() {
+    return this.args.module.triggerDuration;
+  }
 
-  latestTriggerTime: alias('module.latestTriggerTime'),
-  triggerDuration: alias('module.triggerDuration'),
-
-  onLayoutChanged: observer('module.steps.length', 'module.inputType', 'module.displayScale', function() {
-    this.layoutChanged();
-  })
-
-});
+  // Note: observer was removed - Phase 8 will address this with @tracked
+  // onLayoutChanged: observer('module.steps.length', 'module.inputType', 'module.displayScale', ...)
+}

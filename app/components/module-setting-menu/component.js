@@ -1,5 +1,4 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 
-export default Component.extend({
-  classNames: ['module-setting', 'module-setting-menu']
-});
+export default class ModuleSettingMenuComponent extends Component {
+}

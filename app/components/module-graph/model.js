@@ -17,10 +17,10 @@ export default Module.extend({
   xScale: attr('number', { defaultValue: 100 }),
   yScale: attr('number', { defaultValue: 100 }),
 
-  xLineValueInPort: belongsTo('port-value-in', { async: false }),
-  yLineValueInPort: belongsTo('port-value-in', { async: false }),
-  xTrianglesValueInPort: belongsTo('port-value-in', { async: false }),
-  yTrianglesValueInPort: belongsTo('port-value-in', { async: false }),
+  xLineValueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  yLineValueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  xTrianglesValueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  yTrianglesValueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
 
   writeLineValue() {
     let xLineValue = this.xLineValueInPort.getValue();
@@ -43,7 +43,7 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
 
       this.addNumberSetting('xMin', 'xMin', this);

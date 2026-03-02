@@ -1,9 +1,3 @@
-import ApplicationSerializer from '../../serializers/application';
+import ModuleSerializer from '../module/serializer';
 
-export default ApplicationSerializer.extend({
-
-  attrs: {
-    portGroups: { embedded: 'always' }
-  }
-
-});
+export default ModuleSerializer.extend({});

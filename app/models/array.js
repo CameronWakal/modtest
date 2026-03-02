@@ -9,7 +9,7 @@ export default Model.extend({
   valueMax: attr('number', { defaultValue: 127 }),
   valueStep: attr('number', { defaultValue: 1 }),
 
-  items: hasMany('arrayItem'),
+  items: hasMany('arrayItem', { async: false, inverse: 'array' }),
   // the parent model can point this variable to a hasMany of array items if needed.
   // the array will highlight any items that appear in currentItems in the UI.
   currentIndexes: alias('dataManager.currentIndexes'),
@@ -19,22 +19,31 @@ export default Model.extend({
   // managing module will set itself as the array's dataManager.
   dataManager: null,
 
-  onLengthChanged: observer('length', function() {
+  // Method to set length and create/remove items immediately (for use during init)
+  setLength(newLength) {
+    set(this, 'length', newLength);
+    this._syncItems();
+  },
+
+  _syncItems() {
     let length = get(this, 'items.length');
     let newLength = this.length;
 
     if (newLength > length) {
       for (let i = length; i < newLength; i++) {
-        this.store.createRecord('arrayItem', { array: this, index: i });
+        let item = this.store.createRecord('arrayItem', { array: this, index: i });
+        // Explicitly add to items in case inverse relationship doesn't sync immediately
+        this.items.push(item);
       }
     } else if (newLength < length) {
       for (let i = length; i > newLength; i--) {
-        this.items.popObject();
+        this.items.pop();
       }
-    } else {
-      return;
     }
+  },
 
+  onLengthChanged: observer('length', function() {
+    this._syncItems();
   }),
 
   onAttrChanged: observer('length', 'valueMin', 'valueMax', 'valueStep', function() {
@@ -54,7 +63,9 @@ export default Model.extend({
   // ask managing module to save me when my properties have changed.
   requestSave() {
     console.log('array requestSave');
-    this.dataManager.requestSave();
+    if (this.dataManager) {
+      this.dataManager.requestSave();
+    }
   },
 
   incrementAll() {
@@ -74,7 +85,7 @@ export default Model.extend({
   },
 
   shiftForward() {
-    let oldValues = this.items.mapBy('value');
+    let oldValues = this.items.map(item => item.value);
     this.items.forEach((item, index) => {
       if (index < oldValues.length - 1) {
         set(item, 'value', oldValues[index + 1]);
@@ -85,7 +96,7 @@ export default Model.extend({
   },
 
   shiftBackward() {
-    let oldValues = this.items.mapBy('value');
+    let oldValues = this.items.map(item => item.value);
     this.items.forEach((item, index) => {
       if (index > 0) {
         set(item, 'value', oldValues[index - 1]);
@@ -96,10 +107,10 @@ export default Model.extend({
   },
 
   remove() {
-    this.items.toArray().forEach((item) => {
-      item.destroyRecord();
+    this.items.slice().forEach((item) => {
+      this.store.unloadRecord(item);
     });
-    this.destroyRecord();
+    this.store.unloadRecord(this);
   }
 
 });

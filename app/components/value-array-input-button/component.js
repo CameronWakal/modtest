@@ -1,40 +1,34 @@
-import { notEmpty } from '@ember/object/computed';
-import Component from '@ember/component';
-import { set, get, computed } from '@ember/object';
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { set } from '@ember/object';
 
-export default Component.extend({
+export default class ValueArrayInputButtonComponent extends Component {
+  get isOn() {
+    return this.args.item?.value != null;
+  }
 
-  classNames: ['value-array-input-button'],
-  tagName: 'button',
-  classNameBindings: [
-    'isOn:on',
-    'isAccented:accent',
-    'item.isCurrentItem:current'
-  ],
+  get isAccented() {
+    return this.args.item?.value === this.args.max;
+  }
 
-  isOn: notEmpty('item.value'),
-  isAccented: computed('item.value', 'max', function() {
-    return get(this, 'item.value') === this.max;
-  }),
-
-  click(event) {
-    let value = get(this, 'item.value');
-    let max = this.max;
-    let min = this.min;
+  @action
+  handleClick(event) {
+    let value = this.args.item?.value;
+    let max = this.args.max;
+    let min = this.args.min;
 
     if (event.shiftKey) {
       if (value === max) {
-        set(this, 'item.value', null);
+        set(this.args.item, 'value', null);
       } else {
-        set(this, 'item.value', max);
+        set(this.args.item, 'value', max);
       }
     } else {
       if (value === null) {
-        set(this, 'item.value', min);
+        set(this.args.item, 'value', min);
       } else {
-        set(this, 'item.value', null);
+        set(this.args.item, 'value', null);
       }
     }
   }
-
-});
+}

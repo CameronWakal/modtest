@@ -103,8 +103,8 @@ export default Module.extend({
   weightA: a,
   weightB: b,
 
-  valueInPort: belongsTo('port-value-in', { async: false }),
-  keyChangedPort: belongsTo('port-event-out', { async: false }),
+  valueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  keyChangedPort: belongsTo('port-event-out', { async: false, inverse: null }),
 
   // strings representing the displayedKeys, or '--' if nearest keys
   // has not been calculated yet.
@@ -215,8 +215,9 @@ export default Module.extend({
     set(this, 'selectedKey', null);
   },
 
-  ready() {
-    if (this.isNew) {
+  init() {
+    this._super(...arguments);
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
       // create ports
       this.addEventInPort('in', 'addValue', true);
@@ -227,7 +228,7 @@ export default Module.extend({
       this.addValueOutPort('mode', 'getMode', true);
       this.addEventOutPort('update', 'keyChangedPort', true);
 
-      console.log('module-value didCreate saveLater');
+      console.log('module-analyst init requestSave');
       this.requestSave();
     }
 

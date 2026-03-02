@@ -1,6 +1,7 @@
 import Component from '@ember/component';
-import { computed, get } from '@ember/object';
+import { computed, get, set } from '@ember/object';
 import { equal } from '@ember/object/computed';
+import { isEmpty } from '@ember/utils';
 
 export default Component.extend({
 
@@ -21,8 +22,27 @@ export default Component.extend({
       console.log('computed connectedBus is null');
       return null;
     }
-    return get(this, 'port.connections.firstObject.module');
+    return get(this, 'port.connections.0.module');
   }),
+
+  updateDisabledValue(value) {
+    let port = this.port;
+    set(port, 'disabledValue', value);
+
+    // Call the disabledValueChangedMethod on the module if specified
+    let methodName = get(port, 'disabledValueChangedMethod');
+    if (!isEmpty(methodName)) {
+      let module = get(port, 'module');
+      let methodToCall = get(module, methodName);
+      if (methodToCall) {
+        methodToCall.call(module);
+      }
+    }
+
+    // Save the port and request module save
+    port.save();
+    port.requestSave();
+  },
 
   actions: {
     disconnectFromBus() {

@@ -13,8 +13,8 @@ export default Module.extend({
 
   type: 'module-bus', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
 
-  eventOutPort: belongsTo('port-event-out', { async: false }),
-  eventInPort: alias('eventInPorts.firstObject'),
+  eventOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
+  eventInPort: alias('eventInPorts.0'),
 
   eventIn(event) {
     this.eventOutPort.sendEvent(event);
@@ -22,7 +22,9 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    // In Ember Data 4.x, check if truly new by verifying ports are empty
+    // Records loaded from storage will have embedded ports populated
+    if (this.isNew && this.ports.length === 0) {
       // create ports
       this.addEventInPort('eventIn', 'eventIn', false);
       this.addEventOutPort('eventOut', 'eventOutPort', false);

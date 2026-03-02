@@ -37,8 +37,8 @@ export default Module.extend({
   // plonk preset index set by the latest event in
   preset: null,
 
-  eventInPorts: hasMany('port-event-in', { async: false }),
-  eventOutPort: belongsTo('port-event-out', { async: false }),
+  eventInPorts: hasMany('port-event-in', { async: false, inverse: null }),
+  eventOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
 
   // the number of presets you need to include in your plonk patch, in order to have all the
   // inputPorts on this module be addressable via 4v midi->cv
@@ -103,24 +103,28 @@ export default Module.extend({
     let port;
     let currentCount = get(this, 'eventInPorts.length');
     for (let i = 0; i < count; i++) {
-      port = this.addEventInPort(currentCount + i, 'onEventIn', true);
-      this.eventInPorts.pushObject(port);
+      // Pass label as string to ensure it's preserved during serialization
+      port = this.addEventInPort(String(currentCount + i), 'onEventIn', true);
+      this.eventInPorts.push(port);
     }
   },
 
   _removeInputPorts(count) {
     let port;
     for (let i = 0; i < count; i++) {
-      port = this.eventInPorts.popObject();
-      this.ports.removeObject(port);
+      port = this.eventInPorts.pop();
+      const portIndex = this.ports.indexOf(port);
+      if (portIndex !== -1) {
+        this.ports.splice(portIndex, 1);
+      }
       port.disconnect();
-      port.destroyRecord();
+      this.store.unloadRecord(port);
     }
   },
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
 
       this.addNumberSetting('Inputs', 'inputPortsCount', this, { minValue: minInputs, maxValue: maxInputs });

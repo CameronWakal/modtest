@@ -1,13 +1,12 @@
 import Service from '@ember/service';
-import { set } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
-export default Service.extend({
-
-  midi: null,
-  timingListener: null,
-  noteListener: null,
-  outputDevices: null,
-  inputDevices: null,
+export default class MidiService extends Service {
+  midi = null;
+  timingListener = null;
+  noteListener = null;
+  @tracked outputDevices = null;
+  @tracked inputDevices = null;
 
   setup() {
     // request MIDI access
@@ -16,7 +15,7 @@ export default Service.extend({
     } else {
       alert('No MIDI support in your browser.');
     }
-  },
+  }
 
   updateOutputDevices() {
     let outputs = this.midi.outputs.values();
@@ -24,8 +23,8 @@ export default Service.extend({
     for (let output = outputs.next(); output && !output.done; output = outputs.next()) {
       outputsArray.push(output.value);
     }
-    set(this, 'outputDevices', outputsArray);
-  },
+    this.outputDevices = outputsArray;
+  }
 
   updateInputDevices() {
     let inputs = this.midi.inputs.values();
@@ -33,8 +32,8 @@ export default Service.extend({
     for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
       inputsArray.push(input.value);
     }
-    set(this, 'inputDevices', inputsArray);
-  },
+    this.inputDevices = inputsArray;
+  }
 
   sendNote(note, outputDeviceName) {
 
@@ -54,7 +53,7 @@ export default Service.extend({
     } else {
       console.log('Could not send note, midiAccess not initialized.');
     }
-  },
+  }
 
   sendCC(number, value, channel) {
     if (this.midi) {
@@ -69,7 +68,7 @@ export default Service.extend({
     } else {
       console.log('Could not send control change, midiAccess not initialized.');
     }
-  },
+  }
 
   onMIDISuccess(midiAccess) {
     this.midi = midiAccess;
@@ -89,7 +88,7 @@ export default Service.extend({
     this.updateOutputDevices();
     this.updateInputDevices();
 
-  },
+  }
 
   onMIDIMessage(event) {
     let { data } = event;
@@ -147,7 +146,7 @@ export default Service.extend({
             break;
         }
     }
-  },
+  }
 
   onStateChange(event) {
     let {
@@ -163,11 +162,11 @@ export default Service.extend({
     this.showMIDIPorts();
     this.updateOutputDevices();
     this.updateInputDevices();
-  },
+  }
 
   onMIDIFailure(e) {
     console.log(`No access to MIDI devices or your browser doesn't support WebMIDI API. Please use WebMIDIAPIShim ${e}`);
-  },
+  }
 
   // MIDI utility functions
   showMIDIPorts() {
@@ -226,5 +225,4 @@ export default Service.extend({
     }
 
   }
-
-});
+}

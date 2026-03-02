@@ -1,5 +1,6 @@
 import { set, get } from '@ember/object';
-import { belongsTo } from '@ember-data/model';
+import { schedule } from '@ember/runloop';
+import { attr, belongsTo } from '@ember-data/model';
 import ModuleSequence from '../module-sequence/model';
 
 export default ModuleSequence.extend({
@@ -7,39 +8,60 @@ export default ModuleSequence.extend({
   type: 'module-sequence-euclidean', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Euclidean',
 
-  stepsInPort: belongsTo('port-value-in', { async: false }),
-  pulsesInPort: belongsTo('port-value-in', { async: false }),
+  // Override default inputType to 'Button' for this module type
+  inputType: attr('string', { defaultValue: 'Button' }),
+
+  stepsInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  pulsesInPort: belongsTo('port-value-in', { async: false, inverse: null }),
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
-      set(this, 'title', this.name);
-
-      // unlike the parent, we want length to be a port instead of a setting
-      this.removeSetting('Length');
-
-      // add a sequence length port instead
-      this.addValueInPort('steps', 'stepsInPort', { defaultValue: 8, minValue: 0, maxValue: 128, isEnabled: true, disabledValueChangedMethod: 'updateSequence' });
-      this.addValueInPort('pulses', 'pulsesInPort', { defaultValue: 0, minValue: 0, maxValue: 128, isEnabled: true, disabledValueChangedMethod: 'updateSequence' });
-
-      // event to trigger euclid calculation
-      this.addEventInPort('update', 'updateSequence', true);
-
-      set(this, 'inputType', 'Button');
-
-      this.requestSave();
+    // The parent's init creates default ports/settings, we modify them for euclidean behavior
+    // Must use scheduler because Ember Data 4.x doesn't allow relationship modifications during init
+    if (this.isNew && this.ports.length > 0) {
+      let hasStepsPort = this.ports.find(p => p.label === 'steps');
+      if (!hasStepsPort) {
+        schedule('actions', this, this._setupEuclidean);
+      }
     }
   },
 
+  _setupEuclidean() {
+
+    // unlike the parent, we want length to be a port instead of a setting
+    this.removeSetting('Length');
+
+    // add a sequence length port instead
+    this.addValueInPort('steps', 'stepsInPort', { defaultValue: 8, minValue: 0, maxValue: 128, isEnabled: true, disabledValueChangedMethod: 'updateSequence' });
+    this.addValueInPort('pulses', 'pulsesInPort', { defaultValue: 0, minValue: 0, maxValue: 128, isEnabled: true, disabledValueChangedMethod: 'updateSequence' });
+
+    // event to trigger euclid calculation
+    this.addEventInPort('update', 'updateSequence', true);
+
+    // Populate initial values
+    this.updateSequence();
+
+    this.requestSave();
+  },
+
   updateSequence() {
-    let stepCount = this.stepsInPort.getValue();
-    let pulseCount = this.pulsesInPort.getValue();
+    let stepsPort = this.stepsInPort;
+    let pulsesPort = this.pulsesInPort;
+
+    // Guard against ports not being available yet
+    if (!stepsPort || !pulsesPort) {
+      return;
+    }
+
+    let stepCount = stepsPort.getValue();
+    let pulseCount = pulsesPort.getValue();
 
     // calculate euclidean pattern
     let pattern = this.getPattern(pulseCount, stepCount);
 
-    // update the sequence length
-    set(this, 'steps.length', stepCount);
+    // update the sequence length synchronously using setLength instead of set
+    // (observers don't fire during init, so we need synchronous item creation)
+    this.steps.setLength(stepCount);
 
     // for each sequence step, update the value to match the calculated pattern
     get(this, 'steps.items').forEach(function(item) {

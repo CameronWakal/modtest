@@ -8,8 +8,8 @@ export default Module.extend({
   name: 'Mute',
 
   isMuted: attr('boolean', { defaultValue: false }),
-  eventOutPort: belongsTo('port-event-out', { async: false }),
-  valueInPort: belongsTo('port-value-in', { async: false }),
+  eventOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
+  valueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
 
   toggle() {
     this.toggleProperty('isMuted');
@@ -38,7 +38,7 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
       // create ports
       this.addEventInPort('toggle', 'toggle', false);

@@ -1,4 +1,4 @@
-import { set, get } from '@ember/object';
+import { set, get, observer } from '@ember/object';
 import { map } from '@ember/object/computed';
 import { mod } from '../../utils/math-util';
 import { belongsTo } from '@ember-data/model';
@@ -12,12 +12,12 @@ export default Module.extend({
   degreesInScale: 7,
   inputType: 'Number',
   mode: null,
-  degrees: belongsTo('array', { async: false }),
+  degrees: belongsTo('array', { async: false, inverse: null }),
 
-  degreeInPortsGroup: belongsTo('port-group', { async: false }),
-  octaveInPort: belongsTo('port-value-in', { async: false }),
-  rootInPort: belongsTo('port-value-in', { async: false }),
-  modeInPort: belongsTo('port-value-in', { async: false }),
+  degreeInPortsGroup: belongsTo('port-group', { async: false, inverse: null }),
+  octaveInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  rootInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  modeInPort: belongsTo('port-value-in', { async: false, inverse: null }),
 
   // map the value of each valueInPort to the current scale. This is referenced by
   // the degrees array in order to display the currently selected intervals in the UI.
@@ -26,6 +26,13 @@ export default Module.extend({
       return null;
     }
     return mod(port.computedValue, this.degreesInScale);
+  }),
+
+  // Ensure dataManager is set whenever degrees relationship is established
+  onDegreesChanged: observer('degrees', function() {
+    if (this.degrees && !this.degrees.dataManager) {
+      this.degrees.dataManager = this;
+    }
   }),
 
   updateScale() {
@@ -65,10 +72,9 @@ export default Module.extend({
         return;
     }
 
-    get(this, 'degrees.items').then(function(items) {
-      items.forEach((item) => {
-        set(item, 'value', newValues[item.index]);
-      });
+    let items = get(this, 'degrees.items');
+    items.forEach((item) => {
+      set(item, 'value', newValues[item.index]);
     });
 
   },
@@ -77,7 +83,7 @@ export default Module.extend({
 
     let voiceNumber = parseInt(get(port, 'label'));
     let degreeInPorts = get(this, 'degreeInPortsGroup.valueInPorts');
-    let degreeInPort = degreeInPorts.objectAt(voiceNumber);
+    let degreeInPort = degreeInPorts.at(voiceNumber);
 
     // 1. get input values
     // 2. set defaults if they are null
@@ -90,7 +96,7 @@ export default Module.extend({
 
     if (degree != null) {
       let degreeInOctave = mod(degree, this.degreesInScale);
-      let degreeItem = get(this, 'degrees.items').findBy('index', degreeInOctave);
+      let degreeItem = get(this, 'degrees.items').find(i => i.index === degreeInOctave);
       let intervalForDegree = get(degreeItem, 'value');
       if (intervalForDegree == null) {
         return null;
@@ -105,14 +111,14 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
 
       // create degrees
       let degrees = this.store.createRecord('array');
       set(this, 'degrees', degrees);
       set(this, 'degrees.valueMax', 11);
-      set(this, 'degrees.length', this.degreesInScale);
+      this.degrees.setLength(this.degreesInScale);
       this.degrees.dataManager = this;
 
       // create ports
@@ -134,19 +140,21 @@ export default Module.extend({
 
       console.log('module-scale.didCreate() requestSave()');
       this.requestSave();
-    } else {
+    } else if (this.degrees) {
       this.degrees.dataManager = this;
     }
 
   },
 
   remove() {
-    this.degrees.remove();
+    // Embedded records (degrees) are removed automatically with the parent module
     this._super();
   },
 
   save() {
-    this.degrees.save();
+    if (this.degrees) {
+      this.degrees.save();
+    }
     this._super();
   }
 

@@ -8,7 +8,7 @@ export default Model.extend({
   label: attr('string'),
   // a property name on the parent module to read/write
   targetValue: attr('string'),
-  module: belongsTo('module', { async: false, polymorphic: true }),
+  module: belongsTo('module', { async: false, polymorphic: true, inverse: null }),
   minValue: attr('number'),
   maxValue: attr('number'),
 
@@ -20,7 +20,8 @@ export default Model.extend({
   },
 
   remove() {
-    this.destroyRecord();
+    // Embedded records are unloaded by parent, but keep method for compatibility
+    this.store.unloadRecord(this);
   },
 
   save() {
