@@ -1,6 +1,6 @@
 import Component from '@ember/component';
-import { run } from '@ember/runloop';
-import { htmlSafe } from '@ember/string';
+import { once } from '@ember/runloop';
+import { htmlSafe } from '@ember/template';
 import { computed, get, observer } from '@ember/object';
 
 export default Component.extend({
@@ -30,7 +30,7 @@ export default Component.extend({
     'xScale',
     'yScale',
     function() {
-      run.once(this, 'draw');
+      once(this, 'draw');
     }
   ),
 

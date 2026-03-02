@@ -1,13 +1,9 @@
-import ModuleGenericComponent from '../module/component';
+import Component from '@glimmer/component';
 import { action } from '@ember/object';
 
-export default ModuleGenericComponent.extend({
-
-  classNames: ['module-button'],
-
+export default class ModuleButtonComponent extends Component {
   @action
   trig() {
-    this.module.trig();
+    this.args.module.trig();
   }
-
-});
+}

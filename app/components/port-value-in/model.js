@@ -7,7 +7,7 @@ export default Port.extend({
 
   type: 'port-value-in', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
 
-  connections: hasMany('port-value-out', { async: true }),
+  connections: hasMany('port-value-out', { async: false, inverse: 'connections' }),
   canBeEmpty: attr('boolean'),
   defaultValue: attr('number'),
   minValue: attr('number'),

@@ -12,15 +12,16 @@ export default ModuleAnalyst.extend({
   trianglesX: null,
   trianglesY: null,
   trianglesZ: null,
-  spiralDebugOut: belongsTo('port-event-out', { async: false }),
-  trianglesDebugOut: belongsTo('port-event-out', { async: false }),
-  drawIndexInPort: belongsTo('port-value-in', { async: false }),
-  drawScaleInPort: belongsTo('port-value-in', { async: false }),
-  resetOut: belongsTo('port-event-out', { async: false }),
+  spiralDebugOut: belongsTo('port-event-out', { async: false, inverse: null }),
+  trianglesDebugOut: belongsTo('port-event-out', { async: false, inverse: null }),
+  drawIndexInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  drawScaleInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  resetOut: belongsTo('port-event-out', { async: false, inverse: null }),
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    // Check for drawIndexInPort instead of ports.length === 0, since parent init already creates ports
+    if (this.isNew && !this.drawIndexInPort) {
       // graphing outputs
       this.addValueOutPort('sx', 'getSpiralX', true);
       this.addValueOutPort('sy', 'getSpiralY', true);

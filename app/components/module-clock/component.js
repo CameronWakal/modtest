@@ -1,24 +1,14 @@
-import { alias } from '@ember/object/computed';
+import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import ModuleGenericComponent from '../module/component';
 
-export default ModuleGenericComponent.extend({
-
-  classNames: ['module-clock'],
-  classNameBindings: ['isStarted:started'],
-
-  isStarted: alias('module.isStarted'),
-  latestTriggerTime: alias('module.latestTriggerTime'),
-  tickDuration: alias('module.tickDuration'),
-
+export default class ModuleClockComponent extends Component {
   @action
   start() {
-    this.module.start();
-  },
+    this.args.module.start();
+  }
 
   @action
   stop() {
-    this.module.stop();
+    this.args.module.stop();
   }
-
-});
+}

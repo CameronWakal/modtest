@@ -10,9 +10,9 @@ export default Module.extend({
   type: 'module-ccout', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'CC Out',
 
-  controlInPort: belongsTo('port-value-in', { async: false }),
-  channelInPort: belongsTo('port-value-in', { async: false }),
-  valueInPort: belongsTo('port-value-in', { async: false }),
+  controlInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  channelInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  valueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
 
   sendEvent() {
     // check the connection of the 'note' port for the value of the note to play.
@@ -26,7 +26,7 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
 
       // create ports

@@ -1,38 +1,25 @@
-import { set, get, action } from '@ember/object';
-import Component from '@ember/component';
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
 
-export default Component.extend({
+export default class AddModuleMenuItemComponent extends Component {
+  @tracked mouseIsDown = false;
 
-  tagName: 'a',
-  classNames: ['add-module-menu-item'],
-  attributeBindings: ['href'],
-  href: '#',
+  @action
+  handleMouseDown() {
+    this.mouseIsDown = true;
+  }
 
-  mouseIsDown: false,
-
-  mouseDown() {
-    set(this, 'mouseIsDown', true);
-    return false;
-  },
-
-  mouseUp() {
-    set(this, 'mouseIsDown', false);
-  },
+  @action
+  handleMouseUp() {
+    this.mouseIsDown = false;
+  }
 
   @action
   handleMouseMove(event) {
     if (this.mouseIsDown) {
-      this.addModule(this.moduleType, event);
-      set(this, 'mouseIsDown', false);
+      this.args.addModule(this.args.moduleType, event);
+      this.mouseIsDown = false;
     }
-  },
-
-  didInsertElement() {
-    this.element.addEventListener('mousemove', this.handleMouseMove);
-  },
-
-  willDestroyElement() {
-    this.element.removeEventListener('mousemove', this.handleMouseMove);
   }
-
-});
+}

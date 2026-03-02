@@ -8,9 +8,9 @@ export default Module.extend({
   name: 'Value',
 
   value: attr('number'),
-  changeOutPort: belongsTo('port-event-out', { async: false }),
+  changeOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
 
-  valueInPort: belongsTo('port-value-in', { async: false }),
+  valueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
 
   onValueChanged: observer('value', function() {
     if (this.hasDirtyAttributes) {
@@ -38,7 +38,7 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
       // create ports
       this.addEventInPort('set', 'setValue', false);

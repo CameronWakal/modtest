@@ -12,13 +12,13 @@ export default Module.extend({
   type: 'module-switch', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Switch',
 
-  switchInPort: belongsTo('port-value-in', { async: false }),
-  eventOutPort: belongsTo('port-event-out', { async: false }),
-  inputPortsGroup: belongsTo('port-group', { async: false }),
+  switchInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  eventOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
+  inputPortsGroup: belongsTo('port-group', { async: false, inverse: null }),
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
 
       this.addNumberSetting('input sets', 'inputPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
@@ -50,7 +50,7 @@ export default Module.extend({
       return null;
     }
     let ports = get(this, 'inputPortsGroup.valueInPorts');
-    let port = ports.objectAt(switchVal);
+    let port = ports.at(switchVal);
     if (port == null) {
       return null;
     }

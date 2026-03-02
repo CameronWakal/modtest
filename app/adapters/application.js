@@ -1,7 +1,7 @@
 import LFAdapter from 'ember-localforage-adapter/adapters/localforage';
 
-export default LFAdapter.extend({
-  namespace: 'modtest',
+export default class ApplicationAdapter extends LFAdapter {
+  namespace = 'modtest';
 
   // sending 'dontPersist' adapter option allows you to set the state of an ember data model
   // to saved, without persisting to the api. This is useful for embedded record models that
@@ -9,23 +9,22 @@ export default LFAdapter.extend({
 
   updateRecord(store, type, snapshot) {
     if (snapshot.adapterOptions && snapshot.adapterOptions.dontPersist) {
-      return null;
+      return Promise.resolve();
     }
-    return this._super(store, type, snapshot);
-  },
+    return super.updateRecord(store, type, snapshot);
+  }
 
   createRecord(store, type, snapshot) {
     if (snapshot.adapterOptions && snapshot.adapterOptions.dontPersist) {
-      return null;
+      return Promise.resolve();
     }
-    return this._super(store, type, snapshot);
-  },
+    return super.createRecord(store, type, snapshot);
+  }
 
   deleteRecord(store, type, snapshot) {
     if (snapshot.adapterOptions && snapshot.adapterOptions.dontPersist) {
-      return null;
+      return Promise.resolve();
     }
-    return this._super(store, type, snapshot);
+    return super.deleteRecord(store, type, snapshot);
   }
-
-});
+}

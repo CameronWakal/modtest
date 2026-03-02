@@ -1,1 +1,1 @@
-{{~range-slider value=item.value min=min max=max step=step displayScale=displayScale~}}
+{{~range-slider value=this.item.value min=this.min max=this.max step=this.step displayScale=this.displayScale onChange=(action "updateValue")~}}

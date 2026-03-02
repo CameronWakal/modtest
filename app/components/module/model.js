@@ -1,5 +1,5 @@
 import { filterBy } from '@ember/object/computed';
-import { run } from '@ember/runloop';
+import { once } from '@ember/runloop';
 import { set, computed } from '@ember/object';
 import Model, { belongsTo, hasMany, attr } from '@ember-data/model';
 
@@ -12,14 +12,15 @@ export default Model.extend({
   xPos: attr('number', { defaultValue: 0 }),
   yPos: attr('number', { defaultValue: 0 }),
 
-  settings: hasMany('module-setting', { polymorphic: true }),
-  patch: belongsTo('patch', { async: false }),
-  portGroups: hasMany('port-group', { async: false }),
-  ports: computed('portGroups.@each.ports', function() {
+  settings: hasMany('module-setting', { polymorphic: true, async: false, inverse: null }),
+  patch: belongsTo('patch', { async: true, inverse: null }),
+  portGroups: hasMany('port-group', { async: false, inverse: null }),
+  // Depend on basePorts and expansionPorts directly since @each.ports doesn't track union macro changes
+  ports: computed('portGroups.@each.basePorts', 'portGroups.@each.expansionPorts', function() {
     let ports = [];
     this.portGroups.forEach(function(portGroup) {
       portGroup.ports.forEach(function(port) {
-        ports.pushObject(port);
+        ports.push(port);
       });
     });
     return ports;
@@ -38,7 +39,9 @@ export default Model.extend({
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    // In Ember Data 4.x, check if truly new by verifying relationships are empty
+    // Records loaded from storage will have embedded relationships populated
+    if (this.isNew && this.portGroups.length === 0) {
       this.addPortGroup();
     }
   },
@@ -56,48 +59,51 @@ export default Model.extend({
     if (options && options.maxSets) {
       set(portGroup, 'maxSets', options.maxSets);
     }
-    this.portGroups.pushObject(portGroup);
+    this.portGroups.push(portGroup);
     portGroup.save();
     return portGroup;
   },
 
   // portVar is used to easily refer to this specific port from within the module
+  // Pass null for portVar if the port doesn't need a direct reference
   addEventOutPort(label, portVar, isEnabled) {
+    let portGroup = this.portGroups.at(-1);
     let port = this.store.createRecord('port-event-out', {
       label,
       isEnabled,
-      portGroup: this.portGroups.lastObject
+      portGroup
     });
-    this.ports.pushObject(port);
-    this.portGroups.lastObject.addPort(port);
-    set(this, portVar, port);
+    portGroup.addPort(port);
     port.save();
+    if (portVar) {
+      set(this, portVar, port);
+    }
   },
 
   // targetMethod on the module is called by the port when the event comes in
   addEventInPort(label, targetMethod, isEnabled) {
+    let portGroup = this.portGroups.at(-1);
     let port = this.store.createRecord('port-event-in', {
       label,
       targetMethod,
       isEnabled,
-      portGroup: this.portGroups.lastObject
+      portGroup
     });
-    this.ports.pushObject(port);
-    this.portGroups.lastObject.addPort(port);
+    portGroup.addPort(port);
     port.save();
     return port;
   },
 
   // targetVar is checked by the port when a request for the value comes in
   addValueOutPort(label, targetMethod, isEnabled) {
+    let portGroup = this.portGroups.at(-1);
     let port = this.store.createRecord('port-value-out', {
       label,
       targetMethod,
       isEnabled,
-      portGroup: this.portGroups.lastObject
+      portGroup
     });
-    this.ports.pushObject(port);
-    this.portGroups.lastObject.addPort(port);
+    portGroup.addPort(port);
     port.save();
   },
 
@@ -119,6 +125,7 @@ export default Model.extend({
     if (options.canBeEmpty == null) {
       options.canBeEmpty = false;
     }
+    let portGroup = this.portGroups.at(-1);
     let port = this.store.createRecord('port-value-in', {
       label,
       isEnabled: options.isEnabled,
@@ -128,10 +135,9 @@ export default Model.extend({
       disabledValueChangedMethod: options.disabledValueChangedMethod,
       minValue: options.minValue,
       maxValue: options.maxValue,
-      portGroup: this.portGroups.lastObject
+      portGroup
     });
-    this.ports.pushObject(port);
-    this.portGroups.lastObject.addPort(port);
+    portGroup.addPort(port);
     port.save();
     return port;
   },
@@ -151,7 +157,7 @@ export default Model.extend({
       targetValue,
       module
     });
-    this.settings.pushObject(setting);
+    this.settings.push(setting);
   },
 
   addMenuSetting(label, targetValue, itemsProperty, module) {
@@ -162,21 +168,22 @@ export default Model.extend({
       module
     });
 
-    this.settings.pushObject(setting);
+    this.settings.push(setting);
   },
 
   // useful if you're subclassing a module and don't need a setting from the parent
   removeSetting(label) {
-    let setting = this.settings.findBy('label', label);
-    this.settings.removeObject(setting);
-    this.store.findRecord('module-setting', setting.id, { backgroundReload: false }).then(function(setting) {
-      setting.destroyRecord();
-    });
+    let setting = this.settings.find(s => s.label === label);
+    const index = this.settings.indexOf(setting);
+    if (index !== -1) {
+      this.settings.splice(index, 1);
+    }
+    this.store.unloadRecord(setting);
   },
 
   requestSave() {
     console.log('module requestSave');
-    run.once(this, this.save);
+    once(this, this.save);
   },
 
   save() {
@@ -191,16 +198,14 @@ export default Model.extend({
   },
 
   remove() {
-    this.ports.toArray().forEach((port) => {
+    // Disconnect ports first so other modules update their connection state
+    this.ports.slice().forEach((port) => {
       port.disconnect();
-      port.destroyRecord();
     });
 
-    this.settings.toArray().forEach((setting) => {
-      setting.remove();
-    });
-
-    this.destroyRecord();
+    // Use deleteRecord + save instead of destroyRecord for better Ember Data 4.x compatibility
+    this.deleteRecord();
+    this.save();
   }
 
 });

@@ -6,7 +6,6 @@
 */
 
 import Service from '@ember/service';
-import { get } from '@ember/object';
 
 // for slo-mo debugging
 const frameSkip = 0;
@@ -15,15 +14,14 @@ const frameSkip = 0;
 // later than the current time
 const lookahead = 16.666;
 
-export default Service.extend({
-
-  requests: null,
-  frameCounter: 0, // for slo-mo debugging
+export default class SchedulerService extends Service {
+  requests = null;
+  frameCounter = 0; // for slo-mo debugging
 
   setup() {
     window.requestAnimationFrame(this._sendEvents.bind(this));
     this.requests = [];
-  },
+  }
 
   queueEvent(event, callback, module) {
     this.requests.pushObject({
@@ -31,11 +29,11 @@ export default Service.extend({
       event,
       module
     });
-  },
+  }
 
   cancelEventsForModule(module) {
     this.requests = this.requests.rejectBy('module', module);
-  },
+  }
 
   _sendEvents() {
 
@@ -51,8 +49,8 @@ export default Service.extend({
 
     // start by finding the event with the earliest timestamp
     let sortedRequests = this.requests.sortBy('event.targetTime');
-    let event = get(sortedRequests, 'firstObject.event');
-    let callback = get(sortedRequests, 'firstObject.callback');
+    let event = sortedRequests[0]?.event;
+    let callback = sortedRequests[0]?.callback;
 
     // remove and call events until there are no events left
     // with timestamps earlier than the current time
@@ -67,11 +65,10 @@ export default Service.extend({
       // sort the queue each time, because the last event
       // callback might have added more items to the queue.
       sortedRequests = this.requests.sortBy('event.targetTime');
-      event = get(sortedRequests, 'firstObject.event');
-      callback = get(sortedRequests, 'firstObject.callback');
+      event = sortedRequests[0]?.event;
+      callback = sortedRequests[0]?.callback;
 
     }
 
   }
-
-});
+}

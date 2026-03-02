@@ -1,4 +1,4 @@
-import { set, get, observer } from '@ember/object';
+import { set, get, observer, computed } from '@ember/object';
 import { map } from '@ember/object/computed';
 import { belongsTo, attr } from '@ember-data/model';
 import Module from '../module/model';
@@ -13,13 +13,20 @@ export default Module.extend({
   inputTypeMenuOptions,
 
   steps: belongsTo('array', { async: false, inverse: null }),
-  readPortsGroup: belongsTo('port-group', { async: false }),
+  readPortsGroup: belongsTo('port-group', { async: false, inverse: null }),
   inputType: attr('string', { defaultValue: 'Number' }),
   displayScale: attr('number', { defaultValue: 1 }),
 
   onAttrChanged: observer('inputType', 'displayScale', function() {
     if (this.hasDirtyAttributes) {
       this.requestSave();
+    }
+  }),
+
+  // Ensure dataManager is set whenever steps relationship is established
+  onStepsChanged: observer('steps', function() {
+    if (this.steps && !this.steps.dataManager) {
+      this.steps.dataManager = this;
     }
   }),
 
@@ -36,9 +43,9 @@ export default Module.extend({
     let readPortNumber = parseInt(get(port, 'label'));
 
     let readPorts = this.readPortsGroup.valueInPorts;
-    let readPort = readPorts.objectAt(readPortNumber);
+    let readPort = readPorts.at(readPortNumber);
     let index = readPort.getValue();
-    let item = this.steps.items.findBy('index', mod(index, this.steps.items.length));
+    let item = this.steps.items.find(i => i.index === mod(index, this.steps.items.length));
     if (item) {
       return item.value;
     }
@@ -47,13 +54,13 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
 
       // create steps
       let steps = this.store.createRecord('array');
       set(this, 'steps', steps);
-      set(this, 'steps.length', 8);
+      this.steps.setLength(8);
 
       // create settings
       this.addMenuSetting('Input Type', 'inputType', 'inputTypeMenuOptions', this);
@@ -76,16 +83,20 @@ export default Module.extend({
 
       this.requestSave();
     }
-    this.steps.dataManager = this;
+    if (this.steps) {
+      this.steps.dataManager = this;
+    }
   },
 
   remove() {
-    this.steps.remove();
+    // Embedded records (steps) are removed automatically with the parent module
     this._super();
   },
 
   save() {
-    this.steps.save();
+    if (this.steps) {
+      this.steps.save();
+    }
     this._super();
   }
 

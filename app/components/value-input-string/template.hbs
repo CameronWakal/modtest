@@ -1,1 +1,11 @@
-{{yield}}
+<input
+  type="text"
+  value={{this.value}}
+  class="value-input-string {{if this.isPending 'pending'}}"
+  {{did-insert this.setupInput}}
+  {{on "click" this.handleClick}}
+  {{on "focusout" this.handleFocusOut}}
+  {{on "input" this.handleInput}}
+  {{on "keyup" this.handleKeyUp}}
+  {{on "keydown" this.handleKeyDown}}
+/>

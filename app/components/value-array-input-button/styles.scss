@@ -1,7 +1,9 @@
+@use 'sass:math';
+
 $toggle-size: 4px;
-$toggle-borderradius: $toggle-size / 2;
+$toggle-borderradius: math.div($toggle-size, 2);
 $toggle-accent-size: 8px;
-$toggle-accent-borderradius: $toggle-accent-size / 2;
+$toggle-accent-borderradius: math.div($toggle-accent-size, 2);
 
 .value-array-input-button {
 

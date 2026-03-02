@@ -25,13 +25,13 @@ export default Module.extend({
 
   gateIsInBeats: equal('gateUnits', 'beats'),
   delayIsInBeats: equal('delayUnits', 'beats'),
-  tempoInPort: belongsTo('port-value-in', { async: false }),
-  countInPort: belongsTo('port-value-in', { async: false }), // number of times to repeat
-  gateNumeratorInPort: belongsTo('port-value-in', { async: false }), // period to continue repeating
-  gateDenominatorInPort: belongsTo('port-value-in', { async: false }), // period to continue repeating
-  delayNumeratorInPort: belongsTo('port-value-in', { async: false }), // delay between repeats
-  delayDenominatorInPort: belongsTo('port-value-in', { async: false }), // delay between repeats
-  trigOutPort: belongsTo('port-event-out', { async: false }),
+  tempoInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  countInPort: belongsTo('port-value-in', { async: false, inverse: null }), // number of times to repeat
+  gateNumeratorInPort: belongsTo('port-value-in', { async: false, inverse: null }), // period to continue repeating
+  gateDenominatorInPort: belongsTo('port-value-in', { async: false, inverse: null }), // period to continue repeating
+  delayNumeratorInPort: belongsTo('port-value-in', { async: false, inverse: null }), // delay between repeats
+  delayDenominatorInPort: belongsTo('port-value-in', { async: false, inverse: null }), // delay between repeats
+  trigOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
 
   gateIsOn: computed('mode', function() {
     return this.mode === 'gate only' || this.mode === 'count+gate';
@@ -120,7 +120,7 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
 
       this.addEventInPort('trig', 'onEventIn', true);

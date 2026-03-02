@@ -13,12 +13,12 @@ export default Module.extend({
   note: null,
   velocity: null,
 
-  noteOnPort: belongsTo('port-event-out', { async: false }),
-  noteOffPort: belongsTo('port-event-out', { async: false }),
+  noteOnPort: belongsTo('port-event-out', { async: false, inverse: null }),
+  noteOffPort: belongsTo('port-event-out', { async: false, inverse: null }),
 
   inputDeviceName: attr('string', { defaultValue: 'All' }),
   deviceMenuOptions: computed('midi.inputDevices', 'inputDeviceName', function() {
-    let devices = get(this, 'midi.inputDevices').mapBy('name');
+    let devices = get(this, 'midi.inputDevices').map(d => d.name);
     let currentDevice = this.inputDeviceName;
     if (!devices.includes(currentDevice) && currentDevice !== 'All') {
       devices = [currentDevice, ...devices];
@@ -70,7 +70,7 @@ export default Module.extend({
     this._super(...arguments);
     this.midi.noteListener = this;
 
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
 
       // create ports

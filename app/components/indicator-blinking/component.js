@@ -1,33 +1,32 @@
-import Component from '@ember/component';
-import { computed, get, set } from '@ember/object';
-import { htmlSafe } from '@ember/string';
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
+import { schedule } from '@ember/runloop';
+import { htmlSafe } from '@ember/template';
 
-export default Component.extend({
+export default class IndicatorBlinkingComponent extends Component {
+  @tracked countIsEven = true;
 
-  classNames: ['indicator-blinking'],
-  classNameBindings: ['animationClass'],
-  attributeBindings: ['styleAttribute:style'],
+  get blinkDuration() {
+    return this.args.blinkDuration ?? 200;
+  }
 
-  blinkDuration: 200,
-  blinkTrigger: null,
-  countIsEven: true,
-
-  init() {
-    // prevent lamps from initially blinking when revisiting an already-loaded patch route
-    set(this, 'blinkTrigger', null);
-    this._super(...arguments);
-  },
-
-  animationClass: computed('blinkTrigger', function() {
-    if (this.blinkTrigger) {
-      this.countIsEven = !this.countIsEven;
+  get animationClass() {
+    if (this.args.blinkTrigger) {
       return this.countIsEven ? 'on-even' : 'on-odd';
     }
     return '';
-  }),
+  }
 
-  styleAttribute: computed('blinkDuration', function() {
+  get styleAttribute() {
     return htmlSafe(`animation-duration: ${this.blinkDuration}ms;`);
-  })
+  }
 
-});
+  @action
+  onBlinkTriggerChange() {
+    // Schedule state update after render to avoid updating during computation
+    schedule('afterRender', this, () => {
+      this.countIsEven = !this.countIsEven;
+    });
+  }
+}

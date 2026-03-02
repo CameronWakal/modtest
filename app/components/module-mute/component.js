@@ -1,13 +1,9 @@
-import ModuleGenericComponent from '../module/component';
+import Component from '@glimmer/component';
 import { action } from '@ember/object';
 
-export default ModuleGenericComponent.extend({
-
-  classNames: ['module-mute'],
-
+export default class ModuleMuteComponent extends Component {
   @action
   mute() {
-    this.module.toggleProperty('isMuted');
+    this.args.module.toggleProperty('isMuted');
   }
-
-});
+}

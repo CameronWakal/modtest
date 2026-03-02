@@ -1,13 +1,9 @@
-import ModuleGenericComponent from '../module/component';
+import Component from '@glimmer/component';
 import { action } from '@ember/object';
 
-export default ModuleGenericComponent.extend({
-
-  classNames: ['module-analyst'],
-
+export default class ModuleAnalystComponent extends Component {
   @action
   selectKey(index) {
-    this.module.setSelectedKey(index);
+    this.args.module.setSelectedKey(index);
   }
-
-});
+}

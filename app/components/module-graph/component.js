@@ -1,7 +1,4 @@
-import ModuleGenericComponent from '../module/component';
+import Component from '@glimmer/component';
 
-export default ModuleGenericComponent.extend({
-
-  classNames: ['module-graph']
-
-});
+export default class ModuleGraphComponent extends Component {
+}

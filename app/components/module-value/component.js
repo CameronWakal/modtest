@@ -1,7 +1,4 @@
-import ModuleGenericComponent from '../module/component';
+import Component from '@glimmer/component';
 
-export default ModuleGenericComponent.extend({
-
-  classNames: ['module-value']
-
-});
+export default class ModuleValueComponent extends Component {
+}

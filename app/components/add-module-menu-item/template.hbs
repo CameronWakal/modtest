@@ -1,1 +1,7 @@
-{{label}}
+<a
+  href="#"
+  class="add-module-menu-item"
+  {{on "mousedown" this.handleMouseDown}}
+  {{on "mouseup" this.handleMouseUp}}
+  {{on "mousemove" this.handleMouseMove}}
+>{{@label}}</a>

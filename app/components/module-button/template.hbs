@@ -1,12 +1,27 @@
-<ModuleLabel @title={{module.title}} />
-<div class="module-content">
-  <ToggleButton @label='Trig' {{on 'click' this.trig}}/>
-</div>
-<ModulePorts
-  @portGroups={{module.portGroups}}
-  @portStartedConnecting={{this.portStartedConnecting}}
-  @portFinishedConnecting={{this.portFinishedConnecting}}
-  @mouseEnterPort={{this.mouseEnterPort}}
-  @mouseLeavePort={{this.mouseLeavePort}}
-  @disconnectPort={{this.disconnectPort}}
-/>
+<ModuleWrapper
+  @module={{@module}}
+  @remove={{@remove}}
+  @selected={{@selected}}
+  @modulePortStartedConnecting={{@modulePortStartedConnecting}}
+  @modulePortFinishedConnecting={{@modulePortFinishedConnecting}}
+  @startedMoving={{@startedMoving}}
+  @finishedMoving={{@finishedMoving}}
+  @mouseEnterModulePort={{@mouseEnterModulePort}}
+  @mouseLeaveModulePort={{@mouseLeaveModulePort}}
+  @portDisconnected={{@portDisconnected}}
+  @savePatch={{@savePatch}}
+  as |wrapper|
+>
+  <ModuleLabel @title={{@module.title}} />
+  <div class="module-content">
+    <ToggleButton @label='Trig' {{on 'click' this.trig}} />
+  </div>
+  <ModulePorts
+    @portGroups={{@module.portGroups}}
+    @portStartedConnecting={{wrapper.portStartedConnecting}}
+    @portFinishedConnecting={{wrapper.portFinishedConnecting}}
+    @mouseEnterPort={{wrapper.mouseEnterPort}}
+    @mouseLeavePort={{wrapper.mouseLeavePort}}
+    @disconnectPort={{wrapper.disconnectPort}}
+  />
+</ModuleWrapper>

@@ -6,7 +6,7 @@ export default Port.extend({
   type: 'port-value-out', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
 
   // valueOut ports can have multiple valueIn ports as destinations
-  connections: hasMany('port-value-in', { async: true }),
+  connections: hasMany('port-value-in', { async: false, inverse: 'connections' }),
   // module getter method for target value
   targetMethod: attr('string'),
 

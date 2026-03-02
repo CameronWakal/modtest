@@ -7,7 +7,7 @@ export default Module.extend({
   type: 'module-button', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
   name: 'Button',
 
-  eventOutPort: belongsTo('port-event-out', { async: false }),
+  eventOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
 
   trig() {
     this.eventOutPort.sendEvent({
@@ -18,7 +18,7 @@ export default Module.extend({
 
   init() {
     this._super(...arguments);
-    if (this.isNew) {
+    if (this.isNew && this.ports.length === 0) {
       set(this, 'title', this.name);
       // create ports
       this.addEventOutPort('out', 'eventOutPort', true);

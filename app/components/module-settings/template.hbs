@@ -1,17 +1,17 @@
 <div class="app-sidebar-section">
-  <h4>{{module.name}} Module</h4>
+  <h4>{{this.module.name}} Module</h4>
 </div>
 <div class="app-sidebar-section">
   <ul>
     <li>
-      <ValueInputString @boundValue={{this.module.title}} @canBeEmpty={{false}} @valueUpdated={{this.titleChanged}} />
+      <ValueInputString @boundValue={{this.module.title}} @canBeEmpty={{false}} @target={{this.module}} @property="title" @valueUpdated={{this.titleChanged}} />
     </li>
   </ul>
 </div>
-{{#if hasSettings}}
+{{#if this.hasSettings}}
   <div class="app-sidebar-section">
     <ul>
-      {{#each module.settings as |setting|}}
+      {{#each this.module.settings as |setting|}}
         <li>
           {{#let (component setting.type) as |SettingComponent|}}
           <SettingComponent @setting={{setting}} />
@@ -22,11 +22,11 @@
   </div>
 {{/if}}
 
-{{#if hasPorts}}
+{{#if this.hasPorts}}
   <div class="app-sidebar-section">
     <h4>Ports</h4>
     <ul>
-      {{#each module.ports as |port|}}
+      {{#each this.module.ports as |port|}}
         <li>
           <PortSetting @port={{port}} @addBusConnection={{this.addBusConnection}} />
         </li>
