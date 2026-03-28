@@ -1,45 +1,60 @@
+import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
-import { observer, computed, set, get } from '@ember/object';
 import Module from '../module/model';
 import { belongsTo, attr } from '@ember-data/model';
 
 const noteDuration = 20;
 const latency = 10;
 
-export default Module.extend({
+export default class ModuleOutModel extends Module {
+  @service midi;
 
-  midi: service(),
+  type = 'module-out'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name = 'Out';
 
-  type: 'module-out', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'Out',
+  events = null;
+  @tracked latestTriggerTime = null;
+  @tracked triggerDuration = null;
 
-  events: null,
-  latestTriggerTime: null,
-  triggerDuration: null,
+  @belongsTo('port-value-in', { async: false, inverse: null }) noteInPort;
+  @belongsTo('port-value-in', { async: false, inverse: null }) velInPort;
+  @belongsTo('port-value-in', { async: false, inverse: null }) channelInPort;
+  @attr('string', { defaultValue: 'All' }) outputDeviceName;
 
-  noteInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-  velInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-  channelInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-  outputDeviceName: attr('string', { defaultValue: 'All' }),
-
-  deviceMenuOptions: computed('midi.outputDevices', 'outputDeviceName', function() {
-    let devices = get(this, 'midi.outputDevices').map(d => d.name);
+  get deviceMenuOptions() {
+    let devices = this.midi.outputDevices.map(d => d.name);
     let currentDevice = this.outputDeviceName;
     if (!devices.includes(currentDevice) && currentDevice !== 'All') {
       devices = [currentDevice, ...devices];
     }
     return ['All', ...devices];
-  }),
+  }
 
-  onOutputDeviceNameChanged: observer('outputDeviceName', function() {
-    if (this.hasDirtyAttributes) {
+  // eslint-disable-next-line ember/classic-decorator-hooks
+  init() {
+    super.init(...arguments);
+    this.events = [];
+
+    if (this.isNew && this.ports.length === 0) {
+      this.title = this.name;
+
+      // Create ports
+      this.addEventInPort('trig', 'sendEvent', true);
+      this.addValueInPort('note', 'noteInPort', { canBeEmpty: true, minValue: 0, maxValue: 127 });
+      this.addValueInPort('vel', 'velInPort', { defaultValue: 127, minValue: 0, maxValue: 127, isEnabled: false });
+      this.addValueInPort('channel', 'channelInPort', { defaultValue: 1, minValue: 1, maxValue: 16, isEnabled: false });
+
+      // Create settings
+      this.addMenuSetting('Output', 'outputDeviceName', 'deviceMenuOptions', this);
+
+      console.log('module-out.didCreate() requestSave()');
       this.requestSave();
     }
-  }),
+  }
 
   sendEvent(event) {
-    // we add some padding ms to the event timestamps to allow for latency.
-    // send an alert if the latency is more than the allowed padding.
+    // We add some padding ms to the event timestamps to allow for latency.
+    // Send an alert if the latency is more than the allowed padding.
     let netLatency = performance.now() - (event.targetTime + latency);
     if (netLatency > 0) {
       console.log(`Note event is late by ${netLatency}`);
@@ -50,8 +65,7 @@ export default Module.extend({
 
     event.completionTime = performance.now();
     this.events.push(event);
-    if (get(this, 'events.length') >= 64) {
-
+    if (this.events.length >= 64) {
       let callbackDeltas = this.events.map((item) => {
         return item.callbackTime - item.targetTime;
       });
@@ -71,11 +85,10 @@ export default Module.extend({
 
       console.log('avg callback vs target time', callbackAverage, '\navg completion time from callback', executionAverage);
 
-      set(this, 'events', []);
-
+      this.events = [];
     }
 
-    // check the connection of the 'note' port for the value of the note to play.
+    // Check the connection of the 'note' port for the value of the note to play.
     let note = {
       value: this.noteInPort.getValue(),
       velocity: this.velInPort.getValue(),
@@ -85,31 +98,8 @@ export default Module.extend({
     };
     if (note.value != null) {
       this.midi.sendNote(note, this.outputDeviceName);
-      set(this, 'triggerDuration', event.duration);
-      set(this, 'latestTriggerTime', event.targetTime);
-    }
-
-  },
-
-  init() {
-    this._super(...arguments);
-    this.events = [];
-
-    if (this.isNew && this.ports.length === 0) {
-      set(this, 'title', this.name);
-
-      // create ports
-      this.addEventInPort('trig', 'sendEvent', true);
-      this.addValueInPort('note', 'noteInPort', { canBeEmpty: true, minValue: 0, maxValue: 127 });
-      this.addValueInPort('vel', 'velInPort', { defaultValue: 127, minValue: 0, maxValue: 127, isEnabled: false });
-      this.addValueInPort('channel', 'channelInPort', { defaultValue: 1, minValue: 1, maxValue: 16, isEnabled: false });
-
-      // create settings
-      this.addMenuSetting('Output', 'outputDeviceName', 'deviceMenuOptions', this);
-
-      console.log('module-out.didCreate() requestSave()');
-      this.requestSave();
+      this.triggerDuration = event.duration;
+      this.latestTriggerTime = event.targetTime;
     }
   }
-
-});
+}

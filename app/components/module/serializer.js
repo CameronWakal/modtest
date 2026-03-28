@@ -4,16 +4,15 @@ import ApplicationSerializer from '../../serializers/application';
 const PORT_TYPES = ['port-event-in', 'port-event-out', 'port-value-in', 'port-value-out'];
 const PORT_GROUP_TYPE = 'port-group';
 
-export default ApplicationSerializer.extend({
-
-  attrs: {
+export default class ModuleSerializer extends ApplicationSerializer {
+  attrs = {
     portGroups: { embedded: 'always' },
     settings: { embedded: 'always' }
-  },
+  };
 
   // Auto-serialize belongsTo relationships to ports and port-groups as IDs
   serialize(snapshot, options) {
-    let json = this._super(...arguments);
+    let json = super.serialize(snapshot, options);
 
     const modelClass = this.store.modelFor(snapshot.modelName);
     modelClass.eachRelationship((key, relationship) => {
@@ -30,7 +29,7 @@ export default ApplicationSerializer.extend({
     });
 
     return json;
-  },
+  }
 
   normalize(modelClass, resourceHash) {
     // Ensure settings is always an array to avoid EmbeddedRecordsMixin warning
@@ -51,7 +50,7 @@ export default ApplicationSerializer.extend({
     }
 
     // Let EmbeddedRecordsMixin process the embedded records
-    let result = this._super(...arguments);
+    let result = super.normalize(modelClass, resourceHash);
 
     let store = this.store;
 
@@ -77,7 +76,7 @@ export default ApplicationSerializer.extend({
     this._restorePortRelationships(result, resourceHash, modelClass);
 
     return result;
-  },
+  }
 
   _pushSettings(store, settings, moduleId, moduleType) {
     if (!settings || !Array.isArray(settings)) return;
@@ -101,7 +100,7 @@ export default ApplicationSerializer.extend({
         }
       }
     });
-  },
+  }
 
   _pushPortGroup(store, portGroup, moduleId, moduleType) {
     if (!portGroup || !portGroup.id) return;
@@ -126,7 +125,7 @@ export default ApplicationSerializer.extend({
     } catch (e) {
       // Silently ignore - portGroup may already exist with correct data
     }
-  },
+  }
 
   _pushPorts(store, ports, portGroupId) {
     if (!ports || !Array.isArray(ports)) return;
@@ -162,7 +161,7 @@ export default ApplicationSerializer.extend({
         }
       }
     });
-  },
+  }
 
   // Get the connection target type based on port type
   _getConnectionType(portType) {
@@ -173,7 +172,7 @@ export default ApplicationSerializer.extend({
       case 'port-value-out': return 'port-value-in';
       default: return 'port';
     }
-  },
+  }
 
   // Handle modules with no settings - ensure settings is always serialized as an array
   serializeHasMany(snapshot, json, relationship) {
@@ -184,8 +183,8 @@ export default ApplicationSerializer.extend({
         return;
       }
     }
-    this._super(...arguments);
-  },
+    super.serializeHasMany(snapshot, json, relationship);
+  }
 
   // Restore belongsTo relationships to ports and port-groups from serialized IDs
   _restorePortRelationships(result, resourceHash, modelClass) {
@@ -210,7 +209,7 @@ export default ApplicationSerializer.extend({
         }
       }
     });
-  },
+  }
 
   // Extract attributes from a raw JSON object (excluding id, type, and relationship keys)
   _extractAttributes(obj) {
@@ -230,5 +229,4 @@ export default ApplicationSerializer.extend({
 
     return attributes;
   }
-
-});
+}

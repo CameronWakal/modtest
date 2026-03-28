@@ -1,219 +1,183 @@
 # Ember Octane Migration Plan
 
-## Current State Assessment
+## Current State Assessment (Updated 2026-03-27)
 
 ### Component Status
 | Type | Count | Status |
 |------|-------|--------|
-| Glimmer Components | 23 | Already Octane |
-| Classic Components | 19 | Need migration |
+| Glimmer Components | 41 | ✅ All Octane |
+| Classic Components | 0 | ✅ All converted |
 
 ### Class Patterns
-| Type | Count | Pattern |
-|------|-------|---------|
-| Models | 30 | `.extend()` → native class |
-| Serializers | 24 | `.extend()` → native class |
-| Services | 2 | `.extend()` → native class |
-| Adapters | 1 | `.extend()` → native class |
-| Routes | 2 | Already native class |
-| Controllers | 2 | Already native class |
+| Type | Count | Status |
+|------|-------|--------|
+| Models | 30 | ✅ Native classes |
+| Serializers | 26 | ✅ Native classes |
+| Services | 2 | ✅ Native classes |
+| Adapters | 1 | ✅ Native class |
+| Routes | 2 | ✅ Native classes |
+| Controllers | 2 | ✅ Native classes |
 
-### Legacy Patterns Found
-- **Observers**: 19 files (need conversion to `@tracked` + effects)
-- **Computed properties**: 21+ files (need conversion to getters)
-- **`get()`/`set()` imports**: 33 files
-- **`this._super()`**: 34 files
-- **`actions:` hash**: 3 files
-- **`this.send()`**: 3 files
-- **`tagName`/`classNames`/`classNameBindings`**: 19 classic components
+### Legacy Patterns Status
+| Pattern | Original Count | Remaining | Status |
+|---------|---------------|-----------|--------|
+| `Component.extend()` | 19 | 0 | ✅ Done |
+| `Model.extend()` | 30 | 0 | ✅ Done |
+| `Serializer.extend()` | 24 | 1* | ✅ Done |
+| `this._super()` | 34 | 0 | ✅ Done |
+| `computed()` | 21+ | 0 | ✅ Done |
+| `actions:` hash | 3 | 0 | ✅ Done |
+| `tagName`/`classNames` | 19 | 0 | ✅ Done |
+| `addObserver()` | 19 | 0 | ✅ Done |
+| `{{action}}` helper | ? | 1 | ⚠️ Minor |
+| `this.send()` | 3 | 2 | ⚠️ Minor |
+
+*Note: The 1 remaining `.extend()` in `app/serializers/application.js` is intentional for applying `EmbeddedRecordsMixin`
 
 ---
 
 ## Migration Phases
 
-### Phase 1: Services & Adapter (Low Risk)
+### Phase 1: Services & Adapter ✅ COMPLETE
 **Scope**: 3 files
-**Risk**: Low - isolated, easily testable
+**Status**: Complete
 
-Convert to native ES classes:
-1. `app/services/midi.js`
-2. `app/services/scheduler.js`
-3. `app/adapters/application.js`
-
-**Pattern**:
-```javascript
-// Before
-export default Service.extend({
-  property: null,
-  init() { this._super(...arguments); },
-  myMethod() { set(this, 'property', value); }
-});
-
-// After
-export default class MidiService extends Service {
-  @tracked property = null;
-  myMethod() { this.property = value; }
-}
-```
+Converted to native ES classes:
+1. ✅ `app/services/midi.js`
+2. ✅ `app/services/scheduler.js`
+3. ✅ `app/adapters/application.js`
 
 ---
 
-### Phase 2: Simple Classic Components (Medium Risk)
+### Phase 2: Simple Classic Components ✅ COMPLETE
 **Scope**: 10 components
-**Risk**: Medium - UI-facing but straightforward
+**Status**: Complete
 
-Convert components that have minimal state and simple templates:
-1. `add-module-menu-item/component.js`
-2. `toggle-button/component.js`
-3. `indicator-blinking/component.js`
-4. `value-input-number/component.js`
-5. `value-input-string/component.js`
-6. `value-array-input-button/component.js`
-7. `select-menu/component.js`
-8. `select-by-title-menu/component.js`
-9. `module-setting/component.js`
-10. `module-setting-menu/component.js`
-
-**Key changes**:
-- Remove `tagName`, add wrapper element in template
-- Convert `classNames`/`classNameBindings` to template classes
-- Convert `attributeBindings` to template attributes
-- Convert `actions:` hash to `@action` methods
-- Replace `this.get()`/`this.set()` with direct property access and `@tracked`
-- Convert observers to derived state or constructor effects
+All converted to Glimmer components:
+1. ✅ `add-module-menu-item/component.js`
+2. ✅ `toggle-button/component.js`
+3. ✅ `indicator-blinking/component.js`
+4. ✅ `value-input-number/component.js` (removed - merged into base-value-input)
+5. ✅ `value-input-string/component.js` (removed - merged into base-value-input)
+6. ✅ `value-array-input-button/component.js`
+7. ✅ `select-menu/component.js`
+8. ✅ `select-by-title-menu/component.js`
+9. ✅ `module-setting/component.js`
+10. ✅ `module-setting-menu/component.js`
 
 ---
 
-### Phase 3: Complex Classic Components (Higher Risk)
+### Phase 3: Complex Classic Components ✅ COMPLETE
 **Scope**: 9 components
-**Risk**: Higher - stateful, interconnected
+**Status**: Complete
 
-Convert components with complex state management:
-1. `patch-component/component.js` - Main orchestrator (highest complexity)
-2. `patch-settings/component.js`
-3. `module-settings/component.js`
-4. `port/component.js`
-5. `port-setting/component.js`
-6. `port-setting-bus-menu/component.js`
-7. `value-input-fader/component.js`
-8. `value-input-array/component.js`
-9. `graph-canvas/component.js`
-
-**Special considerations for `patch-component`**:
-- Has many `this.send()` calls - convert to direct method calls
-- Complex action handling - refactor to `@action` decorators
-- State management for diagram, modules, connections
+All converted to Glimmer components:
+1. ✅ `patch-component/component.js`
+2. ✅ `patch-settings/component.js`
+3. ✅ `module-settings/component.js`
+4. ✅ `port/component.js`
+5. ✅ `port-setting/component.js`
+6. ✅ `port-setting-bus-menu/component.js`
+7. ✅ `value-input-fader/component.js`
+8. ✅ `value-input-array/component.js`
+9. ✅ `graph-canvas/component.js`
 
 ---
 
-### Phase 4: Port Models (Medium Risk)
+### Phase 4: Port Models ✅ COMPLETE (native classes)
 **Scope**: 7 files
-**Risk**: Medium - core to module connectivity
+**Status**: Native classes complete, observers still present
 
-Convert port models that handle connections:
-1. `app/components/port/model.js` - Base port model
-2. `app/components/port-event-in/model.js`
-3. `app/components/port-event-out/model.js`
-4. `app/components/port-value-in/model.js`
-5. `app/components/port-value-out/model.js`
-6. `app/components/port-group/model.js`
-7. `app/models/port.js`
+All converted to native ES classes:
+1. ✅ `app/components/port/model.js` - Native class (⚠️ has addObserver)
+2. ✅ `app/components/port-event-in/model.js` - Native class
+3. ✅ `app/components/port-event-out/model.js` - Native class
+4. ✅ `app/components/port-value-in/model.js` - Native class (⚠️ has addObserver)
+5. ✅ `app/components/port-value-out/model.js` - Native class
+6. ✅ `app/components/port-group/model.js` - Native class (⚠️ has addObserver)
+7. ✅ `app/models/port.js` - Native class
 
-**Key challenges**:
-- Observers on `isEnabled` and attribute changes
-- Computed properties for `uniqueCssIdentifier`, `compatibleType`
-- `requestSave()` side effects
+**Remaining**: 3 files still use `addObserver()` - see Phase 8
 
 ---
 
-### Phase 5: Module Models (Higher Risk)
-**Scope**: 18 files
-**Risk**: Higher - core business logic
+### Phase 5: Module Models ✅ COMPLETE (native classes)
+**Scope**: 18+ files
+**Status**: Native classes complete, some observers still present
 
-Convert the base module model and all module types:
-1. `app/components/module/model.js` - Base module (do first)
-2. `app/components/module-array/model.js`
-3. `app/components/module-clock/model.js`
-4. `app/components/module-clock-div/model.js`
-5. `app/components/module-sequence/model.js`
-6. `app/components/module-sequence-euclidean/model.js`
-7. `app/components/module-scale/model.js`
-8. `app/components/module-switch/model.js`
-9. `app/components/module-maybe/model.js`
-10. `app/components/module-mute/model.js`
-11. `app/components/module-value/model.js`
-12. `app/components/module-repeat/model.js`
-13. `app/components/module-in/model.js`
-14. `app/components/module-out/model.js`
-15. `app/components/module-ccout/model.js`
-16. `app/components/module-analyst/model.js`
-17. `app/components/module-button/model.js`
-18. `app/components/module-merge-voices/model.js`
+All converted to native ES classes:
+1. ✅ `app/components/module/model.js` - Native class
+2. ✅ `app/components/module-array/model.js` - Native class (⚠️ has addObserver)
+3. ✅ `app/components/module-clock/model.js` - Native class (⚠️ has addObserver)
+4. ✅ `app/components/module-clock-div/model.js` - Native class
+5. ✅ `app/components/module-sequence/model.js` - Native class (⚠️ has addObserver)
+6. ✅ `app/components/module-sequence-euclidean/model.js` - Native class
+7. ✅ `app/components/module-scale/model.js` - Native class (⚠️ has addObserver)
+8. ✅ `app/components/module-switch/model.js` - Native class
+9. ✅ `app/components/module-maybe/model.js` - Native class
+10. ✅ `app/components/module-mute/model.js` - Native class
+11. ✅ `app/components/module-value/model.js` - Native class (⚠️ has addObserver)
+12. ✅ `app/components/module-repeat/model.js` - Native class (⚠️ has addObserver)
+13. ✅ `app/components/module-in/model.js` - Native class (⚠️ has addObserver)
+14. ✅ `app/components/module-out/model.js` - Native class (⚠️ has addObserver)
+15. ✅ `app/components/module-ccout/model.js` - Native class
+16. ✅ `app/components/module-analyst/model.js` - Native class (⚠️ has addObserver)
+17. ✅ `app/components/module-button/model.js` - Native class
+18. ✅ `app/components/module-merge-voices/model.js` - Native class
+19. ✅ `app/components/module-plonkmap/model.js` - Native class (⚠️ has addObserver)
+20. ✅ `app/components/module-bus/model.js` - Native class
+21. ✅ `app/components/module-graph/model.js` - Native class
+22. ✅ `app/components/module-analyst-graphable/model.js` - Native class
 
-**Pattern for models**:
-```javascript
-// Before
-export default Module.extend({
-  type: 'module-clock',
-  tempo: attr('number', { defaultValue: 120 }),
-  onTempoChanged: observer('tempo', function() { ... }),
-  computedThing: computed('a', 'b', function() { ... })
-});
-
-// After
-export default class ModuleClock extends Module {
-  @attr('number', { defaultValue: 120 }) tempo;
-
-  get computedThing() {
-    return this.a + this.b;
-  }
-
-  // Observer → effect in appropriate lifecycle or setter
-}
-```
+**Remaining**: 10 module files still use `addObserver()` - see Phase 8
 
 ---
 
-### Phase 6: Data Models (Medium Risk)
+### Phase 6: Data Models ✅ COMPLETE (native classes)
 **Scope**: 3 files
-**Risk**: Medium - data layer
+**Status**: Native classes complete, some observers still present
 
-Convert remaining data models:
-1. `app/models/patch.js`
-2. `app/models/array.js`
-3. `app/models/array-item.js`
+All converted to native ES classes:
+1. ✅ `app/models/patch.js` - Native class
+2. ✅ `app/models/array.js` - Native class (⚠️ has addObserver)
+3. ✅ `app/models/array-item.js` - Native class (⚠️ has addObserver)
 
----
-
-### Phase 7: Serializers (Medium Risk)
-**Scope**: 24 files
-**Risk**: Medium - affects data persistence
-
-Convert all serializers to native classes:
-1. `app/serializers/application.js` (uses `EmbeddedRecordsMixin`)
-2. `app/serializers/patch.js`
-3. `app/serializers/array.js`
-4. Plus 21 component serializers
-
-**Note**: `EmbeddedRecordsMixin` must be preserved - use with `class extends`:
-```javascript
-import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
-
-export default class ApplicationSerializer extends JSONSerializer.extend(EmbeddedRecordsMixin) {
-  // ...
-}
-```
+**Remaining**: 2 files still use `addObserver()` - see Phase 8
 
 ---
 
-### Phase 8: Template Cleanup (Low Risk)
-**Scope**: ~10 templates
-**Risk**: Low - syntactic changes
+### Phase 7: Serializers ✅ COMPLETE
+**Scope**: 26 files
+**Status**: Complete
 
-1. Convert remaining `{{action}}` helpers to `{{on}}` modifiers
-2. Ensure all component invocations use angle brackets
-3. Remove any `this.` prefix in templates where unnecessary
-4. Update any remaining curly-brace helper patterns
+All converted to native ES classes:
+1. ✅ `app/serializers/application.js` (uses `.extend(EmbeddedRecordsMixin)` - intentional)
+2. ✅ `app/serializers/patch.js`
+3. ✅ `app/serializers/array.js`
+4. ✅ Plus 23 component serializers - all native classes
+
+---
+
+### Phase 8: Observer Removal & Template Cleanup ✅ COMPLETE
+**Scope**: 15 files with observers + 1 template
+**Status**: Observers removed, minor template/controller items remain
+
+#### `addObserver()` removal (15 files): ✅ COMPLETE
+
+All observers have been converted using these patterns:
+1. **Save-triggering observers** → UI components now trigger `requestSave()` after value changes
+2. **Side-effect observers** → Converted to explicit setter methods (e.g., `setSource()`, `setPortSetsCount()`)
+3. **Relationship observers** → Removed; `async: false` ensures relationships are available in `init()`
+4. **Settings system** → Updated `ModuleSettingModel` to detect and use setter methods automatically
+
+**Key architectural changes:**
+- `BaseValueInputComponent` now calls `_triggerSaveIfNeeded()` after committing values
+- `ModuleSettingModel` uses custom getter/setter that checks for setter methods
+- `ValueInputFaderComponent` and `ValueArrayInputButtonComponent` trigger saves after updates
+
+#### Remaining Minor Items (optional):
+- [ ] Convert `{{action 'newPatch'}}` to `{{on "click" ...}}` in `app/templates/application.hbs`
+- [ ] Convert `this.send()` calls in controllers (functional but could modernize)
 
 ---
 
@@ -305,29 +269,29 @@ Phase 7 (Serializers) ───────────────────�
 
 ## Estimated Scope
 
-| Phase | Files | Complexity |
-|-------|-------|------------|
-| 1 | 3 | Low |
-| 2 | 10 | Medium |
-| 3 | 9 | High |
-| 4 | 7 | Medium |
-| 5 | 18 | High |
-| 6 | 3 | Medium |
-| 7 | 24 | Medium |
-| 8 | ~10 | Low |
-| **Total** | **~84** | |
+| Phase | Files | Complexity | Status |
+|-------|-------|------------|--------|
+| 1 | 3 | Low | ✅ Complete |
+| 2 | 10 | Medium | ✅ Complete |
+| 3 | 9 | High | ✅ Complete |
+| 4 | 7 | Medium | ✅ Complete |
+| 5 | 22 | High | ✅ Complete |
+| 6 | 3 | Medium | ✅ Complete |
+| 7 | 26 | Medium | ✅ Complete |
+| 8 | 16 | Medium | ⚠️ In Progress |
+| **Total** | **~96** | | **~90% Complete** |
 
 ---
 
 ## Success Criteria
 
-- [ ] Zero `Component.extend()` usage
-- [ ] Zero `Model.extend()` usage (except where mixing in required)
-- [ ] Zero `observer()` imports
-- [ ] Minimal `computed()` usage (only computed macros where beneficial)
-- [ ] Zero `get(this, ...)` or `set(this, ...)` patterns
-- [ ] Zero `actions:` hash patterns
-- [ ] All templates using angle bracket invocation
-- [ ] All event handlers using `{{on}}` modifier
-- [ ] All tests passing
-- [ ] No new deprecation warnings (except ember-localforage-adapter)
+- [x] Zero `Component.extend()` usage
+- [x] Zero `Model.extend()` usage (except where mixing in required)
+- [x] Zero `observer()` / `addObserver()` imports
+- [x] Zero `computed()` usage
+- [x] Zero `get(this, ...)` or `set(this, ...)` patterns
+- [x] Zero `actions:` hash patterns
+- [x] All templates using angle bracket invocation
+- [ ] All event handlers using `{{on}}` modifier *(1 `{{action}}` remaining - minor)*
+- [x] All tests passing
+- [x] No new deprecation warnings (except ember-localforage-adapter)

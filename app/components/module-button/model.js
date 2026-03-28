@@ -1,25 +1,17 @@
-import { set, get } from '@ember/object';
 import { belongsTo } from '@ember-data/model';
 import Module from '../module/model';
 
-export default Module.extend({
+export default class ModuleButtonModel extends Module {
+  type = 'module-button'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name = 'Button';
 
-  type: 'module-button', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'Button',
+  @belongsTo('port-event-out', { async: false, inverse: null }) eventOutPort;
 
-  eventOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
-
-  trig() {
-    this.eventOutPort.sendEvent({
-      targetTime: performance.now(),
-      callbackTime: performance.now()
-    });
-  },
-
+  // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     if (this.isNew && this.ports.length === 0) {
-      set(this, 'title', this.name);
+      this.title = this.name;
       // create ports
       this.addEventOutPort('out', 'eventOutPort', true);
 
@@ -28,4 +20,10 @@ export default Module.extend({
     }
   }
 
-});
+  trig() {
+    this.eventOutPort.sendEvent({
+      targetTime: performance.now(),
+      callbackTime: performance.now()
+    });
+  }
+}

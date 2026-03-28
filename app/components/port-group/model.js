@@ -1,32 +1,59 @@
-import { filterBy, union } from '@ember/object/computed';
-import { set, observer } from '@ember/object';
 import Model, { belongsTo, hasMany, attr } from '@ember-data/model';
+import { addObserver } from '@ember/object/observers';
+import { notifyPropertyChange } from '@ember/object';
 
-export default Model.extend({
-
-  // a port group can repeat its set of ports in a variable length series
+export default class PortGroupModel extends Model {
+  // A port group can repeat its set of ports in a variable length series
   // eg in1, out1, in2, out2, in3, out3, would have a series length of 3.
-  portSetsCount: attr('number', { defaultValue: 1 }),
-  minSets: attr('number', { defaultValue: 0 }),
-  maxSets: attr('number', { defaultValue: 0 }),
+  @attr('number', { defaultValue: 1 }) portSetsCount;
+  @attr('number', { defaultValue: 0 }) minSets;
+  @attr('number', { defaultValue: 0 }) maxSets;
 
-  module: belongsTo('module', { polymorphic: true, async: false, inverse: null }),
-  basePorts: hasMany('port', { polymorphic: true, async: false, inverse: null }),
-  expansionPorts: hasMany('port', { polymorphic: true, async: false, inverse: null }),
-  ports: union('basePorts', 'expansionPorts'),
-  eventOutPorts: filterBy('ports', 'type', 'port-event-out'),
-  eventInPorts: filterBy('ports', 'type', 'port-event-in'),
-  valueOutPorts: filterBy('ports', 'type', 'port-value-out'),
-  valueInPorts: filterBy('ports', 'type', 'port-value-in'),
-  enabledPorts: filterBy('ports', 'isEnabled', true),
+  @belongsTo('module', { polymorphic: true, async: false, inverse: null }) module;
+  @hasMany('port', { polymorphic: true, async: false, inverse: null }) basePorts;
+  @hasMany('port', { polymorphic: true, async: false, inverse: null }) expansionPorts;
+
+  // eslint-disable-next-line ember/classic-decorator-hooks
+  init() {
+    super.init(...arguments);
+    addObserver(this, 'portSetsCount', this._portSetsCountChanged);
+  }
+
+  get ports() {
+    return [...this.basePorts.slice(), ...this.expansionPorts.slice()];
+  }
+
+  get eventOutPorts() {
+    return this.ports.filter(p => p.type === 'port-event-out');
+  }
+
+  get eventInPorts() {
+    return this.ports.filter(p => p.type === 'port-event-in');
+  }
+
+  get valueOutPorts() {
+    return this.ports.filter(p => p.type === 'port-value-out');
+  }
+
+  get valueInPorts() {
+    return this.ports.filter(p => p.type === 'port-value-in');
+  }
+
+  get enabledPorts() {
+    return this.ports.filter(p => p.isEnabled);
+  }
 
   addPort(port) {
     this.basePorts.push(port);
     // Notify that ports changed so dependent computed properties update
-    this.notifyPropertyChange('basePorts');
-  },
+    notifyPropertyChange(this, 'basePorts');
+  }
 
-  onExpansionPortSetsCountChanged: observer('portSetsCount', function() {
+  _portSetsCountChanged() {
+    this._syncExpansionSets();
+  }
+
+  _syncExpansionSets() {
     let currentSetsCount = (this.expansionPorts.length / this.basePorts.length) + 1;
     let newSetsCount = Math.min(Math.max(this.portSetsCount, this.minSets), this.maxSets);
     let change = newSetsCount - currentSetsCount;
@@ -36,7 +63,7 @@ export default Model.extend({
     } else if (change < 0) {
       this._removeExpansionSets(change * -1);
     }
-  }),
+  }
 
   _addExpansionSets(count) {
     let setSize = this.basePorts.length;
@@ -49,11 +76,13 @@ export default Model.extend({
         basePortLabel = basePort.label.split('0')[0];
         port = basePort.copy();
 
-        set(port, 'label', basePortLabel + i);
+        port.label = basePortLabel + i;
         this.expansionPorts.push(port);
       }
     }
-  },
+    // Notify that ports changed so dependent computed properties update
+    notifyPropertyChange(this, 'expansionPorts');
+  }
 
   _removeExpansionSets(count) {
     let setSize = this.basePorts.length;
@@ -67,11 +96,12 @@ export default Model.extend({
         this.store.unloadRecord(port);
       }
     }
+    // Notify that ports changed so dependent computed properties update
+    notifyPropertyChange(this, 'expansionPorts');
     this.module.requestSave();
-  },
-
-  save() {
-    this._super({ adapterOptions: { dontPersist: true } });
   }
 
-});
+  save() {
+    super.save({ adapterOptions: { dontPersist: true } });
+  }
+}

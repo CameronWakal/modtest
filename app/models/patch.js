@@ -1,18 +1,19 @@
 import Model, { hasMany, attr } from '@ember-data/model';
 
-export default Model.extend({
-  title: attr('string', { defaultValue: 'Untitled Patch' }),
+export default class PatchModel extends Model {
+  @attr('string', { defaultValue: 'Untitled Patch' }) title;
 
   // Explicitly set async: true since modules are stored separately with ids-and-types
   // Use inverse: null for polymorphic relationships to avoid Ember Data 4.x deprecations
-  modules: hasMany('module', { polymorphic: true, inverse: null, async: true }),
-  busses: hasMany('module-bus', { async: true, inverse: null }),
+  @hasMany('module', { polymorphic: true, inverse: null, async: true }) modules;
+  @hasMany('module-bus', { async: true, inverse: null }) busses;
 
   // Flag to track if this record was just created and needs initialization
-  _needsInit: false,
+  _needsInit = false;
 
+  // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     // Use _needsInit flag set by createPatch() instead of relationship state
     // This avoids issues with async relationships during init()
     if (this._needsInit) {
@@ -24,7 +25,7 @@ export default Model.extend({
       this._needsInit = false;
       this.save();
     }
-  },
+  }
 
   save() {
     if (!this.isDeleted) {
@@ -32,7 +33,6 @@ export default Model.extend({
     } else {
       console.log('patch delete');
     }
-    return this._super();
+    return super.save();
   }
-
-});
+}

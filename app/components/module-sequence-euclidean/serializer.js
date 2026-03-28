@@ -1,5 +1,3 @@
 import ModuleSequenceSerializer from '../module-sequence/serializer';
 
-export default ModuleSequenceSerializer.extend({
-
-});
+export default class ModuleSequenceEuclideanSerializer extends ModuleSequenceSerializer {}

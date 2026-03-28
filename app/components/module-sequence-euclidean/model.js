@@ -1,21 +1,20 @@
-import { set, get } from '@ember/object';
 import { schedule } from '@ember/runloop';
 import { attr, belongsTo } from '@ember-data/model';
 import ModuleSequence from '../module-sequence/model';
 
-export default ModuleSequence.extend({
-
-  type: 'module-sequence-euclidean', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'Euclidean',
+export default class ModuleSequenceEuclideanModel extends ModuleSequence {
+  type = 'module-sequence-euclidean'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name = 'Euclidean';
 
   // Override default inputType to 'Button' for this module type
-  inputType: attr('string', { defaultValue: 'Button' }),
+  @attr('string', { defaultValue: 'Button' }) inputType;
 
-  stepsInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-  pulsesInPort: belongsTo('port-value-in', { async: false, inverse: null }),
+  @belongsTo('port-value-in', { async: false, inverse: null }) stepsInPort;
+  @belongsTo('port-value-in', { async: false, inverse: null }) pulsesInPort;
 
+  // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     // The parent's init creates default ports/settings, we modify them for euclidean behavior
     // Must use scheduler because Ember Data 4.x doesn't allow relationship modifications during init
     if (this.isNew && this.ports.length > 0) {
@@ -24,10 +23,9 @@ export default ModuleSequence.extend({
         schedule('actions', this, this._setupEuclidean);
       }
     }
-  },
+  }
 
   _setupEuclidean() {
-
     // unlike the parent, we want length to be a port instead of a setting
     this.removeSetting('Length');
 
@@ -42,7 +40,7 @@ export default ModuleSequence.extend({
     this.updateSequence();
 
     this.requestSave();
-  },
+  }
 
   updateSequence() {
     let stepsPort = this.stepsInPort;
@@ -64,12 +62,12 @@ export default ModuleSequence.extend({
     this.steps.setLength(stepCount);
 
     // for each sequence step, update the value to match the calculated pattern
-    get(this, 'steps.items').forEach(function(item) {
-      let i = get(item, 'index');
+    this.steps.items.forEach((item) => {
+      let i = item.index;
       let value = pattern[i] == 0 ? null : 1;
-      set(item, 'value', value);
+      item.value = value;
     });
-  },
+  }
 
   // from https://github.com/mkontogiannis/euclidean-rhythms/blob/master/src/index.js
   getPattern(pulses, steps) {
@@ -119,5 +117,4 @@ export default ModuleSequence.extend({
 
     return pattern;
   }
-
-});
+}

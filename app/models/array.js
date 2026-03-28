@@ -1,32 +1,44 @@
-import { set, get, observer } from '@ember/object';
 import Model, { attr, hasMany } from '@ember-data/model';
-import { alias } from '@ember/object/computed';
+import { addObserver } from '@ember/object/observers';
 
-export default Model.extend({
+export default class ArrayModel extends Model {
+  @attr('number', { defaultValue: 0 }) length;
+  @attr('number', { defaultValue: 0 }) valueMin;
+  @attr('number', { defaultValue: 127 }) valueMax;
+  @attr('number', { defaultValue: 1 }) valueStep;
 
-  length: attr('number', { defaultValue: 0 }),
-  valueMin: attr('number', { defaultValue: 0 }),
-  valueMax: attr('number', { defaultValue: 127 }),
-  valueStep: attr('number', { defaultValue: 1 }),
+  @hasMany('arrayItem', { async: false, inverse: 'array' }) items;
 
-  items: hasMany('arrayItem', { async: false, inverse: 'array' }),
-  // the parent model can point this variable to a hasMany of array items if needed.
-  // the array will highlight any items that appear in currentItems in the UI.
-  currentIndexes: alias('dataManager.currentIndexes'),
   // the array needs a reference to the parent module to request an embeddedRecords save,
   // but we don't want this to be a belongsTo because of polymorphism problems that started
   // in Ember 3.1. So instead, after an array record is created or when it is loaded, the
   // managing module will set itself as the array's dataManager.
-  dataManager: null,
+  dataManager = null;
 
-  // Method to set length and create/remove items immediately (for use during init)
+  // the parent model can point this variable to a hasMany of array items if needed.
+  // the array will highlight any items that appear in currentItems in the UI.
+  get currentIndexes() {
+    return this.dataManager?.currentIndexes;
+  }
+
+  // eslint-disable-next-line ember/classic-decorator-hooks
+  init() {
+    super.init(...arguments);
+    addObserver(this, 'length', this._lengthChanged);
+  }
+
+  // Set length and sync items immediately (for use during module init)
   setLength(newLength) {
-    set(this, 'length', newLength);
+    this.length = newLength;
     this._syncItems();
-  },
+  }
+
+  _lengthChanged() {
+    this._syncItems();
+  }
 
   _syncItems() {
-    let length = get(this, 'items.length');
+    let length = this.items?.length || 0;
     let newLength = this.length;
 
     if (newLength > length) {
@@ -40,25 +52,15 @@ export default Model.extend({
         this.items.pop();
       }
     }
-  },
-
-  onLengthChanged: observer('length', function() {
-    this._syncItems();
-  }),
-
-  onAttrChanged: observer('length', 'valueMin', 'valueMax', 'valueStep', function() {
-    if (this.hasDirtyAttributes && !this.isNew) {
-      this.requestSave();
-    }
-  }),
+  }
 
   // mark myself as saved when requested by my managing module.
   save() {
-    this._super({ adapterOptions: { dontPersist: true } });
+    super.save({ adapterOptions: { dontPersist: true } });
     this.items.forEach((item) => {
       item.save();
     });
-  },
+  }
 
   // ask managing module to save me when my properties have changed.
   requestSave() {
@@ -66,45 +68,45 @@ export default Model.extend({
     if (this.dataManager) {
       this.dataManager.requestSave();
     }
-  },
+  }
 
   incrementAll() {
     this.items.forEach((item) => {
-      if (get(item, 'value') != null) {
-        set(item, 'value', get(item, 'value') + 1);
+      if (item.value != null) {
+        item.value = item.value + 1;
       }
     });
-  },
+  }
 
   decrementAll() {
     this.items.forEach((item) => {
-      if (get(item, 'value') != null) {
-        set(item, 'value', get(item, 'value') - 1);
+      if (item.value != null) {
+        item.value = item.value - 1;
       }
     });
-  },
+  }
 
   shiftForward() {
     let oldValues = this.items.map(item => item.value);
     this.items.forEach((item, index) => {
       if (index < oldValues.length - 1) {
-        set(item, 'value', oldValues[index + 1]);
+        item.value = oldValues[index + 1];
       } else {
-        set(item, 'value', oldValues[0]);
+        item.value = oldValues[0];
       }
     });
-  },
+  }
 
   shiftBackward() {
     let oldValues = this.items.map(item => item.value);
     this.items.forEach((item, index) => {
       if (index > 0) {
-        set(item, 'value', oldValues[index - 1]);
+        item.value = oldValues[index - 1];
       } else {
-        set(item, 'value', oldValues[oldValues.length - 1]);
+        item.value = oldValues[oldValues.length - 1];
       }
     });
-  },
+  }
 
   remove() {
     this.items.slice().forEach((item) => {
@@ -112,5 +114,4 @@ export default Model.extend({
     });
     this.store.unloadRecord(this);
   }
-
-});
+}

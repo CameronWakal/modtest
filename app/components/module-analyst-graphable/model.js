@@ -1,25 +1,26 @@
 import { belongsTo } from '@ember-data/model';
 import ModuleAnalyst from '../module-analyst/model';
 
-export default ModuleAnalyst.extend({
+export default class ModuleAnalystGraphableModel extends ModuleAnalyst {
+  type = 'module-analyst-graphable'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name = 'Analyst Graphable';
 
-  type: 'module-analyst-graphable', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'Analyst Graphable',
+  spiralX = null;
+  spiralY = null;
+  spiralZ = null;
+  trianglesX = null;
+  trianglesY = null;
+  trianglesZ = null;
 
-  spiralX: null,
-  spiralY: null,
-  spiralZ: null,
-  trianglesX: null,
-  trianglesY: null,
-  trianglesZ: null,
-  spiralDebugOut: belongsTo('port-event-out', { async: false, inverse: null }),
-  trianglesDebugOut: belongsTo('port-event-out', { async: false, inverse: null }),
-  drawIndexInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-  drawScaleInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-  resetOut: belongsTo('port-event-out', { async: false, inverse: null }),
+  @belongsTo('port-event-out', { async: false, inverse: null }) spiralDebugOut;
+  @belongsTo('port-event-out', { async: false, inverse: null }) trianglesDebugOut;
+  @belongsTo('port-value-in', { async: false, inverse: null }) drawIndexInPort;
+  @belongsTo('port-value-in', { async: false, inverse: null }) drawScaleInPort;
+  @belongsTo('port-event-out', { async: false, inverse: null }) resetOut;
 
+  // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     // Check for drawIndexInPort instead of ports.length === 0, since parent init already creates ports
     if (this.isNew && !this.drawIndexInPort) {
       // graphing outputs
@@ -40,26 +41,26 @@ export default ModuleAnalyst.extend({
       console.log('module-value didCreate saveLater');
       this.requestSave();
     }
-  },
+  }
 
   getSpiralX() {
     return this.spiralX;
-  },
+  }
   getSpiralY() {
     return this.spiralY;
-  },
+  }
   getSpiralZ() {
     return this.spiralZ;
-  },
+  }
   getTrianglesX() {
     return this.trianglesX;
-  },
+  }
   getTrianglesY() {
     return this.trianglesY;
-  },
+  }
   getTrianglesZ() {
     return this.trianglesZ;
-  },
+  }
 
   draw() {
     let index = this.drawIndexInPort.getValue();
@@ -68,7 +69,7 @@ export default ModuleAnalyst.extend({
     this.resetOut.sendEvent({});
     this.drawSpiralDebug();
     this.drawTrianglesDebug(index, scale);
-  },
+  }
 
   drawSpiralDebug() {
     // plot spiral values for debugging graph
@@ -84,7 +85,7 @@ export default ModuleAnalyst.extend({
       this.spiralZ = z * 1000;
       this.spiralDebugOut.sendEvent({});
     }
-  },
+  }
 
   // draw visual representation of a major or minor key
   drawTrianglesDebug(i, scale) {
@@ -165,7 +166,7 @@ export default ModuleAnalyst.extend({
     } else {
       console.log('drawTrianglesDebug unrecognized scale');
     }
-  },
+  }
 
   drawMajorChordRep(i) {
     let p = this.pitchRepForIndex(i);
@@ -192,7 +193,7 @@ export default ModuleAnalyst.extend({
     this.trianglesZ = p.z * 1000;
     this.trianglesDebugOut.sendEvent({});
 
-  },
+  }
 
   drawMinorChordRep(i) {
     let p = this.pitchRepForIndex(i);
@@ -219,5 +220,4 @@ export default ModuleAnalyst.extend({
     this.trianglesZ = p.z * 1000;
     this.trianglesDebugOut.sendEvent({});
   }
-
-});
+}

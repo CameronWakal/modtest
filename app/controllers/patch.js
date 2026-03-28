@@ -1,9 +1,10 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
-import { alias } from '@ember/object/computed';
 
 export default class PatchController extends Controller {
-  @alias('model') patch;
+  get patch() {
+    return this.model;
+  }
 
   @action
   removePatch() {

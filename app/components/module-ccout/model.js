@@ -1,33 +1,22 @@
 import { inject as service } from '@ember/service';
-import { set, get } from '@ember/object';
 import Module from '../module/model';
 import { belongsTo } from '@ember-data/model';
 
-export default Module.extend({
+export default class ModuleCcoutModel extends Module {
+  @service midi;
 
-  midi: service(),
+  type = 'module-ccout'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name = 'CC Out';
 
-  type: 'module-ccout', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'CC Out',
+  @belongsTo('port-value-in', { async: false, inverse: null }) controlInPort;
+  @belongsTo('port-value-in', { async: false, inverse: null }) channelInPort;
+  @belongsTo('port-value-in', { async: false, inverse: null }) valueInPort;
 
-  controlInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-  channelInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-  valueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-
-  sendEvent() {
-    // check the connection of the 'note' port for the value of the note to play.
-    let value = this.valueInPort.getValue();
-    let control = this.controlInPort.getValue();
-    if (value != null && control != null) {
-      let channel = this.channelInPort.getValue();
-      this.midi.sendCC(control, value, channel);
-    }
-  },
-
+  // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     if (this.isNew && this.ports.length === 0) {
-      set(this, 'title', this.name);
+      this.title = this.name;
 
       // create ports
       this.addEventInPort('trig', 'sendEvent', true);
@@ -41,4 +30,13 @@ export default Module.extend({
     }
   }
 
-});
+  sendEvent() {
+    // check the connection of the 'note' port for the value of the note to play.
+    let value = this.valueInPort.getValue();
+    let control = this.controlInPort.getValue();
+    if (value != null && control != null) {
+      let channel = this.channelInPort.getValue();
+      this.midi.sendCC(control, value, channel);
+    }
+  }
+}

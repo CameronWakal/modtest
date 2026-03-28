@@ -1,5 +1,6 @@
-import { observer, computed, set, get } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import { belongsTo } from '@ember-data/model';
+import { addObserver } from '@ember/object/observers';
 import Module from '../module/model';
 
 /* Module attempts to identify key signature of a series of notes,
@@ -78,40 +79,39 @@ const minorKeyReps = [
   { x: -0.3111992375, y: 0.3697849875, z: 4.10335456900125 }
 ];
 
-export default Module.extend({
-
-  type: 'module-analyst', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'Guess Key',
+export default class ModuleAnalystModel extends Module {
+  type = 'module-analyst'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name = 'Guess Key';
 
   // precalculated CE coordinates for all major/minor keys
-  majorKeyReps,
-  minorKeyReps,
+  majorKeyReps = majorKeyReps;
+  minorKeyReps = minorKeyReps;
 
   // calculated center of effect for the set of notes
-  pitchSetRep: null,
+  pitchSetRep = null;
   // accumulated total of pitch durations added to the set
-  pitchSetDuration: 0,
-  nearestKeys: null,
-  nearestKeysCount,
+  pitchSetDuration = 0;
+  @tracked nearestKeys = null;
+  nearestKeysCount = nearestKeysCount;
 
   // user-selected key from the component
-  selectedKey: null,
+  @tracked selectedKey = null;
 
   // so the graphable child module can inherit it
-  spiralRadius: r,
-  spiralHeight: h,
-  weightA: a,
-  weightB: b,
+  spiralRadius = r;
+  spiralHeight = h;
+  weightA = a;
+  weightB = b;
 
-  valueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-  keyChangedPort: belongsTo('port-event-out', { async: false, inverse: null }),
+  @belongsTo('port-value-in', { async: false, inverse: null }) valueInPort;
+  @belongsTo('port-event-out', { async: false, inverse: null }) keyChangedPort;
 
   // strings representing the displayedKeys, or '--' if nearest keys
   // has not been calculated yet.
-  displayedKeyNames: computed('displayedKeys', function() {
+  get displayedKeyNames() {
     let displayedKeys = this.displayedKeys;
-    let nearestKeysCount = this.nearestKeysCount;
-    let displayedKeyNames = new Array(nearestKeysCount);
+    let count = this.nearestKeysCount;
+    let displayedKeyNames = new Array(count);
 
     if (displayedKeys == null) {
       displayedKeyNames.fill('--');
@@ -122,20 +122,20 @@ export default Module.extend({
     }
 
     return displayedKeyNames;
-  }),
+  }
 
   // string representing the selected key
-  selectedKeyName: computed('selectedKey', function() {
+  get selectedKeyName() {
     let key = this.selectedKey;
     if (key) {
       return `${indexedPitchNames[key.index]}${key.scale}`;
     }
     return '';
-  }),
+  }
 
   // same as nearestKeys, but with selectedKey in the last slot in the case
   // that selectedKey isn't already included.
-  displayedKeys: computed('nearestKeys.[]', 'selectedKey', function() {
+  get displayedKeys() {
     let nearestKeys = this.nearestKeys;
     let selectedKey = this.selectedKey;
 
@@ -153,12 +153,11 @@ export default Module.extend({
 
     let displayedKeys = nearestKeys.slice();
     displayedKeys.pop();
-    displayedKeys.pushObject(selectedKey);
+    displayedKeys.push(selectedKey);
     return displayedKeys;
+  }
 
-  }),
-
-  keyToOutput: computed('nearestKeys.[]', 'selectedKey', function() {
+  get keyToOutput() {
     let nearestKeys = this.nearestKeys;
     let selectedKey = this.selectedKey;
 
@@ -169,56 +168,15 @@ export default Module.extend({
     } else {
       return null;
     }
-  }),
+  }
 
-  keyToOutputChanged: observer('keyToOutput', function() {
-    this.keyChangedPort.sendEvent({
-      targetTime: performance.now(),
-      callbackTime: performance.now()
-    });
-  }),
-
-  getMode() {
-    let key = this.keyToOutput;
-    if (key) {
-      if (key.scale == 'M') {
-        return 0; // Ionian Mode
-      } else if (key.scale == 'm') {
-        return 5; // Aeolian Mode
-      }
-    }
-  },
-
-  getRoot() {
-    let key = this.keyToOutput;
-    if (key) {
-      return semitoneIndexes[key.index];
-    }
-  },
-
-  addValue() {
-    let newValue = this.valueInPort.getValue();
-    if (newValue != null) {
-      newValue = newValue % 12;
-      newValue = semitoneIndexes[newValue];
-      this.addPitchToSet(newValue, 1);
-
-      let nearestKeys = this.nearestKeysToRep(this.pitchSetRep, this.nearestKeysCount);
-      set(this, 'nearestKeys', nearestKeys);
-    }
-  },
-
-  reset() {
-    this.pitchSetRep = null;
-    this.pitchSetDuration = 0;
-    set(this, 'nearestKeys', null);
-    set(this, 'selectedKey', null);
-  },
-
+  // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
+    addObserver(this, 'keyToOutput', this._keyToOutputChanged);
+
     if (this.isNew && this.ports.length === 0) {
-      set(this, 'title', this.name);
+      this.title = this.name;
       // create ports
       this.addEventInPort('in', 'addValue', true);
       this.addValueInPort('value', 'valueInPort', { isEnabled: true });
@@ -232,34 +190,78 @@ export default Module.extend({
       this.requestSave();
     }
 
-    // activate keyToOutputChanged observer
+    // Activate the observer by accessing the property
     this.keyToOutput;
-  },
+  }
+
+  _keyToOutputChanged() {
+    this.keyChangedPort.sendEvent({
+      targetTime: performance.now(),
+      callbackTime: performance.now()
+    });
+  }
+
+  getMode() {
+    let key = this.keyToOutput;
+    if (key) {
+      if (key.scale == 'M') {
+        return 0; // Ionian Mode
+      } else if (key.scale == 'm') {
+        return 5; // Aeolian Mode
+      }
+    }
+  }
+
+  getRoot() {
+    let key = this.keyToOutput;
+    if (key) {
+      return semitoneIndexes[key.index];
+    }
+  }
+
+  addValue() {
+    let newValue = this.valueInPort.getValue();
+    if (newValue != null) {
+      newValue = newValue % 12;
+      newValue = semitoneIndexes[newValue];
+      this.addPitchToSet(newValue, 1);
+
+      let nearestKeys = this.nearestKeysToRep(this.pitchSetRep, this.nearestKeysCount);
+      this.nearestKeys = nearestKeys;
+    }
+  }
+
+  reset() {
+    this.pitchSetRep = null;
+    this.pitchSetDuration = 0;
+    this.nearestKeys = null;
+    this.selectedKey = null;
+  }
 
   setSelectedKey(keyIndex) {
     let keys = this.displayedKeys;
     if (keys) {
       let key = keys[keyIndex];
       if (key !== this.selectedKey) {
-        set(this, 'selectedKey', keys[keyIndex]);
+        this.selectedKey = keys[keyIndex];
       } else {
-        set(this, 'selectedKey', null);
+        this.selectedKey = null;
       }
     } else {
-      set(this, 'selectedKey', null);
+      this.selectedKey = null;
     }
-  },
+  }
 
   // use the algorithm to overwrite the precalculated key representations
   // in case you want to experiment with different constants, etc.
   generateKeyReps() {
     for (let i = 0; i <= 11; i++) {
-      this.majorKeyReps.pushObject(this.majorKeyRepForIndex(i));
+      this.majorKeyReps.push(this.majorKeyRepForIndex(i));
     }
     for (let i = 0; i <= 11; i++) {
-      this.minorKeyReps.pushObject(this.minorKeyRepForIndex(i));
+      this.minorKeyReps.push(this.minorKeyRepForIndex(i));
     }
-  },
+  }
 
   // generate the 3d coordinate representing a pitch at the given index. p.58
   pitchRepForIndex(i) {
@@ -267,7 +269,7 @@ export default Module.extend({
     let y = Math.round(r * Math.cos((i * Math.PI) / 2));
     let z = i * h;
     return { x, y, z };
-  },
+  }
 
   // generate 3d coordinate representing a major chord based on the index of the tonic pitch. p.58
   majorChordRepForIndex(i) {
@@ -280,7 +282,7 @@ export default Module.extend({
     let cz = p1.z * w1 + p2.z * w2 + p3.z * w3;
 
     return { x: cx, y: cy, z: cz };
-  },
+  }
 
   // generate 3d coordinate representing CE of a minor chord based on the index of the tonic pitch. p.58
   minorChordRepForIndex(i) {
@@ -293,7 +295,7 @@ export default Module.extend({
     let cz = p1.z * u1 + p2.z * u2 + p3.z * u3;
 
     return { x: cx, y: cy, z: cz };
-  },
+  }
 
   // generate 3d coordinate representing CE for major key based on the index of the root pitch. p.58
   majorKeyRepForIndex(i) {
@@ -306,7 +308,7 @@ export default Module.extend({
     let kz = c1.z * wc1 + c2.z * wc2 + c3.z * wc3;
 
     return { x: kx, y: ky, z: kz };
-  },
+  }
 
   // generate 3d coordinate representing CE for minor key based on the index of the root pitch. p.58
   minorKeyRepForIndex(i) {
@@ -329,7 +331,7 @@ export default Module.extend({
     let kz = c1.z * uc1 + c2z * uc2 + c3z * uc3;
 
     return { x: kx, y: ky, z: kz };
-  },
+  }
 
   // add a pitch representation to the set of reps being analysed
   // update the center of effect, which is the average position of all pitches
@@ -364,7 +366,7 @@ export default Module.extend({
 
     this.pitchSetDuration += duration;
     this.pitchSetRep = center;
-  },
+  }
 
   indexForPitchName(name) {
     switch (name) {
@@ -387,7 +389,7 @@ export default Module.extend({
       case 'B': return 5;
     }
     console.log('error: indexForPitchName did not recognize', name);
-  },
+  }
 
   // distance between reps considering the repeating spiral: each pair of
   // points has a distance in two directions, take the smallest.
@@ -405,7 +407,7 @@ export default Module.extend({
     }
     let distance2 = Math.sqrt(dx * dx + dy * dy + dz * dz);
     return Math.min(distance1, distance2);
-  },
+  }
 
   // check distance between a rep and all major and minor key reps,
   // return a ranked array of `keyCount` nearest keys.
@@ -413,7 +415,7 @@ export default Module.extend({
     let nearestKeys = [];
     let index = 0;
     let distance = this.minimumDistanceBetweenReps(rep, this.majorKeyReps[0]);
-    nearestKeys.pushObject({ index, scale: 'M', distance });
+    nearestKeys.push({ index, scale: 'M', distance });
 
     // iterate all major key reps
     for (let i = 1; i < this.majorKeyReps.length; i++) {
@@ -452,7 +454,7 @@ export default Module.extend({
       }
     }
     return nearestKeys;
-  },
+  }
 
   // console log functions for debugging/experimenting
 
@@ -468,7 +470,7 @@ export default Module.extend({
       nearestKeys = this.nearestKeysToRep(this.pitchSetRep, 3);
       this.printNearestKeys(nearestKeys);
     }
-  },
+  }
 
   printKeyReps() {
     console.log('Major Keys:');
@@ -479,13 +481,13 @@ export default Module.extend({
     for (let i = 0; i < this.minorKeyReps.length; i++) {
       console.log(`${i}: ${indexedPitchNames[i]}m`, this.minorKeyReps[i].x, this.minorKeyReps[i].y, this.minorKeyReps[i].z);
     }
-  },
+  }
 
   printRepForIndex(i) {
     let name = indexedPitchNames[i];
     let rep = this.pitchRepForIndex(i);
     console.log(i, name, rep.x, rep.y, rep.z);
-  },
+  }
 
   printNearestKeys(nearestKeys) {
     let name1 = indexedPitchNames[nearestKeys[0].index];
@@ -493,5 +495,4 @@ export default Module.extend({
     let name3 = indexedPitchNames[nearestKeys[2].index];
     console.log(name1 + nearestKeys[0].scale, nearestKeys[0].distance, name2 + nearestKeys[1].scale, nearestKeys[1].distance, name3 + nearestKeys[2].scale, nearestKeys[2].distance);
   }
-
-});
+}

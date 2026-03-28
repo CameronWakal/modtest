@@ -1,36 +1,28 @@
-import { observer, computed } from '@ember/object';
 import Model, { belongsTo, attr } from '@ember-data/model';
 
-export default Model.extend({
+export default class ArrayItemModel extends Model {
+  @attr('number', { defaultValue: null }) value;
+  @attr('number') index;
+  @belongsTo('array', { async: false, inverse: 'items' }) array;
 
-  value: attr('number', { defaultValue: null }),
-  index: attr('number'),
-  array: belongsTo('array', { async: false, inverse: 'items' }),
-
-  isCurrentItem: computed('array.currentIndexes.[]', function() {
-    if (this.array.currentIndexes) {
-      return this.array.currentIndexes.any((index) => this.index === index);
+  get isCurrentItem() {
+    if (this.array?.currentIndexes) {
+      return this.array.currentIndexes.some((index) => this.index === index);
     }
     return false;
-  }),
-
-  onValueChanged: observer('value', function() {
-    if (this.hasDirtyAttributes) {
-      this.requestSave();
-    }
-  }),
+  }
 
   // mark myself as saved when requested by my managing module.
   save() {
-    this._super({ adapterOptions: { dontPersist: true } });
-  },
+    super.save({ adapterOptions: { dontPersist: true } });
+  }
 
   // ask managing module to save me when my properties have changed.
+  // Note: Callers (UI components) are responsible for calling requestSave() after updating value
   requestSave() {
     console.log('array-item requestSave');
     if (this.array) {
       this.array.requestSave();
     }
   }
-
-});
+}

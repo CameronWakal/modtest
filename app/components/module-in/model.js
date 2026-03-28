@@ -1,95 +1,88 @@
 import { inject as service } from '@ember/service';
-import { computed, observer, set, get } from '@ember/object';
 import Module from '../module/model';
 import { belongsTo, attr } from '@ember-data/model';
 
-export default Module.extend({
+export default class ModuleInModel extends Module {
+  @service midi;
 
-  midi: service(),
+  type = 'module-in'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name = 'In';
 
-  type: 'module-in', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'In',
+  note = null;
+  velocity = null;
 
-  note: null,
-  velocity: null,
+  @belongsTo('port-event-out', { async: false, inverse: null }) noteOnPort;
+  @belongsTo('port-event-out', { async: false, inverse: null }) noteOffPort;
 
-  noteOnPort: belongsTo('port-event-out', { async: false, inverse: null }),
-  noteOffPort: belongsTo('port-event-out', { async: false, inverse: null }),
+  @attr('string', { defaultValue: 'All' }) inputDeviceName;
 
-  inputDeviceName: attr('string', { defaultValue: 'All' }),
-  deviceMenuOptions: computed('midi.inputDevices', 'inputDeviceName', function() {
-    let devices = get(this, 'midi.inputDevices').map(d => d.name);
+  get deviceMenuOptions() {
+    let devices = this.midi.inputDevices.map(d => d.name);
     let currentDevice = this.inputDeviceName;
     if (!devices.includes(currentDevice) && currentDevice !== 'All') {
       devices = [currentDevice, ...devices];
     }
     return ['All', ...devices];
-  }),
+  }
 
-  onInputDeviceNameChanged: observer('inputDeviceName', function() {
-    if (this.hasDirtyAttributes) {
+  // eslint-disable-next-line ember/classic-decorator-hooks
+  init() {
+    super.init(...arguments);
+    this.midi.noteListener = this;
+
+    if (this.isNew && this.ports.length === 0) {
+      this.title = this.name;
+
+      // Create ports
+      this.addEventOutPort('on', 'noteOnPort', true);
+      this.addEventOutPort('off', 'noteOffPort', false);
+      this.addValueOutPort('note', 'getNote', true);
+      this.addValueOutPort('vel', 'getVel', true);
+
+      // Create settings
+      this.addMenuSetting('Input', 'inputDeviceName', 'deviceMenuOptions', this);
+
+      console.log('module-in.didCreate() requestSave()');
       this.requestSave();
     }
-  }),
+  }
 
   getNote() {
     return this.note;
-  },
+  }
 
   getVel() {
     return this.velocity;
-  },
+  }
 
   noteOn(note, velocity, timestamp) {
-    set(this, 'note', note);
-    set(this, 'velocity', velocity);
+    this.note = note;
+    this.velocity = velocity;
 
-    if (get(this, 'noteOnPort.isConnected')) {
+    if (this.noteOnPort?.isConnected) {
       let event = {
         targetTime: timestamp,
         callbackTime: performance.now()
       };
       this.noteOnPort.sendEvent(event);
     }
-  },
+  }
 
   noteOff(note, velocity, timestamp) {
-    set(this, 'note', note);
-    set(this, 'velocity', velocity);
+    this.note = note;
+    this.velocity = velocity;
 
-    if (get(this, 'noteOnPort.isConnected')) {
+    if (this.noteOnPort?.isConnected) {
       let event = {
         targetTime: timestamp,
         callbackTime: performance.now()
       };
       this.noteOffPort.sendEvent(event);
     }
-  },
-
-  init() {
-    this._super(...arguments);
-    this.midi.noteListener = this;
-
-    if (this.isNew && this.ports.length === 0) {
-      set(this, 'title', this.name);
-
-      // create ports
-      this.addEventOutPort('on', 'noteOnPort', true);
-      this.addEventOutPort('off', 'noteOffPort', false);
-      this.addValueOutPort('note', 'getNote', true);
-      this.addValueOutPort('vel', 'getVel', true);
-
-      // create settings
-      this.addMenuSetting('Input', 'inputDeviceName', 'deviceMenuOptions', this);
-
-      console.log('module-in.didCreate() requestSave()');
-      this.requestSave();
-    }
-  },
+  }
 
   remove() {
     this.midi.noteListener = null;
-    this._super();
+    super.remove();
   }
-
-});
+}

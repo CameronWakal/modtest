@@ -1,10 +1,8 @@
 import ApplicationSerializer from '../../serializers/application';
 
-export default ApplicationSerializer.extend({
-
-  attrs: {
+export default class PortGroupSerializer extends ApplicationSerializer {
+  attrs = {
     basePorts: { embedded: 'always' },
     expansionPorts: { embedded: 'always' }
-  }
-
-});
+  };
+}

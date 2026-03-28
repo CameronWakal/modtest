@@ -1,65 +1,43 @@
-import { set, get, observer, computed } from '@ember/object';
-import { map } from '@ember/object/computed';
 import { belongsTo, attr } from '@ember-data/model';
 import Module from '../module/model';
 import { mod } from '../../utils/math-util';
 
 const inputTypeMenuOptions = ['Number', 'Slider', 'Both', 'Button'];
 
-export default Module.extend({
+export default class ModuleArrayModel extends Module {
+  type = 'module-array'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name = 'Array';
+  inputTypeMenuOptions = inputTypeMenuOptions;
 
-  type: 'module-array', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'Array',
-  inputTypeMenuOptions,
-
-  steps: belongsTo('array', { async: false, inverse: null }),
-  readPortsGroup: belongsTo('port-group', { async: false, inverse: null }),
-  inputType: attr('string', { defaultValue: 'Number' }),
-  displayScale: attr('number', { defaultValue: 1 }),
-
-  onAttrChanged: observer('inputType', 'displayScale', function() {
-    if (this.hasDirtyAttributes) {
-      this.requestSave();
-    }
-  }),
-
-  // Ensure dataManager is set whenever steps relationship is established
-  onStepsChanged: observer('steps', function() {
-    if (this.steps && !this.steps.dataManager) {
-      this.steps.dataManager = this;
-    }
-  }),
+  @belongsTo('array', { async: false, inverse: null }) steps;
+  @belongsTo('port-group', { async: false, inverse: null }) readPortsGroup;
+  @attr('string', { defaultValue: 'Number' }) inputType;
+  @attr('number', { defaultValue: 1 }) displayScale;
 
   // map the value of each readPort to the current array. This is referenced by
   // the array in order to display the currently selected index in the UI.
-  currentIndexes: map('readPortsGroup.valueInPorts.@each.computedValue', function(port) {
-    if (port.computedValue == null) {
-      return null;
+  get currentIndexes() {
+    if (!this.readPortsGroup?.valueInPorts || !this.steps?.items) {
+      return [];
     }
-    return mod(port.computedValue, this.steps.items.length);
-  }),
+    return this.readPortsGroup.valueInPorts.map(port => {
+      if (port.computedValue == null) {
+        return null;
+      }
+      return mod(port.computedValue, this.steps.items.length);
+    });
+  }
 
-  getValue(port) {
-    let readPortNumber = parseInt(get(port, 'label'));
-
-    let readPorts = this.readPortsGroup.valueInPorts;
-    let readPort = readPorts.at(readPortNumber);
-    let index = readPort.getValue();
-    let item = this.steps.items.find(i => i.index === mod(index, this.steps.items.length));
-    if (item) {
-      return item.value;
-    }
-    return null;
-  },
-
+  // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
+
     if (this.isNew && this.ports.length === 0) {
-      set(this, 'title', this.name);
+      this.title = this.name;
 
       // create steps
       let steps = this.store.createRecord('array');
-      set(this, 'steps', steps);
+      this.steps = steps;
       this.steps.setLength(8);
 
       // create settings
@@ -74,30 +52,43 @@ export default Module.extend({
 
       // add an expandable group of value input/output pairs
       let readPorts = this.addPortGroup({ minSets: 1, maxSets: 4 });
-      set(this, 'readPortsGroup', readPorts);
+      this.readPortsGroup = readPorts;
       this.addValueInPort('0', 'indexInPort', { canBeEmpty: true });
       this.addValueOutPort('0', 'getValue', true);
 
       this.addNumberSetting('read ports', 'readPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
-      set(readPorts, 'portSetsCount', 2);
+      readPorts.portSetsCount = 2;
 
       this.requestSave();
     }
+    // Ensure dataManager is set for loaded records (async: false means it's available in init)
     if (this.steps) {
       this.steps.dataManager = this;
     }
-  },
+  }
+
+  getValue(port) {
+    let readPortNumber = parseInt(port.label);
+
+    let readPorts = this.readPortsGroup.valueInPorts;
+    let readPort = readPorts.at(readPortNumber);
+    let index = readPort.getValue();
+    let item = this.steps.items.find(i => i.index === mod(index, this.steps.items.length));
+    if (item) {
+      return item.value;
+    }
+    return null;
+  }
 
   remove() {
     // Embedded records (steps) are removed automatically with the parent module
-    this._super();
-  },
+    super.remove();
+  }
 
   save() {
     if (this.steps) {
       this.steps.save();
     }
-    this._super();
+    super.save();
   }
-
-});
+}

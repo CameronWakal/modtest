@@ -1,36 +1,22 @@
-import { set, get } from '@ember/object';
 import { belongsTo } from '@ember-data/model';
 import Module from '../module/model';
 
-export default Module.extend({
+export default class ModuleMaybeModel extends Module {
+  type = 'module-maybe'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name = 'Maybe';
 
-  type: 'module-maybe', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'Maybe',
+  @belongsTo('port-event-in', { async: false, inverse: null }) eventInPort;
+  @belongsTo('port-event-out', { async: false, inverse: null }) eventOutPort;
+  @belongsTo('port-value-in', { async: false, inverse: null }) numeratorInPort;
+  @belongsTo('port-value-in', { async: false, inverse: null }) denominatorInPort;
 
-  eventInPort: belongsTo('port-event-in', { async: false, inverse: null }),
-  eventOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
-  numeratorInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-  denominatorInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-
-  onEventIn(event) {
-    let numerator = this.numeratorInPort.getValue();
-    let denominator = this.denominatorInPort.getValue();
-
-    let prob = numerator / denominator;
-    let rand = Math.random();
-
-    if (rand <= prob) {
-      this.eventOutPort.sendEvent(event);
-    }
-
-  },
-
+  // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     if (this.isNew && this.ports.length === 0) {
-      set(this, 'title', this.name);
+      this.title = this.name;
 
-      // create ports
+      // Create ports
       this.addEventInPort('in', 'onEventIn', true);
       this.addEventOutPort('out', 'eventOutPort', true);
 
@@ -42,4 +28,15 @@ export default Module.extend({
     }
   }
 
-});
+  onEventIn(event) {
+    let numerator = this.numeratorInPort.getValue();
+    let denominator = this.denominatorInPort.getValue();
+
+    let prob = numerator / denominator;
+    let rand = Math.random();
+
+    if (rand <= prob) {
+      this.eventOutPort.sendEvent(event);
+    }
+  }
+}

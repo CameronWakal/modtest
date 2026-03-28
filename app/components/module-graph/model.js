@@ -1,50 +1,30 @@
-import { set, get } from '@ember/object';
 import { attr, belongsTo } from '@ember-data/model';
 import Module from '../module/model';
 
-export default Module.extend({
+export default class ModuleGraphModel extends Module {
+  type = 'module-graph'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name = 'Graph';
 
-  type: 'module-graph', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'Graph',
+  lineValues = null;
+  trianglesValues = null;
 
-  lineValues: null,
-  trianglesValues: null,
+  @attr('number', { defaultValue: -1 }) xMin;
+  @attr('number', { defaultValue: 1 }) xMax;
+  @attr('number', { defaultValue: -1 }) yMin;
+  @attr('number', { defaultValue: 1 }) yMax;
+  @attr('number', { defaultValue: 100 }) xScale;
+  @attr('number', { defaultValue: 100 }) yScale;
 
-  xMin: attr('number', { defaultValue: -1 }),
-  xMax: attr('number', { defaultValue: 1 }),
-  yMin: attr('number', { defaultValue: -1 }),
-  yMax: attr('number', { defaultValue: 1 }),
-  xScale: attr('number', { defaultValue: 100 }),
-  yScale: attr('number', { defaultValue: 100 }),
+  @belongsTo('port-value-in', { async: false, inverse: null }) xLineValueInPort;
+  @belongsTo('port-value-in', { async: false, inverse: null }) yLineValueInPort;
+  @belongsTo('port-value-in', { async: false, inverse: null }) xTrianglesValueInPort;
+  @belongsTo('port-value-in', { async: false, inverse: null }) yTrianglesValueInPort;
 
-  xLineValueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-  yLineValueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-  xTrianglesValueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-  yTrianglesValueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-
-  writeLineValue() {
-    let xLineValue = this.xLineValueInPort.getValue();
-    let yLineValue = this.yLineValueInPort.getValue();
-    this.lineValues.pushObject({ x: xLineValue, y: yLineValue });
-  },
-
-  // three values in a row draw a triangle, every fourth value will be
-  // the center of effect for that triangle
-  writeTrianglesValue() {
-    let x = this.xTrianglesValueInPort.getValue();
-    let y = this.yTrianglesValueInPort.getValue();
-    this.trianglesValues.pushObject({ x, y });
-  },
-
-  reset() {
-    this.lineValues.clear();
-    this.trianglesValues.clear();
-  },
-
+  // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     if (this.isNew && this.ports.length === 0) {
-      set(this, 'title', this.name);
+      this.title = this.name;
 
       this.addNumberSetting('xMin', 'xMin', this);
       this.addNumberSetting('yMin', 'yMin', this);
@@ -67,8 +47,26 @@ export default Module.extend({
       this.requestSave();
     }
 
-    set(this, 'lineValues', []);
-    set(this, 'trianglesValues', []);
+    this.lineValues = [];
+    this.trianglesValues = [];
   }
 
-});
+  writeLineValue() {
+    let xLineValue = this.xLineValueInPort.getValue();
+    let yLineValue = this.yLineValueInPort.getValue();
+    this.lineValues.push({ x: xLineValue, y: yLineValue });
+  }
+
+  // three values in a row draw a triangle, every fourth value will be
+  // the center of effect for that triangle
+  writeTrianglesValue() {
+    let x = this.xTrianglesValueInPort.getValue();
+    let y = this.yTrianglesValueInPort.getValue();
+    this.trianglesValues.push({ x, y });
+  }
+
+  reset() {
+    this.lineValues.length = 0;
+    this.trianglesValues.length = 0;
+  }
+}

@@ -1,45 +1,22 @@
-import { set, get, observer } from '@ember/object';
 import { belongsTo, attr } from '@ember-data/model';
+import { addObserver } from '@ember/object/observers';
 import Module from '../module/model';
 
-export default Module.extend({
+export default class ModuleValueModel extends Module {
+  type = 'module-value'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name = 'Value';
 
-  type: 'module-value', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'Value',
+  @attr('number') value;
+  @belongsTo('port-event-out', { async: false, inverse: null }) changeOutPort;
+  @belongsTo('port-value-in', { async: false, inverse: null }) valueInPort;
 
-  value: attr('number'),
-  changeOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
-
-  valueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-
-  onValueChanged: observer('value', function() {
-    if (this.hasDirtyAttributes) {
-      let changeEvent = {
-        targetTime: performance.now(),
-        callbackTime: performance.now()
-      };
-      this.changeOutPort.sendEvent(changeEvent);
-
-      console.log('module-value.onValueChanged() requestSave()');
-      this.requestSave();
-    }
-
-  }),
-
-  getValue() {
-    return this.value;
-  },
-
-  setValue() {
-    let value = this.valueInPort.getValue();
-    set(this, 'value', value);
-    this.requestSave();
-  },
-
+  // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
+    addObserver(this, 'value', this._valueChanged);
+
     if (this.isNew && this.ports.length === 0) {
-      set(this, 'title', this.name);
+      this.title = this.name;
       // create ports
       this.addEventInPort('set', 'setValue', false);
       this.addValueInPort('value', 'valueInPort', { isEnabled: false });
@@ -50,4 +27,21 @@ export default Module.extend({
     }
   }
 
-});
+  _valueChanged() {
+    if (this.hasDirtyAttributes) {
+      this.changeOutPort.sendEvent({
+        targetTime: performance.now(),
+        callbackTime: performance.now()
+      });
+      this.requestSave();
+    }
+  }
+
+  getValue() {
+    return this.value;
+  }
+
+  setValue() {
+    this.value = this.valueInPort.getValue();
+  }
+}

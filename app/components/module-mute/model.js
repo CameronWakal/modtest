@@ -1,46 +1,20 @@
-import { set, get } from '@ember/object';
 import { belongsTo, attr } from '@ember-data/model';
 import Module from '../module/model';
 
-export default Module.extend({
+export default class ModuleMuteModel extends Module {
+  type = 'module-mute'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name = 'Mute';
 
-  type: 'module-mute', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'Mute',
+  @attr('boolean', { defaultValue: false }) isMuted;
+  @belongsTo('port-event-out', { async: false, inverse: null }) eventOutPort;
+  @belongsTo('port-value-in', { async: false, inverse: null }) valueInPort;
 
-  isMuted: attr('boolean', { defaultValue: false }),
-  eventOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
-  valueInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-
-  toggle() {
-    this.toggleProperty('isMuted');
-  },
-
-  mute() {
-    set(this, 'isMuted', true);
-  },
-
-  unmute() {
-    set(this, 'isMuted', false);
-  },
-
-  eventIn(event) {
-    if (!this.isMuted) {
-      this.eventOutPort.sendEvent(event);
-    }
-  },
-
-  getValue() {
-    if (!this.isMuted) {
-      return this.valueInPort.getValue();
-    }
-    return null;
-  },
-
+  // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     if (this.isNew && this.ports.length === 0) {
-      set(this, 'title', this.name);
-      // create ports
+      this.title = this.name;
+      // Create ports
       this.addEventInPort('toggle', 'toggle', false);
       this.addEventInPort('mute', 'mute', false);
       this.addEventInPort('unmute', 'unmute', false);
@@ -53,4 +27,28 @@ export default Module.extend({
     }
   }
 
-});
+  toggle() {
+    this.isMuted = !this.isMuted;
+  }
+
+  mute() {
+    this.isMuted = true;
+  }
+
+  unmute() {
+    this.isMuted = false;
+  }
+
+  eventIn(event) {
+    if (!this.isMuted) {
+      this.eventOutPort.sendEvent(event);
+    }
+  }
+
+  getValue() {
+    if (!this.isMuted) {
+      return this.valueInPort.getValue();
+    }
+    return null;
+  }
+}

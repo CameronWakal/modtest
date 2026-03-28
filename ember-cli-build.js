@@ -26,7 +26,7 @@ module.exports = function(defaults) {
   // along with the exports of each module as its value.
 
   // Shim to restore the Ember global for legacy addons (ember-localforage-adapter)
-  app.import('vendor/ember-global-shim.js', { prepend: true });
+  app.import('vendor/ember-global-shim.js');
 
   return app.toTree();
 };

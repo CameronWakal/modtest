@@ -1,24 +1,25 @@
-import { bool } from '@ember/object/computed';
-import { get, observer, computed } from '@ember/object';
-import { alias } from '@ember/object/computed';
 import Model, { belongsTo, attr } from '@ember-data/model';
-import { isEmpty } from '@ember/utils';
 
-export default Model.extend({
-  type: 'port', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+export default class PortModel extends Model {
+  type = 'port'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
 
-  label: attr('string'),
-  isEnabled: attr('boolean', { defaultValue: true }),
-  portGroup: belongsTo('port-group', { polymorphic: true, async: false, inverse: null }),
-  module: alias('portGroup.module'),
+  @attr('string') label;
+  @attr('boolean', { defaultValue: true }) isEnabled;
+  @belongsTo('port-group', { polymorphic: true, async: false, inverse: null }) portGroup;
 
-  isConnected: bool('connections.length'),
+  get module() {
+    return this.portGroup?.module;
+  }
 
-  uniqueCssIdentifier: computed('id', function() {
+  get isConnected() {
+    return this.connections?.length > 0;
+  }
+
+  get uniqueCssIdentifier() {
     return `port-${this.id}`;
-  }),
+  }
 
-  compatibleType: computed(function() {
+  get compatibleType() {
     switch (this.type) {
       case 'port-value-in': return 'port-value-out';
       case 'port-value-out': return 'port-value-in';
@@ -26,52 +27,35 @@ export default Model.extend({
       case 'port-event-in': return 'port-event-out';
     }
     return '';
-  }),
+  }
 
-  isValuePort: computed('type', function() {
+  get isValuePort() {
     return this.type === 'port-value-in' || this.type === 'port-value-out';
-  }),
-  isEventPort: computed('type', function() {
+  }
+
+  get isEventPort() {
     return this.type === 'port-event-in' || this.type === 'port-event-out';
-  }),
+  }
 
-  onAttrChanged: observer('isEnabled', 'label', function() {
-    if (this.hasDirtyAttributes && !this.isNew) {
-      console.log('port attrchanged');
-      this.requestSave();
-    }
-  }),
-
-  // clear all connections when enabling or disabling
-  // connections must be cleared when enabling in case the port
-  // is connected to a bus
-  onEnabledChanged: observer('isEnabled', function() {
-    console.log('onEnabledChanged');
-    if (!isEmpty(this.connections)) {
-      this.disconnect();
-    }
-  }),
-
-  // remove all connections
+  // Remove all connections
   disconnect() {
     let connections = this.connections.slice();
     connections.forEach((connection) => {
-      const connConnections = get(connection, 'connections');
+      const connConnections = connection.connections;
       const index = connConnections.indexOf(this);
       if (index !== -1) {
         connConnections.splice(index, 1);
       }
       console.log('port.disconnect() requestSave()');
-      get(connection, 'module').requestSave();
+      connection.module.requestSave();
     }, this);
-  },
+  }
 
   save() {
-    this._super({ adapterOptions: { dontPersist: true } });
-  },
+    super.save({ adapterOptions: { dontPersist: true } });
+  }
 
   requestSave() {
     this.module.requestSave();
   }
-
-});
+}

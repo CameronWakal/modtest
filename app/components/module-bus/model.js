@@ -5,23 +5,21 @@
     without needing to visually patch them on the diagram.
 */
 
-import { alias } from '@ember/object/computed';
 import { belongsTo } from '@ember-data/model';
 import Module from '../module/model';
 
-export default Module.extend({
+export default class ModuleBusModel extends Module {
+  type = 'module-bus'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
 
-  type: 'module-bus', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  @belongsTo('port-event-out', { async: false, inverse: null }) eventOutPort;
 
-  eventOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
-  eventInPort: alias('eventInPorts.0'),
+  get eventInPort() {
+    return this.eventInPorts?.[0];
+  }
 
-  eventIn(event) {
-    this.eventOutPort.sendEvent(event);
-  },
-
+  // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     // In Ember Data 4.x, check if truly new by verifying ports are empty
     // Records loaded from storage will have embedded ports populated
     if (this.isNew && this.ports.length === 0) {
@@ -33,4 +31,7 @@ export default Module.extend({
     }
   }
 
-});
+  eventIn(event) {
+    this.eventOutPort.sendEvent(event);
+  }
+}

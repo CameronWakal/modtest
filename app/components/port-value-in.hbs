@@ -1,0 +1,9 @@
+<div
+  class={{this.portClasses}}
+  tabindex="-1"
+  {{on "mousedown" this.handleMouseDown}}
+  {{on "mouseenter" this.handleMouseEnter}}
+  {{on "mouseleave" this.handleMouseLeave}}
+>
+  <span class='port-component-type'>></span><span class='port-component-label'>{{@port.label}}</span>
+</div>

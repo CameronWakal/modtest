@@ -441,9 +441,9 @@ Use this checklist at each testing checkpoint:
 | 3 | Complete | 2026-02-18 | 2026-02-18 | Routes converted to native classes |
 | 4 | Complete | 2026-02-18 | 2026-02-18 | Controllers converted to native classes |
 | 5 | Complete | 2026-02-18 | 2026-02-20 | Ember 4.12 upgrade successful (second attempt) |
-| 6 | Not Started | | | |
-| 7 | Not Started | | | |
-| 8 | Not Started | | | |
+| 6 | Complete | 2026-02-20 | 2026-03-27 | All components converted to Glimmer |
+| 7 | Complete | 2026-02-20 | 2026-03-27 | All module components converted to Glimmer |
+| 8 | Complete | 2026-03-27 | 2026-03-27 | All observers converted to setters |
 | 9 | Not Started | | | |
 | 10 | Not Started | | | |
 | 11 | Not Started | | | |
@@ -643,4 +643,107 @@ Potential enhancements:
 
 ---
 
-**Next Step:** Phase 6 - Convert components to Glimmer (Batch 1 - Core)
+### Phases 6-7 Notes (2026-03-27)
+
+**All Components Converted to Glimmer:**
+
+The Octane migration for components, models, and serializers is complete:
+
+| Item | Count | Status |
+|------|-------|--------|
+| Glimmer Components | 41 | All converted |
+| Native Class Models | 30 | All converted |
+| Native Class Serializers | 26 | All converted |
+| Native Class Services | 2 | All converted |
+| Native Class Adapter | 1 | Converted |
+
+**Legacy Patterns Eliminated:**
+- Zero `Component.extend()` usage
+- Zero `Model.extend()` usage (except mixin application)
+- Zero `this._super()` calls
+- Zero `computed()` usage
+- Zero `actions:` hash patterns
+- Zero `tagName`/`classNames`/`classNameBindings` patterns
+
+**Remaining Work (Phase 8):**
+- 15 files still using `addObserver()` from `@ember/object/observers`
+- 1 `{{action}}` helper in `app/templates/application.hbs`
+- 2 `this.send()` calls in controllers (functional but could modernize)
+
+**Files with addObserver() to convert:**
+- `app/models/array.js`
+- `app/models/array-item.js`
+- `app/components/port/model.js`
+- `app/components/port-value-in/model.js`
+- `app/components/port-group/model.js`
+- `app/components/module-clock/model.js`
+- `app/components/module-sequence/model.js`
+- `app/components/module-analyst/model.js`
+- `app/components/module-repeat/model.js`
+- `app/components/module-out/model.js`
+- `app/components/module-value/model.js`
+- `app/components/module-scale/model.js`
+- `app/components/module-plonkmap/model.js`
+- `app/components/module-in/model.js`
+- `app/components/module-array/model.js`
+
+---
+
+### Phase 8 Notes (2026-03-27)
+
+**All Observers Removed:**
+
+Successfully converted all 15 files that were using `addObserver()` to modern Octane patterns.
+
+**Conversion Strategies Used:**
+
+1. **Save-triggering observers** → UI components now trigger `requestSave()` after value changes
+2. **Side-effect observers** → Converted to explicit setter methods (e.g., `setSource()`, `setPortSetsCount()`)
+3. **Relationship observers** → Removed; `async: false` ensures relationships are available in `init()`
+
+**Key Architectural Changes:**
+
+1. **BaseValueInputComponent** - Now calls `_triggerSaveIfNeeded()` after committing values to trigger saves on the appropriate model.
+
+2. **ModuleSettingModel** - Replaced `alias()` computed property with custom getter/setter that:
+   - Gets value using `get(this.module, targetPath)`
+   - Sets value by checking for setter methods (e.g., `setLength()` for `length` property)
+   - Falls back to `set()` if no setter method exists
+
+3. **Setter Methods Added:**
+   - `array.setLength()` - handles adding/removing array items
+   - `port-group.setPortSetsCount()` - handles adding/removing expansion ports
+   - `module-clock.setSource()` - handles midi listener management
+   - `module-analyst._checkKeyToOutputChanged()` - handles key change detection
+   - `module-plonkmap.setInputPortsCount()` - handles input port management
+   - `module-value.setValue()` - handles change event triggering
+
+4. **UI Components Updated:**
+   - `ValueInputFaderComponent` - triggers save after value updates
+   - `ValueArrayInputButtonComponent` - triggers save after button clicks
+   - `PortSettingComponent.toggleEnabled()` - handles disconnect and save
+
+**Files Converted:**
+- `app/models/array.js` - 4 observers → `setLength()` setter
+- `app/models/array-item.js` - observer removed, callers trigger save
+- `app/components/port/model.js` - observer removed, port-setting handles logic
+- `app/components/port-value-in/model.js` - observer removed
+- `app/components/port-group/model.js` - observer → `setPortSetsCount()` setter
+- `app/components/module-clock/model.js` - observer → `setSource()` setter
+- `app/components/module-sequence/model.js` - observers removed
+- `app/components/module-analyst/model.js` - observer → `_checkKeyToOutputChanged()` method
+- `app/components/module-repeat/model.js` - observers removed
+- `app/components/module-out/model.js` - observer removed
+- `app/components/module-value/model.js` - observer → `setValue()` setter
+- `app/components/module-scale/model.js` - observer removed
+- `app/components/module-plonkmap/model.js` - observer → `setInputPortsCount()` setter
+- `app/components/module-in/model.js` - observer removed
+- `app/components/module-array/model.js` - observers removed
+
+**Remaining Minor Items (optional):**
+- 1 `{{action 'newPatch'}}` in `app/templates/application.hbs` (could convert to `{{on "click"}}`)
+- 2 `this.send()` calls in controllers (functional but could modernize)
+
+---
+
+**Next Step:** Phase 9 - Ember 4.12 → 5.x upgrade

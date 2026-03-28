@@ -1,0 +1,38 @@
+<div class="module-settings {{unless @module.ports.length 'empty'}}">
+  <div class="app-sidebar-section">
+    <h4>{{@module.name}} Module</h4>
+  </div>
+  <div class="app-sidebar-section">
+    <ul>
+      <li>
+        <ValueInputString @boundValue={{@module.title}} @canBeEmpty={{false}} @target={{@module}} @property="title" @valueUpdated={{this.titleChanged}} />
+      </li>
+    </ul>
+  </div>
+  {{#if @module.settings.length}}
+    <div class="app-sidebar-section">
+      <ul>
+        {{#each @module.settings as |setting|}}
+          <li>
+            {{#let (component setting.type) as |SettingComponent|}}
+            <SettingComponent @setting={{setting}} />
+            {{/let}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  {{/if}}
+
+  {{#if @module.ports.length}}
+    <div class="app-sidebar-section">
+      <h4>Ports</h4>
+      <ul>
+        {{#each @module.ports as |port|}}
+          <li>
+            <PortSetting @port={{port}} @addBusConnection={{@addBusConnection}} @portDisconnected={{@portDisconnected}} />
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  {{/if}}
+</div>

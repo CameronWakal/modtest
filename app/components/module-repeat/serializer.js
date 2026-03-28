@@ -1,3 +1,3 @@
 import ModuleSerializer from '../module/serializer';
 
-export default ModuleSerializer.extend({});
+export default class ModuleRepeatSerializer extends ModuleSerializer {}

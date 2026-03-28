@@ -10,7 +10,7 @@
 
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import { action, set } from '@ember/object';
+import { action } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 
 export default class ApplicationRoute extends Route {
@@ -18,6 +18,7 @@ export default class ApplicationRoute extends Route {
   @service midi;
   @service scheduler;
   @service router;
+  @service currentPatch;
 
   constructor() {
     super(...arguments);
@@ -58,18 +59,6 @@ export default class ApplicationRoute extends Route {
     this.loadDefaultPatch();
   }
 
-  @action
-  newPatch() {
-    let patch = this.store.createRecord('patch', { _needsInit: true });
-    this.router.transitionTo('patch', patch);
-    set(this.controllerFor('application'), 'currentPatch', patch);
-  }
-
-  @action
-  patchChangedFromController(newPatch) {
-    this.router.transitionTo('patch', newPatch);
-  }
-
   // when the current patch is about to be deleted, it asks the application
   // router to navigate to a different patch of its choosing
   @action
@@ -83,15 +72,15 @@ export default class ApplicationRoute extends Route {
       let newPatch = this.store.createRecord('patch', { _needsInit: true });
       newPatch.save();
       this.router.transitionTo('patch', newPatch);
-      set(this.controllerFor('application'), 'currentPatch', newPatch);
+      this.currentPatch.patch = newPatch;
     } else if (index === 0) {
       // if we're transitioning from the first patch, go to the next patch
       this.router.transitionTo('patch', patchesList[1]);
-      set(this.controllerFor('application'), 'currentPatch', patchesList[1]);
+      this.currentPatch.patch = patchesList[1];
     } else {
       // otherwise, go to the previous patch
       this.router.transitionTo('patch', patchesList[index - 1]);
-      set(this.controllerFor('application'), 'currentPatch', patchesList[index - 1]);
+      this.currentPatch.patch = patchesList[index - 1];
     }
   }
 
@@ -105,7 +94,7 @@ export default class ApplicationRoute extends Route {
         let patch = this.store.createRecord('patch', { _needsInit: true });
         patch.save();
         this.router.replaceWith('patch', patch);
-        set(this.controllerFor('application'), 'currentPatch', patch);
+        this.currentPatch.patch = patch;
       } else {
         // if there are patches in the list, transition to the first one
         let patches = this.modelFor('application');
@@ -116,7 +105,7 @@ export default class ApplicationRoute extends Route {
       // patch route still has a model from before we hit the browser back button
       this.router.replaceWith('patch', this.modelFor('patch'));
     }
-    // set currentPatch on app controller so it can init dropdown patch menu
-    set(this.controllerFor('application'), 'currentPatch', this.modelFor('patch'));
+    // set currentPatch on service so the dropdown patch menu can use it
+    this.currentPatch.patch = this.modelFor('patch');
   }
 }

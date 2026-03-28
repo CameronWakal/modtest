@@ -3,8 +3,10 @@ import { A } from '@ember/array';
 import LFSerializer from 'ember-localforage-adapter/serializers/localforage';
 import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
 
-export default LFSerializer.extend(EmbeddedRecordsMixin, {
+// Apply mixin to create a base class for native class inheritance
+const MixedSerializer = LFSerializer.extend(EmbeddedRecordsMixin);
 
+export default class ApplicationSerializer extends MixedSerializer {
   // Override to fix deprecated snapshot.type access from ember-localforage-adapter
   shouldSerializeHasMany(snapshot, key, relationship) {
     const modelClass = this.store.modelFor(snapshot.modelName);
@@ -18,7 +20,7 @@ export default LFSerializer.extend(EmbeddedRecordsMixin, {
       (relationshipType === 'manyToNone' ||
         relationshipType === 'manyToMany' ||
         relationshipType === 'manyToOne');
-  },
+  }
 
   // Implement JSONSerializer.serializePolymorphicType to include `type` in polymorphic belongsTos
   serializePolymorphicType(snapshot, json, relationship) {
@@ -30,7 +32,7 @@ export default LFSerializer.extend(EmbeddedRecordsMixin, {
     } else {
       json[`${key}_type`] = belongsTo.modelName;
     }
-  },
+  }
 
   // Override EmbeddedRecordsMixin._generateSerializedHasMany() to:
   // 1. Handle undefined relationships gracefully
@@ -53,21 +55,21 @@ export default LFSerializer.extend(EmbeddedRecordsMixin, {
     }
 
     return ret;
-  },
+  }
 
   // Override JSONSerializer.serialize() to include `type` attribute if requested
   serialize(snapshot, options) {
-    let json = this._super(...arguments);
+    let json = super.serialize(...arguments);
 
     if (options && options.includeType) {
       json.type = snapshot.modelName;
     }
 
     return json;
-  },
+  }
 
   // Extract polymorphic type from `key_type` field during normalization
-  extractPolymorphicRelationship(relationshipType, relationshipHash, relationshipOptions) {
+  extractPolymorphicRelationship(relationshipType, relationshipHash) {
     // If there's a _type field, use it for the polymorphic type
     if (relationshipHash && relationshipHash.type) {
       return {
@@ -75,8 +77,8 @@ export default LFSerializer.extend(EmbeddedRecordsMixin, {
         type: relationshipHash.type
       };
     }
-    return this._super(...arguments);
-  },
+    return super.extractPolymorphicRelationship(...arguments);
+  }
 
   // Normalize belongsTo relationships to extract polymorphic types from key_type fields
   normalize(modelClass, resourceHash) {
@@ -95,7 +97,6 @@ export default LFSerializer.extend(EmbeddedRecordsMixin, {
         }
       }
     });
-    return this._super(...arguments);
+    return super.normalize(...arguments);
   }
-
-});
+}

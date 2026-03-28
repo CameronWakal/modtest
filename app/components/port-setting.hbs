@@ -1,0 +1,24 @@
+<div class={{this.portSettingClasses}} title={{this.title}}>
+  <label class="setting-label">
+    <input type="checkbox" checked={{this.port.isEnabled}} {{on "change" this.toggleEnabled}} />
+    {{this.labelWithType}}
+  </label>
+  {{#unless this.port.isEnabled}}
+    {{#if this.portIsValueIn}}
+      <ValueInputNumber
+        @boundValue={{this.port.disabledValue}}
+        @canBeEmpty={{this.port.canBeEmpty}}
+        @minValue={{this.port.minValue}}
+        @maxValue={{this.port.maxValue}}
+        @onChange={{this.updateDisabledValue}}
+      />
+    {{else if this.port.isEventPort}}
+      <PortSettingBusMenu
+        @busses={{this.port.module.patch.busses}}
+        @connectedBus={{this.connectedBus}}
+        @disconnectFromBus={{this.disconnectFromBus}}
+        @connectToBus={{this.connectToBus}}
+      />
+    {{/if}}
+  {{/unless}}
+</div>
