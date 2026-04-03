@@ -2,7 +2,9 @@
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
-module.exports = function(defaults) {
+module.exports = async function(defaults) {
+  const { setConfig } = await import('@warp-drive/build-config');
+
   let app = new EmberApp(defaults, {
     // Add options here
     sassOptions: {
@@ -12,21 +14,14 @@ module.exports = function(defaults) {
     }
   });
 
-  // Use `app.import` to add additional libraries to the generated
-  // output files.
-  //
-  // If you need to use different assets in different
-  // environments, specify an object as the first parameter. That
-  // object's keys should be the environment name and the values
-  // should be the asset to use in that environment.
-  //
-  // If the library that you are including contains AMD or ES6
-  // modules that you would like to import into your application
-  // please specify an object with the list of modules as keys
-  // along with the exports of each module as its value.
-
-  // Shim to restore the Ember global for legacy addons (ember-localforage-adapter)
-  app.import('vendor/ember-global-shim.js', { prepend: true });
+  // Configure WarpDrive/Ember Data 5.x - must be called after EmberApp is created
+  // but before toTree() to properly configure the build
+  setConfig(app, __dirname, {
+    deprecations: {
+      // Suppress tracking package deprecation - we use @warp-drive/ember/install instead
+      DEPRECATE_TRACKING_PACKAGE: false,
+    },
+  });
 
   return app.toTree();
 };

@@ -1,6 +1,6 @@
 <div class ="app-header">
-  <div class="select-menu-wrapper"><SelectByTitleMenu @items={{this.patches}} @selectedItem={{this.currentPatch}} @itemSelected={{action "patchChanged"}} /></div>
-  <button {{action 'newPatch'}}>New</button>
+  <div class="select-menu-wrapper"><SelectByTitleMenu @items={{this.patches}} @selectedItem={{this.currentPatch.patch}} @itemSelected={{this.patchChanged}} /></div>
+  <button type="button" {{on "click" this.newPatch}}>New</button>
 </div>
 <div class="app-sidebar" id="settings-container">
 </div>

@@ -1,87 +1,41 @@
-import { set, get, observer, computed } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import { belongsTo, attr } from '@ember-data/model';
 import Module from '../module/model';
 
 const inputTypeMenuOptions = ['Number', 'Slider', 'Both', 'Button'];
 
-export default Module.extend({
+export default class ModuleSequenceModel extends Module {
+  type = 'module-sequence'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name = 'Sequence';
+  inputTypeMenuOptions = inputTypeMenuOptions;
+  @tracked latestTriggerTime = null;
+  @tracked triggerDuration = null;
+  @tracked currentIndex = null;
 
-  type: 'module-sequence', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'Sequence',
-  inputTypeMenuOptions,
-  latestTriggerTime: null,
-  triggerDuration: null,
-
-  steps: belongsTo('array', { async: false, inverse: null }),
-  trigOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
-  inputType: attr('string', { defaultValue: 'Number' }),
-  displayScale: attr('number', { defaultValue: 1 }),
-
-  onAttrChanged: observer('inputType', 'displayScale', function() {
-    if (this.hasDirtyAttributes) {
-      this.requestSave();
-    }
-  }),
-
-  // Ensure dataManager is set whenever steps relationship is established
-  onStepsChanged: observer('steps', function() {
-    if (this.steps && !this.steps.dataManager) {
-      this.steps.dataManager = this;
-    }
-  }),
+  @belongsTo('array', { async: false, inverse: null }) steps;
+  @belongsTo('port-event-out', { async: false, inverse: null }) trigOutPort;
+  @attr('string', { defaultValue: 'Number' }) inputType;
+  @attr('number', { defaultValue: 1 }) displayScale;
 
   // currentIndexes is referenced by the steps array to highlight the currently selected
   // steps in the UI. A sequence only ever has one selected step.
-  currentIndexes: computed('currentIndex', function() {
+  get currentIndexes() {
     return [this.currentIndex];
-  }),
-  currentIndex: null,
+  }
 
-  getValue() {
-    let item = this.steps.items.find(i => i.index === this.currentIndex);
-    if (item) {
-      return item.value;
-    }
-    return null;
-  },
-
-  incrementStep(event) {
-
-    // update step
-    if (this.currentIndex == null) {
-      set(this, 'currentIndex', 0);
-    } else if (this.currentIndex < this.steps.length - 1) {
-      set(this, 'currentIndex', this.currentIndex + 1);
-    } else {
-      set(this, 'currentIndex', 0);
-    }
-
-    // output event if current step has a value
-    let step = this.steps.items.find(i => i.index === this.currentIndex);
-    if (!isNaN(parseInt(step.value))) {
-      if (this.trigOutPort.isConnected) {
-        this.trigOutPort.sendEvent(event);
-        set(this, 'triggerDuration', event.duration);
-        set(this, 'latestTriggerTime', event.targetTime);
-      }
-    }
-  },
-
-  reset() {
-    set(this, 'currentIndex', null);
-  },
-
+  // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
-    this._super(...arguments);
-    if (this.isNew && this.ports.length === 0) {
-      set(this, 'title', this.name);
+    super.init(...arguments);
 
-      // create steps
+    if (this.isNew && this.ports.length === 0) {
+      this.title = this.name;
+
+      // Create steps
       let steps = this.store.createRecord('array');
-      set(this, 'steps', steps);
+      this.steps = steps;
       this.steps.setLength(8);
 
-      // create settings
+      // Create settings
       this.addMenuSetting('Input Type', 'inputType', 'inputTypeMenuOptions', this);
 
       // todo: make config option for settings that must have a non-null numeric value
@@ -91,29 +45,53 @@ export default Module.extend({
       this.addNumberSetting('Input Step', 'steps.valueStep', this, { minValue: 1 });
       this.addNumberSetting('Display Scale', 'displayScale', this, { minValue: 1 });
 
-      // create ports
+      // Create ports
       this.addEventInPort('inc', 'incrementStep', true);
       this.addEventInPort('reset', 'reset', false);
       this.addValueOutPort('value', 'getValue', true);
       this.addEventOutPort('trig', 'trigOutPort', false);
-
-      this.requestSave();
     }
+    // Ensure dataManager is set for loaded records (async: false means it's available in init)
     if (this.steps) {
       this.steps.dataManager = this;
     }
-  },
+  }
+
+  getValue() {
+    let item = this.steps.items.find(i => i.index === this.currentIndex);
+    if (item) {
+      return item.value;
+    }
+    return null;
+  }
+
+  incrementStep(event) {
+    // Update step
+    if (this.currentIndex == null) {
+      this.currentIndex = 0;
+    } else if (this.currentIndex < this.steps.length - 1) {
+      this.currentIndex = this.currentIndex + 1;
+    } else {
+      this.currentIndex = 0;
+    }
+
+    // Output event if current step has a value
+    let step = this.steps.items.find(i => i.index === this.currentIndex);
+    if (!isNaN(parseInt(step.value))) {
+      if (this.trigOutPort.isConnected) {
+        this.trigOutPort.sendEvent(event);
+        this.triggerDuration = event.duration;
+        this.latestTriggerTime = event.targetTime;
+      }
+    }
+  }
+
+  reset() {
+    this.currentIndex = null;
+  }
 
   remove() {
     // Embedded records (steps) are removed automatically with the parent module
-    this._super();
-  },
-
-  save() {
-    if (this.steps) {
-      this.steps.save();
-    }
-    this._super();
+    super.remove();
   }
-
-});
+}

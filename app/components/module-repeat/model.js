@@ -1,49 +1,74 @@
+import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
-import { equal } from '@ember/object/computed';
-import { observer, computed, set, get } from '@ember/object';
 import Module from '../module/model';
 import { belongsTo, attr } from '@ember-data/model';
 
 const unitsMenuOptions = ['beats', 'ms'];
 const modeMenuOptions = ['count only', 'gate only', 'count+gate'];
 
-export default Module.extend({
+export default class ModuleRepeatModel extends Module {
+  @service scheduler;
 
-  scheduler: service(),
+  type = 'module-repeat'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
+  name = 'Repeat';
 
-  type: 'module-repeat', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  name: 'Repeat',
+  @tracked latestTriggerTime = null;
+  @tracked triggerDuration = null;
+  unitsMenuOptions = unitsMenuOptions;
+  modeMenuOptions = modeMenuOptions;
 
-  latestTriggerTime: null,
-  triggerDuration: null,
-  unitsMenuOptions,
-  modeMenuOptions,
+  @attr('string', { defaultValue: 'count only' }) mode;
+  @attr('string', { defaultValue: 'beats' }) delayUnits;
+  @attr('string', { defaultValue: 'beats' }) gateUnits;
 
-  mode: attr('string', { defaultValue: 'count only' }),
-  delayUnits: attr('string', { defaultValue: 'beats' }),
-  gateUnits: attr('string', { defaultValue: 'beats' }),
+  @belongsTo('port-value-in', { async: false, inverse: null }) tempoInPort;
+  @belongsTo('port-value-in', { async: false, inverse: null }) countInPort; // number of times to repeat
+  @belongsTo('port-value-in', { async: false, inverse: null }) gateNumeratorInPort; // period to continue repeating
+  @belongsTo('port-value-in', { async: false, inverse: null }) gateDenominatorInPort; // period to continue repeating
+  @belongsTo('port-value-in', { async: false, inverse: null }) delayNumeratorInPort; // delay between repeats
+  @belongsTo('port-value-in', { async: false, inverse: null }) delayDenominatorInPort; // delay between repeats
+  @belongsTo('port-event-out', { async: false, inverse: null }) trigOutPort;
 
-  gateIsInBeats: equal('gateUnits', 'beats'),
-  delayIsInBeats: equal('delayUnits', 'beats'),
-  tempoInPort: belongsTo('port-value-in', { async: false, inverse: null }),
-  countInPort: belongsTo('port-value-in', { async: false, inverse: null }), // number of times to repeat
-  gateNumeratorInPort: belongsTo('port-value-in', { async: false, inverse: null }), // period to continue repeating
-  gateDenominatorInPort: belongsTo('port-value-in', { async: false, inverse: null }), // period to continue repeating
-  delayNumeratorInPort: belongsTo('port-value-in', { async: false, inverse: null }), // delay between repeats
-  delayDenominatorInPort: belongsTo('port-value-in', { async: false, inverse: null }), // delay between repeats
-  trigOutPort: belongsTo('port-event-out', { async: false, inverse: null }),
+  get gateIsInBeats() {
+    return this.gateUnits === 'beats';
+  }
 
-  gateIsOn: computed('mode', function() {
+  get delayIsInBeats() {
+    return this.delayUnits === 'beats';
+  }
+
+  get gateIsOn() {
     return this.mode === 'gate only' || this.mode === 'count+gate';
-  }),
-  countIsOn: computed('mode', function() {
+  }
+
+  get countIsOn() {
     return this.mode === 'count only' || this.mode === 'count+gate';
-  }),
-  onSettingChanged: observer('mode', 'delayUnits', 'gateUnits', function() {
-    if (this.hasDirtyAttributes) {
-      this.requestSave();
+  }
+
+  // eslint-disable-next-line ember/classic-decorator-hooks
+  init() {
+    super.init(...arguments);
+
+    if (this.isNew && this.ports.length === 0) {
+      this.title = this.name;
+
+      this.addEventInPort('trig', 'onEventIn', true);
+
+      // create value-in ports
+      this.addValueInPort('tempo', 'tempoInPort', { defaultValue: 100, minValue: 1 });
+      this.addValueInPort('count', 'countInPort', { defaultValue: 0, minValue: 0 });
+      this.addValueInPort('gate', 'gateNumeratorInPort', { defaultValue: 0, minValue: 0 });
+      this.addValueInPort('gatedenom', 'gateDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
+      this.addValueInPort('delay', 'delayNumeratorInPort', { defaultValue: 1, minValue: 1 });
+      this.addValueInPort('delaydenom', 'delayDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
+      this.addEventOutPort('trig', 'trigOutPort', true);
+
+      // create settings
+      this.addMenuSetting('Mode', 'mode', 'modeMenuOptions', this);
+      this.addMenuSetting('Delay Units', 'delayUnits', 'unitsMenuOptions', this);
+      this.addMenuSetting('Gate Units', 'durationUnits', 'unitsMenuOptions', this);
     }
-  }),
+  }
 
   // when an event comes in, repeat the event after a delay.
   // multiple repeats can be generated from a single original event.
@@ -80,8 +105,8 @@ export default Module.extend({
     // examine incoming event and send it through if it's a queued repeat event
     if (event.repeatCount != null && event.repeatOriginalTargetTime != null) {
       this.trigOutPort.sendEvent(event);
-      set(this, 'triggerDuration', event.duration);
-      set(this, 'latestTriggerTime', event.targetTime);
+      this.triggerDuration = event.duration;
+      this.latestTriggerTime = event.targetTime;
     }
 
     // create the next repeat event based on incoming event properties
@@ -115,33 +140,5 @@ export default Module.extend({
     if (eventShouldRepeat) {
       this.scheduler.queueEvent(repeatEvent, this.onEventIn.bind(this));
     }
-
-  },
-
-  init() {
-    this._super(...arguments);
-    if (this.isNew && this.ports.length === 0) {
-      set(this, 'title', this.name);
-
-      this.addEventInPort('trig', 'onEventIn', true);
-
-      // create value-in ports
-      this.addValueInPort('tempo', 'tempoInPort', { defaultValue: 100, minValue: 1 });
-      this.addValueInPort('count', 'countInPort', { defaultValue: 0, minValue: 0 });
-      this.addValueInPort('gate', 'gateNumeratorInPort', { defaultValue: 0, minValue: 0 });
-      this.addValueInPort('gatedenom', 'gateDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
-      this.addValueInPort('delay', 'delayNumeratorInPort', { defaultValue: 1, minValue: 1 });
-      this.addValueInPort('delaydenom', 'delayDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
-      this.addEventOutPort('trig', 'trigOutPort', true);
-
-      // create settings
-      this.addMenuSetting('Mode', 'mode', 'modeMenuOptions', this);
-      this.addMenuSetting('Delay Units', 'delayUnits', 'unitsMenuOptions', this);
-      this.addMenuSetting('Gate Units', 'durationUnits', 'unitsMenuOptions', this);
-
-      console.log('module-repeat.didCreate() requestSave()');
-      this.requestSave();
-    }
   }
-
-});
+}

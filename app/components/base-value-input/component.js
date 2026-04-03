@@ -20,7 +20,9 @@ export default class BaseValueInputComponent extends Component {
   get value() {
     // Sync local value from boundValue when it changes externally
     if (this.args.boundValue !== this._lastBoundValue) {
+      // eslint-disable-next-line ember/no-side-effects
       this._lastBoundValue = this.args.boundValue;
+      // eslint-disable-next-line ember/no-side-effects
       this._localValue = this.args.boundValue;
     }
     return this._localValue;
@@ -121,12 +123,18 @@ export default class BaseValueInputComponent extends Component {
     if (this.args.onChange) {
       this.args.onChange(value);
     } else if (this.args.target && this.args.property) {
-      // Allow passing target object and property name for direct setting
       set(this.args.target, this.args.property, value);
+      // Trigger save on the target or its module
+      this._triggerSaveIfNeeded();
     } else {
       // This will fail in Glimmer - all usages should provide @onChange or @target/@property
       console.warn('ValueInput: No onChange handler provided. Value updates will fail.');
     }
+  }
+
+  // Trigger auto-save after value changes
+  _triggerSaveIfNeeded() {
+    this.args.target?.save();
   }
 
   resetValue() {

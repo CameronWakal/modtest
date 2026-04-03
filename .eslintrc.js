@@ -34,7 +34,6 @@ module.exports = {
       files: [
         '.eslintrc.js',
         '.template-lintrc.js',
-        'ember-cli-build.js',
         'testem.js',
         'config/**/*.js',
         'lib/*/index.js',
@@ -53,6 +52,27 @@ module.exports = {
         // this can be removed once the following is fixed
         // https://github.com/mysticatea/eslint-plugin-node/issues/77
         'node/no-unpublished-require': 'off'
+      }
+    },
+    // ember-cli-build.js uses async/await and dynamic imports
+    {
+      files: ['ember-cli-build.js'],
+      parserOptions: {
+        sourceType: 'module',
+        ecmaVersion: 2022
+      },
+      env: {
+        browser: false,
+        node: true
+      },
+      plugins: ['node'],
+      extends: ['plugin:node/recommended'],
+      rules: {
+        'node/no-unpublished-require': 'off',
+        'node/no-unsupported-features/es-syntax': ['error', {
+          ignores: ['dynamicImport', 'modules']
+        }],
+        'node/no-missing-import': 'off'
       }
     }
   ]

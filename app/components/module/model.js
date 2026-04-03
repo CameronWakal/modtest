@@ -1,22 +1,18 @@
-import { filterBy } from '@ember/object/computed';
-import { once } from '@ember/runloop';
-import { set, computed } from '@ember/object';
 import Model, { belongsTo, hasMany, attr } from '@ember-data/model';
 
-export default Model.extend({
+export default class ModuleModel extends Model {
+  type = 'module'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
 
-  type: 'module', // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  shouldAutoSave: false,
+  @attr('string') title;
+  @attr('number', { defaultValue: 0 }) xPos;
+  @attr('number', { defaultValue: 0 }) yPos;
 
-  title: attr('string'),
-  xPos: attr('number', { defaultValue: 0 }),
-  yPos: attr('number', { defaultValue: 0 }),
+  @hasMany('module-setting', { polymorphic: true, async: false, inverse: null }) settings;
+  @belongsTo('patch', { async: true, inverse: null }) patch;
+  @hasMany('port-group', { async: false, inverse: null }) portGroups;
 
-  settings: hasMany('module-setting', { polymorphic: true, async: false, inverse: null }),
-  patch: belongsTo('patch', { async: true, inverse: null }),
-  portGroups: hasMany('port-group', { async: false, inverse: null }),
   // Depend on basePorts and expansionPorts directly since @each.ports doesn't track union macro changes
-  ports: computed('portGroups.@each.basePorts', 'portGroups.@each.expansionPorts', function() {
+  get ports() {
     let ports = [];
     this.portGroups.forEach(function(portGroup) {
       portGroup.ports.forEach(function(port) {
@@ -24,45 +20,60 @@ export default Model.extend({
       });
     });
     return ports;
-  }),
+  }
 
-  eventOutPorts: filterBy('ports', 'type', 'port-event-out'),
-  eventInPorts: filterBy('ports', 'type', 'port-event-in'),
-  valueOutPorts: filterBy('ports', 'type', 'port-value-out'),
-  valueInPorts: filterBy('ports', 'type', 'port-value-in'),
-  enabledPorts: filterBy('ports', 'isEnabled', true),
-  enabledOutPorts: computed('ports.@each.{type,isEnabled}', function() {
+  get eventOutPorts() {
+    return this.ports.filter(p => p.type === 'port-event-out');
+  }
+
+  get eventInPorts() {
+    return this.ports.filter(p => p.type === 'port-event-in');
+  }
+
+  get valueOutPorts() {
+    return this.ports.filter(p => p.type === 'port-value-out');
+  }
+
+  get valueInPorts() {
+    return this.ports.filter(p => p.type === 'port-value-in');
+  }
+
+  get enabledPorts() {
+    return this.ports.filter(p => p.isEnabled);
+  }
+
+  get enabledOutPorts() {
     return this.ports.filter((item) => {
       return item.isEnabled && (item.type === 'port-value-out' || item.type === 'port-event-out');
     });
-  }),
+  }
 
+  // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     // In Ember Data 4.x, check if truly new by verifying relationships are empty
     // Records loaded from storage will have embedded relationships populated
     if (this.isNew && this.portGroups.length === 0) {
       this.addPortGroup();
     }
-  },
+  }
 
-  // a grouping of ports within the port list, so you can have a degree of control
+  // A grouping of ports within the port list, so you can have a degree of control
   // over the order of ports when they're dynamically added or removed
   addPortGroup(options) {
-    // have to explicitly define the empty port arrays to avoid an annoying serializer warning:
+    // Have to explicitly define the empty port arrays to avoid an annoying serializer warning:
     // https://github.com/emberjs/data/issues/5173
     let portGroup = this.store.createRecord('port-group', { basePorts: [], expansionPorts: [], module: this });
 
     if (options && options.minSets) {
-      set(portGroup, 'minSets', options.minSets);
+      portGroup.minSets = options.minSets;
     }
     if (options && options.maxSets) {
-      set(portGroup, 'maxSets', options.maxSets);
+      portGroup.maxSets = options.maxSets;
     }
     this.portGroups.push(portGroup);
-    portGroup.save();
     return portGroup;
-  },
+  }
 
   // portVar is used to easily refer to this specific port from within the module
   // Pass null for portVar if the port doesn't need a direct reference
@@ -74,11 +85,10 @@ export default Model.extend({
       portGroup
     });
     portGroup.addPort(port);
-    port.save();
     if (portVar) {
-      set(this, portVar, port);
+      this[portVar] = port;
     }
-  },
+  }
 
   // targetMethod on the module is called by the port when the event comes in
   addEventInPort(label, targetMethod, isEnabled) {
@@ -90,9 +100,8 @@ export default Model.extend({
       portGroup
     });
     portGroup.addPort(port);
-    port.save();
     return port;
-  },
+  }
 
   // targetVar is checked by the port when a request for the value comes in
   addValueOutPort(label, targetMethod, isEnabled) {
@@ -104,17 +113,16 @@ export default Model.extend({
       portGroup
     });
     portGroup.addPort(port);
-    port.save();
-  },
+  }
 
-  // create a value-in-port and add it to the internal list of ports,
+  // Create a value-in-port and add it to the internal list of ports,
   // then assign it to the provided variable.
   addValueInPort(label, portVar, options) {
     let port = this.addValueInPortWithoutAssignment(label, options);
-    set(this, portVar, port);
-  },
+    this[portVar] = port;
+  }
 
-  // create a value-in-port and add it to the internal list of ports,
+  // Create a value-in-port and add it to the internal list of ports,
   // but then just return it rather than assigning it to the provided
   // port variable as above. This can be useful if you want to create
   // a dynamic number of ports in a hasMany, for example.
@@ -138,9 +146,8 @@ export default Model.extend({
       portGroup
     });
     portGroup.addPort(port);
-    port.save();
     return port;
-  },
+  }
 
   addNumberSetting(label, targetValue, module, options) {
     if (options == null) {
@@ -158,7 +165,7 @@ export default Model.extend({
       module
     });
     this.settings.push(setting);
-  },
+  }
 
   addMenuSetting(label, targetValue, itemsProperty, module) {
     let setting = this.store.createRecord('module-setting-menu', {
@@ -169,9 +176,9 @@ export default Model.extend({
     });
 
     this.settings.push(setting);
-  },
+  }
 
-  // useful if you're subclassing a module and don't need a setting from the parent
+  // Useful if you're subclassing a module and don't need a setting from the parent
   removeSetting(label) {
     let setting = this.settings.find(s => s.label === label);
     const index = this.settings.indexOf(setting);
@@ -179,23 +186,7 @@ export default Model.extend({
       this.settings.splice(index, 1);
     }
     this.store.unloadRecord(setting);
-  },
-
-  requestSave() {
-    console.log('module requestSave');
-    once(this, this.save);
-  },
-
-  save() {
-    if (this.shouldAutoSave) {
-      if (!this.isDeleted) {
-        console.log('module saved');
-      } else {
-        console.log('module deleted');
-      }
-      this._super();
-    }
-  },
+  }
 
   remove() {
     // Disconnect ports first so other modules update their connection state
@@ -207,5 +198,4 @@ export default Model.extend({
     this.deleteRecord();
     this.save();
   }
-
-});
+}

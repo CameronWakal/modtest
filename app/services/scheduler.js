@@ -24,7 +24,7 @@ export default class SchedulerService extends Service {
   }
 
   queueEvent(event, callback, module) {
-    this.requests.pushObject({
+    this.requests.push({
       callback,
       event,
       module
@@ -32,7 +32,7 @@ export default class SchedulerService extends Service {
   }
 
   cancelEventsForModule(module) {
-    this.requests = this.requests.rejectBy('module', module);
+    this.requests = this.requests.filter(req => req.module !== module);
   }
 
   _sendEvents() {
@@ -47,27 +47,30 @@ export default class SchedulerService extends Service {
       return;
     }
 
-    // start by finding the event with the earliest timestamp
-    let sortedRequests = this.requests.sortBy('event.targetTime');
-    let event = sortedRequests[0]?.event;
-    let callback = sortedRequests[0]?.callback;
+    let now = performance.now() + lookahead;
 
-    // remove and call events until there are no events left
-    // with timestamps earlier than the current time
-    while (event && event.targetTime <= performance.now() + lookahead) {
+    // Process events until none remain with timestamps before now
+    while (this.requests.length > 0) {
+      // Find event with earliest timestamp (linear scan, avoids sorting overhead)
+      let earliestIndex = 0;
+      let earliestTime = this.requests[0].event.targetTime;
 
-      this.requests = sortedRequests.slice(1);
-      event.callbackTime = performance.now();
-      callback(event);
+      for (let i = 1; i < this.requests.length; i++) {
+        if (this.requests[i].event.targetTime < earliestTime) {
+          earliestTime = this.requests[i].event.targetTime;
+          earliestIndex = i;
+        }
+      }
 
-      // console.log('called:', event.targetTime, 'queue:', this.requests.mapBy('event.targetTime'));
+      // Stop if earliest event is still in the future
+      if (earliestTime > now) break;
 
-      // sort the queue each time, because the last event
-      // callback might have added more items to the queue.
-      sortedRequests = this.requests.sortBy('event.targetTime');
-      event = sortedRequests[0]?.event;
-      callback = sortedRequests[0]?.callback;
+      // Remove the event from queue and call it
+      let request = this.requests.splice(earliestIndex, 1)[0];
+      request.event.callbackTime = performance.now();
+      request.callback(request.event);
 
+      // console.log('called:', request.event.targetTime, 'queue:', this.requests.map(r => r.event.targetTime));
     }
 
   }
