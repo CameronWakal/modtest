@@ -30,7 +30,6 @@ export default class ValueArrayInputButtonComponent extends Component {
         set(this.args.item, 'value', null);
       }
     }
-    // Trigger save through the array's data manager
-    this.args.item?.array?.requestSave();
+    this.args.item?.save();
   }
 }

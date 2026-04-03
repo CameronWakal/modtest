@@ -22,8 +22,6 @@ export default class ModuleValueModel extends Module {
       this.addValueInPort('value', 'valueInPort', { isEnabled: false });
       this.addValueOutPort('value', 'getValue', true);
       this.addEventOutPort('changed', 'changeOutPort', false);
-      console.log('module-value didCreate saveLater');
-      this.requestSave();
     }
   }
 
@@ -33,7 +31,7 @@ export default class ModuleValueModel extends Module {
         targetTime: performance.now(),
         callbackTime: performance.now()
       });
-      this.requestSave();
+      this.save();
     }
   }
 

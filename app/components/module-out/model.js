@@ -46,9 +46,6 @@ export default class ModuleOutModel extends Module {
 
       // Create settings
       this.addMenuSetting('Output', 'outputDeviceName', 'deviceMenuOptions', this);
-
-      console.log('module-out.didCreate() requestSave()');
-      this.requestSave();
     }
   }
 

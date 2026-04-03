@@ -75,9 +75,6 @@ export default class ModulePlonkmapModel extends Module {
 
       // add array of input ports
       this._addInputPorts(this.inputPortsCount);
-
-      console.log('module-plonkmap.didCreate() requestSave()');
-      this.requestSave();
     }
   }
 

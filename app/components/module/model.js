@@ -1,9 +1,7 @@
-import { once } from '@ember/runloop';
 import Model, { belongsTo, hasMany, attr } from '@ember-data/model';
 
 export default class ModuleModel extends Model {
   type = 'module'; // modelName that can be referenced in templates, constructor.modelName fails in Ember > 2.6
-  shouldAutoSave = false;
 
   @attr('string') title;
   @attr('number', { defaultValue: 0 }) xPos;
@@ -74,7 +72,6 @@ export default class ModuleModel extends Model {
       portGroup.maxSets = options.maxSets;
     }
     this.portGroups.push(portGroup);
-    portGroup.save();
     return portGroup;
   }
 
@@ -88,7 +85,6 @@ export default class ModuleModel extends Model {
       portGroup
     });
     portGroup.addPort(port);
-    port.save();
     if (portVar) {
       this[portVar] = port;
     }
@@ -104,7 +100,6 @@ export default class ModuleModel extends Model {
       portGroup
     });
     portGroup.addPort(port);
-    port.save();
     return port;
   }
 
@@ -118,7 +113,6 @@ export default class ModuleModel extends Model {
       portGroup
     });
     portGroup.addPort(port);
-    port.save();
   }
 
   // Create a value-in-port and add it to the internal list of ports,
@@ -152,7 +146,6 @@ export default class ModuleModel extends Model {
       portGroup
     });
     portGroup.addPort(port);
-    port.save();
     return port;
   }
 
@@ -193,22 +186,6 @@ export default class ModuleModel extends Model {
       this.settings.splice(index, 1);
     }
     this.store.unloadRecord(setting);
-  }
-
-  requestSave() {
-    console.log('module requestSave');
-    once(this, this.save);
-  }
-
-  save() {
-    if (this.shouldAutoSave) {
-      if (!this.isDeleted) {
-        console.log('module saved');
-      } else {
-        console.log('module deleted');
-      }
-      super.save();
-    }
   }
 
   remove() {

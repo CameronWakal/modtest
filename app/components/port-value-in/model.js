@@ -30,7 +30,6 @@ export default class PortValueInModel extends Port {
       maxValue: this.maxValue,
       portGroup: this.portGroup
     });
-    newPort.save();
     return newPort;
   }
 

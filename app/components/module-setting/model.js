@@ -26,7 +26,4 @@ export default class ModuleSettingModel extends Model {
     this.store.unloadRecord(this);
   }
 
-  save() {
-    super.save({ adapterOptions: { dontPersist: true } });
-  }
 }

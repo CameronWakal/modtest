@@ -24,7 +24,6 @@ export default class ValueInputFaderComponent extends Component {
   @action
   updateValue(value) {
     this.args.item.value = value;
-    // Trigger save through the array's data manager
-    this.args.item.array?.requestSave();
+    this.args.item.save();
   }
 }

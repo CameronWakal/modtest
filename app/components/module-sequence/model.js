@@ -50,8 +50,6 @@ export default class ModuleSequenceModel extends Module {
       this.addEventInPort('reset', 'reset', false);
       this.addValueOutPort('value', 'getValue', true);
       this.addEventOutPort('trig', 'trigOutPort', false);
-
-      this.requestSave();
     }
     // Ensure dataManager is set for loaded records (async: false means it's available in init)
     if (this.steps) {
@@ -95,12 +93,5 @@ export default class ModuleSequenceModel extends Module {
   remove() {
     // Embedded records (steps) are removed automatically with the parent module
     super.remove();
-  }
-
-  save() {
-    if (this.steps) {
-      this.steps.save();
-    }
-    super.save();
   }
 }

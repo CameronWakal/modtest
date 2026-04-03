@@ -7,7 +7,7 @@ export default class ArrayModel extends Model {
   @attr('number', { defaultValue: 127 }) valueMax;
   @attr('number', { defaultValue: 1 }) valueStep;
 
-  @hasMany('arrayItem', { async: false, inverse: 'array' }) items;
+  @hasMany('array-item', { async: false, inverse: null }) items;
 
   // the array needs a reference to the parent module to request an embeddedRecords save,
   // but we don't want this to be a belongsTo because of polymorphism problems that started
@@ -43,8 +43,7 @@ export default class ArrayModel extends Model {
 
     if (newLength > length) {
       for (let i = length; i < newLength; i++) {
-        let item = this.store.createRecord('arrayItem', { array: this, index: i });
-        // Explicitly add to items in case inverse relationship doesn't sync immediately
+        let item = this.store.createRecord('array-item', { array: this, index: i });
         this.items.push(item);
       }
     } else if (newLength < length) {
@@ -54,21 +53,6 @@ export default class ArrayModel extends Model {
     }
   }
 
-  // mark myself as saved when requested by my managing module.
-  save() {
-    super.save({ adapterOptions: { dontPersist: true } });
-    this.items.forEach((item) => {
-      item.save();
-    });
-  }
-
-  // ask managing module to save me when my properties have changed.
-  requestSave() {
-    console.log('array requestSave');
-    if (this.dataManager) {
-      this.dataManager.requestSave();
-    }
-  }
 
   incrementAll() {
     this.items.forEach((item) => {

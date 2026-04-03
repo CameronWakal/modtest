@@ -17,7 +17,4 @@ export default class ModuleSettingMenuModel extends ModuleSetting {
     defineProperty(this, 'items', alias(targetPath));
   }
 
-  save() {
-    super.save({ adapterOptions: { dontPersist: true } });
-  }
 }

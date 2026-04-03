@@ -18,7 +18,7 @@ export default class PatchModel extends Model {
     // This avoids issues with async relationships during init()
     if (this._needsInit) {
       // create bus modules for routing invisible bus connections
-      let resetBus = this.store.createRecord('module-bus', { patch: this, shouldAutoSave: true, title: 'reset bus' });
+      let resetBus = this.store.createRecord('module-bus', { patch: this, title: 'reset bus' });
       // Access content directly for async relationships
       const bussesArray = this.busses.content || this.busses;
       bussesArray.push(resetBus);
@@ -27,12 +27,4 @@ export default class PatchModel extends Model {
     }
   }
 
-  save() {
-    if (!this.isDeleted) {
-      console.log('patch save');
-    } else {
-      console.log('patch delete');
-    }
-    return super.save();
-  }
 }

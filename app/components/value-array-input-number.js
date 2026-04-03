@@ -42,8 +42,6 @@ export default class ValueArrayInputNumberComponent extends BaseValueInputCompon
 
   @action
   handleKeyDown(event) {
-    console.log('keycode:', event.keyCode);
-
     switch (event.keyCode) {
       case 13: // enter/return
         this.updateValue();
@@ -90,8 +88,7 @@ export default class ValueArrayInputNumberComponent extends BaseValueInputCompon
   commitValue(value) {
     if (this.args.item) {
       set(this.args.item, 'value', value);
-      // Trigger save through the array's data manager
-      this.args.item.array?.requestSave();
+      this.args.item.save();
     } else if (this.args.onChange) {
       this.args.onChange(value);
     } else {

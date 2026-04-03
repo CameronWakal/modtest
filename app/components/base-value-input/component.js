@@ -124,7 +124,7 @@ export default class BaseValueInputComponent extends Component {
       this.args.onChange(value);
     } else if (this.args.target && this.args.property) {
       set(this.args.target, this.args.property, value);
-      // Trigger save if target has a requestSave method (e.g., module settings)
+      // Trigger save on the target or its module
       this._triggerSaveIfNeeded();
     } else {
       // This will fail in Glimmer - all usages should provide @onChange or @target/@property
@@ -132,19 +132,9 @@ export default class BaseValueInputComponent extends Component {
     }
   }
 
-  // Trigger requestSave on the appropriate model after value changes
+  // Trigger auto-save after value changes
   _triggerSaveIfNeeded() {
-    const target = this.args.target;
-    if (!target) return;
-
-    // If target is a setting, trigger save on its module
-    if (target.module?.requestSave) {
-      target.module.requestSave();
-    }
-    // If target has requestSave directly (e.g., port)
-    else if (target.requestSave) {
-      target.requestSave();
-    }
+    this.args.target?.save();
   }
 
   resetValue() {

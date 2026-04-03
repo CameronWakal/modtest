@@ -24,9 +24,6 @@ export default class ModuleCcoutModel extends Module {
       this.addValueInPort('control', 'controlInPort', { isEnabled: false, canBeEmpty: true, defaultValue: 0, minValue: 0, maxValue: 127 });
       this.addValueInPort('channel', 'channelInPort', { isEnabled: false, defaultValue: 0, minValue: 0, maxValue: 15 });
       this.addValueInPort('value', 'valueInPort', { canBeEmpty: true, minValue: 0, maxValue: 127 });
-
-      console.log('module-ccout.didCreate() requestSave()');
-      this.requestSave();
     }
   }
 

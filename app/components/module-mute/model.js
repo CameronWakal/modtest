@@ -22,8 +22,6 @@ export default class ModuleMuteModel extends Module {
       this.addValueInPort('in', 'valueInPort', { canBeEmpty: true });
       this.addEventOutPort('out', 'eventOutPort', true);
       this.addValueOutPort('out', 'getValue', true);
-      console.log('module-value didCreate saveLater');
-      this.requestSave();
     }
   }
 

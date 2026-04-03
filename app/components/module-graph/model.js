@@ -42,9 +42,6 @@ export default class ModuleGraphModel extends Module {
       this.addEventInPort('t', 'writeTrianglesValue', true);
 
       this.addEventInPort('reset', 'reset', true);
-
-      console.log('module-value didCreate saveLater');
-      this.requestSave();
     }
 
     this.lineValues = [];

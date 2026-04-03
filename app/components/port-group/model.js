@@ -59,7 +59,6 @@ export default class PortGroupModel extends Model {
     let change = newSetsCount - currentSetsCount;
     if (change > 0) {
       this._addExpansionSets(change);
-      this.module.requestSave();
     } else if (change < 0) {
       this._removeExpansionSets(change * -1);
     }
@@ -98,10 +97,6 @@ export default class PortGroupModel extends Model {
     }
     // Notify that ports changed so dependent computed properties update
     notifyPropertyChange(this, 'expansionPorts');
-    this.module.requestSave();
   }
 
-  save() {
-    super.save({ adapterOptions: { dontPersist: true } });
-  }
 }

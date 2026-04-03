@@ -58,8 +58,6 @@ export default class ModuleArrayModel extends Module {
 
       this.addNumberSetting('read ports', 'readPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
       readPorts.portSetsCount = 2;
-
-      this.requestSave();
     }
     // Ensure dataManager is set for loaded records (async: false means it's available in init)
     if (this.steps) {
@@ -83,12 +81,5 @@ export default class ModuleArrayModel extends Module {
   remove() {
     // Embedded records (steps) are removed automatically with the parent module
     super.remove();
-  }
-
-  save() {
-    if (this.steps) {
-      this.steps.save();
-    }
-    super.save();
   }
 }

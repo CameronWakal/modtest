@@ -20,8 +20,6 @@ export default class ValueInputNumberComponent extends BaseValueInputComponent {
 
   @action
   handleKeyDown(event) {
-    console.log('keycode:', event.keyCode);
-
     switch (event.keyCode) {
       case 13: // enter/return
         this.updateValue();

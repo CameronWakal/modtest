@@ -17,7 +17,6 @@ export default class PortSettingComponent extends Component {
 
   get connectedBus() {
     if (this.port?.isEnabled) {
-      console.log('computed connectedBus is null');
       return null;
     }
     return this.port?.connections?.[0]?.module;
@@ -81,15 +80,12 @@ export default class PortSettingComponent extends Component {
       }
     }
 
-    // Save the port and request module save
     port.save();
-    port.requestSave();
   }
 
   @action
   disconnectFromBus() {
     if (this.connectedBus) {
-      console.log('disconnecting!');
       this.port.disconnect();
     }
   }
@@ -106,7 +102,6 @@ export default class PortSettingComponent extends Component {
     }
 
     this.disconnectFromBus();
-    console.log('connecting!');
     this.args.addBusConnection?.(sourcePort, destPort);
   }
 
@@ -119,7 +114,7 @@ export default class PortSettingComponent extends Component {
     }
 
     this.port.isEnabled = !this.port.isEnabled;
-    this.port.requestSave();
+    this.port.save();
 
     // Notify parent that port state changed (triggers diagram redraw)
     this.args.portDisconnected?.();

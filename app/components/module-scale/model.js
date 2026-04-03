@@ -60,9 +60,6 @@ export default class ModuleScaleModel extends Module {
       degreeInPorts.portSetsCount = 2;
 
       this.updateScale();
-
-      console.log('module-scale.didCreate() requestSave()');
-      this.requestSave();
     }
     // Ensure dataManager is set for loaded records (async: false means it's available in init)
     if (this.degrees) {
@@ -76,7 +73,6 @@ export default class ModuleScaleModel extends Module {
       return;
     }
     this.mode = mode;
-    console.log('updating scale mode to', mode);
 
     let newValues;
 
@@ -144,12 +140,5 @@ export default class ModuleScaleModel extends Module {
   remove() {
     // Embedded records (degrees) are removed automatically with the parent module
     super.remove();
-  }
-
-  save() {
-    if (this.degrees) {
-      this.degrees.save();
-    }
-    super.save();
   }
 }

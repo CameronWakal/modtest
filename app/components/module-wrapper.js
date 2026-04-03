@@ -24,8 +24,6 @@ export default class ModuleWrapperComponent extends Component {
       this.isMoving = true;
       document.addEventListener('mouseup', this.mouseUpBodyFunction);
       document.addEventListener('mousemove', this.mouseMoveBodyFunction);
-    } else {
-      this.args.module.shouldAutoSave = true;
     }
   }
 
@@ -160,13 +158,12 @@ export default class ModuleWrapperComponent extends Component {
 
     if (this.didMove) {
       if (this.args.module.isNew) {
-        this.args.module.shouldAutoSave = true;
         if (this.args.savePatch) {
           this.args.savePatch();
         }
       }
 
-      this.args.module.requestSave();
+      this.args.module.save();
       this.didMove = false;
     }
 

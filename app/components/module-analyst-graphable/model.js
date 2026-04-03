@@ -37,9 +37,6 @@ export default class ModuleAnalystGraphableModel extends ModuleAnalyst {
       this.addEventOutPort('reset', 'resetOut', true);
       this.addValueInPort('index', 'drawIndexInPort', { 'isEnabled': true });
       this.addValueInPort('scale', 'drawScaleInPort', { 'maxValue': 1, 'minValue': 0, 'isEnabled': true });
-
-      console.log('module-value didCreate saveLater');
-      this.requestSave();
     }
   }
 

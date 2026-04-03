@@ -19,6 +19,7 @@ export default class ApplicationRoute extends Route {
   @service scheduler;
   @service router;
   @service currentPatch;
+  @service autoSave;
 
   constructor() {
     super(...arguments);
@@ -27,32 +28,13 @@ export default class ApplicationRoute extends Route {
   }
 
   async model() {
-    // Pre-load all module types into the store
-    // With polymorphic relationships, each type is stored separately in localforage
-    await Promise.all([
-      this.store.findAll('module-sequence'),
-      this.store.findAll('module-sequence-euclidean'),
-      this.store.findAll('module-bus'),
-      this.store.findAll('module-clock'),
-      this.store.findAll('module-clock-div'),
-      this.store.findAll('module-in'),
-      this.store.findAll('module-out'),
-      this.store.findAll('module-ccout'),
-      this.store.findAll('module-scale'),
-      this.store.findAll('module-array'),
-      this.store.findAll('module-switch'),
-      this.store.findAll('module-maybe'),
-      this.store.findAll('module-mute'),
-      this.store.findAll('module-value'),
-      this.store.findAll('module-repeat'),
-      this.store.findAll('module-analyst'),
-      this.store.findAll('module-analyst-graphable'),
-      this.store.findAll('module-button'),
-      this.store.findAll('module-merge-voices'),
-      this.store.findAll('module-plonkmap'),
-      this.store.findAll('module-graph'),
-    ]);
-    return this.store.findAll('patch');
+    // Load all patches from IndexedDB
+    // The adapter deserializes complete documents, so all embedded records
+    // (modules, ports, settings) are created automatically
+    await this.store.findAll('patch');
+
+    // Return all patches from the store
+    return this.store.peekAll('patch');
   }
 
   activate() {
@@ -62,7 +44,7 @@ export default class ApplicationRoute extends Route {
   // when the current patch is about to be deleted, it asks the application
   // router to navigate to a different patch of its choosing
   @action
-  transitionFromPatch(patch) {
+  async transitionFromPatch(patch) {
     let patches = this.modelFor('application');
     let patchesList = patches.slice();
     let index = patchesList.indexOf(patch);
@@ -70,15 +52,18 @@ export default class ApplicationRoute extends Route {
     if (patchesList.length <= 1) {
       // make a new patch if we're transitioning from the only patch
       let newPatch = this.store.createRecord('patch', { _needsInit: true });
-      newPatch.save();
+      this.autoSave.setCurrentPatch(newPatch.id);
+      await newPatch.save();
       this.router.transitionTo('patch', newPatch);
       this.currentPatch.patch = newPatch;
     } else if (index === 0) {
       // if we're transitioning from the first patch, go to the next patch
+      this.autoSave.setCurrentPatch(patchesList[1].id);
       this.router.transitionTo('patch', patchesList[1]);
       this.currentPatch.patch = patchesList[1];
     } else {
       // otherwise, go to the previous patch
+      this.autoSave.setCurrentPatch(patchesList[index - 1].id);
       this.router.transitionTo('patch', patchesList[index - 1]);
       this.currentPatch.patch = patchesList[index - 1];
     }
@@ -86,24 +71,28 @@ export default class ApplicationRoute extends Route {
 
   // when arriving at the index route, transition to the first patch in the list,
   // or a new patch if the list is empty.
-  loadDefaultPatch() {
+  async loadDefaultPatch() {
     if (this.modelFor('patch') == null) {
       // if no patch is selected
       if (isEmpty(this.modelFor('application'))) {
         // add a patch to the list if there are none
         let patch = this.store.createRecord('patch', { _needsInit: true });
-        patch.save();
+        this.autoSave.setCurrentPatch(patch.id);
+        await patch.save();
         this.router.replaceWith('patch', patch);
         this.currentPatch.patch = patch;
       } else {
         // if there are patches in the list, transition to the first one
         let patches = this.modelFor('application');
         let patchesList = patches.slice();
+        this.autoSave.setCurrentPatch(patchesList[0].id);
         this.router.replaceWith('patch', patchesList[0]);
       }
     } else {
       // patch route still has a model from before we hit the browser back button
-      this.router.replaceWith('patch', this.modelFor('patch'));
+      let patch = this.modelFor('patch');
+      this.autoSave.setCurrentPatch(patch.id);
+      this.router.replaceWith('patch', patch);
     }
     // set currentPatch on service so the dropdown patch menu can use it
     this.currentPatch.patch = this.modelFor('patch');

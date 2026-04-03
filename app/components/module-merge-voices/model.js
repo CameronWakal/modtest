@@ -54,8 +54,6 @@ export default class ModuleMergeVoicesModel extends Module {
       // Setting to control number of input pairs
       this.addNumberSetting('Inputs', 'inputPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 8 });
       inputGroup.portSetsCount = 2;
-
-      this.requestSave();
     }
   }
 

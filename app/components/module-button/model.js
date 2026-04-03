@@ -14,9 +14,6 @@ export default class ModuleButtonModel extends Module {
       this.title = this.name;
       // create ports
       this.addEventOutPort('out', 'eventOutPort', true);
-
-      console.log('module-value didCreate saveLater');
-      this.requestSave();
     }
   }
 

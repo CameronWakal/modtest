@@ -33,8 +33,6 @@ export default class ModuleClockDivModel extends Module {
       this.addValueInPort('shift', 'shiftByPort', { isEnabled: false, defaultValue: 0 });
 
       this.addEventOutPort('trig', 'trigOutPort', true);
-      console.log('module-clock-div.didCreate() requestSave()');
-      this.requestSave();
     }
   }
 

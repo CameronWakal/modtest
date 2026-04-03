@@ -38,8 +38,6 @@ export default class ModuleSequenceEuclideanModel extends ModuleSequence {
 
     // Populate initial values
     this.updateSequence();
-
-    this.requestSave();
   }
 
   updateSequence() {

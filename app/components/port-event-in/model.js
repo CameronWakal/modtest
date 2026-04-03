@@ -21,7 +21,6 @@ export default class PortEventInModel extends Port {
       isEnabled: this.isEnabled,
       portGroup: this.portGroup
     });
-    newPort.save();
     return newPort;
   }
 }

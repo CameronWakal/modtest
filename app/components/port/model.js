@@ -46,16 +46,8 @@ export default class PortModel extends Model {
       if (index !== -1) {
         connConnections.splice(index, 1);
       }
-      console.log('port.disconnect() requestSave()');
-      connection.module.requestSave();
+      connection.save();
     }, this);
   }
 
-  save() {
-    super.save({ adapterOptions: { dontPersist: true } });
-  }
-
-  requestSave() {
-    this.module.requestSave();
-  }
 }

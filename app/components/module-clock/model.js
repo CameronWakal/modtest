@@ -50,7 +50,6 @@ export default class ModuleClockModel extends Module {
       this.addValueInPort('res', 'resInPort', { isEnabled: false, defaultValue: defaultRes, minValue: 1, maxValue: 24 });
       this.addEventOutPort('reset', 'resetOutPort', false);
       this.addEventOutPort('trig', 'trigOutPort', true);
-      this.requestSave();
     }
   }
 

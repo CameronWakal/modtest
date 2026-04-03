@@ -41,9 +41,6 @@ export default class ModuleInModel extends Module {
 
       // Create settings
       this.addMenuSetting('Input', 'inputDeviceName', 'deviceMenuOptions', this);
-
-      console.log('module-in.didCreate() requestSave()');
-      this.requestSave();
     }
   }
 

@@ -185,9 +185,6 @@ export default class ModuleAnalystModel extends Module {
       this.addValueOutPort('root', 'getRoot', true);
       this.addValueOutPort('mode', 'getMode', true);
       this.addEventOutPort('update', 'keyChangedPort', true);
-
-      console.log('module-analyst init requestSave');
-      this.requestSave();
     }
 
     // Activate the observer by accessing the property

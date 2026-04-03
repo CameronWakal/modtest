@@ -37,9 +37,6 @@ export default class ModuleSwitchModel extends Module {
       this.addPortGroup();
       this.addValueOutPort('out', 'getValue', true);
       this.addEventOutPort('out', 'eventOutPort', true);
-
-      console.log('module-switch.didCreate() requestSave()');
-      this.requestSave();
     }
   }
 

@@ -67,9 +67,6 @@ export default class ModuleRepeatModel extends Module {
       this.addMenuSetting('Mode', 'mode', 'modeMenuOptions', this);
       this.addMenuSetting('Delay Units', 'delayUnits', 'unitsMenuOptions', this);
       this.addMenuSetting('Gate Units', 'durationUnits', 'unitsMenuOptions', this);
-
-      console.log('module-repeat.didCreate() requestSave()');
-      this.requestSave();
     }
   }
 

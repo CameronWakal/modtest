@@ -71,10 +71,8 @@ export default class PatchComponentComponent extends Component {
   addBusConnection(sourcePort, destPort) {
     // a bus connection doesn't appear in the diagram, so no update necessary
     destPort.connections.push(sourcePort);
-    destPort.module.requestSave();
-
     sourcePort.connections.push(destPort);
-    sourcePort.module.requestSave();
+    destPort.save();
   }
 
   @action
@@ -195,15 +193,12 @@ export default class PatchComponentComponent extends Component {
     if (destIndex !== -1) {
       sourceConnections.splice(destIndex, 1);
     }
-    console.log('patch.removeConnection() requestSave()');
-    sourcePort.module.requestSave();
 
     const destConnections = destPort.connections;
     const sourceIndex = destConnections.indexOf(sourcePort);
     if (sourceIndex !== -1) {
       destConnections.splice(sourceIndex, 1);
     }
-    console.log('patch.removeConnection() requestSave()');
-    destPort.module.requestSave();
+    destPort.save();
   }
 }
