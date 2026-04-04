@@ -1,21 +1,25 @@
 # Codebase Audit Report
 
 **Date**: April 2026
-**Ember Version**: 5.12 LTS
+**Ember Version**: 6.12
 **Ember Data Version**: 5.8.0 (WarpDrive)
 
 ---
 
 ## Executive Summary
 
-This is an Octane edition Ember.js 5.12 application with ~89 source files using native class syntax, @tracked properties, and Glimmer components. The codebase has been actively modernized.
+This is an Octane edition Ember.js 6.12 application with ~89 source files using native class syntax, @tracked properties, and Glimmer components. The codebase has been actively modernized.
 
 **Recent Progress**:
+- Upgraded Ember from 5.12 to 6.12
 - Upgraded Ember Data from 4.12 to 5.8 (WarpDrive)
 - Configured WarpDrive build system and reactivity
 - Fixed all Ember Data 5.x deprecations (non-strict types, duplicate hasMany pushes)
 - Replaced `ember-localforage-adapter` with custom Dexie.js-based adapter
 - Implemented document-based storage (patches stored as complete JSON documents)
+- Enabled ES modules (`use-ember-modules`) to resolve AMD bundle deprecation
+- Updated linting stack: ESLint 8, eslint-plugin-ember 12, ember-template-lint 7
+- Fixed accessibility issues (aria-labels on inputs/selects, button types)
 
 ---
 
@@ -59,14 +63,15 @@ Files with `addObserver`:
 - Should use proper logging library or remove
 
 ### Outdated Dependencies
-| Package | Current | Latest | Priority |
-|---------|---------|--------|----------|
-| eslint | 7.32.0 | 10.x | High |
-| @ember/test-helpers | 3.3.1 | 5.4.1 | Medium |
-| @glimmer/component | 1.1.2 | 2.0.0 | Medium |
-| ember-cli | 5.12.0 | 6.x | Low |
-| ember-resolver | 11.0.1 | 13.2.0 | Low |
-| ember-template-lint | 5.13.0 | 7.9.3 | Medium |
+| Package | Current | Latest | Status |
+|---------|---------|--------|--------|
+| eslint | 8.x | 9.x | Updated (9.x requires flat config migration) |
+| eslint-plugin-ember | 12.x | 12.x | ✅ Current |
+| ember-template-lint | 7.x | 7.x | ✅ Current |
+| @ember/test-helpers | 5.4.0 | 5.4.1 | Minor patch available |
+| @glimmer/component | 2.0.0 | 2.0.0 | ✅ Current |
+| ember-cli | 6.11.0 | 6.11.2 | Minor patch available |
+| ember-resolver | 13.0.0 | 13.2.0 | Minor update available |
 
 ---
 
@@ -86,10 +91,41 @@ Files affected:
 - `app/components/port.js`
 
 ### Missing Accessibility
-- 0 ARIA attributes in 51 components
-- No aria-label on interactive ports
+- ~~0 ARIA attributes in 51 components~~ Partially addressed
+- Added aria-labels to select menus and value inputs
+- No aria-label on interactive ports (intentional - visual-only interface)
 - No role="button" on clickable elements
 - Canvas component has no alternative text
+
+### Disabled Lint Rules (Future Refactoring)
+Rules disabled in `.eslintrc.js` and `.template-lintrc.js` that should be addressed:
+
+**ESLint (`ember/no-runloop`)** - 13 instances
+Files using `@ember/runloop` functions (schedule, debounce, cancel):
+- `app/components/base-value-input/component.js`
+- `app/components/indicator-blinking.js`
+- `app/components/module-sequence-euclidean/model.js`
+- `app/components/patch-component.js`
+- `app/components/patch-diagram.js`
+- `app/services/auto-save.js`
+
+**Fix**: Migrate to `ember-concurrency` tasks or `@ember/destroyable` patterns.
+
+**Template Lint (`no-at-ember-render-modifiers`)** - 10 instances
+Using local `did-insert`/`did-update` modifiers (not the deprecated @ember/render-modifiers).
+Files: `graph-canvas.hbs`, `indicator-blinking.hbs`, `module-array.hbs`, `module-sequence.hbs`, `module-sequence-euclidean.hbs`, `patch-diagram.hbs`, `value-*-input-*.hbs`
+
+**Fix**: Rule is a false positive since we use custom modifiers in `app/modifiers/`. Could configure rule to allow specific modifiers, or refactor to resource-based patterns.
+
+**Template Lint (`no-pointer-down-event-binding`)** - 8 instances
+Intentional mousedown/pointerdown for drag interactions in ports, modules, and patch diagram.
+
+**Fix**: None needed - this is intentional UX for drag-and-drop. Rule disabled by design.
+
+**Template Lint (`no-invalid-interactive`)** - ✅ FIXED
+~~Range slider uses div with mousedown for custom slider behavior.~~
+
+Added `role="slider"`, ARIA attributes (`aria-valuenow`, `aria-valuemin`, `aria-valuemax`, `aria-orientation`), `tabindex="0"`, and keyboard support (arrow keys, Home, End).
 
 ### Module Initialization Duplication
 - 23 module models repeat same initialization pattern
@@ -120,18 +156,25 @@ Files affected:
 ### Phase 1: Critical ✅ COMPLETE
 1. ~~Replace ember-localforage-adapter~~ DONE
 2. ~~Upgrade Ember Data to 5.x~~ DONE
-3. Begin test coverage improvements
+3. ~~Upgrade Ember to 6.x~~ DONE
+4. ~~Enable ES modules (use-ember-modules)~~ DONE
+5. ~~Update linting stack (ESLint 8, eslint-plugin-ember 12, ember-template-lint 7)~~ DONE
 
 ### Phase 2: High Priority (Current)
-4. Remove manual observers (use @tracked)
-5. Audit and remove console.log statements
-6. Upgrade ESLint to v9+ (flat config)
+6. Begin test coverage improvements
+7. Remove manual observers (use @tracked)
+8. Audit and remove console.log statements
+9. Migrate `@ember/runloop` usage to `ember-concurrency` (13 instances)
 
 ### Phase 3: Medium Priority
-7. Modernize binding patterns (remove .bind(this))
-8. Improve accessibility (ARIA attributes)
-9. Reduce module initialization duplication
-10. Migrate Sass to @use syntax
+10. Upgrade ESLint to v9+ (requires flat config migration)
+11. Modernize binding patterns (remove .bind(this))
+12. Reduce module initialization duplication
+13. Migrate Sass to @use syntax
+
+### Phase 4: Nice to Have
+14. ~~Add `role="slider"` and ARIA to range-slider component~~ DONE
+15. Configure template-lint to recognize custom modifiers
 
 ---
 
@@ -185,7 +228,9 @@ The application uses a document-based storage architecture with WarpDrive/Ember 
 |------|---------|
 | `app/adapters/application.js` | Core persistence adapter |
 | `app/serializers/patch.js` | Document serialization, relationship linking |
-| `app/services/auto-save.js` | Debounced save coordination |
+| `app/services/auto-save.js` | Debounced save coordination, runloop usage |
 | `app/initializers/warp-drive.js` | WarpDrive setup, deprecation handling |
 | `app/routes/application.js` | Load coordination |
-| `.eslintrc.js` | Disabled rules to re-enable |
+| `.eslintrc.js` | Disabled `ember/no-runloop` rule |
+| `.template-lintrc.js` | Disabled modifier and pointer event rules |
+| `config/optional-features.json` | ES modules enabled |

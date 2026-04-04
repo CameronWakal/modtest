@@ -1,6 +1,7 @@
 <input
   type="text"
   value={{this.value}}
+  aria-label="Text value"
   class="value-input-string {{if this.isPending 'pending'}}"
   {{did-insert this.setupInput}}
   {{on "click" this.handleClick}}

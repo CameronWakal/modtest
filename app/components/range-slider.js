@@ -86,6 +86,39 @@ export default class RangeSliderComponent extends Component {
     document.addEventListener('touchend', this._onMouseUp);
   }
 
+  @action
+  onKeyDown(event) {
+    let newValue = this.value;
+    const step = this.step || 1;
+
+    switch (event.key) {
+      case 'ArrowUp':
+      case 'ArrowRight':
+        newValue = Math.min(this.max, this.value + step);
+        event.preventDefault();
+        break;
+      case 'ArrowDown':
+      case 'ArrowLeft':
+        newValue = Math.max(this.min, this.value - step);
+        event.preventDefault();
+        break;
+      case 'Home':
+        newValue = this.min;
+        event.preventDefault();
+        break;
+      case 'End':
+        newValue = this.max;
+        event.preventDefault();
+        break;
+      default:
+        return;
+    }
+
+    if (newValue !== this.value && this.args.onChange) {
+      this.args.onChange(newValue);
+    }
+  }
+
   _onMouseMove = (event) => {
     if (!this.isDragging) return;
     event.preventDefault();

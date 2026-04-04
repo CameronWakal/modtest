@@ -1,5 +1,5 @@
 import Adapter from '@ember-data/adapter';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * Custom adapter that stores patches as complete JSON documents in IndexedDB.

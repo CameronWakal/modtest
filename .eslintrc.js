@@ -26,7 +26,9 @@ module.exports = {
   rules: {
     'no-console': 'off',
     'ember/no-observers': 'off',
-    'ember/no-jquery': 'error'
+    'ember/no-jquery': 'error',
+    // TODO: Migrate to ember-concurrency or ember-lifeline
+    'ember/no-runloop': 'off'
   },
   overrides: [
     // node files

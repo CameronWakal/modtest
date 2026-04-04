@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class PatchRoute extends Route {
   @service store;
@@ -22,7 +22,7 @@ export default class PatchRoute extends Route {
   @action
   willTransition(transition) {
     if (transition.targetName === 'index') {
-      this.replaceWith('patch', this.modelFor('patch'));
+      this.router.replaceWith('patch', this.modelFor('patch'));
     }
   }
 
