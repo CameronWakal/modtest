@@ -1,7 +1,15 @@
 <div
   class="rangeslider {{this.orientationClass}}"
+  role="slider"
+  tabindex="0"
+  aria-valuenow={{this.value}}
+  aria-valuemin={{this.min}}
+  aria-valuemax={{this.max}}
+  aria-orientation={{this.orientation}}
+  aria-label={{@label}}
   {{on "mousedown" this.onMouseDown}}
   {{on "touchstart" this.onTouchStart}}
+  {{on "keydown" this.onKeyDown}}
 >
   <div class="rangeslider-fill" style={{this.fillStyle}}></div>
   <div class="rangeslider-handle" style={{this.handleStyle}}></div>

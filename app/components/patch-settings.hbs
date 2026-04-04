@@ -2,6 +2,6 @@
 <div class="app-sidebar-section">
   <ul>
     <li><ValueInputString @boundValue={{@patch.title}} @canBeEmpty={{false}} @target={{@patch}} @property="title" @valueUpdated={{this.titleChanged}} /></li>
-    <li><button {{on "click" @removePatch}}>Delete Patch</button></li>
+    <li><button type="button" {{on "click" @removePatch}}>Delete Patch</button></li>
   </ul>
 </div>

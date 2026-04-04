@@ -14,16 +14,16 @@
 >
   <ModuleLabel @title={{@module.title}} />
   <div class="module-content">
-    {{graph-canvas
-      lineValues=@module.lineValues
-      trianglesValues=@module.trianglesValues
-      xMin=@module.xMin
-      xMax=@module.xMax
-      yMin=@module.yMin
-      yMax=@module.yMax
-      xScale=@module.xScale
-      yScale=@module.yScale
-    }}
+    <GraphCanvas
+      @lineValues={{@module.lineValues}}
+      @trianglesValues={{@module.trianglesValues}}
+      @xMin={{@module.xMin}}
+      @xMax={{@module.xMax}}
+      @yMin={{@module.yMin}}
+      @yMax={{@module.yMax}}
+      @xScale={{@module.xScale}}
+      @yScale={{@module.yScale}}
+    />
   </div>
   <ModulePorts
     @portGroups={{@module.portGroups}}

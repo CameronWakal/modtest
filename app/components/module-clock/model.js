@@ -1,5 +1,5 @@
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { belongsTo, attr } from '@ember-data/model';
 import { addObserver } from '@ember/object/observers';
 import Module from '../module/model';

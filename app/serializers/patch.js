@@ -1,5 +1,5 @@
 import JSONSerializer from '@ember-data/serializer/json';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * Serializer for patch documents.
