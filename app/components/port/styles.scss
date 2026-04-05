@@ -1,3 +1,5 @@
+@use 'styles/tokens' as *;
+
 .port {
   color: $color-text;
   cursor: pointer;

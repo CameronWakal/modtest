@@ -1,3 +1,5 @@
+@use 'styles/tokens' as *;
+
 .module {
   background-color: $color-module-background;
   border-radius: $module-borderradius;

@@ -45,29 +45,18 @@ export default class ModuleRepeatModel extends Module {
     return this.mode === 'count only' || this.mode === 'count+gate';
   }
 
-  // eslint-disable-next-line ember/classic-decorator-hooks
-  init() {
-    super.init(...arguments);
-
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
-
-      this.addEventInPort('trig', 'onEventIn', true);
-
-      // create value-in ports
-      this.addValueInPort('tempo', 'tempoInPort', { defaultValue: 100, minValue: 1 });
-      this.addValueInPort('count', 'countInPort', { defaultValue: 0, minValue: 0 });
-      this.addValueInPort('gate', 'gateNumeratorInPort', { defaultValue: 0, minValue: 0 });
-      this.addValueInPort('gatedenom', 'gateDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
-      this.addValueInPort('delay', 'delayNumeratorInPort', { defaultValue: 1, minValue: 1 });
-      this.addValueInPort('delaydenom', 'delayDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
-      this.addEventOutPort('trig', 'trigOutPort', true);
-
-      // create settings
-      this.addMenuSetting('Mode', 'mode', 'modeMenuOptions', this);
-      this.addMenuSetting('Delay Units', 'delayUnits', 'unitsMenuOptions', this);
-      this.addMenuSetting('Gate Units', 'durationUnits', 'unitsMenuOptions', this);
-    }
+  configure() {
+    this.addEventInPort('trig', 'onEventIn', true);
+    this.addValueInPort('tempo', 'tempoInPort', { defaultValue: 100, minValue: 1 });
+    this.addValueInPort('count', 'countInPort', { defaultValue: 0, minValue: 0 });
+    this.addValueInPort('gate', 'gateNumeratorInPort', { defaultValue: 0, minValue: 0 });
+    this.addValueInPort('gatedenom', 'gateDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
+    this.addValueInPort('delay', 'delayNumeratorInPort', { defaultValue: 1, minValue: 1 });
+    this.addValueInPort('delaydenom', 'delayDenominatorInPort', { isEnabled: false, defaultValue: 1, minValue: 1 });
+    this.addEventOutPort('trig', 'trigOutPort', true);
+    this.addMenuSetting('Mode', 'mode', 'modeMenuOptions', this);
+    this.addMenuSetting('Delay Units', 'delayUnits', 'unitsMenuOptions', this);
+    this.addMenuSetting('Gate Units', 'durationUnits', 'unitsMenuOptions', this);
   }
 
   // when an event comes in, repeat the event after a delay.
@@ -76,7 +65,7 @@ export default class ModuleRepeatModel extends Module {
   // in gate mode, an event repeats until a set period of time from the original event has elapsed.
   // in count+gate mode, an event repeats are limited by both count and gate.
   // gate and delay duration can be supplied in either beats or milliseconds.
-  onEventIn(event) {
+  onEventIn = (event) => {
     let tempo = this.tempoInPort.getValue();
     let msPerBeat = 60000 / tempo;
 
@@ -138,7 +127,7 @@ export default class ModuleRepeatModel extends Module {
       eventShouldRepeat = false;
     }
     if (eventShouldRepeat) {
-      this.scheduler.queueEvent(repeatEvent, this.onEventIn.bind(this));
+      this.scheduler.queueEvent(repeatEvent, this.onEventIn);
     }
   }
 }

@@ -29,19 +29,14 @@ export default class ModuleInModel extends Module {
   init() {
     super.init(...arguments);
     this.midi.noteListener = this;
+  }
 
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
-
-      // Create ports
-      this.addEventOutPort('on', 'noteOnPort', true);
-      this.addEventOutPort('off', 'noteOffPort', false);
-      this.addValueOutPort('note', 'getNote', true);
-      this.addValueOutPort('vel', 'getVel', true);
-
-      // Create settings
-      this.addMenuSetting('Input', 'inputDeviceName', 'deviceMenuOptions', this);
-    }
+  configure() {
+    this.addEventOutPort('on', 'noteOnPort', true);
+    this.addEventOutPort('off', 'noteOffPort', false);
+    this.addValueOutPort('note', 'getNote', true);
+    this.addValueOutPort('vel', 'getVel', true);
+    this.addMenuSetting('Input', 'inputDeviceName', 'deviceMenuOptions', this);
   }
 
   getNote() {

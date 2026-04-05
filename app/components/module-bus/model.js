@@ -17,16 +17,9 @@ export default class ModuleBusModel extends Module {
     return this.eventInPorts?.[0];
   }
 
-  // eslint-disable-next-line ember/classic-decorator-hooks
-  init() {
-    super.init(...arguments);
-    // In Ember Data 4.x, check if truly new by verifying ports are empty
-    // Records loaded from storage will have embedded ports populated
-    if (this.isNew && this.ports.length === 0) {
-      // create ports
-      this.addEventInPort('eventIn', 'eventIn', false);
-      this.addEventOutPort('eventOut', 'eventOutPort', false);
-    }
+  configure() {
+    this.addEventInPort('eventIn', 'eventIn', false);
+    this.addEventOutPort('eventOut', 'eventOutPort', false);
   }
 
   eventIn(event) {

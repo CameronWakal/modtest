@@ -1,32 +1,23 @@
-$module-borderradius: 5px;
-$input-borderradius: 4px;
-$button-borderradius: 4px;
+@use 'tokens' as *;
 
-$z-background: 0;
-$z-patch-diagram: 100;
-$z-module: 200;
-$z-selected-module: 300;
-$z-app-chrome: 400;
-$z-new-module: 500;
-
-@import 'colors';
-@import 'components/port/styles';
-@import 'components/module/styles';
-@import 'components/indicator-blinking/styles';
-@import 'components/module-settings/styles';
-@import 'components/module-setting/styles';
-@import 'components/value-input-number/styles';
-@import 'components/value-input-string/styles';
-@import 'components/value-array-input-number/styles';
-@import 'components/value-array-input-button/styles';
-@import 'components/value-input-fader/styles';
-@import 'components/value-input-array/styles';
-@import 'components/patch-diagram/styles';
-@import 'components/patch-component/styles';
-@import 'components/port-setting/styles';
-@import 'components/toggle-button/styles';
-@import 'components/graph-canvas/styles';
-@import 'components/module-analyst/styles';
+// Component styles - use 'as *' since these are CSS-only (no exported members)
+@use 'components/port/styles' as *;
+@use 'components/module/styles' as *;
+@use 'components/indicator-blinking/styles' as *;
+@use 'components/module-settings/styles' as *;
+@use 'components/module-setting/styles' as *;
+@use 'components/value-input-number/styles' as *;
+@use 'components/value-input-string/styles' as *;
+@use 'components/value-array-input-number/styles' as *;
+@use 'components/value-array-input-button/styles' as *;
+@use 'components/value-input-fader/styles' as *;
+@use 'components/value-input-array/styles' as *;
+@use 'components/patch-diagram/styles' as *;
+@use 'components/patch-component/styles' as *;
+@use 'components/port-setting/styles' as *;
+@use 'components/toggle-button/styles' as *;
+@use 'components/graph-canvas/styles' as *;
+@use 'components/module-analyst/styles' as *;
 
 html,
 input,

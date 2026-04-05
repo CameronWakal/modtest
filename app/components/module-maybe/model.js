@@ -10,19 +10,11 @@ export default class ModuleMaybeModel extends Module {
   @belongsTo('port-value-in', { async: false, inverse: null }) numeratorInPort;
   @belongsTo('port-value-in', { async: false, inverse: null }) denominatorInPort;
 
-  // eslint-disable-next-line ember/classic-decorator-hooks
-  init() {
-    super.init(...arguments);
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
-
-      // Create ports
-      this.addEventInPort('in', 'onEventIn', true);
-      this.addEventOutPort('out', 'eventOutPort', true);
-
-      this.addValueInPort('numerator', 'numeratorInPort', { defaultValue: 1, minValue: 0, isEnabled: false });
-      this.addValueInPort('denominator', 'denominatorInPort', { defaultValue: 2, minValue: 1, isEnabled: false });
-    }
+  configure() {
+    this.addEventInPort('in', 'onEventIn', true);
+    this.addEventOutPort('out', 'eventOutPort', true);
+    this.addValueInPort('numerator', 'numeratorInPort', { defaultValue: 1, minValue: 0, isEnabled: false });
+    this.addValueInPort('denominator', 'denominatorInPort', { defaultValue: 2, minValue: 1, isEnabled: false });
   }
 
   onEventIn(event) {

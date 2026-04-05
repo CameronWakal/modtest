@@ -19,7 +19,7 @@ export default class SchedulerService extends Service {
   frameCounter = 0; // for slo-mo debugging
 
   setup() {
-    window.requestAnimationFrame(this._sendEvents.bind(this));
+    window.requestAnimationFrame(this._sendEvents);
     this.requests = [];
   }
 
@@ -35,9 +35,9 @@ export default class SchedulerService extends Service {
     this.requests = this.requests.filter(req => req.module !== module);
   }
 
-  _sendEvents() {
+  _sendEvents = () => {
 
-    window.requestAnimationFrame(this._sendEvents.bind(this));
+    window.requestAnimationFrame(this._sendEvents);
 
     // for slo-mo debugging
     this.frameCounter++;

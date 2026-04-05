@@ -1,3 +1,5 @@
+@use 'styles/tokens' as *;
+
 .value-input-fader {
   background: $color-input-background;
   border-bottom: 6px solid $color-transparent;

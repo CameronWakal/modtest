@@ -174,21 +174,17 @@ export default class ModuleAnalystModel extends Module {
   init() {
     super.init(...arguments);
     addObserver(this, 'keyToOutput', this._keyToOutputChanged);
-
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
-      // create ports
-      this.addEventInPort('in', 'addValue', true);
-      this.addValueInPort('value', 'valueInPort', { isEnabled: true });
-      this.addEventInPort('reset', 'reset', true);
-
-      this.addValueOutPort('root', 'getRoot', true);
-      this.addValueOutPort('mode', 'getMode', true);
-      this.addEventOutPort('update', 'keyChangedPort', true);
-    }
-
     // Activate the observer by accessing the property
     this.keyToOutput;
+  }
+
+  configure() {
+    this.addEventInPort('in', 'addValue', true);
+    this.addValueInPort('value', 'valueInPort', { isEnabled: true });
+    this.addEventInPort('reset', 'reset', true);
+    this.addValueOutPort('root', 'getRoot', true);
+    this.addValueOutPort('mode', 'getMode', true);
+    this.addEventOutPort('update', 'keyChangedPort', true);
   }
 
   _keyToOutputChanged() {

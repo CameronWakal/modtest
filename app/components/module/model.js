@@ -56,6 +56,19 @@ export default class ModuleModel extends Model {
     if (this.isNew && this.portGroups.length === 0) {
       this.addPortGroup();
     }
+    if (this.isNew && this.ports.length === 0) {
+      if (this.name) {
+        this.title = this.name;
+      }
+      this.configure();
+    }
+  }
+
+  // Subclasses override this to set up a new module instance.
+  // Called automatically for new records only (not when loading from storage).
+  // Use for: creating ports, settings, embedded records, and initial state.
+  configure() {
+    // Base implementation does nothing
   }
 
   // A grouping of ports within the port list, so you can have a degree of control

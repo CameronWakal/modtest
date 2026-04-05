@@ -33,28 +33,22 @@ export default class ModuleMergeVoicesModel extends Module {
       .sort((a, b) => parseInt(a.label) - parseInt(b.label));
   }
 
-  // eslint-disable-next-line ember/classic-decorator-hooks
-  init() {
-    super.init(...arguments);
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
+  configure() {
+    // Output ports in the default port group
+    this.addValueOutPort('out', 'getValue', true);
+    this.addEventOutPort('out', 'eventOutPort', true);
 
-      // Output ports in the default port group
-      this.addValueOutPort('out', 'getValue', true);
-      this.addEventOutPort('out', 'eventOutPort', true);
+    // Expandable input port group
+    let inputGroup = this.addPortGroup({ minSets: 1, maxSets: 8 });
+    this.inputPortsGroup = inputGroup;
 
-      // Expandable input port group
-      let inputGroup = this.addPortGroup({ minSets: 1, maxSets: 8 });
-      this.inputPortsGroup = inputGroup;
+    // Base input ports (labeled '0', expansion will be '1', '2', etc.)
+    this.addValueInPortWithoutAssignment('0', { canBeEmpty: true });
+    this.addEventInPort('0', 'onEventIn', true);
 
-      // Base input ports (labeled '0', expansion will be '1', '2', etc.)
-      this.addValueInPortWithoutAssignment('0', { canBeEmpty: true });
-      this.addEventInPort('0', 'onEventIn', true);
-
-      // Setting to control number of input pairs
-      this.addNumberSetting('Inputs', 'inputPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 8 });
-      inputGroup.portSetsCount = 2;
-    }
+    // Setting to control number of input pairs
+    this.addNumberSetting('Inputs', 'inputPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 8 });
+    inputGroup.portSetsCount = 2;
   }
 
   getValue() {

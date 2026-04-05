@@ -31,38 +31,34 @@ export default class ModuleArrayModel extends Module {
   // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
     super.init(...arguments);
-
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
-
-      // create steps
-      let steps = this.store.createRecord('array');
-      this.steps = steps;
-      this.steps.setLength(8);
-
-      // create settings
-      this.addMenuSetting('Input Type', 'inputType', 'inputTypeMenuOptions', this);
-
-      // todo: make config option for settings that must have a non-null numeric value
-      this.addNumberSetting('Length', 'steps.length', this, { minValue: 1, maxValue: 64 });
-      this.addNumberSetting('Input Min', 'steps.valueMin', this);
-      this.addNumberSetting('Input Max', 'steps.valueMax', this);
-      this.addNumberSetting('Input Step', 'steps.valueStep', this, { minValue: 1 });
-      this.addNumberSetting('Display Scale', 'displayScale', this, { minValue: 1 });
-
-      // add an expandable group of value input/output pairs
-      let readPorts = this.addPortGroup({ minSets: 1, maxSets: 4 });
-      this.readPortsGroup = readPorts;
-      this.addValueInPort('0', 'indexInPort', { canBeEmpty: true });
-      this.addValueOutPort('0', 'getValue', true);
-
-      this.addNumberSetting('read ports', 'readPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
-      readPorts.portSetsCount = 2;
-    }
-    // Ensure dataManager is set for loaded records (async: false means it's available in init)
+    // Ensure dataManager is set for loaded records
     if (this.steps) {
       this.steps.dataManager = this;
     }
+  }
+
+  configure() {
+    // create steps
+    let steps = this.store.createRecord('array');
+    this.steps = steps;
+    this.steps.setLength(8);
+
+    // create settings
+    this.addMenuSetting('Input Type', 'inputType', 'inputTypeMenuOptions', this);
+    this.addNumberSetting('Length', 'steps.length', this, { minValue: 1, maxValue: 64 });
+    this.addNumberSetting('Input Min', 'steps.valueMin', this);
+    this.addNumberSetting('Input Max', 'steps.valueMax', this);
+    this.addNumberSetting('Input Step', 'steps.valueStep', this, { minValue: 1 });
+    this.addNumberSetting('Display Scale', 'displayScale', this, { minValue: 1 });
+
+    // add an expandable group of value input/output pairs
+    let readPorts = this.addPortGroup({ minSets: 1, maxSets: 4 });
+    this.readPortsGroup = readPorts;
+    this.addValueInPort('0', 'indexInPort', { canBeEmpty: true });
+    this.addValueOutPort('0', 'getValue', true);
+
+    this.addNumberSetting('read ports', 'readPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
+    readPorts.portSetsCount = 2;
   }
 
   getValue(port) {

@@ -41,16 +41,14 @@ export default class ModuleClockModel extends Module {
   init() {
     super.init(...arguments);
     addObserver(this, 'source', this._sourceChanged);
+  }
 
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
-
-      this.addMenuSetting('Source', 'source', 'sourceMenuValues', this);
-      this.addValueInPort('tempo', 'tempoInPort', { isEnabled: false, defaultValue: defaultTempo, minValue: 1 });
-      this.addValueInPort('res', 'resInPort', { isEnabled: false, defaultValue: defaultRes, minValue: 1, maxValue: 24 });
-      this.addEventOutPort('reset', 'resetOutPort', false);
-      this.addEventOutPort('trig', 'trigOutPort', true);
-    }
+  configure() {
+    this.addMenuSetting('Source', 'source', 'sourceMenuValues', this);
+    this.addValueInPort('tempo', 'tempoInPort', { isEnabled: false, defaultValue: defaultTempo, minValue: 1 });
+    this.addValueInPort('res', 'resInPort', { isEnabled: false, defaultValue: defaultRes, minValue: 1, maxValue: 24 });
+    this.addEventOutPort('reset', 'resetOutPort', false);
+    this.addEventOutPort('trig', 'trigOutPort', true);
   }
 
   _sourceChanged() {
@@ -156,7 +154,7 @@ export default class ModuleClockModel extends Module {
     this.midiEventCount = null;
   }
 
-  onSchedulerCallback(event) {
+  onSchedulerCallback = (event) => {
     if (this.isStarted && this.source === 'Internal') {
       // Calculate the tickDuration to use for the duration of the current event,
       // and to schedule the next event.
@@ -176,7 +174,7 @@ export default class ModuleClockModel extends Module {
   }
 
   queueEvent(event) {
-    this.scheduler.queueEvent(event, this.onSchedulerCallback.bind(this), this);
+    this.scheduler.queueEvent(event, this.onSchedulerCallback, this);
   }
 
   sendEvent(event) {

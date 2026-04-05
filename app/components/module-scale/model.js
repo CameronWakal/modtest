@@ -33,38 +33,36 @@ export default class ModuleScaleModel extends Module {
   // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
     super.init(...arguments);
-
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
-
-      // Create degrees
-      let degrees = this.store.createRecord('array');
-      this.degrees = degrees;
-      this.degrees.valueMax = 11;
-      this.degrees.setLength(this.degreesInScale);
-      this.degrees.dataManager = this;
-
-      // Create ports
-      this.addValueInPort('octave', 'octaveInPort', { isEnabled: false, defaultValue: 3, minValue: -2, maxValue: 8 });
-      this.addValueInPort('root', 'rootInPort', { isEnabled: false, defaultValue: 0 });
-      this.addValueInPort('mode', 'modeInPort', { isEnabled: false, defaultValue: 0, disabledValueChangedMethod: 'updateScale' });
-      this.addEventInPort('update', 'updateScale', false);
-
-      // Add an expandable group of input ports
-      let degreeInPorts = this.addPortGroup({ minSets: 1, maxSets: 4 });
-      this.degreeInPortsGroup = degreeInPorts;
-      this.addValueInPort('0', 'degreeInPort', { canBeEmpty: true });
-      this.addValueOutPort('0', 'getNote', true);
-
-      this.addNumberSetting('voices', 'degreeInPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
-      degreeInPorts.portSetsCount = 2;
-
-      this.updateScale();
-    }
-    // Ensure dataManager is set for loaded records (async: false means it's available in init)
+    // Ensure dataManager is set for loaded records
     if (this.degrees) {
       this.degrees.dataManager = this;
     }
+  }
+
+  configure() {
+    // Create degrees
+    let degrees = this.store.createRecord('array');
+    this.degrees = degrees;
+    this.degrees.valueMax = 11;
+    this.degrees.setLength(this.degreesInScale);
+    this.degrees.dataManager = this;
+
+    // Create ports
+    this.addValueInPort('octave', 'octaveInPort', { isEnabled: false, defaultValue: 3, minValue: -2, maxValue: 8 });
+    this.addValueInPort('root', 'rootInPort', { isEnabled: false, defaultValue: 0 });
+    this.addValueInPort('mode', 'modeInPort', { isEnabled: false, defaultValue: 0, disabledValueChangedMethod: 'updateScale' });
+    this.addEventInPort('update', 'updateScale', false);
+
+    // Add an expandable group of input ports
+    let degreeInPorts = this.addPortGroup({ minSets: 1, maxSets: 4 });
+    this.degreeInPortsGroup = degreeInPorts;
+    this.addValueInPort('0', 'degreeInPort', { canBeEmpty: true });
+    this.addValueOutPort('0', 'getNote', true);
+
+    this.addNumberSetting('voices', 'degreeInPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
+    degreeInPorts.portSetsCount = 2;
+
+    this.updateScale();
   }
 
   updateScale() {

@@ -7,14 +7,8 @@ export default class ModuleButtonModel extends Module {
 
   @belongsTo('port-event-out', { async: false, inverse: null }) eventOutPort;
 
-  // eslint-disable-next-line ember/classic-decorator-hooks
-  init() {
-    super.init(...arguments);
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
-      // create ports
-      this.addEventOutPort('out', 'eventOutPort', true);
-    }
+  configure() {
+    this.addEventOutPort('out', 'eventOutPort', true);
   }
 
   trig() {

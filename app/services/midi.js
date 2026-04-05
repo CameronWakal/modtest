@@ -11,7 +11,7 @@ export default class MidiService extends Service {
   setup() {
     // request MIDI access
     if (navigator.requestMIDIAccess) {
-      navigator.requestMIDIAccess({ sysex: false }).then(this.onMIDISuccess.bind(this), this.onMIDIFailure.bind(this));
+      navigator.requestMIDIAccess({ sysex: false }).then(this.onMIDISuccess, this.onMIDIFailure);
     } else {
       alert('No MIDI support in your browser.');
     }
@@ -70,27 +70,27 @@ export default class MidiService extends Service {
     }
   }
 
-  onMIDISuccess(midiAccess) {
+  onMIDISuccess = (midiAccess) => {
     this.midi = midiAccess;
     let inputs = this.midi.inputs.values();
     // loop through all inputs
     for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
       // listen for midi messages
-      input.value.onmidimessage = this.onMIDIMessage.bind(this);
+      input.value.onmidimessage = this.onMIDIMessage;
     }
 
     this.outputs = this.midi.outputs.values();
 
     // listen for connect/disconnect message
     this.midi.midiManager = this;
-    this.midi.onstatechange = this.onStateChange.bind(this);
+    this.midi.onstatechange = this.onStateChange;
     this.showMIDIPorts();
     this.updateOutputDevices();
     this.updateInputDevices();
 
   }
 
-  onMIDIMessage(event) {
+  onMIDIMessage = (event) => {
     let { data } = event;
     /*
     let cmd = data[0] >> 4;
@@ -148,7 +148,7 @@ export default class MidiService extends Service {
     }
   }
 
-  onStateChange(event) {
+  onStateChange = (event) => {
     let {
       port
     } = event;
@@ -164,7 +164,7 @@ export default class MidiService extends Service {
     this.updateInputDevices();
   }
 
-  onMIDIFailure(e) {
+  onMIDIFailure = (e) => {
     console.log(`No access to MIDI devices or your browser doesn't support WebMIDI API. Please use WebMIDIAPIShim ${e}`);
   }
 

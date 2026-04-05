@@ -9,20 +9,14 @@ export default class ModuleMuteModel extends Module {
   @belongsTo('port-event-out', { async: false, inverse: null }) eventOutPort;
   @belongsTo('port-value-in', { async: false, inverse: null }) valueInPort;
 
-  // eslint-disable-next-line ember/classic-decorator-hooks
-  init() {
-    super.init(...arguments);
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
-      // Create ports
-      this.addEventInPort('toggle', 'toggle', false);
-      this.addEventInPort('mute', 'mute', false);
-      this.addEventInPort('unmute', 'unmute', false);
-      this.addEventInPort('in', 'eventIn', true);
-      this.addValueInPort('in', 'valueInPort', { canBeEmpty: true });
-      this.addEventOutPort('out', 'eventOutPort', true);
-      this.addValueOutPort('out', 'getValue', true);
-    }
+  configure() {
+    this.addEventInPort('toggle', 'toggle', false);
+    this.addEventInPort('mute', 'mute', false);
+    this.addEventInPort('unmute', 'unmute', false);
+    this.addEventInPort('in', 'eventIn', true);
+    this.addValueInPort('in', 'valueInPort', { canBeEmpty: true });
+    this.addEventOutPort('out', 'eventOutPort', true);
+    this.addValueOutPort('out', 'getValue', true);
   }
 
   toggle() {

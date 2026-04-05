@@ -34,19 +34,14 @@ export default class ModuleOutModel extends Module {
   init() {
     super.init(...arguments);
     this.events = [];
+  }
 
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
-
-      // Create ports
-      this.addEventInPort('trig', 'sendEvent', true);
-      this.addValueInPort('note', 'noteInPort', { canBeEmpty: true, minValue: 0, maxValue: 127 });
-      this.addValueInPort('vel', 'velInPort', { defaultValue: 127, minValue: 0, maxValue: 127, isEnabled: false });
-      this.addValueInPort('channel', 'channelInPort', { defaultValue: 1, minValue: 1, maxValue: 16, isEnabled: false });
-
-      // Create settings
-      this.addMenuSetting('Output', 'outputDeviceName', 'deviceMenuOptions', this);
-    }
+  configure() {
+    this.addEventInPort('trig', 'sendEvent', true);
+    this.addValueInPort('note', 'noteInPort', { canBeEmpty: true, minValue: 0, maxValue: 127 });
+    this.addValueInPort('vel', 'velInPort', { defaultValue: 127, minValue: 0, maxValue: 127, isEnabled: false });
+    this.addValueInPort('channel', 'channelInPort', { defaultValue: 1, minValue: 1, maxValue: 16, isEnabled: false });
+    this.addMenuSetting('Output', 'outputDeviceName', 'deviceMenuOptions', this);
   }
 
   sendEvent(event) {

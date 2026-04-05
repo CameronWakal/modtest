@@ -1,3 +1,5 @@
+@use 'styles/tokens' as *;
+
 $color-string-selection: rgba($color-neutral-dark, .4);
 
 .value-input-string {

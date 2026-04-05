@@ -3,222 +3,273 @@
 **Date**: April 2026
 **Ember Version**: 6.12
 **Ember Data Version**: 5.8.0 (WarpDrive)
+**Branch**: ember-6-upgrade
 
 ---
 
 ## Executive Summary
 
-This is an Octane edition Ember.js 6.12 application with ~89 source files using native class syntax, @tracked properties, and Glimmer components. The codebase has been actively modernized.
+This is an Octane edition Ember.js 6.12 application for building modular audio/MIDI patch systems. The codebase contains ~4,600 lines of component JavaScript across 35+ components, using native class syntax, @tracked properties, and Glimmer components throughout.
 
-**Recent Progress**:
+**Overall Code Quality**: 8/10
+
+**Modernization Status**: Substantially Complete
 - Upgraded Ember from 5.12 to 6.12
 - Upgraded Ember Data from 4.12 to 5.8 (WarpDrive)
-- Configured WarpDrive build system and reactivity
-- Fixed all Ember Data 5.x deprecations (non-strict types, duplicate hasMany pushes)
-- Replaced `ember-localforage-adapter` with custom Dexie.js-based adapter
-- Implemented document-based storage (patches stored as complete JSON documents)
-- Enabled ES modules (`use-ember-modules`) to resolve AMD bundle deprecation
-- Updated linting stack: ESLint 8, eslint-plugin-ember 12, ember-template-lint 7
-- Fixed accessibility issues (aria-labels on inputs/selects, button types)
+- Migrated ESLint to v9 flat config
+- Migrated Sass from @import to @use syntax
+- Replaced ember-localforage-adapter with custom Dexie.js adapter
+- All dependencies up to date
 
 ---
 
-## Critical Issues (P0)
+## Quality Metrics Summary
 
-### 1. ~~Ember Data 4.12 → 5.x~~ RESOLVED
-- ~~Current: 4.12.8~~
-- **Resolution**: Upgraded to Ember Data 5.8.0 with WarpDrive
-  - Added `@warp-drive/ember` for reactivity integration
-  - Configured build via `@warp-drive/build-config`
-  - Fixed deprecations: non-strict types (`arrayItem` → `array-item`)
-  - Converted array/array-item to explicit relationship management (`inverse: null`)
-  - Added deprecation handler for `store.findAll` (custom IndexedDB adapter pattern)
-
-### 2. ~~ember-localforage-adapter~~ RESOLVED
-- **Resolution**: Replaced with custom adapter using Dexie.js
-  - Core files: `app/services/database.js`, `app/adapters/application.js`, `app/serializers/patch.js`, `app/services/auto-save.js`
-
-### 3. Test Coverage < 10%
-- Only 6 test files with 69 total lines
-- 51 components, most untested
-- No integration tests
-- No visual regression tests
+| Metric | Value | Status |
+|--------|-------|--------|
+| Total Components | 35+ | Good separation of concerns |
+| Component JS Lines | ~4,600 | Well-structured |
+| Component Templates | 51 files (~970 lines) | Clean, modern syntax |
+| Services | 6 | Well-organized |
+| Native Classes | 100% | Excellent |
+| Glimmer Components | 100% | Excellent |
+| @tracked Usage | 17+ files | Good |
+| Legacy Observers | 6 files | Intentionally kept |
+| Console Statements | 30 | Needs cleanup |
+| Try/Catch Blocks | 1 | Insufficient |
+| Test Files | 6 | Minimal coverage |
 
 ---
 
-## High Priority Issues (P1)
+## Completed Modernization
 
-### Manual Observers (6 files)
-Files with `addObserver`:
-- `app/models/array.js`
-- `app/components/module-clock/model.js`
-- `app/components/module-plonkmap/model.js`
-- `app/components/port-group/model.js`
-- `app/components/module-analyst/model.js`
-- `app/components/module-value/model.js`
+### Phase 1: Critical (Complete)
+- [x] Replace ember-localforage-adapter with Dexie.js
+- [x] Upgrade Ember Data to 5.8.0 (WarpDrive)
+- [x] Upgrade Ember to 6.12
+- [x] Enable ES modules (use-ember-modules)
+- [x] Update linting stack (ESLint 9, eslint-plugin-ember 12, ember-template-lint 7)
 
-### Console.log Statements (26 instances)
-- ESLint rule disabled: `'no-console': 'off'`
-- Reduced from 57 to 26 during recent work
-- Should use proper logging library or remove
+### Phase 2: High Priority (Complete)
+- [x] Migrate ESLint to v9 flat config (`eslint.config.mjs`)
+- [x] Modernize binding patterns (convert .bind(this) to arrow functions)
+- [x] Reduce module initialization duplication (template method pattern)
+- [x] Migrate Sass to @use syntax
+- [x] Add ARIA attributes to range-slider component
 
-### Outdated Dependencies
-| Package | Current | Latest | Status |
-|---------|---------|--------|--------|
-| eslint | 8.x | 9.x | Updated (9.x requires flat config migration) |
-| eslint-plugin-ember | 12.x | 12.x | ✅ Current |
-| ember-template-lint | 7.x | 7.x | ✅ Current |
-| @ember/test-helpers | 5.4.0 | 5.4.1 | Minor patch available |
-| @glimmer/component | 2.0.0 | 2.0.0 | ✅ Current |
-| ember-cli | 6.11.0 | 6.11.2 | Minor patch available |
-| ember-resolver | 13.0.0 | 13.2.0 | Minor update available |
+### Phase 3: Medium Priority (Complete)
+- [x] Update ember-resolver to 13.2.0
+- [x] Update ember-cli to 6.11.2
+- [x] Update @ember/test-helpers to 5.4.1
 
 ---
 
-## Medium Priority Issues (P2)
+## Remaining Issues
 
-### Direct DOM Access (33 instances)
-- `document.addEventListener/removeEventListener` usage
-- `window.onresize` global mutation
-- Risk: Hard to test, potential memory leaks
+### P1: Console Statements (30 instances across 11 files)
 
-### .bind(this) Pattern (10 instances)
-Files affected:
+| File | Count | Context |
+|------|-------|---------|
+| `app/services/midi.js` | 9 | MIDI device initialization |
+| `app/components/module-analyst/model.js` | 8 | Key analysis debug output |
+| `app/adapters/application.js` | 3 | Auto-save request logging |
+| `app/services/auto-save.js` | 2 | Save operations |
+| `app/components/module-out/model.js` | 2 | Latency debug |
+| `app/services/scheduler.js` | 1 | Commented out |
+| `app/components/value-input-string.js` | 1 | Debug |
+| `app/components/select-menu.js` | 1 | Debug |
+| `app/components/base-value-input/component.js` | 1 | Debug |
+| `app/components/module-scale/model.js` | 1 | Error logging |
+| `app/components/module-analyst-graphable/model.js` | 1 | Debug |
+
+**Recommendation**: Implement a logging service or remove for production.
+
+### P1: Minimal Error Handling
+
+Only 1 try/catch block in the entire codebase (`app/services/auto-save.js:55`).
+
+**Missing error handling in**:
+- Route model hooks (findAll, findRecord operations)
+- MIDI initialization
+- Scheduler operations
+- IndexedDB adapter operations
+
+**Recommendation**: Add error boundaries and proper error handling strategy.
+
+### P1: Alert Usage (Anti-Pattern)
+
+`app/services/midi.js:16` uses `alert()` for browser MIDI support check.
+
+**Recommendation**: Replace with notification service or graceful degradation.
+
+### P2: Test Coverage < 10%
+
+Only 6 test files with minimal coverage:
+- `tests/unit/adapters/application-test.js`
+- `tests/unit/controllers/application-test.js`
+- `tests/unit/controllers/patch-test.js`
+- `tests/unit/routes/patch-test.js`
+- `tests/unit/services/midi-test.js`
+- `tests/unit/utils/math-util-test.js`
+
+**Missing**:
+- Component tests (0 of 35+ components)
+- Integration tests
+- Acceptance tests
+- Service tests (scheduler, database, auto-save)
+
+### P2: Direct DOM Access (33 instances)
+
+Components using `document.addEventListener/removeEventListener`:
+- `app/components/range-slider.js`
+- `app/components/port.js`
 - `app/components/patch-diagram.js`
 - `app/components/module-wrapper.js`
-- `app/services/midi.js`
-- `app/services/scheduler.js`
-- `app/components/port.js`
 
-### Missing Accessibility
-- ~~0 ARIA attributes in 51 components~~ Partially addressed
-- Added aria-labels to select menus and value inputs
-- No aria-label on interactive ports (intentional - visual-only interface)
-- No role="button" on clickable elements
-- Canvas component has no alternative text
+**Risk**: Memory leaks if cleanup not handled properly.
 
-### Disabled Lint Rules (Future Refactoring)
-Rules disabled in `.eslintrc.js` and `.template-lintrc.js` that should be addressed:
+**Status**: All files have proper `willDestroy` cleanup implemented.
 
-**ESLint (`ember/no-runloop`)** - 13 instances
-Files using `@ember/runloop` functions (schedule, debounce, cancel):
-- `app/components/base-value-input/component.js`
-- `app/components/indicator-blinking.js`
-- `app/components/module-sequence-euclidean/model.js`
-- `app/components/patch-component.js`
-- `app/components/patch-diagram.js`
-- `app/services/auto-save.js`
+---
 
-**Fix**: Migrate to `ember-concurrency` tasks or `@ember/destroyable` patterns.
+## Intentionally Kept Patterns
 
-**Template Lint (`no-at-ember-render-modifiers`)** - 10 instances
-Using local `did-insert`/`did-update` modifiers (not the deprecated @ember/render-modifiers).
-Files: `graph-canvas.hbs`, `indicator-blinking.hbs`, `module-array.hbs`, `module-sequence.hbs`, `module-sequence-euclidean.hbs`, `patch-diagram.hbs`, `value-*-input-*.hbs`
+### Manual Observers (6 files)
 
-**Fix**: Rule is a false positive since we use custom modifiers in `app/modifiers/`. Could configure rule to allow specific modifiers, or refactor to resource-based patterns.
+Files using `addObserver` that cannot be replaced with `@tracked`:
 
-**Template Lint (`no-pointer-down-event-binding`)** - 8 instances
-Intentional mousedown/pointerdown for drag interactions in ports, modules, and patch diagram.
+| File | Observer | Side Effect |
+|------|----------|-------------|
+| `app/models/array.js` | `length` | Create/destroy array-item records |
+| `app/components/module-clock/model.js` | `source` | Start/stop MIDI listeners, timers |
+| `app/components/module-plonkmap/model.js` | `inputPortsCount` | Create/destroy input port records |
+| `app/components/port-group/model.js` | `portSetsCount` | Create/destroy expansion port records |
+| `app/components/module-analyst/model.js` | `keyToOutput` | Send event through output port |
+| `app/components/module-value/model.js` | `value` | Send event and save record |
 
-**Fix**: None needed - this is intentional UX for drag-and-drop. Rule disabled by design.
+**Rationale**: These observers trigger imperative side effects (record creation, event sending, timer management) that would cause infinite loops or fire incorrectly if placed in `@tracked` getters.
 
-**Template Lint (`no-invalid-interactive`)** - ✅ FIXED
-~~Range slider uses div with mousedown for custom slider behavior.~~
+### @ember/runloop Usage (6 files)
 
-Added `role="slider"`, ARIA attributes (`aria-valuenow`, `aria-valuemin`, `aria-valuemax`, `aria-orientation`), `tabindex="0"`, and keyboard support (arrow keys, Home, End).
+| File | Function | Purpose |
+|------|----------|---------|
+| `app/services/auto-save.js` | `debounce`, `cancel` | Coalesce rapid save calls |
+| `app/components/patch-diagram.js` | `scheduleOnce('afterRender')` | Wait for DOM before drawing canvas |
+| `app/components/base-value-input/component.js` | `schedule('afterRender')` | Avoid tracked state mutation during render |
+| `app/components/indicator-blinking.js` | `schedule('afterRender')` | Avoid tracked state mutation during render |
+| `app/components/patch-component.js` | `scheduleOnce('afterRender')` | Reset state after render completes |
+| `app/components/module-sequence-euclidean/model.js` | `schedule('actions')` | Work around Ember Data init timing |
 
-### Module Initialization Duplication
-- 23 module models repeat same initialization pattern
-- Opportunity for base class extraction or decorator
+**Rationale**: `schedule('afterRender')` calls avoid Glimmer's "mutation during tracking" errors. Migration to `ember-concurrency` would add dependency without meaningful benefit.
 
-### Sass @import Deprecation
-- Currently silenced in ember-cli-build.js
-- Should migrate to @use syntax
+### Disabled Lint Rules
+
+**ESLint** (`eslint.config.mjs`):
+- `no-console: off` - Pending logging strategy
+- `ember/no-observers: off` - Intentional observer usage (see above)
+- `ember/no-runloop: off` - Intentional runloop usage (see above)
+
+**Template Lint** (`.template-lintrc.js`):
+- `no-at-ember-render-modifiers` - False positive for custom `did-insert`/`did-update` modifiers
+- `no-pointer-down-event-binding` - Intentional for drag-and-drop interactions
+
+---
+
+## Architecture
+
+### Component Structure
+
+The codebase uses a sophisticated component-model architecture:
+
+```
+app/components/
+├── module/model.js           # Base class (215 lines)
+├── module-{name}/model.js    # Domain logic subclasses
+├── module-{name}.js          # Glimmer component (optional)
+├── module-{name}.hbs         # Template
+└── ...
+```
+
+**Pattern**: Components with complex domain logic use a separate `model.js` file extending the base `Module` class, keeping UI concerns separate from business logic.
+
+### Service Architecture
+
+| Service | Responsibility | Dependencies |
+|---------|----------------|--------------|
+| `store` | Ember Data store access | - |
+| `database` | IndexedDB persistence (Dexie.js) | - |
+| `auto-save` | Debounced patch persistence | store |
+| `current-patch` | Active patch state | - |
+| `midi` | WebMIDI API integration | - |
+| `scheduler` | Event timing/scheduling | - |
+
+### Persistence Layer
+
+Document-based storage with WarpDrive/Ember Data 5.8:
+
+- **DatabaseService**: Dexie.js wrapper for IndexedDB
+- **ApplicationAdapter**: Custom Ember Data adapter for full-document persistence
+- **PatchSerializer**: Complete document serialization with embedded records (537 lines)
+- **AutoSaveService**: Debounced persistence with runloop integration
+
+**Data Flow**:
+1. Patches stored as complete JSON documents (not normalized)
+2. Embedded records (modules, ports, settings) serialized within patches
+3. On change, auto-save schedules debounced patch save
+4. Relationships use `inverse: null` for explicit, predictable behavior
 
 ---
 
 ## Positive Findings
 
-- Modern Octane patterns throughout (native classes, @tracked, @action)
-- No jQuery dependency
-- Proper modifier usage (did-insert, did-update)
-- Well-structured MIDI integration
-- Clear feature organization by module type
-- Active maintenance with regular commits
-- Document-based persistence with Dexie.js for fast local storage
-- Up-to-date Ember Data 5.8 with WarpDrive integration
-- Clean relationship management with explicit `inverse: null` pattern
+- **100% Native Classes**: No `Ember.Component.extend()` or classic patterns
+- **100% Glimmer Components**: All UI components use `@glimmer/component`
+- **Modern Template Syntax**: Angle brackets, `{{on}}` modifier, no deprecated `{{action}}`
+- **No jQuery**: Zero jQuery dependency
+- **Proper Modifier Usage**: Custom `did-insert`/`did-update` modifiers (not deprecated @ember/render-modifiers)
+- **Well-Structured MIDI Integration**: Comprehensive WebMIDI support
+- **Clean Feature Organization**: Module types clearly separated
+- **Active Maintenance**: Regular commits, modern tooling
+- **Document-Based Persistence**: Ready for export/import and cloud sync
+- **Explicit Relationship Management**: Predictable behavior with `inverse: null`
 
 ---
 
-## Recommended Action Plan
+## Dependencies Status
 
-### Phase 1: Critical ✅ COMPLETE
-1. ~~Replace ember-localforage-adapter~~ DONE
-2. ~~Upgrade Ember Data to 5.x~~ DONE
-3. ~~Upgrade Ember to 6.x~~ DONE
-4. ~~Enable ES modules (use-ember-modules)~~ DONE
-5. ~~Update linting stack (ESLint 8, eslint-plugin-ember 12, ember-template-lint 7)~~ DONE
+All dependencies are current as of April 2026:
 
-### Phase 2: High Priority (Current)
-6. Begin test coverage improvements
-7. Remove manual observers (use @tracked)
-8. Audit and remove console.log statements
-9. Migrate `@ember/runloop` usage to `ember-concurrency` (13 instances)
-
-### Phase 3: Medium Priority
-10. Upgrade ESLint to v9+ (requires flat config migration)
-11. Modernize binding patterns (remove .bind(this))
-12. Reduce module initialization duplication
-13. Migrate Sass to @use syntax
-
-### Phase 4: Nice to Have
-14. ~~Add `role="slider"` and ARIA to range-slider component~~ DONE
-15. Configure template-lint to recognize custom modifiers
+| Package | Version | Status |
+|---------|---------|--------|
+| ember-source | 6.12.0 | Current |
+| ember-data | 5.8.0 | Current |
+| ember-cli | 6.11.2 | Current |
+| ember-resolver | 13.2.0 | Current |
+| @ember/test-helpers | 5.4.1 | Current |
+| @glimmer/component | 2.0.0 | Current |
+| eslint | 9.x | Current (flat config) |
+| eslint-plugin-ember | 12.7.5 | Current |
+| ember-template-lint | 7.0.0 | Current |
+| @warp-drive/ember | 5.8.0 | Current |
+| dexie | 4.4.1 | Current |
 
 ---
 
-## Architecture: Persistence Layer
+## Recommended Next Steps
 
-The application uses a document-based storage architecture with WarpDrive/Ember Data 5.8:
+### High Priority
+1. **Implement logging service** - Replace 30 console statements with proper logging
+2. **Add error handling** - Implement try/catch blocks in async operations
+3. **Replace alert()** - Use notification component in midi.js
 
-### Components
-- **DatabaseService** (`app/services/database.js`): Dexie.js wrapper for IndexedDB
-- **ApplicationAdapter** (`app/adapters/application.js`): Custom Ember Data adapter
-- **PatchSerializer** (`app/serializers/patch.js`): Full document serialization with explicit relationship management
-- **AutoSaveService** (`app/services/auto-save.js`): Debounced persistence
-- **WarpDrive Initializer** (`app/initializers/warp-drive.js`): Reactivity setup and deprecation handling
+### Medium Priority
+4. **Begin test coverage** - Start with critical paths (auto-save, serializer, adapter)
+5. **Configure template-lint** - Allow custom modifiers to eliminate false positives
+6. **Add observer cleanup** - Ensure models using `addObserver` properly clean up in `willDestroy`
 
-### Data Flow
-1. Patches are stored as complete JSON documents (not normalized)
-2. Embedded records (modules, ports, settings) are serialized within patches
-3. When embedded records change, auto-save schedules a debounced patch save
-4. On load, documents are deserialized into Ember Data records
-5. Relationships use `inverse: null` for explicit, predictable behavior
-
-### WarpDrive Configuration
-- Build config in `ember-cli-build.js` via `@warp-drive/build-config`
-- Reactivity via `@warp-drive/ember/install`
-- Legacy request methods deprecation silenced (custom adapter doesn't use `store.request()`)
-
-### Benefits
-- Simpler data model (single table vs normalized)
-- Ready for export/import functionality
-- Future-ready for cloud sync
-- Predictable relationship behavior with explicit management
-- Modern Ember Data 5.x patterns
-
----
-
-## Build Stats
-
-**Production Build** (April 2026):
-| Asset | Size | Gzipped |
-|-------|------|---------|
-| vendor.js | 440 KB | 131 KB |
-| app.js | 262 KB | 37 KB |
-| chunk (Ember Data) | 349 KB | 103 KB |
-| app.css | 13 KB | 2.4 KB |
+### Nice to Have
+7. **Documentation** - Add JSDoc comments to complex serializer/adapter methods
+8. **Performance audit** - Profile build size (vendor.js: 440KB, app.js: 262KB)
 
 ---
 
@@ -227,10 +278,20 @@ The application uses a document-based storage architecture with WarpDrive/Ember 
 | File | Concern |
 |------|---------|
 | `app/adapters/application.js` | Core persistence adapter |
-| `app/serializers/patch.js` | Document serialization, relationship linking |
-| `app/services/auto-save.js` | Debounced save coordination, runloop usage |
+| `app/serializers/patch.js` | Document serialization (537 lines) |
+| `app/services/auto-save.js` | Debounced save, runloop usage |
+| `app/services/midi.js` | WebMIDI integration, alert() usage |
 | `app/initializers/warp-drive.js` | WarpDrive setup, deprecation handling |
-| `app/routes/application.js` | Load coordination |
-| `.eslintrc.js` | Disabled `ember/no-runloop` rule |
+| `eslint.config.mjs` | Disabled rules configuration |
 | `.template-lintrc.js` | Disabled modifier and pointer event rules |
-| `config/optional-features.json` | ES modules enabled |
+
+---
+
+## Build Stats (April 2026)
+
+| Asset | Size | Gzipped |
+|-------|------|---------|
+| vendor.js | 440 KB | 131 KB |
+| app.js | 262 KB | 37 KB |
+| chunk (Ember Data) | 349 KB | 103 KB |
+| app.css | 13 KB | 2.4 KB |
