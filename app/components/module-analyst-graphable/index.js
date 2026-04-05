@@ -1,4 +1,4 @@
-import ModuleAnalystComponent from './module-analyst';
+import ModuleAnalystComponent from '../module-analyst';
 
 export default class ModuleAnalystGraphableComponent extends ModuleAnalystComponent {
 }
