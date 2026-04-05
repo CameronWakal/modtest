@@ -1,4 +1,4 @@
-$color-current-input-highlight: rgba($color-warm-bright, .5);
+@use 'styles/tokens' as *;
 
 .value-array-input-number {
   border-radius: 0;

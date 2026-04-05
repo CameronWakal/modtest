@@ -13,20 +13,14 @@ export default class PatchDiagramComponent extends Component {
   @tracked newConnectionFrom = null;
 
   canvasElement = null;
-  mouseMoveBodyFunction = null;
   previousMovingModule = null;
   previousConnectingFromPort = null;
   previousNeedsUpdate = null;
 
-  constructor() {
-    super(...arguments);
-    this.mouseMoveBodyFunction = this.mouseMoveBody.bind(this);
-  }
-
   willDestroy() {
     super.willDestroy(...arguments);
-    if (this.mouseMoveBodyFunction) {
-      document.removeEventListener('mousemove', this.mouseMoveBodyFunction);
+    if (this.mouseMoveBody) {
+      document.removeEventListener('mousemove', this.mouseMoveBody);
     }
     window.onresize = null;
   }
@@ -135,25 +129,25 @@ export default class PatchDiagramComponent extends Component {
   addMouseListener() {
     if (!this._mouseListenerActive) {
       this._mouseListenerActive = true;
-      document.addEventListener('mousemove', this.mouseMoveBodyFunction);
+      document.addEventListener('mousemove', this.mouseMoveBody);
     }
   }
 
   // remove the mouse listener only if there is neither a moving module or a connecting port
   removeMouseListener() {
     if (this._mouseListenerActive && !this.args.movingModule && !this.args.connectingFromPort) {
-      document.removeEventListener('mousemove', this.mouseMoveBodyFunction);
+      document.removeEventListener('mousemove', this.mouseMoveBody);
       this._mouseListenerActive = false;
     }
   }
 
   // callback for mousemove on body
-  mouseMoveBody(event) {
+  mouseMoveBody = (event) => {
     event.preventDefault();
     if (this.args.movingModule || this.args.connectingFromPort) {
       this.drawConnections(event);
     }
-  }
+  };
 
   @action
   handleMouseDown(event) {

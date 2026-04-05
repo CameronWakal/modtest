@@ -14,30 +14,23 @@ export default class ModuleSwitchModel extends Module {
   @belongsTo('port-event-out', { async: false, inverse: null }) eventOutPort;
   @belongsTo('port-group', { async: false, inverse: null }) inputPortsGroup;
 
-  // eslint-disable-next-line ember/classic-decorator-hooks
-  init() {
-    super.init(...arguments);
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
+  configure() {
+    this.addNumberSetting('input sets', 'inputPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
+    this.addValueInPort('switch', 'switchInPort', { canBeEmpty: true });
 
-      this.addNumberSetting('input sets', 'inputPortsGroup.portSetsCount', this, { minValue: 1, maxValue: 4 });
+    // add an expandable group of input ports
+    let inputPorts = this.addPortGroup({ minSets: 1, maxSets: 4 });
+    this.inputPortsGroup = inputPorts;
 
-      this.addValueInPort('switch', 'switchInPort', { canBeEmpty: true });
+    // add one valueInPort and one eventInPort to the group
+    this.addValueInPortWithoutAssignment('0', { canBeEmpty: true });
+    this.addEventInPort('0', 'onEventIn', true);
 
-      // add an expandable group of input ports
-      let inputPorts = this.addPortGroup({ minSets: 1, maxSets: 4 });
-      this.inputPortsGroup = inputPorts;
+    inputPorts.portSetsCount = 2;
 
-      // add one valueInPort and one eventInPort to the group
-      this.addValueInPortWithoutAssignment('0', { canBeEmpty: true });
-      this.addEventInPort('0', 'onEventIn', true);
-
-      inputPorts.portSetsCount = 2;
-
-      this.addPortGroup();
-      this.addValueOutPort('out', 'getValue', true);
-      this.addEventOutPort('out', 'eventOutPort', true);
-    }
+    this.addPortGroup();
+    this.addValueOutPort('out', 'getValue', true);
+    this.addEventOutPort('out', 'eventOutPort', true);
   }
 
   getValue() {

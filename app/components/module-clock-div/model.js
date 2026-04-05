@@ -20,20 +20,12 @@ export default class ModuleClockDivModel extends Module {
   @belongsTo('port-value-in', { async: false, inverse: null }) shiftByPort;
   @belongsTo('port-event-out', { async: false, inverse: null }) trigOutPort;
 
-  // eslint-disable-next-line ember/classic-decorator-hooks
-  init() {
-    super.init(...arguments);
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
-
-      this.addEventInPort('clock', 'onClockIn', true);
-      this.addEventInPort('reset', 'onResetIn', false);
-
-      this.addValueInPort('div', 'divByPort', { isEnabled: false, defaultValue: 6, minValue: 1 });
-      this.addValueInPort('shift', 'shiftByPort', { isEnabled: false, defaultValue: 0 });
-
-      this.addEventOutPort('trig', 'trigOutPort', true);
-    }
+  configure() {
+    this.addEventInPort('clock', 'onClockIn', true);
+    this.addEventInPort('reset', 'onResetIn', false);
+    this.addValueInPort('div', 'divByPort', { isEnabled: false, defaultValue: 6, minValue: 1 });
+    this.addValueInPort('shift', 'shiftByPort', { isEnabled: false, defaultValue: 0 });
+    this.addEventOutPort('trig', 'trigOutPort', true);
   }
 
   onClockIn(event) {

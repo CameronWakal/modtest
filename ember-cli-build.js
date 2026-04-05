@@ -8,9 +8,7 @@ module.exports = async function(defaults) {
   let app = new EmberApp(defaults, {
     // Add options here
     sassOptions: {
-      includePaths: ['app'],
-      // Silence Sass @import deprecation warnings until full migration to @use
-      silenceDeprecations: ['import']
+      includePaths: ['app']
     }
   });
 

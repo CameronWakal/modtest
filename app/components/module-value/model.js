@@ -14,15 +14,13 @@ export default class ModuleValueModel extends Module {
   init() {
     super.init(...arguments);
     addObserver(this, 'value', this._valueChanged);
+  }
 
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
-      // create ports
-      this.addEventInPort('set', 'setValue', false);
-      this.addValueInPort('value', 'valueInPort', { isEnabled: false });
-      this.addValueOutPort('value', 'getValue', true);
-      this.addEventOutPort('changed', 'changeOutPort', false);
-    }
+  configure() {
+    this.addEventInPort('set', 'setValue', false);
+    this.addValueInPort('value', 'valueInPort', { isEnabled: false });
+    this.addValueOutPort('value', 'getValue', true);
+    this.addEventOutPort('changed', 'changeOutPort', false);
   }
 
   _valueChanged() {

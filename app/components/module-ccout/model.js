@@ -12,19 +12,11 @@ export default class ModuleCcoutModel extends Module {
   @belongsTo('port-value-in', { async: false, inverse: null }) channelInPort;
   @belongsTo('port-value-in', { async: false, inverse: null }) valueInPort;
 
-  // eslint-disable-next-line ember/classic-decorator-hooks
-  init() {
-    super.init(...arguments);
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
-
-      // create ports
-      this.addEventInPort('trig', 'sendEvent', true);
-
-      this.addValueInPort('control', 'controlInPort', { isEnabled: false, canBeEmpty: true, defaultValue: 0, minValue: 0, maxValue: 127 });
-      this.addValueInPort('channel', 'channelInPort', { isEnabled: false, defaultValue: 0, minValue: 0, maxValue: 15 });
-      this.addValueInPort('value', 'valueInPort', { canBeEmpty: true, minValue: 0, maxValue: 127 });
-    }
+  configure() {
+    this.addEventInPort('trig', 'sendEvent', true);
+    this.addValueInPort('control', 'controlInPort', { isEnabled: false, canBeEmpty: true, defaultValue: 0, minValue: 0, maxValue: 127 });
+    this.addValueInPort('channel', 'channelInPort', { isEnabled: false, defaultValue: 0, minValue: 0, maxValue: 15 });
+    this.addValueInPort('value', 'valueInPort', { canBeEmpty: true, minValue: 0, maxValue: 127 });
   }
 
   sendEvent() {

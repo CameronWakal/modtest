@@ -26,35 +26,31 @@ export default class ModuleSequenceModel extends Module {
   // eslint-disable-next-line ember/classic-decorator-hooks
   init() {
     super.init(...arguments);
-
-    if (this.isNew && this.ports.length === 0) {
-      this.title = this.name;
-
-      // Create steps
-      let steps = this.store.createRecord('array');
-      this.steps = steps;
-      this.steps.setLength(8);
-
-      // Create settings
-      this.addMenuSetting('Input Type', 'inputType', 'inputTypeMenuOptions', this);
-
-      // todo: make config option for settings that must have a non-null numeric value
-      this.addNumberSetting('Length', 'steps.length', this, { minValue: 1, maxValue: 64 });
-      this.addNumberSetting('Input Min', 'steps.valueMin', this);
-      this.addNumberSetting('Input Max', 'steps.valueMax', this);
-      this.addNumberSetting('Input Step', 'steps.valueStep', this, { minValue: 1 });
-      this.addNumberSetting('Display Scale', 'displayScale', this, { minValue: 1 });
-
-      // Create ports
-      this.addEventInPort('inc', 'incrementStep', true);
-      this.addEventInPort('reset', 'reset', false);
-      this.addValueOutPort('value', 'getValue', true);
-      this.addEventOutPort('trig', 'trigOutPort', false);
-    }
-    // Ensure dataManager is set for loaded records (async: false means it's available in init)
+    // Ensure dataManager is set for loaded records
     if (this.steps) {
       this.steps.dataManager = this;
     }
+  }
+
+  configure() {
+    // Create steps
+    let steps = this.store.createRecord('array');
+    this.steps = steps;
+    this.steps.setLength(8);
+
+    // Create settings
+    this.addMenuSetting('Input Type', 'inputType', 'inputTypeMenuOptions', this);
+    this.addNumberSetting('Length', 'steps.length', this, { minValue: 1, maxValue: 64 });
+    this.addNumberSetting('Input Min', 'steps.valueMin', this);
+    this.addNumberSetting('Input Max', 'steps.valueMax', this);
+    this.addNumberSetting('Input Step', 'steps.valueStep', this, { minValue: 1 });
+    this.addNumberSetting('Display Scale', 'displayScale', this, { minValue: 1 });
+
+    // Create ports
+    this.addEventInPort('inc', 'incrementStep', true);
+    this.addEventInPort('reset', 'reset', false);
+    this.addValueOutPort('value', 'getValue', true);
+    this.addEventOutPort('trig', 'trigOutPort', false);
   }
 
   getValue() {

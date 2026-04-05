@@ -1,3 +1,5 @@
+@use 'styles/tokens' as *;
+
 .app-sidebar {
 
   background-color: $color-sidebar-background;

@@ -1,0 +1,21 @@
+// Shared design tokens and variables
+// This file forwards colors and defines layout variables
+
+@use 'colors' as colors;
+@forward 'colors';
+
+// Shared color variants (derived from base colors)
+$color-current-input-highlight: rgba(colors.$color-warm-bright, .5);
+
+// Border radii
+$module-borderradius: 5px;
+$input-borderradius: 4px;
+$button-borderradius: 4px;
+
+// Z-index layers
+$z-background: 0;
+$z-patch-diagram: 100;
+$z-module: 200;
+$z-selected-module: 300;
+$z-app-chrome: 400;
+$z-new-module: 500;

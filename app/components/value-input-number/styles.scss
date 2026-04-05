@@ -1,3 +1,5 @@
+@use 'styles/tokens' as *;
+
 .value-input-number {
   background: $color-input-background;
   border: 0;

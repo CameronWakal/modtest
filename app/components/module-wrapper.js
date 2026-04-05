@@ -10,27 +10,20 @@ export default class ModuleWrapperComponent extends Component {
   @tracked moveOffsetY = null;
   @tracked portIsConnectingFrom = false;
 
-  mouseUpBodyFunction = null;
-  mouseMoveBodyFunction = null;
-
   constructor() {
     super(...arguments);
 
-    // Save reference to bound functions so removeEventListener will work
-    this.mouseUpBodyFunction = this.mouseUpBody.bind(this);
-    this.mouseMoveBodyFunction = this.mouseMoveBody.bind(this);
-
     if (this.args.module.isNew) {
       this.isMoving = true;
-      document.addEventListener('mouseup', this.mouseUpBodyFunction);
-      document.addEventListener('mousemove', this.mouseMoveBodyFunction);
+      document.addEventListener('mouseup', this.mouseUpBody);
+      document.addEventListener('mousemove', this.mouseMoveBody);
     }
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    document.removeEventListener('mouseup', this.mouseUpBodyFunction);
-    document.removeEventListener('mousemove', this.mouseMoveBodyFunction);
+    document.removeEventListener('mouseup', this.mouseUpBody);
+    document.removeEventListener('mousemove', this.mouseMoveBody);
   }
 
   get xPos() {
@@ -116,8 +109,8 @@ export default class ModuleWrapperComponent extends Component {
       this.isMoving = true;
       this.moveOffsetX = event.pageX - this.xPos;
       this.moveOffsetY = event.pageY - this.yPos;
-      document.addEventListener('mouseup', this.mouseUpBodyFunction);
-      document.addEventListener('mousemove', this.mouseMoveBodyFunction);
+      document.addEventListener('mouseup', this.mouseUpBody);
+      document.addEventListener('mousemove', this.mouseMoveBody);
       if (this.args.selected) {
         this.args.selected();
       }
@@ -137,7 +130,7 @@ export default class ModuleWrapperComponent extends Component {
     }
   }
 
-  mouseMoveBody(event) {
+  mouseMoveBody = (event) => {
     event.preventDefault();
     this.didMove = true;
 
@@ -152,7 +145,7 @@ export default class ModuleWrapperComponent extends Component {
     this.yPos = event.pageY - this.moveOffsetY;
   }
 
-  mouseUpBody(event) {
+  mouseUpBody = (event) => {
     event.preventDefault();
     this.isMoving = false;
 
@@ -170,7 +163,7 @@ export default class ModuleWrapperComponent extends Component {
     if (this.args.finishedMoving) {
       this.args.finishedMoving();
     }
-    document.removeEventListener('mouseup', this.mouseUpBodyFunction);
-    document.removeEventListener('mousemove', this.mouseMoveBodyFunction);
+    document.removeEventListener('mouseup', this.mouseUpBody);
+    document.removeEventListener('mousemove', this.mouseMoveBody);
   }
 }

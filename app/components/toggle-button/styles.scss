@@ -1,3 +1,5 @@
+@use 'styles/tokens' as *;
+
 $color-focused-button: rgba($color-neutral-bright, .4);
 $color-active-button: rgba($color-cool-bright, .8);
 
