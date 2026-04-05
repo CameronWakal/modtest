@@ -1,6 +1,6 @@
 import { action } from '@ember/object';
 import { set } from '@ember/object';
-import BaseValueInputComponent from './base-value-input/component';
+import BaseValueInputComponent from '../base-value-input/component';
 
 /**
  * Numeric input for use in arrays. Extends BaseValueInputComponent.

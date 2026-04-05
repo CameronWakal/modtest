@@ -1,6 +1,6 @@
 import { set } from '@ember/object';
 import { isEmpty } from '@ember/utils';
-import BaseValueInputComponent from './base-value-input/component';
+import BaseValueInputComponent from '../base-value-input/component';
 
 /**
  * String input component. Extends BaseValueInputComponent.

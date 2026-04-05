@@ -1,4 +1,4 @@
-import PortComponent from './port';
+import PortComponent from '../port';
 
 export default class PortEventInComponent extends PortComponent {
   get portTypeClasses() {

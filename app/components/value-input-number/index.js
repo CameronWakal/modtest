@@ -1,5 +1,5 @@
 import { action } from '@ember/object';
-import BaseValueInputComponent from './base-value-input/component';
+import BaseValueInputComponent from '../base-value-input/component';
 
 /**
  * Numeric input component with increment/decrement via arrow keys.
